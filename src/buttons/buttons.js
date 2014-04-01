@@ -1,3 +1,4 @@
+'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.button:loButtonClear
@@ -8,7 +9,7 @@
  * Resize textarea automatically to the size of its text content.
  *
  * @example
- <example module="patternfly.button">
+ <example module="patternfly.buttons">
 
  <file name="index.html">
  <div ng-controller="ButtonDemoCtrl">
@@ -31,7 +32,7 @@
 
  </example>
  */
-angular.module('patternfly.button', []).directive('loButtonClear', function () {
+angular.module('patternfly.buttons', []).directive('loButtonClear', function () {
   return {
     scope: {
       loButtonClear: '&'

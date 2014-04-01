@@ -1,3 +1,4 @@
+'use strict';
 angular.module('patternfly.notification', [])
 
 .factory('Notifications', function($rootScope, $timeout, $log) {

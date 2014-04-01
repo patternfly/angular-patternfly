@@ -10,21 +10,41 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-ngdocs');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-available-tasks');
 
   function init() {
 
     grunt.initConfig({
+      availabletasks: {
+        tasks: {
+          options: {
+            descriptions: {
+              'help' : 'Task list helper for your Grunt enabled projects.',
+              'clean' : 'Deletes the content of the dist directory.',
+              'build' : 'Builds the project (including documentation) into the dist directory.',
+              'test' : 'Executes the karma testsuite.',
+              'watch' : 'Whenever js source files (from the src directory) change, the tasks executes jshint and documentation build.',
+              'ngdocs' : 'Builds documentation into dist/docs.',
+              'ngdocs:view' : 'Builds documentation into dist/docs and runs a web server. The docs can be accessed on http://localhost:8000/'
+            },
+            groups: {
+              'Basic project tasks': ['help', 'clean', 'build', 'test'],
+              'Documentation tasks': ['ngdocs', 'ngdocs:view']
+            }
+          }
+        }
+      },
       concat: {
         options: {
           separator: ';'
         },
         dist: {
-          src: ['src/button/button.js', 'src/notification/notification.js'],
+          src: 'src/*/*.js',
           dest: 'dist/angular-patternfly.js'
         }
       },
       jshint: {
-        files: ['Gruntfile.js','dist/angular-patternfly.js'],
+        files: ['Gruntfile.js', 'src/*/*.js'],
         options: {
           jshintrc: '.jshintrc'
         },
@@ -35,7 +55,7 @@ module.exports = function(grunt) {
           },
           files: {
             // TODO make list of modules optional (= specify as args or build all)
-            src: ['src/button/button.js', 'src/notification/notification.js']
+            src: 'src/*/*.js'
           }
         }
       },
@@ -49,46 +69,54 @@ module.exports = function(grunt) {
           dest: 'dist/angular-patternfly.min.js'
         }
       },
-      /*
       ngdocs: {
         options: {
-          scripts: ['lib/angular/angular.js', 'dist/angular-patternfly.min.js'],
-          html5Mode: false
-        },
-        api: ['src/button/button.js']
-      },
-      */
-      ngdocs: {
-        options: {
+          dest: 'dist/docs',
           scripts: ['angular.js', 'dist/angular-patternfly.min.js'],
           html5Mode: false
         },
-        all: ['src/button/button.js']
+        all: ['src/*/*.js']
       },
 
       connect: {
         options: {
           keepalive: true
         },
-        server: {}
+        server: {},
+        docs: {
+          options: {
+            base: 'dist/docs'
+          }
+        }
       },
 
       watch: {
-        files: ['Gruntfile.js', 'src/button/button.js', 'src/notification/notification.js'],
-        tasks: ['ngdocs'],
+        files: ['Gruntfile.js', 'src/*/*.js'],
+        tasks: ['jshint', 'ngdocs'],
         options: {
           livereload: true
         }
       },
+      karma: {
+        unit: {
+          configFile: 'karma.conf.js',
+          singleRun: true,
+          browsers: ['PhantomJS']
+        }
+      },
 
-      clean: ['docs']
+      clean: {
+        docs: ['dist/docs'],
+        all: ['dist/*']
+      }
 
     });
 
-    grunt.registerTask('default', ['jshint:beforeconcat', 'concat', 'uglify:build']);
-    grunt.registerTask('docs', ['ngdocs']);
-    grunt.registerTask('docs:view', ['default', 'clean', 'ngdocs', 'connect']);
-    grunt.registerTask('watchx', ['watch']);
+    grunt.registerTask('build', ['clean', 'jshint:beforeconcat', 'jshint', 'test', 'concat', 'uglify:build', 'ngdocs']);
+    grunt.registerTask('default', ['build']);
+    grunt.registerTask('ngdocs:view', ['default', 'clean', 'ngdocs', 'connect:docs:livereload']);
+    grunt.registerTask('test', ['karma']);
+    grunt.registerTask('help', ['availabletasks']);
 
   }
 
