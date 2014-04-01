@@ -1,0 +1,29 @@
+{
+  "author": "Viliam Rockai",
+  "name": "angular-patternfly",
+  "version": "0.0.0",
+  "description": "Angular extension of the Patternfly project.",
+  "homepage": "https://github.com/patternfly/angular-patternfly",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "connect-livereload": "~0.3.0",
+    "express":"~3.4.4",
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": "0.4.1",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-uglify": "~0.2.5",
+    "grunt-contrib-jshint": "~0.7.0",
+    "grunt-karma": "~0.6.2",
+    "grunt-ngdocs": "~0.1.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "engines":{
+    "node":"0.10.10"
+  }
+}
