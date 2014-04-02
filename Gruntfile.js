@@ -2,15 +2,8 @@
 
 module.exports = function(grunt) {
 
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks('grunt-ngdocs');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-available-tasks');
+
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   function init() {
 
@@ -34,6 +27,10 @@ module.exports = function(grunt) {
           }
         }
       },
+      clean: {
+        docs: ['dist/docs'],
+        all: ['dist/*']
+      },
       concat: {
         options: {
           separator: ';'
@@ -41,6 +38,17 @@ module.exports = function(grunt) {
         dist: {
           src: 'src/*/*.js',
           dest: 'dist/angular-patternfly.js'
+        }
+      },
+      connect: {
+        options: {
+          keepalive: true
+        },
+        server: {},
+        docs: {
+          options: {
+            base: 'dist/docs'
+          }
         }
       },
       jshint: {
@@ -59,14 +67,11 @@ module.exports = function(grunt) {
           }
         }
       },
-      uglify: {
-        options: {
-          mangle: false
-        },
-        build: {
-          files: {},
-          src: 'dist/angular-patternfly.js',
-          dest: 'dist/angular-patternfly.min.js'
+      karma: {
+        unit: {
+          configFile: 'karma.conf.js',
+          singleRun: true,
+          browsers: ['PhantomJS']
         }
       },
       ngdocs: {
@@ -77,44 +82,34 @@ module.exports = function(grunt) {
         },
         all: ['src/*/*.js']
       },
-
-      connect: {
+      uglify: {
         options: {
-          keepalive: true
+          mangle: false
         },
-        server: {},
-        docs: {
+        build: {
+          files: {},
+          src: 'dist/angular-patternfly.js',
+          dest: 'dist/angular-patternfly.min.js'
+        }
+      },
+      watch: {
+        main: {
+          files: ['Gruntfile.js'],
+          tasks: ['jshint']
+        },
+        js: {
+          files: ['Gruntfile.js', 'src/*/*.js'],
+          tasks: ['jshint', 'ngdocs'],
           options: {
-            base: 'dist/docs'
+            livereload: true
           }
         }
-      },
-
-      watch: {
-        files: ['Gruntfile.js', 'src/*/*.js'],
-        tasks: ['jshint', 'ngdocs'],
-        options: {
-          livereload: true
-        }
-      },
-      karma: {
-        unit: {
-          configFile: 'karma.conf.js',
-          singleRun: true,
-          browsers: ['PhantomJS']
-        }
-      },
-
-      clean: {
-        docs: ['dist/docs'],
-        all: ['dist/*']
       }
-
     });
 
     grunt.registerTask('build', ['clean', 'jshint:beforeconcat', 'jshint', 'test', 'concat', 'uglify:build', 'ngdocs']);
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('ngdocs:view', ['default', 'clean', 'ngdocs', 'connect:docs:livereload']);
+    grunt.registerTask('ngdocs:view', ['build', 'connect:docs:livereload']);
     grunt.registerTask('test', ['karma']);
     grunt.registerTask('help', ['availabletasks']);
 

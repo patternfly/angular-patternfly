@@ -2,17 +2,17 @@
 module.exports = function(config) {
   config.set({
     // base path, that will be used to resolve files and exclude
-    basePath: '../..',
+    //basePath: '.',
 
     frameworks: ['jasmine', 'commonjs'],
 
     // list of files / patterns to load in the browser
     files: [
-      '/home/vrockai/workspace/angular-patternfly/' + 'misc/test-lib/jquery-1.11.0.min.js',
-      '/home/vrockai/workspace/angular-patternfly/' + 'misc/test-lib/angular.js',
-      '/home/vrockai/workspace/angular-patternfly/' + 'misc/test-lib/angular-mocks.js',
-      '/home/vrockai/workspace/angular-patternfly/' + 'misc/test-lib/helpers.js',
-      '/home/vrockai/workspace/angular-patternfly/' + 'src/**/*.js'
+      'misc/test-lib/jquery-1.11.0.min.js',
+      'misc/test-lib/angular.js',
+      'misc/test-lib/angular-mocks.js',
+      'misc/test-lib/helpers.js',
+      'src/**/*.js'
     ],
 
     // list of files to exclude
