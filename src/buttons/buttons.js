@@ -14,7 +14,7 @@
  <file name="index.html">
  <div ng-controller="ButtonDemoCtrl">
   <form>
-    <button lo-button-clear="clearMe()">Clear</button>
+    <button pf-btn-clear="clearMe()">Clear</button>
     <pre>{{text}}</pre>
   </form>
  </div>
@@ -22,20 +22,20 @@
 
  <file name="script.js">
  function ButtonDemoCtrl($scope) {
-    $scope.text = 'Text before clear.';
+    $scope.text = 'The text visible before clicking on the clear button.';
 
     $scope.clearMe = function() {
-      $scope.text = '';
+      $scope.text = 'Clear button clicked.';
     };
   }
  </file>
 
  </example>
  */
-angular.module('patternfly.buttons', []).directive('loButtonClear', function () {
+angular.module('patternfly.buttons', []).directive('pfBtnClear', function () {
   return {
     scope: {
-      loButtonClear: '&'
+      pfBtnClear: '&'
     },
     restrict: 'A',
     link: function (scope, elem) {
@@ -43,7 +43,7 @@ angular.module('patternfly.buttons', []).directive('loButtonClear', function () 
       elem.attr('type','button');
       elem.bind('click', function() {
         scope.$apply(function() {
-          scope.loButtonClear();
+          scope.pfBtnClear();
         });
       });
     }

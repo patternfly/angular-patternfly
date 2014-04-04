@@ -18,7 +18,7 @@ describe('buttons', function () {
 
     it('should work correctly with default model values', function () {
       $scope.model = false;
-      var btn = compileButton('<button lo-button-clear>click</button>', $scope);
+      var btn = compileButton('<button pf-btn-clear>click</button>', $scope);
       expect(btn).toHaveClass('btn');
       expect(btn).toHaveClass('btn-default');
       expect(btn).toHaveClass('btn-lg');

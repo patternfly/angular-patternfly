@@ -2,7 +2,6 @@
 
 module.exports = function(grunt) {
 
-
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   function init() {
@@ -14,7 +13,8 @@ module.exports = function(grunt) {
             descriptions: {
               'help' : 'Task list helper for your Grunt enabled projects.',
               'clean' : 'Deletes the content of the dist directory.',
-              'build' : 'Builds the project (including documentation) into the dist directory.',
+              'build' : 'Builds the project (including documentation) into the dist directory. You can specify modules to be built as arguments (' +
+                'grunt build:buttons:notification) otherwise all available modules are built.',
               'test' : 'Executes the karma testsuite.',
               'watch' : 'Whenever js source files (from the src directory) change, the tasks executes jshint and documentation build.',
               'ngdocs' : 'Builds documentation into dist/docs.',
@@ -41,10 +41,6 @@ module.exports = function(grunt) {
         }
       },
       connect: {
-        options: {
-          keepalive: true
-        },
-        server: {},
         docs: {
           options: {
             base: 'dist/docs'
@@ -62,7 +58,6 @@ module.exports = function(grunt) {
             ignores: ['**.min.js']
           },
           files: {
-            // TODO make list of modules optional (= specify as args or build all)
             src: 'src/*/*.js'
           }
         }
@@ -99,17 +94,34 @@ module.exports = function(grunt) {
         },
         js: {
           files: ['Gruntfile.js', 'src/*/*.js'],
-          tasks: ['jshint', 'ngdocs'],
-          options: {
-            livereload: true
-          }
+          tasks: ['build']
         }
       }
     });
 
-    grunt.registerTask('build', ['clean', 'jshint:beforeconcat', 'jshint', 'test', 'concat', 'uglify:build', 'ngdocs']);
+    // You can specify which modules to build as arguments of the build task.
+    grunt.registerTask('build', 'Create bootstrap build files', function() {
+      var concatSrc = [];
+
+      if (this.args.length) {
+        this.args.forEach(function(file){
+          if (grunt.file.exists('./src/'+file)){
+            grunt.log.ok('Adding ' + file + ' to the build queue.');
+            concatSrc.push('src/'+file+'/*.js');
+          } else {
+            grunt.fail.warn('Unable to build module \'' + file + '\'. The module doesn\'t exist.');
+          }
+        });
+
+      } else {
+        concatSrc = 'src/*/*.js';
+      }
+
+      grunt.task.run(['clean', 'jshint:beforeconcat', 'jshint', 'test', 'concat', 'uglify:build', 'ngdocs']);
+    });
+
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('ngdocs:view', ['build', 'connect:docs:livereload']);
+    grunt.registerTask('ngdocs:view', ['build', 'connect:docs', 'watch']);
     grunt.registerTask('test', ['karma']);
     grunt.registerTask('help', ['availabletasks']);
 

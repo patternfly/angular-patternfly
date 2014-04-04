@@ -13,6 +13,8 @@ lib-cov
 pids
 logs
 results
+test-results.xml
+dist/docs
 
 node_modules
 lib
