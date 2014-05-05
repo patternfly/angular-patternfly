@@ -8,12 +8,8 @@
   "keywords": [ "angular", "patternfly"],
   "license": "MIT",
   "ignore": [
-    "*",
-    "**/.*",
     "node_modules",
-    "lib",
-    "src",
-    "misc"
+    "lib"
   ],
   "main": ["dist/angular-patternfly.js", "dist/angular-patternfly.min.js"],
   "dependencies": {
