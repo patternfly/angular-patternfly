@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @ngdoc directive
- * @name patternfly.button:loButtonClear
+ * @name patternfly.button:pfButtonClear
  * @element button
  * @function
  *
@@ -14,8 +14,8 @@
  <file name="index.html">
  <div ng-controller="ButtonDemoCtrl">
   <form>
-    <button pf-btn-clear="clearMe()">Clear</button>
     <pre>{{text}}</pre>
+    <button pf-btn-clear="clearMe()">Clear</button>
   </form>
  </div>
  </file>
