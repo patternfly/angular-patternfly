@@ -9,7 +9,7 @@
  * @description
  * Directive used for input validation based on custom function.
  *
- * @param {expression=} pfValidationEnabled If true, the validation is enabled, it is disabled otherwise.
+ * @param {expression=} pfValidationDisabled If true, the validation is disabled, it is enabled otherwise.
  *
  * @example
  <example module="patternfly.validation">
@@ -17,18 +17,35 @@
  <file name="index.html">
    <div ng-controller="ValidationDemoCtrl">
    <form class="form-horizontal">
+
      <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Number:</label>
+       <label class="col-sm-2 control-label" for="message">Initially valid:</label>
        <div class="col-sm-10">
-         <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)" pf-validation-enabled="isValidationEnabled"/>
+         <input class="form-control" type="text" ng-model="myValueValid" pf-validation="isNumber(input)"/>
          <span class="help-block">The value you typed is not a number.</span>
        </div>
      </div>
 
      <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Validation enabled:</label>
+       <label class="col-sm-2 control-label" for="message">Fixed Number:</label>
        <div class="col-sm-10">
-         <input class="form-control" type="checkbox" ng-model="isValidationEnabled"/>
+         <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)"/>
+         <span class="help-block">The value you typed is not a number.</span>
+       </div>
+     </div>
+
+     <div class="form-group">
+       <label class="col-sm-2 control-label" for="message">Number:</label>
+       <div class="col-sm-10">
+         <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)" pf-validation-disabled="isValidationDisabled"/>
+         <span class="help-block">The value you typed is not a number.</span>
+       </div>
+     </div>
+
+     <div class="form-group">
+       <label class="col-sm-2 control-label" for="message">Validation disabled:</label>
+       <div class="col-sm-10">
+         <input class="form-control" type="checkbox" ng-model="isValidationDisabled"/>
        </div>
      </div>
    </form>
@@ -38,10 +55,10 @@
  <file name="script.js">
  function ValidationDemoCtrl($scope) {
     $scope.myValue = "Change this value to be a number";
-    $scope.isValidationEnabled = true;
+    $scope.myValueValid = 42;
+    $scope.isValidationDisabled = false;
 
     $scope.isNumber = function(value) {
-
       if (isNaN(value)){
         return false;
       }
@@ -59,15 +76,16 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
     require: 'ngModel',
     scope: {
       pfValidation: '&',
-      pfValidationEnabled: '='
+      pfValidationDisabled: '='
     },
     link: function (scope, element, attrs, ctrl) {
-      scope.inputCtrl = ctrl;
-      scope.valEnabled = attrs.pfValidationEnabled;
 
-      scope.$watch('pfValidationEnabled', function(newVal){
-        scope.valEnabled = newVal;
-        if (!newVal) {
+      scope.inputCtrl = ctrl;
+      scope.valEnabled = !attrs.pfValidationDisabled;
+
+      scope.$watch('pfValidationDisabled', function(newVal){
+        scope.valEnabled = !newVal;
+        if (newVal) {
           scope.inputCtrl.$setValidity('pfValidation',true);
           toggleErrorClass(false);
         } else {
@@ -95,13 +113,8 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
         }
       });
 
-      scope.$watch('inputCtrl.$modelValue', function(newVal){
-        var valid = !newVal || scope.pfValidation( {'input': newVal} ) || newVal === '';
-        if (scope.valEnabled && !valid){
-          scope.inputCtrl.$setValidity('pfValidation',false);
-        } else {
-          scope.inputCtrl.$setValidity('pfValidation',true);
-        }
+      scope.$watch('inputCtrl.$modelValue', function(){
+        validate();
       });
 
       function validate() {
@@ -110,21 +123,33 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
         var valid = !val || scope.pfValidation({'input':val})  || val === '';
         if (scope.valEnabled && !valid){
           toggleErrorClass(true);
+        } else {
+          toggleErrorClass(false);
         }
       }
 
       function toggleErrorClass(add) {
         var messageElement = element.next();
         var parentElement = element.parent();
+        var hasErrorM = parentElement.hasClass('has-error');
+        var wasHidden = messageElement.hasClass('ng-hide');
 
-        if (add && !parentElement.hasClass('has-error')){
-          parentElement.addClass('has-error');
-          messageElement.removeClass('ng-hide');
+        if (add){
+          if (!hasErrorM) {
+            parentElement.addClass('has-error');
+          }
+          if (wasHidden){
+            messageElement.removeClass('ng-hide');
+          }
         }
 
-        if (!add && parentElement.hasClass('has-error')){
-          parentElement.removeClass('has-error');
-          messageElement.addClass('ng-hide');
+        if (!add){
+          if(hasErrorM) {
+            parentElement.removeClass('has-error');
+          }
+          if (!wasHidden) {
+            messageElement.addClass('ng-hide');
+          }
         }
       }
     }

@@ -57,11 +57,14 @@ angular.module('patternfly.formgroup', []).directive('pfFormGroup', function () 
     link: function (scope, element, attrs, ctrl, transclude) {
 
       if (!attrs.pfId){
-        attrs.pfId = 'pdID' + Math.floor((Math.random()*1000000)+1);
+        attrs.pfId = 'pfID' + Math.floor((Math.random()*1000000)+1);
       }
 
       if (!attrs.pfLabelClass) {
         attrs.pfLabelClass = 'col-sm-2';
+      }
+
+      if (!attrs.pfInputClass) {
         attrs.pfInputClass = 'col-sm-10';
       }
 
@@ -72,15 +75,9 @@ angular.module('patternfly.formgroup', []).directive('pfFormGroup', function () 
       '</div>');
 
       transclude(scope, function (clone) {
-        console.log('transclude should do nothing in element.');
         var transcludeDiv = angular.element(element.find('div').get(1));
-
-        transcludeDiv.addClass('col-sm-10');
-
         transcludeDiv.append(clone);
-
         var transcludeInput = angular.element(transcludeDiv.find('input').get(0));
-
         transcludeInput.addClass('form-control');
         transcludeInput.attr('id', attrs.pfId);
       });

@@ -26,14 +26,14 @@
        <div class="form-group">
          <label class="col-sm-2 control-label" for="i2">Another unfocused:</label>
          <div class="col-sm-10">
-           <input class="form-control" id="i1" ng-model="i2"></input>
+           <input class="form-control" id="i2" ng-model="i2"></input>
          </div>
        </div>
 
        <div class="form-group">
          <label class="col-sm-2 control-label" for="i3">Focused input:</label>
          <div class="col-sm-10">
-           <input class="form-control" id="i1" ng-model="i3" autofocus></input>
+           <input class="form-control" id="i3" ng-model="i3" autofocus></input>
          </div>
        </div>
 
@@ -52,7 +52,7 @@ angular.module('patternfly.autofocus', []).directive('pfAutofocus', function($ti
         if (elems && elems.length > 0) {
           elems[0].focus();
         }
-      }, 150);
+      }, 0);
     }
   };
 })
@@ -103,11 +103,9 @@ angular.module('patternfly.autofocus', []).directive('pfAutofocus', function($ti
       scope.$watch(attrs.pfFocused, function(newValue) {
         $timeout(function () {
           if (newValue) {
+            element[0].focus();
             if (element[0].select) {
               element[0].select();
-            }
-            else {
-              element[0].focus();
             }
           }
         });

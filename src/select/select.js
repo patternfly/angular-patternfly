@@ -31,7 +31,7 @@
      <div class="col-sm-10">
        <select pf-select ng-model="fruit" id="fruit">
          <option value="orange">Orange</option>
-         <option value="apple" ng-selected="true">Apple</option>
+         <option value="apple" ng-selected="true" selected>Apple</option>
          <option value="banana">Banana</option>
        </select>
      </div>
@@ -41,21 +41,12 @@
      <label class="col-sm-2 control-label" for="drink">Preferred drink:</label>
      <div class="col-sm-10">
        <select pf-select ng-model="drink" id="drink" ng-options="o as o for o in drinks">
-         <option>No drink selected</option>
+         <option value="">No drink selected</option>
        </select>
      </div>
    </div>
 
- <div class="form-group">
- <label class="col-sm-2 control-label" for="drink"x>Preferred drink:</label>
- <div class="col-sm-10">
- <select ng-model="drinkx" id="drinkx" ng-options="o as o for o in drinks">
- <option>No drink selected</option>
- </select>
- </div>
- </div>
-
-   </form>
+ </form>
 
  <p>Your preferred pet is {{pet}}.</p>
 
