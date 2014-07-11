@@ -9,30 +9,6 @@ describe('pf-autofocus', function () {
     $timeout = _$timeout_;
   }));
 
-  describe('Input with pf-autofocus directive', function () {
-
-    var compileElement = function (markup, scope) {
-      var el = $compile(markup)(scope);
-      scope.$digest();
-      return el;
-    };
-
-    it('should be focused', function () {
-      var page = compileElement('<form><input id="i1" type="text"/></form><form pf-autofocus><input id="i2" autofocus type="text"/></form>', $scope);
-
-      body = angular.element(document.body);
-      body.html(page);
-
-      $timeout.flush();
-
-      var eUnfocused = page.find("#i1");
-      var eFocused = page.find("#i2");
-
-      expect(eFocused[0] === document.activeElement).toBe(true);
-      expect(eUnfocused[0] === document.activeElement).toBe(false);
-    });
-  });
-
   describe('Input with pf-focused directive', function () {
 
     var compileElement = function (markup, scope) {
