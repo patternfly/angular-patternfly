@@ -613,12 +613,10 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       }
 
       scope.$watch('inputCtrl.$valid', function(isValid){
-        if (scope.inputCtrl.$dirty) {
-          if (isValid) {
-            toggleErrorClass(false);
-          } else {
-            toggleErrorClass(true);
-          }
+        if (isValid) {
+          toggleErrorClass(false);
+        } else {
+          toggleErrorClass(true);
         }
       });
 
@@ -629,7 +627,13 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       function validate() {
         var val = scope.inputCtrl.$modelValue;
 
-        var valid = !val || scope.pfValidation({'input':val})  || val === '';
+        var valFunc = scope.pfValidation({'input':val});
+
+        if(!attrs.pfValidation){
+          valFunc = true;
+        }
+        var valid = !val || valFunc  || val === '';
+
         if (scope.valEnabled && !valid){
           toggleErrorClass(true);
         } else {

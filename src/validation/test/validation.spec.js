@@ -12,7 +12,7 @@ describe('pf-validation', function () {
   describe('Input with pf-validation directive', function () {
 
     var compileInput = function (markup, scope) {
-      var pre = '<form class="form-horizontal"><div class="form-group">' +
+      var pre = '<form class="form-horizontal" id="myForm" name="myForm"><div class="form-group">' +
         '<label class="col-sm-2 control-label" for="foo">Number:</label><div class="col-sm-10">';
       var post = '<span class="help-block">The value you typed is not a number.</span>' +
         '</div></div></form>';
@@ -129,5 +129,23 @@ describe('pf-validation', function () {
       expect(inputPage.find('span')).toHaveClass('ng-hide');
     });
 
+    it('should work without validation function', function () {
+      $scope.bar = 'abcd';
+      $scope.switch = true;
+
+      $scope.foo = validationFunc;
+
+      var inputPage = compileInput('<input type="text" pf-validation ng-model="bar" id="foo" name="foo"/>', $scope);
+
+      expect(inputPage.find('div.col-sm-10')).not.toHaveClass('has-error');
+      expect(inputPage.find('span')).toHaveClass('ng-hide');
+
+      $scope.$apply(function() {
+        $scope.myForm.foo.$setValidity('foo', false);
+      });
+
+      expect(inputPage.find('div.col-sm-10')).toHaveClass('has-error');
+      expect(inputPage.find('span')).not.toHaveClass('ng-hide');
+    });
   });
 });
