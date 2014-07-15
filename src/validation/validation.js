@@ -138,6 +138,8 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
         var hasErrorM = parentElement.hasClass('has-error');
         var wasHidden = messageElement.hasClass('ng-hide');
 
+        scope.inputCtrl.$setValidity('pf-validation', !add);
+
         if (add){
           if (!hasErrorM) {
             parentElement.addClass('has-error');

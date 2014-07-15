@@ -79,6 +79,30 @@ describe('pf-validation', function () {
       expect(inputPage.find('span')).toHaveClass('ng-hide');
     });
 
+    it('should set the $valid property properly', function () {
+
+      $scope.bar = 'abc';
+
+      $scope.foo = validationFunc;
+
+      var inputPage = compileInput('<input type="text" pf-validation="foo(input)" ng-model="bar" id="foo" name="foo"/>', $scope);
+
+      expect($scope.myForm.foo.$valid).toBe(true);
+
+      $scope.$apply(function() {
+        $scope.bar = 'abcd';
+      });
+
+      expect($scope.myForm.foo.$valid).toBe(false);
+
+      $scope.$apply(function() {
+        $scope.bar = 'abc';
+      });
+
+      expect($scope.myForm.foo.$valid).toBe(true);
+
+    });
+
     it('should evaluate ng-model when enabled initially', function () {
       $scope.bar = 'abcd';
       $scope.switch = false;
