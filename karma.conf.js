@@ -4,13 +4,14 @@ module.exports = function(config) {
     // base path, that will be used to resolve files and exclude
     //basePath: '.',
 
-    frameworks: ['jasmine', 'commonjs'],
+    frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
     files: [
-      'misc/test-lib/jquery-1.11.0.min.js',
-      'misc/test-lib/angular.js',
-      'misc/test-lib/angular-mocks.js',
+      'lib/patternfly/components/jquery/jquery.js',
+      'lib/patternfly/components/bootstrap-select/bootstrap-select.js',
+      'lib/angular/angular.js',
+      'lib/angular-mocks/angular-mocks.js',
       'misc/test-lib/helpers.js',
       'src/**/*.js'
     ],
@@ -19,12 +20,12 @@ module.exports = function(config) {
     exclude: [
       'client/main.js'
     ],
-
+/*
     preprocessors: {
       'client/*.js': ['commonjs'],
       'test/client/*.js': ['commonjs']
     },
-
+*/
     // use dots reporter, as travis terminal does not support escaping sequences
     // possible values: 'dots', 'progress'
     // CLI --reporters progress
@@ -80,7 +81,6 @@ module.exports = function(config) {
       'karma-chrome-launcher',
       'karma-firefox-launcher',
       'karma-junit-reporter',
-      'karma-commonjs',
       'karma-phantomjs-launcher'
     ]
   });

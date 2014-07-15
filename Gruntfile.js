@@ -47,6 +47,20 @@ module.exports = function(grunt) {
           }
         }
       },
+      copy: {
+        docdata: {
+          cwd: 'lib/patternfly/dist',
+          src: [ 'fonts/*', 'img/*' ],
+          dest: 'dist/docs',
+          expand: true
+        },
+        fa: {
+          cwd: 'lib/patternfly/',
+          src: [ 'components/font-awesome/**' ],
+          dest: 'dist/docs',
+          expand: true
+        }
+      },
       jshint: {
         files: ['Gruntfile.js', 'src/*/*.js'],
         options: {
@@ -67,13 +81,21 @@ module.exports = function(grunt) {
           configFile: 'karma.conf.js',
           singleRun: true,
           browsers: ['PhantomJS']
+          //browsers: ['Chrome']
         }
       },
       ngdocs: {
         options: {
+          title: 'Angular-Patternfly Documentation',
           dest: 'dist/docs',
-          scripts: ['angular.js', 'dist/angular-patternfly.min.js'],
-          html5Mode: false
+          scripts: ['lib/patternfly/components/jquery/jquery.js',
+            'lib/patternfly/components/bootstrap/dist/js/bootstrap.js',
+            'lib/patternfly/components/bootstrap-select/bootstrap-select.js',
+            'angular.js',
+            'dist/angular-patternfly.js',
+            'lib/patternfly/dist/js/patternfly.js'],
+          html5Mode: false,
+          styles: ['lib/patternfly/dist/css/patternfly.css']
         },
         all: ['src/*/*.js']
       },
@@ -117,7 +139,7 @@ module.exports = function(grunt) {
         concatSrc = 'src/*/*.js';
       }
 
-      grunt.task.run(['clean', 'jshint:beforeconcat', 'jshint', 'test', 'concat', 'uglify:build', 'ngdocs']);
+      grunt.task.run(['clean', 'jshint:beforeconcat', 'jshint', 'test', 'concat', 'uglify:build', 'ngdocs', 'copy']);
     });
 
     grunt.registerTask('default', ['build']);
