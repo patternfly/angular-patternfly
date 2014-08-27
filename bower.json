@@ -17,7 +17,11 @@
     ".gitignore",
     ".jshintrc",
     "karma.conf.js",
-    "server.js"
+    "server.js",
+    "misc",
+    "src",
+    "README.md",
+    "bower.json"
   ],
   "main": [
     "dist/angular-patternfly.js",
