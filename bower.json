@@ -1,27 +1,41 @@
 {
   "name": "angular-patternfly",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "authors": [
-    "vrockai@redhat.com"
+    "Red Hat"
   ],
-  "description": "Angular extension of the Patternfly project.",
+  "description": "Angular extension of the PatternFly project.",
   "keywords": [ "angular", "patternfly"],
-  "license": "MIT",
+  "license": "EPL-1.0",
   "ignore": [
     "node_modules",
-    "lib"
+    "lib",
+    "Gruntfile.js",
+    "package.json",
+    ".bowerrc",
+    ".editorconfig",
+    ".gitignore",
+    ".jshintrc",
+    "karma.conf.js",
+    "server.js"
   ],
-  "main": ["dist/angular-patternfly.js", "dist/angular-patternfly.min.js"],
+  "main": [
+    "dist/angular-patternfly.js",
+    "dist/angular-patternfly.min.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/patternfly/angular-patternfly.git"
+  },
   "dependencies": {
-    "angular":">=1.2.16",
+    "angular": ">=1.2.16",
     "patternfly": "1.0.3"
   },
   "devDependencies": {
-    "angular-animate":">=1.2.16",
-    "angular-mocks":">=1.2.16",
-    "angular-sanitize":">=1.2.16",
-    "angular-touch":">=1.2.16",
-    "angular-route":">=1.2.16"
-  },
-  "private": true
+    "angular-animate": ">=1.2.16",
+    "angular-mocks": ">=1.2.16",
+    "angular-sanitize": ">=1.2.16",
+    "angular-touch": ">=1.2.16",
+    "angular-route": ">=1.2.16"
+  }
 }

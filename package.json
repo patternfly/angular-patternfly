@@ -1,8 +1,8 @@
 {
-  "author": "Viliam Rockai",
+  "author": "Red Hat",
   "name": "angular-patternfly",
-  "version": "0.0.0",
-  "description": "Angular extension of the Patternfly project.",
+  "version": "0.0.1",
+  "description": "Angular extension of the PatternFly project.",
   "homepage": "https://github.com/patternfly/angular-patternfly",
   "dependencies": {},
   "devDependencies": {
