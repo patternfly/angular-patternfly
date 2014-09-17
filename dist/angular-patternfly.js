@@ -487,7 +487,10 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
     link: function (scope, element, attrs, ngModel) {
       element.selectpicker();
 
-      ngModel.$render = function() {
+      var $render = ngModel.$render;
+
+      ngModel.$render = function(){
+        $render.apply(this, arguments);
         $timeout(function() {
           element.selectpicker('refresh');
         },0,false);
