@@ -32,14 +32,14 @@
     "url": "git://github.com/patternfly/angular-patternfly.git"
   },
   "dependencies": {
-    "angular": ">=1.2.16",
+    "angular": "1.2.25",
     "patternfly": "1.0.3"
   },
   "devDependencies": {
-    "angular-animate": ">=1.2.16",
-    "angular-mocks": ">=1.2.16",
-    "angular-sanitize": ">=1.2.16",
-    "angular-touch": ">=1.2.16",
-    "angular-route": ">=1.2.16"
+    "angular-animate": "1.2.25",
+    "angular-mocks": "1.2.25",
+    "angular-sanitize": "1.2.25",
+    "angular-touch": "1.2.25",
+    "angular-route": "1.2.25"
   }
 }
