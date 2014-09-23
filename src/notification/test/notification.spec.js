@@ -49,7 +49,7 @@ describe('pf-notification', function () {
       expect($scope.notifications.data[4].message).toBe('error (http)');
 
       $timeout.flush();
-      expect($scope.notifications.data.length).toBe(0);
+      expect($scope.notifications.data.length).toBe(2);
     });
   });
 
@@ -83,7 +83,7 @@ describe('pf-notification', function () {
       expect(iE[0]).toBeTruthy();
       expect(iW[0]).toBeTruthy();
 
-      expect(alertElement.text()).toBe('head1 defaultMes');
+      expect(alertElement.text()).toBe('×Closehead1 defaultMes');
       expect(alertElement).toHaveClass('alert');
       expect(alertElement).toHaveClass('alert-success');
       expect(iconOk).not.toHaveClass('ng-hide');
@@ -132,19 +132,19 @@ describe('pf-notification', function () {
 
       var alertElement = angular.element(notifyElement.children().get(0));
 
-      expect(alertElement.text()).toBe('head1 defaultMes');
+      expect(alertElement.text()).toBe('×Closehead1 defaultMes');
 
       $scope.$apply(function(){
         $scope.header = "head2";
       });
 
-      expect(alertElement.text()).toBe('head2 defaultMes');
+      expect(alertElement.text()).toBe('×Closehead2 defaultMes');
 
       $scope.$apply(function(){
         $scope.message = "defaultMes2";
       });
 
-      expect(alertElement.text()).toBe('head2 defaultMes2');
+      expect(alertElement.text()).toBe('×Closehead2 defaultMes2');
 
     });
   });
