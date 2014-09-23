@@ -20,10 +20,15 @@
  * Set the verbose mode to on (default) or off. During the verbose mode, each notification is printed in the console,
  * too. This is done using the default angular.js $log service.
  *
+ * ### Notifications.setPersist
+ * Sets persist option for particular modes. Notification with persistent mode won't be dismissed after delay, but has
+ * to be closed manually with the close button. By default, the "error" and "httpError" modes are set to persistent.
+ * The input is an object in format {mode: persistValue}.
+ *
  * ## Configuration Example
  * ```js
  * angular.module('myApp', []).config(function(NotificationsProvider){
- *   NotificationsProvider.setDelay(10000).setVerbose(false);
+ *   NotificationsProvider.setDelay(10000).setVerbose(false).setPersist({'error': true, 'httpError': true, 'warn': true});
  * });
  * ```
  * @example
@@ -82,6 +87,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
   this.delay = 5000;
   this.verbose = true;
   this.notifications = {};
+  this.persist = {'error': true, 'httpError': true};
 
   this.setDelay = function(delay){
     this.delay = delay;
@@ -93,11 +99,16 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     return this;
   };
 
+  this.setPersist = function(persist){
+    this.persist = persist;
+  };
+
   this.$get = ['$rootScope', '$timeout', '$log', function($rootScope, $timeout, $log) {
 
     var delay = this.delay;
     var notifications = this.notifications;
     var verbose = this.verbose;
+    var persist = this.persist;
 
     $rootScope.notifications = {};
     $rootScope.notifications.data = [];
@@ -131,37 +142,29 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       scheduleMessagePop();
     };
 
-    notifications.info = function(message) {
-      notifications.message('info', 'Info!', message);
-      if (verbose) {
-        $log.info(message);
-      }
+    var modes = {
+      info: { type: 'info', header: 'Info!', log: 'info'},
+      success: { type: 'success', header: 'Success!', log: 'info'},
+      error: { type: 'danger', header: 'Error!', log: 'error'},
+      warn: { type: 'warning', header: 'Warning!', log: 'warn'}
     };
 
-    notifications.success = function(message) {
-      notifications.message('success', 'Success!', message);
-      if (verbose) {
-        $log.info(message);
-      }
-    };
+    function createNotifyMethod(mode){
+      return function (message) {
+        notifications.message(modes[mode].type, modes[mode].header, message, persist[mode]);
+        if (verbose) {
+          $log[modes[mode].log](message);
+        }
+      };
+    }
 
-    notifications.error = function(message) {
-      notifications.message('danger', 'Error!', message, true);
-      if (verbose) {
-        $log.error(message);
-      }
-    };
-
-    notifications.warn = function(message) {
-      notifications.message('warning', 'Warning!', message);
-      if (verbose) {
-        $log.warn(message);
-      }
-    };
+    for (var mode in modes) {
+      notifications[mode] = createNotifyMethod(mode);
+    }
 
     notifications.httpError = function(message, httpResponse) {
       message += ' (' + (httpResponse.data.message || httpResponse.data.cause || httpResponse.data.cause || httpResponse.data.errorMessage) + ')';
-      notifications.message('danger', 'Error!', message, true);
+      notifications.message('danger', 'Error!', message, persist.httpError);
       if (verbose) {
         $log.error(message);
       }
