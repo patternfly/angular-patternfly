@@ -9,11 +9,10 @@
  *
  * ## Configuring the service
  *
- * You can configure the service with two methods. You can set the custom delay with the setDelay method and
- * set the verbose mode with the setVerbose method.
+ * You can configure the service with: setDelay, setVerbose and setPersist.
  *
  * ### Notifications.setDelay
- * Set the delay after which the notification is dismissed. The argument of this method is delay in miliseconds. Default
+ * Set the delay after which the notification is dismissed. The argument of this method expects miliseconds. Default
  * delay is 5000 ms.
  *
  * ### Notifications.setVerbose
