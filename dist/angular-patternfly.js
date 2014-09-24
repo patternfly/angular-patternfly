@@ -148,6 +148,29 @@ angular.module('patternfly.formgroup', []).directive('pfFormGroup', function () 
  * @description
  * Notification service used to notify user about important events in the application.
  *
+ * ## Configuring the service
+ *
+ * You can configure the service with: setDelay, setVerbose and setPersist.
+ *
+ * ### Notifications.setDelay
+ * Set the delay after which the notification is dismissed. The argument of this method expects miliseconds. Default
+ * delay is 5000 ms.
+ *
+ * ### Notifications.setVerbose
+ * Set the verbose mode to on (default) or off. During the verbose mode, each notification is printed in the console,
+ * too. This is done using the default angular.js $log service.
+ *
+ * ### Notifications.setPersist
+ * Sets persist option for particular modes. Notification with persistent mode won't be dismissed after delay, but has
+ * to be closed manually with the close button. By default, the "error" and "httpError" modes are set to persistent.
+ * The input is an object in format {mode: persistValue}.
+ *
+ * ## Configuration Example
+ * ```js
+ * angular.module('myApp', []).config(function(NotificationsProvider){
+ *   NotificationsProvider.setDelay(10000).setVerbose(false).setPersist({'error': true, 'httpError': true, 'warn': true});
+ * });
+ * ```
  * @example
  <example module="patternfly.notification">
 
@@ -198,66 +221,98 @@ angular.module('patternfly.formgroup', []).directive('pfFormGroup', function () 
 
  </example>
  */
-angular.module('patternfly.notification', []).factory('Notifications', function($rootScope, $timeout, $log) {
+angular.module('patternfly.notification', []).provider('Notifications', function() {
   // time (in ms) the notifications are shown
-  var delay = 5000;
 
-  var notifications = {};
+  this.delay = 5000;
+  this.verbose = true;
+  this.notifications = {};
+  this.persist = {'error': true, 'httpError': true};
 
-  $rootScope.notifications = {};
-  $rootScope.notifications.data = [];
-
-  $rootScope.notifications.remove = function(index){
-    $rootScope.notifications.data.splice(index,1);
+  this.setDelay = function(delay){
+    this.delay = delay;
+    return this;
   };
 
-  var scheduleMessagePop = function() {
-    $timeout(function() {
-      $rootScope.notifications.data.splice(0,1);
-    }, delay);
+  this.setVerbose = function(verbose){
+    this.verbose = verbose;
+    return this;
   };
 
-  if (!$rootScope.notifications) {
+  this.setPersist = function(persist){
+    this.persist = persist;
+  };
+
+  this.$get = ['$rootScope', '$timeout', '$log', function($rootScope, $timeout, $log) {
+
+    var delay = this.delay;
+    var notifications = this.notifications;
+    var verbose = this.verbose;
+    var persist = this.persist;
+
+    $rootScope.notifications = {};
     $rootScope.notifications.data = [];
-  }
 
-  notifications.message = function(type, header, message) {
-    $rootScope.notifications.data.push({
-      type : type,
-      header: header,
-      message : message
-    });
+    $rootScope.notifications.remove = function(index){
+      $rootScope.notifications.data.splice(index,1);
+    };
 
-    scheduleMessagePop();
-  };
+    var scheduleMessagePop = function() {
+      $timeout(function() {
+        for (var i = 0; i < $rootScope.notifications.data.length; i++){
+          if (!$rootScope.notifications.data[i].isPersistent){
+            $rootScope.notifications.data.splice(i,1);
+          }
+        }
+      }, delay);
+    };
 
-  notifications.info = function(message) {
-    notifications.message('info', 'Info!', message);
-    $log.info(message);
-  };
+    if (!$rootScope.notifications) {
+      $rootScope.notifications.data = [];
+    }
 
-  notifications.success = function(message) {
-    notifications.message('success', 'Success!', message);
-    $log.info(message);
-  };
+    notifications.message = function(type, header, message, isPersistent) {
+      $rootScope.notifications.data.push({
+        type : type,
+        header: header,
+        message : message,
+        isPersistent: isPersistent
+      });
 
-  notifications.error = function(message) {
-    notifications.message('danger', 'Error!', message);
-    $log.error(message);
-  };
+      scheduleMessagePop();
+    };
 
-  notifications.warn = function(message) {
-    notifications.message('warning', 'Warning!', message);
-    $log.warn(message);
-  };
+    var modes = {
+      info: { type: 'info', header: 'Info!', log: 'info'},
+      success: { type: 'success', header: 'Success!', log: 'info'},
+      error: { type: 'danger', header: 'Error!', log: 'error'},
+      warn: { type: 'warning', header: 'Warning!', log: 'warn'}
+    };
 
-  notifications.httpError = function(message, httpResponse) {
-    message += ' (' + (httpResponse.data.message || httpResponse.data.cause || httpResponse.data.cause || httpResponse.data.errorMessage) + ')';
-    notifications.message('danger', 'Error!', message);
-    $log.error(message);
-  };
+    function createNotifyMethod(mode){
+      return function (message) {
+        notifications.message(modes[mode].type, modes[mode].header, message, persist[mode]);
+        if (verbose) {
+          $log[modes[mode].log](message);
+        }
+      };
+    }
 
-  return notifications;
+    for (var mode in modes) {
+      notifications[mode] = createNotifyMethod(mode);
+    }
+
+    notifications.httpError = function(message, httpResponse) {
+      message += ' (' + (httpResponse.data.message || httpResponse.data.cause || httpResponse.data.cause || httpResponse.data.errorMessage) + ')';
+      notifications.message('danger', 'Error!', message, persist.httpError);
+      if (verbose) {
+        $log.error(message);
+      }
+    };
+
+    return notifications;
+  }];
+
 })
 
 /**
@@ -269,6 +324,7 @@ angular.module('patternfly.notification', []).factory('Notifications', function(
  * @param {expression=} pfNotificationType The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'.
  * @param {expression=} pfNotificationMessage The main text message of the notification.
  * @param {expression=} pfNotificationHeader The header text of the notification.
+ * @param {expression=} pfNotificationPersistent The notification won't disappear after delay timeout, but has to be closed manually with the close button.
  *
  * @description
  * The main visual element of the notification message.
@@ -281,7 +337,8 @@ angular.module('patternfly.notification', []).factory('Notifications', function(
 
      <pf-notification pf-notification-type="type"
                       pf-notification-header="header"
-                      pf-notification-message="message">
+                      pf-notification-message="message"
+                      pf-notification-persistent="isPersistent">
      </pf-notification>
 
      <form class="form-horizontal">
@@ -303,6 +360,12 @@ angular.module('patternfly.notification', []).factory('Notifications', function(
           <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
          </div>
        </div>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="type">Persistent:</label>
+         <div class="col-sm-10">
+          <input type="checkbox" ng-model="isPersistent"></input>
+         </div>
+       </div>
      </form>
    </div>
  </file>
@@ -311,6 +374,7 @@ angular.module('patternfly.notification', []).factory('Notifications', function(
  function NotificationDemoCtrl($scope) {
     $scope.types = ['success','info','danger', 'warning'];
     $scope.type = $scope.types[0];
+    $scope.isPersistent = false;
 
     $scope.header = 'Default Header.';
     $scope.message = 'Default Message.';
@@ -324,10 +388,16 @@ angular.module('patternfly.notification', []).factory('Notifications', function(
     scope: {
       'pfNotificationType': '=',
       'pfNotificationMessage': '=',
-      'pfNotificationHeader': '='
+      'pfNotificationHeader': '=',
+      'pfNotificationPersistent': '=',
+      'pfNotificationIndex': '='
     },
     restrict: 'E',
-    template: '<div class="alert alert-{{pfNotificationType}}" ng-click="notifications.remove($index)">' +
+    template: '<div class="alert alert-{{pfNotificationType}}">' +
+                '<button ng-show="pfNotificationPersistent" type="button" class="close" ' +
+                'ng-click="$parent.notifications.remove($index)">' +
+                  '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>' +
+                '</button>' +
                 '<span class="pficon pficon-ok" ng-show="pfNotificationType == \'success\'"></span>' +
                 '<span class="pficon pficon-info" ng-show="pfNotificationType == \'info\'"></span>' +
                 '<span class="pficon-layered" ng-show="pfNotificationType == \'danger\'">' +
@@ -410,12 +480,15 @@ angular.module('patternfly.notification', []).factory('Notifications', function(
                 '<div ng-repeat="notification in notifications.data">' +
                   '<pf-notification pf-notification-type="notification.type" ' +
                                    'pf-notification-header="notification.header" ' +
-                                   'pf-notification-message="notification.message">' +
+                                   'pf-notification-message="notification.message" ' +
+                                   'pf-notification-persistent="notification.isPersistent"' +
+                                   'pf-notification-index="$index">' +
                   '</pf-notification>' +
                 '</div>' +
               '</div>'
   };
-});;'use strict';
+});
+;'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.select:pfSelect
