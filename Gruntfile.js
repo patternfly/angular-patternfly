@@ -29,6 +29,7 @@ module.exports = function(grunt) {
       },
       clean: {
         docs: ['dist/docs'],
+        templates: ['dist/templates.js'],
         all: ['dist/*']
       },
       concat: {
@@ -36,7 +37,7 @@ module.exports = function(grunt) {
           separator: ';'
         },
         dist: {
-          src: 'src/*/*.js',
+          src: ['src/**/*.module.js', 'src/**/*.js', 'dist/templates.js'],
           dest: 'dist/angular-patternfly.js'
         }
       },
@@ -79,7 +80,7 @@ module.exports = function(grunt) {
         }
       },
       jshint: {
-        files: ['Gruntfile.js', 'src/*/*.js'],
+        files: ['Gruntfile.js', 'src/**/*.js'],
         options: {
           jshintrc: '.jshintrc'
         },
@@ -89,16 +90,15 @@ module.exports = function(grunt) {
             ignores: ['**.min.js']
           },
           files: {
-            src: 'src/*/*.js'
+            src: 'src/**/*.js'
           }
         }
       },
       karma: {
         unit: {
-          configFile: 'karma.conf.js',
+          configFile: 'test/karma.conf.js',
           singleRun: true,
           browsers: ['PhantomJS']
-          //browsers: ['Chrome']
         }
       },
       ngdocs: {
@@ -114,7 +114,14 @@ module.exports = function(grunt) {
           html5Mode: false,
           styles: ['lib/patternfly/dist/css/patternfly.css']
         },
-        all: ['src/*/*.js']
+        all: ['src/**/*.js']
+      },
+      ngtemplates: {
+        'patternfly.notification': {
+          cwd: 'src/',
+          src: [ 'notification/**/*.html' ],
+          dest: 'dist/templates.js'
+        }
       },
       uglify: {
         options: {
@@ -132,7 +139,7 @@ module.exports = function(grunt) {
           tasks: ['jshint']
         },
         js: {
-          files: ['Gruntfile.js', 'src/*/*.js'],
+          files: ['Gruntfile.js', 'src/**/*.js'],
           tasks: ['build']
         }
       }
@@ -153,10 +160,10 @@ module.exports = function(grunt) {
         });
 
       } else {
-        concatSrc = 'src/*/*.js';
+        concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'jshint:beforeconcat', 'lint', 'test', 'concat', 'uglify:build', 'ngdocs', 'copy']);
+      grunt.task.run(['clean', 'jshint:beforeconcat', 'lint', 'test', 'ngtemplates', 'concat', 'uglify:build', 'ngdocs', 'copy', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);

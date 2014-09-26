@@ -8,6 +8,7 @@
   "devDependencies": {
     "express": "3.4.4",
     "grunt": "0.4.2",
+    "grunt-angular-templates": "0.5.7",
     "grunt-available-tasks": "0.4.3",
     "grunt-contrib-clean": "0.4.1",
     "grunt-contrib-concat": "0.3.0",
@@ -24,6 +25,7 @@
     "karma": "0.12.23",
     "karma-jasmine": "0.2.2",
     "karma-junit-reporter": "0.2.2",
+    "karma-ng-html2js-preprocessor": "~0.1",
     "karma-phantomjs-launcher": "0.1.4",
     "matchdep": "0.3.0"
   },

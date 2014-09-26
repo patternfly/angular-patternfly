@@ -2,7 +2,7 @@
 module.exports = function(config) {
   config.set({
     // base path, that will be used to resolve files and exclude
-    //basePath: '.',
+    basePath: '../',
 
     frameworks: ['jasmine'],
 
@@ -13,19 +13,25 @@ module.exports = function(config) {
       'lib/angular/angular.js',
       'lib/angular-mocks/angular-mocks.js',
       'misc/test-lib/helpers.js',
-      'src/**/*.js'
+      'src/**/*.module.js',
+      'src/**/*.js',
+      'src/**/*.html',
+      'test/**/*.spec.js'
     ],
 
     // list of files to exclude
     exclude: [
       'client/main.js'
     ],
-/*
+
     preprocessors: {
-      'client/*.js': ['commonjs'],
-      'test/client/*.js': ['commonjs']
+      'src/**/*.html': 'ng-html2js'
     },
-*/
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'src/'
+    },
+
     // use dots reporter, as travis terminal does not support escaping sequences
     // possible values: 'dots', 'progress'
     // CLI --reporters progress
@@ -33,7 +39,7 @@ module.exports = function(config) {
 
     junitReporter: {
       // will be resolved to basePath (in the same way as files/exclude patterns)
-      outputFile: 'test-results.xml'
+      outputFile: 'test/test-results.xml'
     },
 
     // web server port
@@ -47,7 +53,7 @@ module.exports = function(config) {
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     // CLI --log-level debug
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_WARN,
 
     // enable / disable watching file and executing tests whenever any file changes
     // CLI --auto-watch --no-auto-watch
@@ -75,13 +81,5 @@ module.exports = function(config) {
     // report which specs are slower than 500ms
     // CLI --report-slower-than 500
     reportSlowerThan: 500,
-
-    plugins: [
-      'karma-jasmine',
-      'karma-chrome-launcher',
-      'karma-firefox-launcher',
-      'karma-junit-reporter',
-      'karma-phantomjs-launcher'
-    ]
   });
 };

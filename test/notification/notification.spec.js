@@ -2,7 +2,12 @@ describe('pf-notification', function () {
 
   var $scope, $compile, Notifications, $timeout;
 
-  beforeEach(module('patternfly.notification'));
+  beforeEach(module(
+    'patternfly.notification',
+    'notification/views/notification.html',
+    'notification/views/notification-list.html'
+  ));
+
   beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _Notifications_) {
     $scope = _$rootScope_;
     $compile = _$compile_;
@@ -83,7 +88,8 @@ describe('pf-notification', function () {
       expect(iE[0]).toBeTruthy();
       expect(iW[0]).toBeTruthy();
 
-      expect(alertElement.text()).toBe('×Closehead1 defaultMes');
+      expect(alertElement.text()).toContain('×Close');
+      expect(alertElement.text()).toContain('head1 defaultMes');
       expect(alertElement).toHaveClass('alert');
       expect(alertElement).toHaveClass('alert-success');
       expect(iconOk).not.toHaveClass('ng-hide');
@@ -132,19 +138,22 @@ describe('pf-notification', function () {
 
       var alertElement = angular.element(notifyElement.children().get(0));
 
-      expect(alertElement.text()).toBe('×Closehead1 defaultMes');
+      expect(alertElement.text()).toContain('×Close');
+      expect(alertElement.text()).toContain('head1 defaultMes');
 
       $scope.$apply(function(){
         $scope.header = "head2";
       });
 
-      expect(alertElement.text()).toBe('×Closehead2 defaultMes');
+      expect(alertElement.text()).toContain('×Close');
+      expect(alertElement.text()).toContain('head2 defaultMes');
 
       $scope.$apply(function(){
         $scope.message = "defaultMes2";
       });
 
-      expect(alertElement.text()).toBe('×Closehead2 defaultMes2');
+      expect(alertElement.text()).toContain('×Close');
+      expect(alertElement.text()).toContain('head2 defaultMes2');
 
     });
   });

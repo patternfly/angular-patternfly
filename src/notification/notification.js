@@ -252,23 +252,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       'pfNotificationIndex': '='
     },
     restrict: 'E',
-    template: '<div class="alert alert-{{pfNotificationType}}">' +
-                '<button ng-show="pfNotificationPersistent" type="button" class="close" ' +
-                'ng-click="$parent.notifications.remove($index)">' +
-                  '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>' +
-                '</button>' +
-                '<span class="pficon pficon-ok" ng-show="pfNotificationType == \'success\'"></span>' +
-                '<span class="pficon pficon-info" ng-show="pfNotificationType == \'info\'"></span>' +
-                '<span class="pficon-layered" ng-show="pfNotificationType == \'danger\'">' +
-                  '<span class="pficon pficon-error-octagon"></span>' +
-                  '<span class="pficon pficon-error-exclamation"></span>' +
-                '</span>' +
-                '<span class="pficon-layered" ng-show="pfNotificationType == \'warning\'">' +
-                  '<span class="pficon pficon-warning-triangle"></span>' +
-                  '<span class="pficon pficon-warning-exclamation"></span>' +
-                '</span>' +
-                '<strong>{{pfNotificationHeader}}</strong> {{pfNotificationMessage}}' +
-              '</div>'
+    templateUrl: 'notification/views/notification.html'
   };
 })
 /**
@@ -335,15 +319,6 @@ angular.module('patternfly.notification', []).provider('Notifications', function
 .directive('pfNotificationList', function () {
   return {
     restrict: 'E',
-    template: '<div data-ng-show="notifications.data.length > 0">' +
-                '<div ng-repeat="notification in notifications.data">' +
-                  '<pf-notification pf-notification-type="notification.type" ' +
-                                   'pf-notification-header="notification.header" ' +
-                                   'pf-notification-message="notification.message" ' +
-                                   'pf-notification-persistent="notification.isPersistent"' +
-                                   'pf-notification-index="$index">' +
-                  '</pf-notification>' +
-                '</div>' +
-              '</div>'
+    templateUrl: 'notification/views/notification-list.html'
   };
 });
