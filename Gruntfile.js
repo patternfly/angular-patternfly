@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -11,14 +11,14 @@ module.exports = function(grunt) {
         tasks: {
           options: {
             descriptions: {
-              'help' : 'Task list helper for your Grunt enabled projects.',
-              'clean' : 'Deletes the content of the dist directory.',
-              'build' : 'Builds the project (including documentation) into the dist directory. You can specify modules to be built as arguments (' +
+              'help': 'Task list helper for your Grunt enabled projects.',
+              'clean': 'Deletes the content of the dist directory.',
+              'build': 'Builds the project (including documentation) into the dist directory. You can specify modules to be built as arguments (' +
                 'grunt build:buttons:notification) otherwise all available modules are built.',
-              'test' : 'Executes the karma testsuite.',
-              'watch' : 'Whenever js source files (from the src directory) change, the tasks executes jshint and documentation build.',
-              'ngdocs' : 'Builds documentation into dist/docs.',
-              'ngdocs:view' : 'Builds documentation into dist/docs and runs a web server. The docs can be accessed on http://localhost:8000/'
+              'test': 'Executes the karma testsuite.',
+              'watch': 'Whenever js source files (from the src directory) change, the tasks executes jshint and documentation build.',
+              'ngdocs': 'Builds documentation into dist/docs.',
+              'ngdocs:view': 'Builds documentation into dist/docs and runs a web server. The docs can be accessed on http://localhost:8000/'
             },
             groups: {
               'Basic project tasks': ['help', 'clean', 'build', 'test'],
@@ -59,6 +59,23 @@ module.exports = function(grunt) {
           src: [ 'components/font-awesome/**' ],
           dest: 'dist/docs',
           expand: true
+        }
+      },
+      htmlhint: {
+        html: {
+          src: ['src/**/*.html'],
+          options: {
+            'tagname-lowercase': true,
+            'attr-lowercase': true,
+            'attr-value-doublequotes': true,
+            'tag-pair': true,
+            'tag-self-close': true,
+            'id-unique': true,
+            'src-not-empty': true,
+            'style-disabled': true,
+            'img-alt-require': true,
+            'spec-char-escape': true
+          }
         }
       },
       jshint: {
@@ -122,14 +139,14 @@ module.exports = function(grunt) {
     });
 
     // You can specify which modules to build as arguments of the build task.
-    grunt.registerTask('build', 'Create bootstrap build files', function() {
+    grunt.registerTask('build', 'Create bootstrap build files', function () {
       var concatSrc = [];
 
       if (this.args.length) {
-        this.args.forEach(function(file){
-          if (grunt.file.exists('./src/'+file)){
+        this.args.forEach(function (file) {
+          if (grunt.file.exists('./src/' + file)) {
             grunt.log.ok('Adding ' + file + ' to the build queue.');
-            concatSrc.push('src/'+file+'/*.js');
+            concatSrc.push('src/' + file + '/*.js');
           } else {
             grunt.fail.warn('Unable to build module \'' + file + '\'. The module doesn\'t exist.');
           }
@@ -139,11 +156,12 @@ module.exports = function(grunt) {
         concatSrc = 'src/*/*.js';
       }
 
-      grunt.task.run(['clean', 'jshint:beforeconcat', 'jshint', 'test', 'concat', 'uglify:build', 'ngdocs', 'copy']);
+      grunt.task.run(['clean', 'jshint:beforeconcat', 'lint', 'test', 'concat', 'uglify:build', 'ngdocs', 'copy']);
     });
 
     grunt.registerTask('default', ['build']);
     grunt.registerTask('ngdocs:view', ['build', 'connect:docs', 'watch']);
+    grunt.registerTask('lint', ['jshint', 'htmlhint']);
     grunt.registerTask('test', ['karma']);
     grunt.registerTask('help', ['availabletasks']);
 
