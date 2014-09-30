@@ -108,6 +108,18 @@ module.exports = function(grunt) {
         all: ['src/**/*.js']
       },
       ngtemplates: {
+        options: {
+          htmlmin: {
+            collapseBooleanAttributes:      true,
+            collapseWhitespace:             true,
+            removeAttributeQuotes:          true,
+            removeComments:                 false,
+            removeEmptyAttributes:          true,
+            removeRedundantAttributes:      true,
+            removeScriptTypeAttributes:     true,
+            removeStyleLinkTypeAttributes:  true
+          }
+        },
         'patternfly.notification': {
           cwd: 'src/',
           src: ['notification/**/*.html'],
