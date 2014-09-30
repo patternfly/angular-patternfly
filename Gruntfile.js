@@ -51,13 +51,13 @@ module.exports = function(grunt) {
       copy: {
         docdata: {
           cwd: 'lib/patternfly/dist',
-          src: [ 'fonts/*', 'img/*' ],
+          src: ['fonts/*', 'img/*'],
           dest: 'dist/docs',
           expand: true
         },
         fa: {
           cwd: 'lib/patternfly/',
-          src: [ 'components/font-awesome/**' ],
+          src: ['components/font-awesome/**'],
           dest: 'dist/docs',
           expand: true
         }
@@ -119,7 +119,7 @@ module.exports = function(grunt) {
       ngtemplates: {
         'patternfly.notification': {
           cwd: 'src/',
-          src: [ 'notification/**/*.html' ],
+          src: ['notification/**/*.html'],
           dest: 'dist/templates.js'
         }
       },
