@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -139,11 +139,11 @@ module.exports = function (grunt) {
     });
 
     // You can specify which modules to build as arguments of the build task.
-    grunt.registerTask('build', 'Create bootstrap build files', function () {
+    grunt.registerTask('build', 'Create bootstrap build files', function() {
       var concatSrc = [];
 
       if (this.args.length) {
-        this.args.forEach(function (file) {
+        this.args.forEach(function(file) {
           if (grunt.file.exists('./src/' + file)) {
             grunt.log.ok('Adding ' + file + ' to the build queue.');
             concatSrc.push('src/' + file + '/*.js');
