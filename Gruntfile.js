@@ -29,7 +29,7 @@ module.exports = function(grunt) {
       },
       clean: {
         docs: ['dist/docs'],
-        templates: ['dist/templates.js'],
+        templates: ['templates/'],
         all: ['dist/*']
       },
       concat: {
@@ -37,7 +37,7 @@ module.exports = function(grunt) {
           separator: ';'
         },
         dist: {
-          src: ['src/**/*.module.js', 'src/**/*.js', 'dist/templates.js'],
+          src: ['src/**/*.module.js', 'src/**/*.js', 'templates/*.js'],
           dest: 'dist/angular-patternfly.js'
         }
       },
@@ -120,10 +120,15 @@ module.exports = function(grunt) {
             removeStyleLinkTypeAttributes:  true
           }
         },
+        'patternfly.form': {
+          cwd: 'src/',
+          src: ['form/**/*.html'],
+          dest: 'templates/form.js'
+        },
         'patternfly.notification': {
           cwd: 'src/',
           src: ['notification/**/*.html'],
-          dest: 'dist/templates.js'
+          dest: 'templates/notification.js'
         }
       },
       uglify: {

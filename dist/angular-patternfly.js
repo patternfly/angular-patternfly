@@ -1,4 +1,11 @@
 /**
+ * @name  patternfly.form
+ *
+ * @description
+ *   Module for formting related functionality, primarily filters.
+ */
+angular.module('patternfly.form', []);
+;/**
  * @name  patternfly
  *
  * @description
@@ -72,89 +79,204 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
 ;'use strict';
 /**
  * @ngdoc directive
- * @name patternfly.formgroup:pfFormGroup
- * @restrict E
- * @scope
+ * @name patternfly.form.directive:pfFormButtons
  *
  * @description
- * The main form element created to get rid of the patternfly forms boilerplate.
+ *   Encapsulates the standard structure and styling for create and cancel buttons
+ *   when used with a form.
  *
- * @param {string=} pfId ID used in the input element and its matching label. If not specified ID is randomly generated.
- * @param {string=} pfLabelClass The class of the label element. Default value is "col-sm-2".
- * @param {string=} pfInputClass The class of the input element. Default value is "col-sm-10".
- * @param {string=} pfLabelText The label text.
+ *   This directive creates new scope.
+ *
+ * @param {function} pfHandleCancel function to call when the user clicks cancel.
+ * @param {function} pfHandleSave function to call when the user clicks save.
+ * @param {expression} pfWorking the model to store the working status in.
+ * @param {string} pfButtonClass the class of the button container.
  *
  * @example
- <example module="patternfly.formgroup">
+ <example module="patternfly.form">
 
- <file name="index.html">
-   <div ng-controller="FormGroupDemoCtrl">
-     <form class="form-horizontal">
-       <pf-form-group pf-label-text="Long input:">
-          <input type="text" ng-model="test"></input>
-       </pf-form-group>
-
-       <pf-form-group pf-label-class="col-sm-6" pf-input-class="col-sm-6" pf-label-text="Short input:" pf-id="id2">
-          <input type="text" class="form-control" ng-model="test"></input>
-       </pf-form-group>
-
-       <hr/>
-       <p>This is how the boilerplate looks like:</p>
-
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="message">Message:</label>
-         <div class="col-sm-10">
-           <input type="text" ng-model="test" class="form-control"></input>
+   <file name="index.html">
+     <div ng-controller="FormButtonCtrl">
+       <p>Saved?</p>
+       <p>{{ status }}</p>
+       <form>
+         <div class="form-group>
+           <label class="control-label col-sm-2">Input</label>
+           <input class="form-control col-sm-5" name="item" ng-model="input" type="text">
          </div>
-       </div>
-     </form>
-   </div>
- </file>
+         <div pf-form-buttons pf-on-cancel="cancel()" pf-on-save="save(item)" pf-working="working"></div>
+       </form>
+     </div>
+   </file>
 
- <file name="script.js">
- function FormGroupDemoCtrl($scope) {
-    $scope.header = 'Default Header.';
-    $scope.message = 'Default Message.';
-    $scope.test = 'testing message';
-  }
- </file>
+   <file name="script.js">
+     function FormButtonCtrl ($scope, $timeout) {
+       $scope.status = 'Not yet Saved'
+       $scope.working = false;
 
+       $scope.save = function (item) {
+         $scope.status = 'saved';
+         $scope.working = true;
+
+         $timeout(function () {
+           $scope.working = false;
+         }, 1000);
+       };
+
+       $scope.cancel = function () {
+         $scope.status = 'cancelled';
+         $scope.input = null;
+       };
+     }
+   </file>
  </example>
  */
-angular.module('patternfly.formgroup', []).directive('pfFormGroup', function () {
+angular.module('patternfly.form').directive('pfFormButtons', function () {
   return {
-    restrict: 'E',
-    transclude: true,
-    link: function (scope, element, attrs, ctrl, transclude) {
-
-      if (!attrs.pfId){
-        attrs.pfId = 'pfID' + Math.floor((Math.random()*1000000)+1);
+    replace: true,
+    require: '^form',
+    templateUrl: 'form/views/form-buttons.html',
+    scope: {
+      pfHandleCancel: '&pfOnCancel',
+      pfHandleSave: '&pfOnSave',
+      pfWorking: '=',
+      pfButtonContainerClass: '@'
+    },
+    link: function (scope, iElement, iAttrs, controller) {
+      if (scope.pfWorking === undefined) {
+        scope.pfWorking = false;
       }
 
-      if (!attrs.pfLabelClass) {
-        attrs.pfLabelClass = 'col-sm-2';
-      }
+      scope.isInvalid = function () {
+        var invalid = controller.$invalid;
 
-      if (!attrs.pfInputClass) {
-        attrs.pfInputClass = 'col-sm-10';
-      }
+        angular.forEach(controller, function (value) {
+          if (value && value.$error) {
+            if (value.$error.server) {
+              invalid = false;
+            }
+          }
+        });
 
-      element.append('<div class="form-group">' +
-      '<label class="control-label ' + attrs.pfLabelClass + '" for="' + attrs.pfId + '">' + attrs.pfLabelText + '</label>' +
-      '<div class="' + attrs.pfInputClass + '">' +
-      '</div>' +
-      '</div>');
-
-      transclude(scope, function (clone) {
-        var transcludeDiv = angular.element(element.find('div').get(1));
-        transcludeDiv.append(clone);
-        var transcludeInput = angular.element(transcludeDiv.find('input').get(0));
-        transcludeInput.addClass('form-control');
-        transcludeInput.attr('id', attrs.pfId);
-      });
+        return invalid;
+      };
     }
   };
-});;'use strict';
+});
+;'use strict';
+/**
+ * @ngdoc directive
+ * @name patternfly.form.directive:pfFormGroup
+ *
+ * @description
+ *  Encapsulates the structure and styling for a label + input used within a
+ *  Bootstrap3 based form.
+ *
+ *  This directive creates new scope.
+ *
+ * @param {string} pfLabel the text for the <label> element.
+ * @param {string} pfFieldId the id of the form field. Default value is id of the form field element.
+ * @param {string} pfLabelClass the class of the label element. Default value is "col-sm-2".
+ * @param {string} pfInputClass the class of the input element. Default value is "col-sm-5".
+ *
+ * @example
+ <example module="patternfly.form">
+
+   <file name="index.html">
+     <form class="form-horizontal" ng-controller="FormDemoCtrl">
+
+       <p>Name: {{ item.name }}</p>
+       <p>Description: {{ item.description }}</p>
+       <div pf-form-group pf-label="Name" required>
+         <input id="name" name="name"
+                ng-model="item.name" type="text" required/>
+       </div>
+
+       <div pf-form-group pf-input-class="col-sm-9" pf-label="Description">
+         <textarea id="description" name="description" ng-model="item.description">
+           {{ item.description }}
+         </textarea>
+       </div>
+     </form>
+   </file>
+
+   <file name="script.js">
+     function FormDemoCtrl ($scope) {
+        $scope.item = {
+          name: 'Homer Simpson',
+          description: 'I like donuts and Duff.  Doh!'
+        };
+      }
+   </file>
+ </example>
+ */
+angular.module('patternfly.form').directive('pfFormGroup', function () {
+  function getInput(element) {
+    // table is used for bootstrap3 date/time pickers
+    var input = element.find('table');
+
+    if (input.length === 0) {
+      input = element.find('input');
+
+      if (input.length === 0) {
+        input = element.find('select');
+
+        if (input.length === 0) {
+          input = element.find('textarea');
+        }
+      }
+    }
+    return input;
+  }
+
+  return {
+    transclude: true,
+    replace: true,
+    require: '^form',
+    templateUrl: 'form/views/form-group.html',
+    scope: {
+      'pfLabel': '@',
+      'pfField': '@',
+      'pfLabelClass': '@',
+      'pfInputClass': '@'
+    },
+    link: function (scope, iElement, iAttrs, controller) {
+      var input = getInput(iElement),
+        type = input.attr('type'),
+        field;
+
+      if (!iAttrs.pfLabelClass) {
+        iAttrs.pfLabelClass = 'col-sm-2';
+      }
+
+      if (!iAttrs.pfInputClass) {
+        iAttrs.pfInputClass = 'col-sm-5';
+      }
+      
+      if (!scope.pfField) {
+        scope.pfField = input.attr('id');
+      }
+      field = scope.pfField;
+
+      if (['checkbox', 'radio', 'time'].indexOf(type) === -1) {
+        input.addClass('form-control');
+      }
+
+      if (input.attr('required')) {
+        iElement.addClass('required');
+      }
+
+      if (controller[field]) {
+        scope.error = controller[field].$error;
+      }
+
+      scope.hasErrors = function () {
+        return controller[field] && controller[field].$invalid && controller[field].$dirty;
+      };
+    }
+  };
+});
+;'use strict';
 /**
  * @ngdoc service
  * @name patternfly.notification.Notification
@@ -735,7 +857,20 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       }
     }
   };
-});;angular.module('patternfly.notification').run(['$templateCache', function($templateCache) {
+});;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('form/views/form-buttons.html',
+    "<div class=form-group><div class=\"{{ pfButtonContainerClass }}\"><div class=\"control-group buttons\"><button class=\"btn btn-default\" type=button ng-click=pfHandleCancel() ng-disabled=pfWorking translate>Cancel</button> <button class=\"btn btn-primary\" ng-click=\"pfHandleSave(); pfWorking = true\" ng-disabled=\"isInvalid() || pfWorking\"><i class=\"icon-spinner icon-spin\" ng-show=pfWorking></i> <span ng-show=pfWorking translate>Saving...</span> <span ng-hide=pfWorking translate>Save</span></button></div></div></div>"
+  );
+
+
+  $templateCache.put('form/views/form-group.html',
+    "<div class=form-group ng-class=\"{ 'has-error' : hasErrors() }\"><label for=\"{{ pfField }}\" class=\"control-label {{ pfLabelClass }}\">{{ pfLabel }}</label><div class=\"{{ pfInputClass }}\"><span ng-transclude></span> <span class=help-block ng-show=error.messages><ul><li ng-repeat=\"message in error.messages\">{{ message }}</li></ul></span></div></div>"
+  );
+
+}]);
+;angular.module('patternfly.notification').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('notification/views/notification-list.html',
