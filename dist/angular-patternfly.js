@@ -13,7 +13,7 @@ angular.module('patternfly.form', []);
  */
 angular.module('patternfly', [
   'patternfly.autofocus',
-  'patternfly.formgroup',
+  'patternfly.form',
   'patternfly.notification',
   'patternfly.select',
   'patternfly.validation',
