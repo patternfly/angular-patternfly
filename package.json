@@ -1,7 +1,7 @@
 {
   "author": "Red Hat",
   "name": "angular-patternfly",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Angular extension of the PatternFly project.",
   "homepage": "https://github.com/patternfly/angular-patternfly",
   "dependencies": {},
