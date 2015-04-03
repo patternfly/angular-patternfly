@@ -685,7 +685,7 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
         var optionCollectionList = attrs.ngOptions.split('in ');
         var optionCollection = optionCollectionList[optionCollectionList.length - 1];
 
-        scope.$watch(optionCollection, function() {
+        scope.$watchCollection(optionCollection, function() {
           element.selectpicker('refresh');
         });
       }
@@ -695,7 +695,8 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
       });
     }
   };
-});;'use strict';
+});
+;'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.validation:pfValidation
