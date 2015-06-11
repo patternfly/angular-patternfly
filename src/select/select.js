@@ -40,7 +40,7 @@
    <div class="form-group">
      <label class="col-sm-2 control-label" for="drink">Preferred drink:</label>
      <div class="col-sm-10">
-       <select pf-select ng-model="drink" id="drink" ng-options="o as o for o in drinks">
+       <select pf-select="{ noneSelectedText: 'None' }" ng-model="drink" id="drink" ng-options="o as o for o in drinks">
          <option value="">No drink selected</option>
        </select>
      </div>
@@ -67,8 +67,11 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
   return {
     restrict: 'A',
     require: '?ngModel',
+    scope: {
+      selectPickerOptions: '=pfSelect'
+    },
     link: function (scope, element, attrs, ngModel) {
-      element.selectpicker();
+      element.selectpicker(scope.selectPickerOptions);
 
       var $render = ngModel.$render;
 
