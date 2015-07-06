@@ -96,7 +96,7 @@ module.exports = function(grunt) {
         options: {
           title: 'Angular-Patternfly Documentation',
           dest: 'dist/docs',
-          scripts: ['lib/patternfly/components/jquery/jquery.js',
+          scripts: ['lib/patternfly/components/jquery/dist/jquery.js',
             'lib/patternfly/components/bootstrap/dist/js/bootstrap.js',
             'lib/patternfly/components/bootstrap-select/bootstrap-select.js',
             'angular.js',
