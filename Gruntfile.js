@@ -33,9 +33,6 @@ module.exports = function(grunt) {
         all: ['dist/*']
       },
       concat: {
-        options: {
-          separator: ';'
-        },
         dist: {
           src: ['src/**/*.module.js', 'src/**/*.js', 'templates/*.js'],
           dest: 'dist/angular-patternfly.js'
@@ -129,6 +126,11 @@ module.exports = function(grunt) {
           cwd: 'src/',
           src: ['notification/**/*.html'],
           dest: 'templates/notification.js'
+        },
+        'patternfly.card': {
+          cwd: 'src/',
+          src: ['card/**/*.html'],
+          dest: 'templates/card.js'
         }
       },
       uglify: {

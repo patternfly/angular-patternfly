@@ -10,5 +10,6 @@ angular.module('patternfly', [
   'patternfly.notification',
   'patternfly.select',
   'patternfly.validation',
+  'patternfly.card'
 ]);
 

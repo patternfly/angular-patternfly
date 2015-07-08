@@ -5,7 +5,8 @@
  *   Module for formting related functionality, primarily filters.
  */
 angular.module('patternfly.form', []);
-;/**
+
+/**
  * @name  patternfly
  *
  * @description
@@ -17,9 +18,11 @@ angular.module('patternfly', [
   'patternfly.notification',
   'patternfly.select',
   'patternfly.validation',
+  'patternfly.card'
 ]);
 
-;'use strict';
+
+'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.autofocus:pfFocused
@@ -76,7 +79,9 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
     }
   };
 });
-;'use strict';
+
+'use strict';
+
 /**
  * @ngdoc directive
  * @name patternfly.card:pfCard
@@ -109,7 +114,7 @@ angular.module('patternfly.card', []).directive('pfCard', function() {
           }
         };
 	});
-;'use strict';
+'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormButtons
@@ -196,7 +201,8 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
     }
   };
 });
-;'use strict';
+
+'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormGroup
@@ -309,7 +315,8 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     }
   };
 });
-;'use strict';
+
+'use strict';
 /**
  * @ngdoc service
  * @name patternfly.notification.Notification
@@ -633,7 +640,8 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     templateUrl: 'notification/views/notification-list.html'
   };
 });
-;'use strict';
+
+'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.select:pfSelect
@@ -732,7 +740,8 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
     }
   };
 });
-;'use strict';
+
+'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.validation:pfValidation
@@ -894,7 +903,17 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       }
     }
   };
-});;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
+});
+angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('card/card.html',
+    "<div class=tile-pf><div class=tile-pf-heading><h2 class=tile-pf-title>{{headtitle}}</h2></div><span ng-if=subtitle class=tile-pf-subtitle>{{subtitle}}</span><div class=tile-pf-body><ng-transclude></ng-transclude></div></div>"
+  );
+
+}]);
+
+angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('form/views/form-buttons.html',
@@ -907,7 +926,8 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
   );
 
 }]);
-;angular.module('patternfly.notification').run(['$templateCache', function($templateCache) {
+
+angular.module('patternfly.notification').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('notification/views/notification-list.html',
