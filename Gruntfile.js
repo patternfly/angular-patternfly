@@ -7,6 +7,7 @@ module.exports = function(grunt) {
   function init() {
 
     grunt.initConfig({
+      pkg: grunt.file.readJSON('package.json'),
       availabletasks: {
         tasks: {
           options: {
@@ -15,6 +16,7 @@ module.exports = function(grunt) {
               'clean': 'Deletes the content of the dist directory.',
               'build': 'Builds the project (including documentation) into the dist directory. You can specify modules to be built as arguments (' +
                 'grunt build:buttons:notification) otherwise all available modules are built.',
+              'bump': 'Increases version numbers in bower.json, commits files and pushses tags',
               'test': 'Executes the karma testsuite.',
               'watch': 'Whenever js source files (from the src directory) change, the tasks executes jshint and documentation build.',
               'ngdocs': 'Builds documentation into dist/docs.',
@@ -25,6 +27,20 @@ module.exports = function(grunt) {
               'Documentation tasks': ['ngdocs', 'ngdocs:view']
             }
           }
+        }
+      },
+      bump: {
+        options: {
+          files: ['package.json', 'bower.json'],
+          updateConfigs: ['pkg'],
+          commit: true,
+          commitMessage: 'Version %VERSION%',
+          commitFiles: ['package.json', 'bower.json'],
+          createTag: true,
+          tagName: 'v%VERSION%',
+          tagMessage: 'Version %VERSION%',
+          push: true,
+          pushTo: 'origin'
         }
       },
       clean: {
@@ -182,6 +198,16 @@ module.exports = function(grunt) {
       }
 
       grunt.task.run(['clean', 'jshint:beforeconcat', 'lint', 'test', 'ngtemplates', 'concat', 'uglify:build', 'ngdocs', 'copy', 'clean:templates']);
+    });
+
+    grunt.registerTask('release', function (bump) {
+      // If no 'bump' argument was provided, set it to 'patch'
+      if (arguments.length === 0) {
+        bump = 'patch';
+      }
+
+      // Build first, bump the appropriate version piece, build the dist folder, and commit it all up
+      grunt.task.run('build', 'bump-only:' + bump, 'bump-commit');
     });
 
     grunt.registerTask('default', ['build']);

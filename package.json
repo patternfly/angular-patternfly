@@ -1,7 +1,7 @@
 {
   "author": "Red Hat",
   "name": "angular-patternfly",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Angular extension of the PatternFly project.",
   "homepage": "https://github.com/patternfly/angular-patternfly",
   "dependencies": {},
@@ -10,6 +10,7 @@
     "grunt": "0.4.2",
     "grunt-angular-templates": "0.5.7",
     "grunt-available-tasks": "0.4.3",
+    "grunt-bump": "0.0.13",
     "grunt-contrib-clean": "0.4.1",
     "grunt-contrib-concat": "0.3.0",
     "grunt-contrib-connect": "0.5.0",
