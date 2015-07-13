@@ -33,7 +33,8 @@
   },
   "dependencies": {
     "angular": "1.2.25 - 1.3.*",
-    "patternfly": "1.3.0"
+    "patternfly": "1.3.0",
+    "c3": "https://github.com/masayuki0812/c3.git#0.4.11-rc1"
   },
   "devDependencies": {
     "angular-animate": "1.2.25 - 1.3.*",
