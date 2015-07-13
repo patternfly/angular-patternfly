@@ -10,6 +10,12 @@
  * @param {string} id the ID iof the container that the chart should bind to
  *
  * @example
+<file name="index.html">
+  <div id="chartId">
+    <div c3-chart id="chartId"  config="chartConfig"></div>
+  </div>
+ </file>
+
 <file name="script.js">
  function ChartCtrl () {
     var vm = this;
@@ -29,7 +35,7 @@
       scope: {
         config: '='
       },
-      template: '<div></div>',
+      template: '<div id=""></div>',
       replace: true,
       link: function(scope, element, attrs) {
         //generate c3 chart data

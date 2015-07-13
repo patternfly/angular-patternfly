@@ -1,9 +1,9 @@
-describe('Directive: pfCard', function() {
-  var $scope, $compile, element, title, subtitle;
+describe('Directive: pfPercentageUsed', function() {
+  var $scope, $compile, element;
 
   beforeEach(module(
-    'patternfly.card',
-    'card/card.html'
+    'patternfly.charts',
+    'charts/progress/progress-chart.html'
   ));
 
   beforeEach(inject(function(_$compile_, _$rootScope_) {
@@ -12,16 +12,25 @@ describe('Directive: pfCard', function() {
   }));
 
   beforeEach(function() {
-    element = '<div pf-card headtitle="My card title" subtitle="My card subtitle title">Inner content goes here</div>';
+    $scope.quotas = [{ "title":"CPU", "start":"8", "end":"16" }];
+
+    element = ' <div pf-percentage-used charts="quotas"></div>';
     element = $compile(element)($scope);
     $scope.$digest();
   });
 
-  it("should set the title and subtitle", function() {
-    title = angular.element(element).find('.tile-pf-title').html();
-    expect(title).toBe("My card title");
+  it("should set the used amount and percentage", function() {
+    expect(angular.element(element).find('.used').html()).toBe("8 of 16");
+    var usedChart = angular.element(element).find('.quota-chart-used');
+    expect(usedChart.attr("style")).toBe("width:50%");
+  });
 
-    subtitle = angular.element(element).find('.tile-pf-subtitle').html();
-    expect(subtitle).toBe("My card subtitle title");
+  it("should update the used amount and percentage", function() {
+    $scope.quotas = [{ "title":"CPU", "start":"4", "end":"16" }];
+    $scope.$digest();
+
+    expect(angular.element(element).find('.used').html()).toBe("4 of 16");
+    var usedChart = angular.element(element).find('.quota-chart-used');
+    expect(usedChart.attr("style")).toBe("width:25%");
   });
 });

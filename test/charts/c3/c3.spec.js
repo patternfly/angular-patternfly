@@ -18,7 +18,8 @@ describe('Directive: c3Chart', function() {
     $scope.$digest();
   });
 
-  it("should set the chart up", function() {
-    //console.log(angular.element(element).html());
+  it("chart should find empty template", function() {
+    expect(angular.element(element).html()).toBe("");
   });
+
 });
