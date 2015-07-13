@@ -3,7 +3,7 @@ describe('Directive: pfFormGroup', function() {
 
   beforeEach(module(
     'patternfly.form',
-    'form/views/form-group.html'
+    'form/form-group/views/form-group.html'
   ));
 
   beforeEach(inject(function(_$compile_, _$rootScope_) {

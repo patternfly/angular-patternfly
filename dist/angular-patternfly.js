@@ -1,4 +1,13 @@
 /**
+ * @name  patternfly
+ *
+ * @description
+ *   Charts module for patternfly. Must Inlcude d3.js and c3.js to use
+ * 
+ */
+angular.module('patternfly.charts', []);
+
+;/**
  * @name  patternfly.form
  *
  * @description
@@ -13,14 +22,14 @@ angular.module('patternfly.form', []);
  */
 angular.module('patternfly', [
   'patternfly.autofocus',
+  'patternfly.card',
   'patternfly.form',
   'patternfly.notification',
   'patternfly.select',
-  'patternfly.validation',
+  'patternfly.validation'
 ]);
 
-;'use strict';
-/**
+;/**
  * @ngdoc directive
  * @name patternfly.autofocus:pfFocused
  * @restrict A
@@ -60,6 +69,7 @@ angular.module('patternfly', [
  */
 
 angular.module('patternfly.autofocus', []).directive('pfFocused', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
@@ -76,8 +86,151 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
     }
   };
 });
-;'use strict';
-/**
+;/**
+ * @ngdoc directive
+ * @name patternfly.card:pfCard
+ * @restrict A
+ * @element ANY
+ * @param {headtitle=} Title for the card - required
+ * @param {subtitle=} Subtitle for the card - optional
+ *
+ * @description
+ * Directive for easiliy displaying a html with transcluded content
+ *
+ * @example
+ <example module="patternfly.card">
+
+ <file name="index.html">
+    <div pf-card headtitle="My Card Title" subtitle="My card subtitle">Inner content goes here</div>
+ </file>
+
+ </example>
+ */
+
+angular.module('patternfly.card', []).directive('pfCard', function() {
+    'use strict';
+
+    return {
+        restrict: 'A',
+        transclude: true,
+        templateUrl: 'card/card.html',
+        scope: {
+            headtitle: '@',
+            subtitle: '@'
+          }
+        };
+	});;/**
+ * @ngdoc directive
+ * @name patternfly.charts.directive:c3Chart
+ *
+ * @description
+ *   Directive for wrapping c3 library
+ *
+ *
+ * @param {expression} chartConfig the c3 configuration options for the chart
+ * @param {string} id the ID iof the container that the chart should bind to
+ *
+ * @example
+<file name="index.html">
+  <div id="chartId">
+    <div c3-chart id="chartId"  config="chartConfig"></div>
+  </div>
+ </file>
+
+<file name="script.js">
+ function ChartCtrl () {
+    var vm = this;
+    vm.chartId = 'myChartId';
+    vm.chartConfig = { 'labels': ['Created','Deleted'], 'tooltipSuffixes': ['Container Group','Container Group'] };
+ }
+ </file>
+ */
+(function(c3){
+  'use strict';
+
+  angular.module('patternfly.charts')
+  .directive('c3Chart', ['$timeout', function($timeout) {
+
+    return {
+      restrict: 'A',
+      scope: {
+        config: '='
+      },
+      template: '<div id=""></div>',
+      replace: true,
+      link: function(scope, element, attrs) {
+        //generate c3 chart data
+        var chartData = scope.config;
+        chartData.bindto = '#' + attrs.id;
+
+        //Generating the chart
+        $timeout(function() {
+          c3.generate(chartData);
+        }, 100);
+      }
+    };
+  }]);
+}(c3));;/**
+ * @ngdoc directive
+ * @name patternfly.charts.directive:pfPercentageUsed
+ *
+ * @description
+ *   Directive for rendering a percentage used progress chart. Will render one or more
+ *   bars based on data 
+ *
+ *
+ * @param {string} charts model data to be displalayed
+ * @param {string} id the ID iof the container that the chart should bind to
+ *
+ * @example
+ <example module="patternfly.charts">
+ <file name="index.html">
+    <div pf-percentage-used charts="vm.quotas"></div>
+ </file>
+
+ <file name="script.js">
+ function ChartCtrl () {
+    var vm = this;
+    vm.quotas = { "data":[
+        { "title":"CPU", "start":"25", "end":"46" },
+        { "title":"Memory", "start":"8", "end":"16" }
+      ]
+    }
+ }
+ </file>
+ </example>
+ */
+
+angular.module('patternfly.charts')
+    .directive('pfPercentageUsed', ['$timeout', function($timeout) {
+	'use strict';
+
+  return {
+    restrict: 'A',
+    scope: {
+      charts: '=',
+    },
+    replace: true,
+    templateUrl: 'charts/progress/progress-chart.html',
+    link: function($scope) {
+      $scope.$watch('charts', function(newVal, oldVal){
+        if (typeof(newVal) !== 'undefined') {
+          //Calculate the perentage used  
+          angular.forEach($scope.charts, function(chart, index) {
+            chart.percentageUsed = 100 * (chart.start/chart.end);
+          }, $scope.charts);
+
+          //Animate in the chart load.
+          $scope.animate = true;
+		      $timeout(function(){
+                $scope.animate = false;
+              }, 0);
+        }
+      });
+    }
+  };
+}]);
+;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormButtons
  *
@@ -132,10 +285,11 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
  </example>
  */
 angular.module('patternfly.form').directive('pfFormButtons', function () {
+  'use strict';
   return {
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-buttons.html',
+    templateUrl: 'form/form-buttons/views/form-buttons.html',
     scope: {
       pfHandleCancel: '&pfOnCancel',
       pfHandleSave: '&pfOnSave',
@@ -163,8 +317,7 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
     }
   };
 });
-;'use strict';
-/**
+;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormGroup
  *
@@ -211,6 +364,8 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
  </example>
  */
 angular.module('patternfly.form').directive('pfFormGroup', function () {
+  'use strict';
+  
   function getInput(element) {
     // table is used for bootstrap3 date/time pickers
     var input = element.find('table');
@@ -233,7 +388,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     transclude: true,
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-group.html',
+    templateUrl: 'form/form-group/views/form-group.html',
     scope: {
       'pfLabel': '@',
       'pfField': '@',
@@ -276,8 +431,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     }
   };
 });
-;'use strict';
-/**
+;/**
  * @ngdoc service
  * @name patternfly.notification.Notification
  * @requires $rootScope
@@ -359,6 +513,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
  </example>
  */
 angular.module('patternfly.notification', []).provider('Notifications', function() {
+  'use strict';
   // time (in ms) the notifications are shown
 
   this.delay = 5000;
@@ -521,6 +676,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 .directive('pfNotification', function () {
+  'use strict';
   return {
     scope: {
       'pfNotificationType': '=',
@@ -595,13 +751,13 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 .directive('pfNotificationList', function () {
+  'use strict';
   return {
     restrict: 'E',
     templateUrl: 'notification/views/notification-list.html'
   };
 });
-;'use strict';
-/**
+;/**
  * @ngdoc directive
  * @name patternfly.select:pfSelect
  * @element select
@@ -666,6 +822,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 angular.module('patternfly.select', []).directive('pfSelect', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     require: '?ngModel',
@@ -699,8 +856,7 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
     }
   };
 });
-;'use strict';
-/**
+;/**
  * @ngdoc directive
  * @name patternfly.validation:pfValidation
  * @restrict E
@@ -772,6 +928,7 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
  </example>
  */
 angular.module('patternfly.validation', []).directive('pfValidation', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -861,15 +1018,31 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       }
     }
   };
-});;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
+});;angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('form/views/form-buttons.html',
+  $templateCache.put('card/card.html',
+    "<div class=tile-pf><div class=tile-pf-heading><h2 class=tile-pf-title>{{headtitle}}</h2></div><span ng-if=subtitle class=tile-pf-subtitle>{{subtitle}}</span><div class=tile-pf-body><ng-transclude></ng-transclude></div></div>"
+  );
+
+}]);
+;angular.module('patternfly.charts').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('charts/progress/progress-chart.html',
+    "<div class=quota-charts-wrapper><div class=quota-chart ng-repeat=\"chart in charts\"><div class=quota-chart-title><span>{{ chart.title }}</span> <span class=used>{{chart.start}} of {{chart.end}}</span></div><div class=quota-chart-bar><div class=quota-chart-used ng-class=\"{'animate': animate}\" style=width:{{chart.percentageUsed}}%></div><div class=quota-chart-unused></div></div></div></div>"
+  );
+
+}]);
+;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('form/form-buttons/views/form-buttons.html',
     "<div class=form-group><div class=\"{{ pfButtonContainerClass }}\"><div class=\"control-group buttons\"><button class=\"btn btn-default\" type=button ng-click=pfHandleCancel() ng-disabled=pfWorking translate>Cancel</button> <button class=\"btn btn-primary\" ng-click=\"pfHandleSave(); pfWorking = true\" ng-disabled=\"isInvalid() || pfWorking\"><i class=\"icon-spinner icon-spin\" ng-show=pfWorking></i> <span ng-show=pfWorking translate>Saving...</span> <span ng-hide=pfWorking translate>Save</span></button></div></div></div>"
   );
 
 
-  $templateCache.put('form/views/form-group.html',
+  $templateCache.put('form/form-group/views/form-group.html',
     "<div class=form-group ng-class=\"{ 'has-error' : hasErrors() }\"><label for=\"{{ pfField }}\" class=\"control-label {{ pfLabelClass }}\">{{ pfLabel }}</label><div class=\"{{ pfInputClass }}\"><span ng-transclude></span> <span class=help-block ng-show=error.messages><ul><li ng-repeat=\"message in error.messages\">{{ message }}</li></ul></span></div></div>"
   );
 
