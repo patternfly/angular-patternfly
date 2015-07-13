@@ -1,4 +1,3 @@
-'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormGroup
@@ -46,6 +45,8 @@
  </example>
  */
 angular.module('patternfly.form').directive('pfFormGroup', function () {
+  'use strict';
+  
   function getInput(element) {
     // table is used for bootstrap3 date/time pickers
     var input = element.find('table');
@@ -68,7 +69,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     transclude: true,
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-group.html',
+    templateUrl: 'form/form-group/views/form-group.html',
     scope: {
       'pfLabel': '@',
       'pfField': '@',

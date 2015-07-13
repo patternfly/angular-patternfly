@@ -6,10 +6,11 @@
  */
 angular.module('patternfly', [
   'patternfly.autofocus',
+  'patternfly.card',
+  'patternfly.charts',
   'patternfly.form',
   'patternfly.notification',
   'patternfly.select',
-  'patternfly.validation',
-  'patternfly.card'
+  'patternfly.validation'
 ]);
 

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @ngdoc directive
  * @name patternfly.card:pfCard
@@ -22,6 +20,8 @@
  */
 
 angular.module('patternfly.card', []).directive('pfCard', function() {
+    'use strict';
+
     return {
         restrict: 'A',
         transclude: true,

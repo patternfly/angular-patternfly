@@ -1,4 +1,3 @@
-'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.select:pfSelect
@@ -64,6 +63,7 @@
  </example>
  */
 angular.module('patternfly.select', []).directive('pfSelect', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     require: '?ngModel',

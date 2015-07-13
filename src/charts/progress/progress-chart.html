@@ -1,0 +1,12 @@
+<div class="quota-charts-wrapper">
+	<div class="quota-chart" ng-repeat="chart in charts">
+    	<div class="quota-chart-title">
+       		<span>{{ chart.title }}</span>
+        	<span class="used">{{chart.start}} of {{chart.end}}</span>
+    	</div>
+    	<div class="quota-chart-bar">
+        	<div class="quota-chart-used" ng-class="{'animate': animate}" style="width:{{chart.percentageUsed}}%"></div>
+        	<div class="quota-chart-unused"></div>
+    	</div>
+	</div>
+</div>

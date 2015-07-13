@@ -10,6 +10,7 @@ module.exports = function(config) {
     files: [
       'lib/patternfly/components/jquery/dist/jquery.js',
       'lib/patternfly/components/bootstrap-select/bootstrap-select.js',
+      'lib/patternfly/components/c3/c3.js',
       'lib/angular/angular.js',
       'lib/angular-mocks/angular-mocks.js',
       'misc/test-lib/helpers.js',
