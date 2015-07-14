@@ -1,4 +1,3 @@
-'use strict';
 /**
  * @ngdoc service
  * @name patternfly.notification.Notification
@@ -81,6 +80,7 @@
  </example>
  */
 angular.module('patternfly.notification', []).provider('Notifications', function() {
+  'use strict';
   // time (in ms) the notifications are shown
 
   this.delay = 5000;
@@ -243,6 +243,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 .directive('pfNotification', function () {
+  'use strict';
   return {
     scope: {
       'pfNotificationType': '=',
@@ -317,6 +318,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 .directive('pfNotificationList', function () {
+  'use strict';
   return {
     restrict: 'E',
     templateUrl: 'notification/views/notification-list.html'

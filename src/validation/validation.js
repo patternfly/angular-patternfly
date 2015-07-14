@@ -1,4 +1,3 @@
-'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.validation:pfValidation
@@ -71,6 +70,7 @@
  </example>
  */
 angular.module('patternfly.validation', []).directive('pfValidation', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     require: 'ngModel',

@@ -1,4 +1,3 @@
-'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.autofocus:pfFocused
@@ -39,6 +38,7 @@
  */
 
 angular.module('patternfly.autofocus', []).directive('pfFocused', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {

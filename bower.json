@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "authors": [
     "Red Hat"
   ],
@@ -33,7 +33,8 @@
   },
   "dependencies": {
     "angular": "1.2.25 - 1.3.*",
-    "patternfly": "1.1.1 - 1.1.4"
+    "patternfly": "1.3.0",
+    "c3": "https://github.com/masayuki0812/c3.git#0.4.11-rc1"
   },
   "devDependencies": {
     "angular-animate": "1.2.25 - 1.3.*",

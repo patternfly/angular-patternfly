@@ -1,4 +1,13 @@
 /**
+ * @name  patternfly
+ *
+ * @description
+ *   Charts module for patternfly. Must Inlcude d3.js and c3.js to use
+ * 
+ */
+angular.module('patternfly.charts', []);
+
+;/**
  * @name  patternfly.form
  *
  * @description
@@ -13,14 +22,14 @@ angular.module('patternfly.form', []);
  */
 angular.module('patternfly', [
   'patternfly.autofocus',
+  'patternfly.card',
   'patternfly.form',
   'patternfly.notification',
   'patternfly.select',
-  'patternfly.validation',
+  'patternfly.validation'
 ]);
 
-;'use strict';
-/**
+;/**
  * @ngdoc directive
  * @name patternfly.autofocus:pfFocused
  * @restrict A
@@ -60,6 +69,7 @@ angular.module('patternfly', [
  */
 
 angular.module('patternfly.autofocus', []).directive('pfFocused', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
@@ -76,8 +86,524 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
     }
   };
 });
-;'use strict';
-/**
+;/**
+ * @ngdoc directive
+ * @name patternfly.card:pfCard
+ * @restrict A
+ * @element ANY
+ * @param {headtitle=} Title for the card - required
+ * @param {subtitle=} Subtitle for the card - optional
+ *
+ * @description
+ * Directive for easiliy displaying a html with transcluded content
+ *
+ * @example
+ <example module="patternfly.card">
+
+ <file name="index.html">
+    <div pf-card headtitle="My Card Title" subtitle="My card subtitle">Inner content goes here</div>
+ </file>
+
+ </example>
+ */
+
+angular.module('patternfly.card', []).directive('pfCard', function() {
+    'use strict';
+
+    return {
+        restrict: 'A',
+        transclude: true,
+        templateUrl: 'card/card.html',
+        scope: {
+            headtitle: '@',
+            subtitle: '@'
+          }
+        };
+	});;/**
+ * @ngdoc directive
+ * @name patternfly.charts.directive:c3Chart
+ *
+ * @description
+ *   Directive for wrapping c3 library
+ *
+ *
+ * @param {expression} chartConfig the c3 configuration options for the chart
+ * @param {string} id the ID iof the container that the chart should bind to
+ *
+ * @example
+<file name="index.html">
+  <div id="chartId">
+    <div c3-chart id="chartId"  config="chartConfig"></div>
+  </div>
+ </file>
+
+<file name="script.js">
+ function ChartCtrl () {
+    var vm = this;
+    vm.chartId = 'myChartId';
+    vm.chartConfig = { 'labels': ['Created','Deleted'], 'tooltipSuffixes': ['Container Group','Container Group'] };
+ }
+ </file>
+ */
+(function(c3){
+  'use strict';
+
+  angular.module('patternfly.charts')
+  .directive('c3Chart', ['$timeout', function($timeout) {
+
+    return {
+      restrict: 'A',
+      scope: {
+        config: '='
+      },
+      template: '<div id=""></div>',
+      replace: true,
+      link: function(scope, element, attrs) {
+        //generate c3 chart data
+        var chartData = scope.config;
+        chartData.bindto = '#' + attrs.id;
+
+        //Generating the chart
+        $timeout(function() {
+          c3.generate(chartData);
+        }, 100);
+      }
+    };
+  }]);
+}(c3));;angular.module('patternfly.charts').factory('ChartsMixin', function() {
+    'use strict';
+    var getDefaultPoint = function() {
+        return {
+            show: true,
+            r: 5
+          };
+      };
+
+    // Radial Chart Defaults
+    var getDefaultRadialDonut = function(title) {
+        return {
+            title: title,
+            label: {
+                show: false
+              },
+              width: 10
+            };
+      };
+
+    var getDefaultRadialSize = function() {
+        return {
+            height: 130
+          };
+      };
+
+    var getDefaultRadialColor = function() {
+        return {
+            pattern: ['#0088CE', '#D1D1D1']
+          };
+      };
+
+    var getDefaultRadialTooltip = function() {
+        return {
+            show: false
+          };
+      };
+
+    var getDefaultRadialLegend = function() {
+        return {
+            show: false
+          };
+      };
+
+    var getDefaultRadialConfig = function(title) {
+        return {
+            donut: getDefaultRadialDonut(title),
+            size: getDefaultRadialSize(),
+            legend: getDefaultRadialLegend(),
+            color: getDefaultRadialColor(),
+            tooltip: getDefaultRadialTooltip()
+          };
+      };
+
+    // Area Chart Defaults
+    var getDefaultAreaArea = function() {
+        return {
+            zerobased: true
+          };
+      };
+
+    var getDefaultAreaSize = function() {
+        return {
+            height: 100
+          };
+      };
+
+    var getDefaultAreaPoint = function() {
+        return {
+            r: 1,
+            focus: {
+                expand: {
+                    r: 4
+                  }
+                }
+              };
+      };
+
+    var getDefaultAreaColor = function() {
+        return {
+            pattern: ['#3f9c35', '#ec7a08', '#0088ce', '#00659c', '#cc0000']
+          };
+      };
+
+    var getDefaultAreaLegend = function() {
+        return {
+            show: false
+          };
+      };
+
+    var getDefaultAreaTooltip = function() {
+        return {
+            show: false
+          };
+      };
+
+    var getDefaultAreaConfig = function() {
+        return {
+            area: getDefaultAreaArea(),
+            size: getDefaultAreaSize(),
+            point: getDefaultAreaPoint(),
+            color: getDefaultAreaColor(),
+            legend: getDefaultAreaLegend(),
+            tooltip: getDefaultRadialTooltip()
+          };
+      };
+
+    // Sparkline Chart Defaults
+    var getDefaultSparklineArea = function() {
+        return {
+            zerobased: true
+          };
+      };
+
+    var getDefaultSparklineSize = function() {
+        return {
+            height: 40
+          };
+      };
+
+    var getDefaultSparklineAxis = function() {
+        return {
+            x: {
+                show: false
+              },
+              y: {
+                  show: false
+                }
+              };
+      };
+
+    var getDefaultSparklineColor = function() {
+        return {
+            pattern: ['#0088ce', '#00659c', '#3f9c35', '#ec7a08', '#cc0000']
+          };
+      };
+
+    var getDefaultSparklineLegend = function() {
+        return {
+            show: false
+          };
+      };
+
+    var getDefaultSparklinePoint = function() {
+        return {
+            show: false
+          };
+      };
+
+    var getDefaultSparklineTooltip = function(tooltipTextFn) {
+        tooltipTextFn = tooltipTextFn || function(data) {
+            return data.value;
+          };
+        return {
+            // because a sparkline should only contain a single data column, the tooltip will only work for a single data column
+            contents: function(d) {
+                return '<span class="c3-tooltip-sparkline">' + tooltipTextFn(d[0]) + '</span>';
+              }
+          };
+      };
+
+    var getDefaultSparklineConfig = function(tooltipTextFn) {
+        return {
+            area: getDefaultSparklineArea(),
+            size: getDefaultSparklineSize(),
+            axis: getDefaultSparklineAxis(),
+            color: getDefaultSparklineColor(),
+            legend: getDefaultSparklineLegend(),
+            point: getDefaultSparklinePoint(),
+            tooltip: getDefaultSparklineTooltip(tooltipTextFn)
+          };
+      };
+
+    // Heat Maps
+    var getDefaultHeatmapColorPattern = function() {
+        return ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
+      };
+
+    var defaultHeatmapBlockPadding = 1;
+    var getDefaultHeatmapColor = function() {
+        return d3.scale.threshold().domain([0.7, 0.8, 0.9]).range(this.getDefaultHeatmapColorPattern());
+      };
+
+    return {
+        getDefaultPoint: getDefaultPoint,
+        getDefaultRadialConfig: getDefaultRadialConfig,
+        getDefaultRadialDonut: getDefaultRadialDonut,
+        getDefaultRadialSize: getDefaultRadialSize,
+        getDefaultRadialColor: getDefaultRadialColor,
+        getDefaultRadialTooltip: getDefaultRadialTooltip,
+        getDefaultRadialLegend: getDefaultRadialLegend,
+        getDefaultAreaConfig: getDefaultAreaConfig,
+        getDefaultAreaArea: getDefaultAreaArea,
+        getDefaultAreaSize: getDefaultAreaSize,
+        getDefaultAreaPoint: getDefaultAreaPoint,
+        getDefaultAreaColor: getDefaultAreaColor,
+        getDefaultAreaLegend: getDefaultAreaLegend,
+        getDefaultAreaTooltip: getDefaultAreaTooltip,
+        getDefaultSparklineConfig: getDefaultSparklineConfig,
+        getDefaultSparklineArea: getDefaultSparklineArea,
+        getDefaultSparklineAxis: getDefaultSparklineAxis,
+        getDefaultSparklineColor: getDefaultSparklineColor,
+        getDefaultSparklineLegend: getDefaultSparklineLegend,
+        getDefaultSparklinePoint: getDefaultSparklinePoint,
+        getDefaultSparklineSize: getDefaultSparklineSize,
+        getDefaultSparklineTooltip: getDefaultSparklineTooltip,
+        getDefaultHeatmapColorPattern: getDefaultHeatmapColorPattern,
+        defaultHeatmapBlockPadding: defaultHeatmapBlockPadding,
+        getDefaultHeatmapColor: getDefaultHeatmapColor
+      };
+  });;/**
+ * @ngdoc directive
+ * @name patternfly.charts.directive:pfPercentageUsed
+ *
+ * @description
+ *   Directive for rendering a percentage used progress chart. Will render one or more
+ *   bars based on data 
+ *
+ *
+ * @param {string} charts model data to be displalayed
+ * @param {string} id the ID iof the container that the chart should bind to
+ *
+ * @example
+ <example module="patternfly.charts">
+ <file name="index.html">
+    <div pf-percentage-used charts="vm.quotas"></div>
+ </file>
+
+ <file name="script.js">
+ function ChartCtrl () {
+    var vm = this;
+    vm.quotas = { "data":[
+        { "title":"CPU", "start":"25", "end":"46" },
+        { "title":"Memory", "start":"8", "end":"16" }
+      ]
+    }
+ }
+ </file>
+ </example>
+ */
+
+angular.module('patternfly.charts')
+    .directive('pfPercentageUsed', ['$timeout', function($timeout) {
+	'use strict';
+
+  return {
+    restrict: 'A',
+    scope: {
+      charts: '=',
+    },
+    replace: true,
+    templateUrl: 'charts/progress/progress-chart.html',
+    link: function($scope) {
+      $scope.$watch('charts', function(newVal, oldVal){
+        if (typeof(newVal) !== 'undefined') {
+          //Calculate the perentage used  
+          angular.forEach($scope.charts, function(chart, index) {
+            chart.percentageUsed = 100 * (chart.start/chart.end);
+          }, $scope.charts);
+
+          //Animate in the chart load.
+          $scope.animate = true;
+		      $timeout(function(){
+                $scope.animate = false;
+              }, 0);
+        }
+      });
+    }
+  };
+}]);
+;angular.module('patternfly.charts').directive('cfmeTrends', ['ChartsMixin', '$timeout', function(chartsMixin, $timeout) {
+    'use strict';
+    return {
+        restrict: 'A',
+        scope: {
+            config: '=',
+            data: '=',
+            id: '@'
+          },
+          replace: true,
+          templateUrl: 'charts/trends/trends-chart.html',
+          controller: ['$scope', function($scope) {
+            var me = this;
+
+            $scope.containerId = $scope.id.trim();
+            $scope.chartId = $scope.containerId + 'Chart';
+
+            this.chartColor = {
+                pattern: ['#6ca100', '#0088ce']
+              };
+
+            var chartTooltip = function(scope) {
+                return {
+                    contents: function (d) {
+                        return '<div id="container-group-trends-tooltip">' +
+                            '<table class="c3-tooltip">' +
+                            '  <tbody>' +
+                            '    <tr>' +
+                            '      <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +
+                            '    </tr>' +
+                            '    <tr">' +
+                            '      <td class="name">' +
+                            '        <span style="background-color:' + me.chartColor.pattern[0] + '"></span>' +
+                            d[0].name + ':' +
+                            '      </td>' +
+                            '      <td class="value" style="white-space: nowrap;">' +
+                            '         +' + d[0].value + ' ' + scope.config.tooltipSuffixes[0] +
+                            '      </td>' +
+                            '    </tr>' +
+                            '    <tr">' +
+                            '      <div style="background-color:' + me.chartColor.pattern[1] + '"> </div>' +
+                            '      <td class="name">' +
+                            '        <span style="background-color:' + me.chartColor.pattern[1] + '"></span>' +
+                            d[1].name + ':' +
+                            '      </td>' +
+                            '      <td class="value" style="white-space: nowrap;">' +
+                            '         -' + d[1].value + ' ' + scope.config.tooltipSuffixes[1] +
+                            '      </td>' +
+                            '    </tr>' +
+                            '  </tbody>' +
+                            '</table>' +
+                            '</div>';
+                      },
+                    position: function (data, width, height, element) {
+                        var center = parseInt(element.getAttribute('x'));
+                        var top = parseInt(element.getAttribute('y'));
+                        var chartBox = document.querySelector('#' + scope.chartId).getBoundingClientRect();
+                        var graphOffsetX = document.querySelector('#' + scope.chartId + ' g.c3-axis-y').getBoundingClientRect().right;
+
+                        var x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
+                        x = Math.min(x, chartBox.width - width);
+                        var y = top - height;
+
+                        return {top: y, left: x};
+                      }
+                  };
+              };
+
+            var chartAxis = {
+                x: {
+                    show: false,
+                    type: 'timeseries',
+                    tick: {
+                        format: '%Y-%m-%d'
+                      }
+                    },
+                    y: {
+                      show: false
+                    }
+                  };
+
+            $scope.getChartData = function () {
+                var id = $scope.id.trim();
+                var trend1 = [$scope.config.labels[0]];
+                var trend2 = [$scope.config.labels[1]];
+                var dates = ['dates'];
+                var data = this.data;
+
+                if (data) {
+                  var dateLength = 0;
+                  var keys = [];
+                  for (var key in data){
+                    keys.push(key);
+                  }
+
+                  trend1 = trend1.concat(data[keys[0]]);
+                  trend2 = trend2.concat(data[keys[1]]);
+                  dateLength = data[keys[0]].length;
+
+                  if (data.dates && data.dates.length > 0) {
+                    for (var i=0; i<data.dates.length; i++) {
+                      dates.push(new Date(data.dates[i]));
+                    }
+                  } else {
+                    // Use fake dates
+                    var today = new Date();
+                    for (var d=dateLength - 1; d>=0; d--) {
+                      dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
+                    }
+                  }
+                }
+
+                var retVal = {
+                    x: 'dates',
+                    columns: [
+                        dates,
+                        trend1,
+                        trend2
+                      ],
+                      type: 'area'
+                    };
+
+                // seems like a hack, but I don't know c3 well enough to
+                // make this generic
+                if (id === 'imageTrends') {
+                  var axes = {};
+                  var imgs = $scope.config.labels[0];
+                  var totSize = $scope.config.labels[1];
+                  axes[imgs] = 'y';
+                  axes[totSize] = 'y2';
+                  retVal.axes = axes;
+                }
+                return retVal;
+              };
+
+            var chartPoint = {
+              show: false
+            };
+
+            var chartSize = {
+              height: 71
+            };
+
+
+            $scope.chartConfig = {
+                point:   chartPoint,
+                size:    chartSize,
+                axis:    chartAxis,
+                color:   this.chartColor,
+                tooltip: chartTooltip($scope),
+                data:    $scope.getChartData()
+              };
+
+          }],
+
+          link: function(scope, element, attrs){
+
+            attrs.$observe('data', function(){
+                scope.chartConfig.data = scope.getChartData();
+              });
+          }
+        };
+  }]);
+;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormButtons
  *
@@ -132,10 +658,11 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
  </example>
  */
 angular.module('patternfly.form').directive('pfFormButtons', function () {
+  'use strict';
   return {
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-buttons.html',
+    templateUrl: 'form/form-buttons/views/form-buttons.html',
     scope: {
       pfHandleCancel: '&pfOnCancel',
       pfHandleSave: '&pfOnSave',
@@ -163,8 +690,7 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
     }
   };
 });
-;'use strict';
-/**
+;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormGroup
  *
@@ -211,6 +737,8 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
  </example>
  */
 angular.module('patternfly.form').directive('pfFormGroup', function () {
+  'use strict';
+  
   function getInput(element) {
     // table is used for bootstrap3 date/time pickers
     var input = element.find('table');
@@ -233,7 +761,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     transclude: true,
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-group.html',
+    templateUrl: 'form/form-group/views/form-group.html',
     scope: {
       'pfLabel': '@',
       'pfField': '@',
@@ -276,8 +804,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     }
   };
 });
-;'use strict';
-/**
+;/**
  * @ngdoc service
  * @name patternfly.notification.Notification
  * @requires $rootScope
@@ -359,6 +886,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
  </example>
  */
 angular.module('patternfly.notification', []).provider('Notifications', function() {
+  'use strict';
   // time (in ms) the notifications are shown
 
   this.delay = 5000;
@@ -521,6 +1049,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 .directive('pfNotification', function () {
+  'use strict';
   return {
     scope: {
       'pfNotificationType': '=',
@@ -595,13 +1124,13 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 .directive('pfNotificationList', function () {
+  'use strict';
   return {
     restrict: 'E',
     templateUrl: 'notification/views/notification-list.html'
   };
 });
-;'use strict';
-/**
+;/**
  * @ngdoc directive
  * @name patternfly.select:pfSelect
  * @element select
@@ -666,6 +1195,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 angular.module('patternfly.select', []).directive('pfSelect', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     require: '?ngModel',
@@ -699,8 +1229,7 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
     }
   };
 });
-;'use strict';
-/**
+;/**
  * @ngdoc directive
  * @name patternfly.validation:pfValidation
  * @restrict E
@@ -772,6 +1301,7 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
  </example>
  */
 angular.module('patternfly.validation', []).directive('pfValidation', function($timeout) {
+  'use strict';
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -861,15 +1391,36 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       }
     }
   };
-});;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
+});;angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('form/views/form-buttons.html',
+  $templateCache.put('card/card.html',
+    "<div class=tile-pf><div class=tile-pf-heading><h2 class=tile-pf-title>{{headtitle}}</h2></div><span ng-if=subtitle class=tile-pf-subtitle>{{subtitle}}</span><div class=tile-pf-body><ng-transclude></ng-transclude></div></div>"
+  );
+
+}]);
+;angular.module('patternfly.charts').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('charts/progress/progress-chart.html',
+    "<div class=quota-charts-wrapper><div class=quota-chart ng-repeat=\"chart in charts\"><div class=quota-chart-title><span>{{ chart.title }}</span> <span class=used>{{chart.start}} of {{chart.end}}</span></div><div class=quota-chart-bar><div class=quota-chart-used ng-class=\"{'animate': animate}\" style=width:{{chart.percentageUsed}}%></div><div class=quota-chart-unused></div></div></div></div>"
+  );
+
+
+  $templateCache.put('charts/trends/trends-chart.html',
+    "<div id={{id}}><div c3-chart id={{chartId}} config=chartConfig></div></div>"
+  );
+
+}]);
+;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('form/form-buttons/views/form-buttons.html',
     "<div class=form-group><div class=\"{{ pfButtonContainerClass }}\"><div class=\"control-group buttons\"><button class=\"btn btn-default\" type=button ng-click=pfHandleCancel() ng-disabled=pfWorking translate>Cancel</button> <button class=\"btn btn-primary\" ng-click=\"pfHandleSave(); pfWorking = true\" ng-disabled=\"isInvalid() || pfWorking\"><i class=\"icon-spinner icon-spin\" ng-show=pfWorking></i> <span ng-show=pfWorking translate>Saving...</span> <span ng-hide=pfWorking translate>Save</span></button></div></div></div>"
   );
 
 
-  $templateCache.put('form/views/form-group.html',
+  $templateCache.put('form/form-group/views/form-group.html',
     "<div class=form-group ng-class=\"{ 'has-error' : hasErrors() }\"><label for=\"{{ pfField }}\" class=\"control-label {{ pfLabelClass }}\">{{ pfLabel }}</label><div class=\"{{ pfInputClass }}\"><span ng-transclude></span> <span class=help-block ng-show=error.messages><ul><li ng-repeat=\"message in error.messages\">{{ message }}</li></ul></span></div></div>"
   );
 
