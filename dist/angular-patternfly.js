@@ -119,7 +119,17 @@ angular.module('patternfly.card', []).directive('pfCard', function() {
             subtitle: '@'
           }
         };
-	});;/**
+	});;angular.module( 'patternfly.charts' ).directive('pfAggregateTypeCard', function() {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      types: '='
+    },
+    templateUrl: 'modules/app/directives/aggregatetype/aggregate-type.html'
+  };
+});
+;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:c3Chart
  *
@@ -1690,6 +1700,10 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 
   $templateCache.put('charts/donut/donut-percent-chart.html',
     "<div id=radial-chart-container class=radial-chart><div c3-chart id={{donutChartId}} config=config.donutConfig></div></div>"
+  );
+
+  $templateCache.put('charts/aggregatetype/aggregate-type.html',
+    "<div class=\"tile-pf tile-pf-accented tile-pf-status tile-pf-providers\"><h2 class=tile-pf-title ng-if=\"types.count > 1\"><span class=tile-pf-status-count>{{types.count}}</span> <span class=tile-pf-status-type>{{types.name}}</span><div class=\"indicator providers\"><span ng-repeat=\"type in types.types\"><a class=count ng-if=\"type.id && type.href\" href={{type.href}}{{type.id}}><i class=\"provider-icon {{type.iconClass}}\">{{ type.count }}</a> <a class=count ng-if=\"!type.id && type.href\" href={{type.href}}><i class=\"provider-icon {{type.iconClass}}\">{{ type.count }}</a><div class=count ng-if=\"!type.id && !type.href\"><i class=\"provider-icon {{type.iconClass}}\">{{ type.count }}</div></span></div></h2><h2 class=tile-pf-title ng-if=\"types.count == 0\">No Types</h2><h2 class=tile-pf-title ng-if=\"types.count == 1\"><i class=\"provider-icon provider-icon-large {{types.types[0].iconClass}}\"></h2></div>"
   );
 
 
