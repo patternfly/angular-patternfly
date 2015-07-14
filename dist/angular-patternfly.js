@@ -870,7 +870,26 @@ angular.module('patternfly.charts').directive('pfTrends', ['ChartsMixin', '$time
       }
     };
   }
-]);;/**
+]);;angular.module('patternfly.charts').directive('pfUtilizationChart', ['ChartsMixin', '$timeout',
+  function(chartsMixin, $timeout) {
+    'use strict';
+    return {
+      restrict: 'A',
+      scope: {
+        config: '=',
+        data: '='
+      },
+      replace: true,
+      templateUrl: 'charts/utilization/utilization-chart.html',
+      controller: ['$scope',
+        function($scope) {
+          if ($scope.data.available === undefined) {
+            $scope.data.available = $scope.data.total - $scope.data.used;
+          }
+          $scope.config.availableUnits = $scope.config.availableUnits || $scope.totalUnits;
+        }]
+    };
+  }]);;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormButtons
  *
@@ -1691,6 +1710,11 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 
   $templateCache.put('charts/trends/trends-chart.html',
     "<div id={{id}}><div c3-chart id={{chartId}} config=chartConfig></div></div>"
+  );
+
+
+  $templateCache.put('charts/utilization/utilization-chart.html',
+    "<div class=utilization-chart><h3 class=\"h4 count-title\">{{config.title}}</h3><div class=\"count-utilization col-xs-12\"><div class=\"available-text left col-xs-4\"><span>{{data.total - data.used}} {{config.availableUnits}}</span></div><div class=\"available-text right col-xs-8\"><div class=\"available-text col-xs-12 title-small title-small-upper\"><span>Available</span></div><div class=\"available-text col-xs-12 title-small title-small-lower\"><span>of {{data.total}} {{config.totalUnits}}</span></div></div></div><div pf-donut-pct-chart config=config data=data></div><div pf-sparkline-chart config=config data=data></div><p class=\"pull-left legend-text\">{{config.legendLeftText}}</p><p class=\"pull-right legend-text\">{{config.legendRightText}}</p></div>"
   );
 
 }]);
