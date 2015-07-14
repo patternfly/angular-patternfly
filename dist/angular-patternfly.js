@@ -380,7 +380,141 @@ angular.module('patternfly.card', []).directive('pfCard', function() {
         defaultHeatmapBlockPadding: defaultHeatmapBlockPadding,
         getDefaultHeatmapColor: getDefaultHeatmapColor
       };
-  });;/**
+  });;angular.module('patternfly.charts').directive('pfHeatMap', ['ChartsMixin', '$timeout',
+  function(chartsMixin, $timeout) {
+    'use strict';
+    return {
+      restrict: 'A',
+      scope: {
+        parentid: '@',
+        data: '='
+      },
+      replace: true,
+      template: '<svg style="width:100%; height: 100%;"></svg>',
+      controller: ['$scope', '$rootScope',
+        function($scope, $rootScope) {
+          $scope.blockPadding = chartsMixin.defaultHeatmapBlockPadding;
+          $scope.heatmapColor = chartsMixin.getDefaultHeatmapColor();
+          $scope.heatmapColorPattern = chartsMixin.getDefaultHeatmapColorPattern();
+          $scope.determineBlockSize = function() {
+            var x = $scope.width;
+            var y = $scope.height;
+            var n = $scope.data.length;
+            var px = Math.ceil(Math.sqrt(n * x / y));
+            var py = Math.ceil(Math.sqrt(n * y / x));
+            var sx, sy;
+            if (Math.floor(px * y / x) * px < n) {
+              sx = y / Math.ceil(px * y / x);
+            } else {
+              sx = x / px;
+            }
+            if (Math.floor(py * x / y) * py < n) {
+              sy = x / Math.ceil(x * py / y);
+            } else {
+              sy = y / py;
+            }
+            return Math.max(sx, sy);
+          };
+        }],
+      link: function(scope, element, attrs) {
+        var thisComponent = element[0];
+        var updateSizes = function() {
+          var parentDiv = document.querySelector('#' + scope.parentid);
+          scope.width = parentDiv.clientWidth;
+          scope.height = parentDiv.clientHeight;
+          scope.blockSize = scope.determineBlockSize();
+          scope.rows = (scope.blockSize === 0) ? 0 : Math.floor(scope.height / scope.blockSize);
+        };
+        $timeout(function() {
+          updateSizes();
+          scope.redraw();
+        }, 100);
+
+        scope.didInsertElement = function() {
+          updateSizes();
+          scope.redraw();
+          this.resizeNotificationService.on('windowResizedLowLatency', this, this.handleResize);
+        };
+
+        scope.willDestroyElement = function() {
+          this.resizeNotificationService.off('windowResizedLowLatency', this, this.handleResize);
+        };
+
+        scope.handleResize = function() {
+          updateSizes();
+          scope.redraw();
+        };
+        
+        scope.redraw = function() {
+          var data = scope.data;
+          var rows = scope.rows;
+          var blockSize = scope.blockSize;
+          var blockPadding = scope.blockPadding;
+          var color = scope.heatmapColor;
+          var component = thisComponent;
+
+          function highlightBlock(block, active) {
+            block.style('fill-opacity', active ? 1 : 0.4);
+          }
+          var svg = window.d3.select(thisComponent);
+          svg.selectAll('*').remove();
+          var blocks = svg.selectAll('rect').data(data).enter().append('rect');
+          blocks.attr('x', function(d, i) {
+            return (Math.floor(i / rows) * blockSize) + blockPadding;
+          }).attr('y', function(d, i) {
+            return (i % rows * blockSize) + blockPadding;
+          }).attr('width', blockSize - (2 * blockPadding)).attr('height', blockSize - (2 * blockPadding)).style('fill', function(d) {
+            return color(d.value);
+          });
+          blocks.on('mouseover', function() {
+            blocks.call(highlightBlock, false);
+            d3.select(this).call(highlightBlock, true);
+          });
+          blocks.on('click', function(d) {
+            component.sendAction('click', d);
+          });
+          blocks.each(function(d) {
+            $(this).tooltip({
+              container: 'body',
+              animation: false,
+              placement: 'top',
+              trigger: 'hover',
+              html: true,
+              title: d.tooltip
+            });
+          });
+          svg.on('mouseleave', function() {
+            blocks.call(highlightBlock, true);
+          });
+        };
+      }
+    };
+  }]);;angular.module('patternfly.charts').directive('pfHeatMapLegend', ['ChartsMixin', '$timeout',
+  function(chartsMixin, $timeout) {
+    'use strict';
+    return {
+      restrict: 'A',
+      scope: {
+        legend: '='
+      },
+      replace: true,
+      templateUrl: 'charts/heapmap/heatmap-legend.html',
+      controller: ['$scope', '$rootScope',
+        function($scope, $rootScope) {
+          var items = [];
+          var legendColors = chartsMixin.getDefaultHeatmapColorPattern();
+          if ($scope.legend) {
+            for (var i = $scope.legend.length - 1; i >= 0; i--) {
+              items.push({
+                text: $scope.legend[i],
+                color: legendColors[i]
+              });
+            }
+          }
+          $scope.legendItems = items;
+        }]
+    };
+  }]);;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfPercentageUsed
  *
@@ -1365,6 +1499,11 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 }]);
 ;angular.module('patternfly.charts').run(['$templateCache', function($templateCache) {
   'use strict';
+
+  $templateCache.put('charts/heatmap/heatmap-legend.html',
+    "<div class=\"heatmap-legend heatmap-legend-container\"><div ng-repeat=\"item in legendItems\" class=heatmap-legend-container><li class=color-box style=\"background-color: {{item.color}}\"></li><li class=legend-text>{{item.text}}</li></div></div>"
+  );
+
 
   $templateCache.put('charts/progress/progress-chart.html',
     "<div class=quota-charts-wrapper><div class=quota-chart ng-repeat=\"chart in charts\"><div class=quota-chart-title><span>{{ chart.title }}</span> <span class=used>{{chart.start}} of {{chart.end}}</span></div><div class=quota-chart-bar><div class=quota-chart-used ng-class=\"{'animate': animate}\" style=width:{{chart.percentageUsed}}%></div><div class=quota-chart-unused></div></div></div></div>"
