@@ -1,0 +1,19 @@
+<div class="tile-pf tile-pf-accented tile-pf-status">
+    <h2 class="tile-pf-title">
+        <span class="fa pficon {{objectType.iconClass}} container-font-color"></span>
+        <a href="#{{url}}/{{objectType.type}}" ng-if="objectType.type">
+            <span class="tile-pf-status-count">{{objectType.count}}</span>
+            <span class="tile-pf-status-type">{{objectType.name}}</span>
+        </a>
+        <span ng-if="!objectType.type">
+            <span class="tile-pf-status-count">{{objectType.count}}</span>
+            <span class="tile-pf-status-type">{{objectType.name}}</span>
+        </span>
+        <div class="indicator status">
+            <span ng-repeat="status in objectType.status">
+                <i class="fa-status-icon {{status.iconClass}}"/>
+                <span class="count">{{status.count}}</span>
+            </span>
+        </div>
+    </h2>
+</div>

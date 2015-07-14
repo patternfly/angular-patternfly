@@ -602,7 +602,18 @@ angular.module('patternfly.card', []).directive('pfCard', function() {
           $scope.legendItems = items;
         }]
     };
-  }]);;/**
+  }]);;angular.module( 'patternfly.charts' ).directive('pfObjStatus', function() {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      objectType: '=type',
+      url: '='
+    },
+    templateUrl: 'charts/objectstatus/object-status-tile.html'
+  };
+});
+;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfPercentageUsed
  *
@@ -1710,6 +1721,11 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 
   $templateCache.put('charts/heatmap/heatmap-legend.html',
     "<div class=\"heatmap-legend heatmap-legend-container\"><div ng-repeat=\"item in legendItems\" class=heatmap-legend-container><li class=color-box style=\"background-color: {{item.color}}\"></li><li class=legend-text>{{item.text}}</li></div></div>"
+  );
+
+
+  $templateCache.put('charts/objectstatus/object-status-tile.html',
+    "<div class=\"tile-pf tile-pf-accented tile-pf-status\"><h2 class=tile-pf-title><span class=\"fa pficon {{objectType.iconClass}} container-font-color\"></span> <a href=#{{url}}/{{objectType.type}} ng-if=objectType.type><span class=tile-pf-status-count>{{objectType.count}}</span> <span class=tile-pf-status-type>{{objectType.name}}</span></a> <span ng-if=!objectType.type><span class=tile-pf-status-count>{{objectType.count}}</span> <span class=tile-pf-status-type>{{objectType.name}}</span></span><div class=\"indicator status\"><span ng-repeat=\"status in objectType.status\"><i class=\"fa-status-icon {{status.iconClass}}\"><span class=count>{{status.count}}</span></span></div></h2></div>"
   );
 
 
