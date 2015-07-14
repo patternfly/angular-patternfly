@@ -441,7 +441,7 @@ angular.module('patternfly.charts')
   };
 }]);
 ;'use strict';
-angular.module('patternfly.charts').directive('cfmeTrends', ['ChartsMixin', '$timeout',
+angular.module('patternfly.charts').directive('pfTrends', ['ChartsMixin', '$timeout',
     function(chartsMixin, $timeout) {
     return {
       restrict: 'A',
