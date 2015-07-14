@@ -5,6 +5,6 @@ angular.module( 'patternfly.charts' ).directive('pfAggregateTypeCard', function(
     scope: {
       types: '='
     },
-    templateUrl: 'modules/app/directives/aggregatetype/aggregate-type.html'
+    templateUrl: 'charts/aggregatetype/aggregate-type.html'
   };
 });

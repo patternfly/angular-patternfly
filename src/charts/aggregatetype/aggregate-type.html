@@ -4,9 +4,7 @@
         <span class="tile-pf-status-type">{{types.name}}</span>
         <div class="indicator providers">
             <span ng-repeat="type in types.types">
-                <a class="count" ng-if="type.id && type.href" href="{{type.href}}{{type.id}}"><i class="provider-icon {{type.iconClass}}"/>{{ type.count }}</a>
-                <a class="count" ng-if="!type.id && type.href" href="{{type.href}}"><i class="provider-icon {{type.iconClass}}"/>{{ type.count }}</a>
-                <div class="count" ng-if="!type.id && !type.href"><i class="provider-icon {{type.iconClass}}"/>{{ type.count }}</div>
+                <a class="count" href="{{type.href}}{{type.id}}"><i class="provider-icon {{type.iconClass}}"/>{{ type.count }}</a>
             </span>
         </div>
     </h2>
