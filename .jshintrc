@@ -14,12 +14,14 @@
   "quotmark": "single",
   "regexp": true,
   "undef": true,
-  "unused": true,
+  "unused": "vars",
   "strict": true,
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "angular": false
-    //"$": false
+    "angular": false,
+    "$": false,
+    "c3": false,
+    "d3": false
   }
 }
