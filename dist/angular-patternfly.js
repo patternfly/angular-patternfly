@@ -498,7 +498,7 @@ angular.module('patternfly.card', []).directive('pfCard', function() {
         legend: '='
       },
       replace: true,
-      templateUrl: 'charts/heapmap/heatmap-legend.html',
+      templateUrl: 'charts/heatmap/heatmap-legend.html',
       controller: ['$scope', '$rootScope',
         function($scope, $rootScope) {
           var items = [];
