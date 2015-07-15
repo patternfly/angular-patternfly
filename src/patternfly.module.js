@@ -12,4 +12,3 @@ angular.module('patternfly', [
   'patternfly.select',
   'patternfly.validation'
 ]);
-

@@ -18,10 +18,10 @@ describe('Directive: pfCard', function() {
   });
 
   it("should set the title and subtitle", function() {
-    title = angular.element(element).find('.tile-pf-title').html();
+    title = angular.element(element).find('.card-pf-title').html();
     expect(title).toBe("My card title");
 
-    subtitle = angular.element(element).find('.tile-pf-subtitle').html();
+    subtitle = angular.element(element).find('.card-pf-subtitle').html();
     expect(subtitle).toBe("My card subtitle title");
   });
 });

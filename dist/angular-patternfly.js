@@ -28,7 +28,6 @@ angular.module('patternfly', [
   'patternfly.select',
   'patternfly.validation'
 ]);
-
 ;/**
  * @ngdoc directive
  * @name patternfly.autofocus:pfFocused
@@ -106,20 +105,19 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
 
  </example>
  */
-
 angular.module('patternfly.card', []).directive('pfCard', function() {
-    'use strict';
-
-    return {
-        restrict: 'A',
-        transclude: true,
-        templateUrl: 'card/card.html',
-        scope: {
-            headtitle: '@',
-            subtitle: '@'
-          }
-        };
-	});;/**
+  'use strict';
+  return {
+    restrict: 'A',
+    transclude: true,
+    templateUrl: 'card/card.html',
+    scope: {
+      headtitle: '@',
+      subtitle: '@'
+    }
+  };
+});
+;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:c3Chart
  *
@@ -1681,7 +1679,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
   'use strict';
 
   $templateCache.put('card/card.html',
-    "<div class=tile-pf><div class=tile-pf-heading><h2 class=tile-pf-title>{{headtitle}}</h2></div><span ng-if=subtitle class=tile-pf-subtitle>{{subtitle}}</span><div class=tile-pf-body><ng-transclude></ng-transclude></div></div>"
+    "<div class=card-pf><div class=card-pf-heading><h2 class=card-pf-title>{{headtitle}}</h2></div><span ng-if=subtitle class=card-pf-subtitle>{{subtitle}}</span><div class=card-pf-body><ng-transclude></ng-transclude></div></div>"
   );
 
 }]);
@@ -1699,7 +1697,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 
 
   $templateCache.put('charts/progress/progress-chart.html',
-    "<div class=quota-charts-wrapper><div class=quota-chart ng-repeat=\"chart in charts\"><div class=quota-chart-title><span>{{ chart.title }}</span> <span class=used>{{chart.start}} of {{chart.end}}</span></div><div class=quota-chart-bar><div class=quota-chart-used ng-class=\"{'animate': animate}\" style=width:{{chart.percentageUsed}}%></div><div class=quota-chart-unused></div></div></div></div>"
+    "<div class=percentageUsedBarChartWrapper><div class=perentageUsedBarChart ng-repeat=\"chart in charts\"><div class=percentageUsedBarTitle><span>{{ chart.title }}</span> <span class=used>{{chart.start}} of {{chart.end}}</span></div><div class=percentageUsedBar><div class=percentageUsedBarFilled ng-class=\"{'animate': animate}\" style=width:{{chart.percentageUsed}}%></div><div class=percentageUsedBarUnused></div></div></div></div>"
   );
 
 

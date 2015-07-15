@@ -21,7 +21,7 @@ describe('Directive: pfPercentageUsed', function() {
 
   it("should set the used amount and percentage", function() {
     expect(angular.element(element).find('.used').html()).toBe("8 of 16");
-    var usedChart = angular.element(element).find('.quota-chart-used');
+    var usedChart = angular.element(element).find('.percentageUsedBarFilled');
     expect(usedChart.attr("style")).toBe("width:50%");
   });
 
@@ -30,7 +30,7 @@ describe('Directive: pfPercentageUsed', function() {
     $scope.$digest();
 
     expect(angular.element(element).find('.used').html()).toBe("4 of 16");
-    var usedChart = angular.element(element).find('.quota-chart-used');
+    var usedChart = angular.element(element).find('.percentageUsedBarFilled');
     expect(usedChart.attr("style")).toBe("width:25%");
   });
 });

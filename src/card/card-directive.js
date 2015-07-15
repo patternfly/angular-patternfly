@@ -18,17 +18,15 @@
 
  </example>
  */
-
 angular.module('patternfly.card', []).directive('pfCard', function() {
-    'use strict';
-
-    return {
-        restrict: 'A',
-        transclude: true,
-        templateUrl: 'card/card.html',
-        scope: {
-            headtitle: '@',
-            subtitle: '@'
-          }
-        };
-	});
+  'use strict';
+  return {
+    restrict: 'A',
+    transclude: true,
+    templateUrl: 'card/card.html',
+    scope: {
+      headtitle: '@',
+      subtitle: '@'
+    }
+  };
+});
