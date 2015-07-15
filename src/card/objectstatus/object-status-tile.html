@@ -1,0 +1,19 @@
+<div class="card-pf card-pf-accented card-pf-status">
+    <h2 class="card-pf-title">
+        <span class="fa pficon {{objectType.iconClass}} container-font-color"></span>
+        <a href="#{{url}}/{{objectType.type}}" ng-if="objectType.type">
+            <span class="card-pf-status-count">{{objectType.count}}</span>
+            <span class="card-pf-status-type">{{objectType.name}}</span>
+        </a>
+        <span ng-if="!objectType.type">
+            <span class="card-pf-status-count">{{objectType.count}}</span>
+            <span class="card-pf-status-type">{{objectType.name}}</span>
+        </span>
+        <div class="indicator status">
+            <span ng-repeat="status in objectType.status">
+                <i class="fa-status-icon {{status.iconClass}}"/>
+                <span class="count">{{status.count}}</span>
+            </span>
+        </div>
+    </h2>
+</div>

@@ -1,4 +1,12 @@
 /**
+ * @name  patternfly card
+ *
+ * @description
+ *   Card module for patternfly.
+ *
+ */
+angular.module('patternfly.card', []);
+;/**
  * @name  patternfly
  *
  * @description
@@ -85,6 +93,16 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
     }
   };
 });
+;angular.module( 'patternfly.card' ).directive('pfAggregateTypeCard', function() {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      types: '='
+    },
+    templateUrl: 'card/aggregatetype/aggregate-type.html'
+  };
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.card:pfCard
@@ -105,16 +123,27 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
 
  </example>
  */
-angular.module('patternfly.card', []).directive('pfCard', function() {
+angular.module('patternfly.card').directive('pfCard', function() {
   'use strict';
   return {
     restrict: 'A',
     transclude: true,
-    templateUrl: 'card/card.html',
+    templateUrl: 'card/basic/card.html',
     scope: {
       headtitle: '@',
       subtitle: '@'
     }
+  };
+});
+;angular.module( 'patternfly.card' ).directive('pfObjStatus', function() {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      objectType: '=type',
+      url: '='
+    },
+    templateUrl: 'card/objectstatus/object-status-tile.html'
   };
 });
 ;/**
@@ -1678,8 +1707,18 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 });;angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('card/card.html',
+  $templateCache.put('card/aggregatetype/aggregate-type.html',
+    "<div class=\"card-pf card-pf-accented card-pf-status card-pf-providers\"><h2 class=card-pf-title ng-if=\"types.count > 1\"><span class=card-pf-status-count>{{types.count}}</span> <span class=card-pf-status-type>{{types.name}}</span><div class=\"indicator providers\"><span ng-repeat=\"type in types.types\"><a class=count href={{type.href}}{{type.id}}><i class=\"provider-icon {{type.iconClass}}\">{{ type.count }}</a></span></div></h2><h2 class=card-pf-title ng-if=\"types.count == 0\">No Types</h2><h2 class=card-pf-title ng-if=\"types.count == 1\"><i class=\"provider-icon provider-icon-large {{types.types[0].iconClass}}\"></h2></div>"
+  );
+
+
+  $templateCache.put('card/basic/card.html',
     "<div class=card-pf><div class=card-pf-heading><h2 class=card-pf-title>{{headtitle}}</h2></div><span ng-if=subtitle class=card-pf-subtitle>{{subtitle}}</span><div class=card-pf-body><ng-transclude></ng-transclude></div></div>"
+  );
+
+
+  $templateCache.put('card/objectstatus/object-status-tile.html',
+    "<div class=\"card-pf card-pf-accented card-pf-status\"><h2 class=card-pf-title><span class=\"fa pficon {{objectType.iconClass}} container-font-color\"></span> <a href=#{{url}}/{{objectType.type}} ng-if=objectType.type><span class=card-pf-status-count>{{objectType.count}}</span> <span class=card-pf-status-type>{{objectType.name}}</span></a> <span ng-if=!objectType.type><span class=card-pf-status-count>{{objectType.count}}</span> <span class=card-pf-status-type>{{objectType.name}}</span></span><div class=\"indicator status\"><span ng-repeat=\"status in objectType.status\"><i class=\"fa-status-icon {{status.iconClass}}\"><span class=count>{{status.count}}</span></span></div></h2></div>"
   );
 
 }]);

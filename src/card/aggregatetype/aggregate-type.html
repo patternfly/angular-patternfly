@@ -1,0 +1,17 @@
+<div class="card-pf card-pf-accented card-pf-status card-pf-providers">
+    <h2 class="card-pf-title" ng-if="types.count > 1">
+        <span class="card-pf-status-count">{{types.count}}</span>
+        <span class="card-pf-status-type">{{types.name}}</span>
+        <div class="indicator providers">
+            <span ng-repeat="type in types.types">
+                <a class="count" href="{{type.href}}{{type.id}}"><i class="provider-icon {{type.iconClass}}"/>{{ type.count }}</a>
+            </span>
+        </div>
+    </h2>
+    <h2 class="card-pf-title" ng-if="types.count == 0">
+        No Types
+    </h2>
+    <h2 class="card-pf-title" ng-if="types.count == 1">
+        <i class="provider-icon provider-icon-large {{types.types[0].iconClass}}"/>
+    </h2>
+</div>

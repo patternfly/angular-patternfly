@@ -3,7 +3,7 @@ describe('Directive: pfCard', function() {
 
   beforeEach(module(
     'patternfly.card',
-    'card/card.html'
+    'card/basic/card.html'
   ));
 
   beforeEach(inject(function(_$compile_, _$rootScope_) {
