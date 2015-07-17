@@ -10,8 +10,8 @@ angular.module('patternfly.card', []);
  * @name  patternfly
  *
  * @description
- *   Charts module for patternfly. Must Inlcude d3.js and c3.js to use
- * 
+ *   Charts module for patternfly. Must Include d3.js and c3.js to use
+ *
  */
 angular.module('patternfly.charts', []);
 
@@ -112,7 +112,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
  * @param {subtitle=} Subtitle for the card - optional
  *
  * @description
- * Directive for easiliy displaying a html with transcluded content
+ * Directive for easily displaying a card with transcluded content
  *
  * @example
  <example module="patternfly.card">
@@ -625,10 +625,10 @@ angular.module('patternfly.card').directive('pfCard', function() {
  *
  * @description
  *   Directive for rendering a percentage used progress chart. Will render one or more
- *   bars based on data 
+ *   bars based on data
  *
  *
- * @param {string} charts model data to be displalayed
+ * @param {string} charts model data to be displayed
  * @param {string} id the ID iof the container that the chart should bind to
  *
  * @example
@@ -664,7 +664,7 @@ angular.module('patternfly.charts')
     link: function($scope) {
       $scope.$watch('charts', function(newVal, oldVal){
         if (typeof(newVal) !== 'undefined') {
-          //Calculate the perentage used  
+          //Calculate the percentage used
           angular.forEach($scope.charts, function(chart, index) {
             chart.percentageUsed = 100 * (chart.start/chart.end);
           }, $scope.charts);

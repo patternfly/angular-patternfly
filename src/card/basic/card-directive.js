@@ -7,7 +7,7 @@
  * @param {subtitle=} Subtitle for the card - optional
  *
  * @description
- * Directive for easiliy displaying a html with transcluded content
+ * Directive for easily displaying a card with transcluded content
  *
  * @example
  <example module="patternfly.card">

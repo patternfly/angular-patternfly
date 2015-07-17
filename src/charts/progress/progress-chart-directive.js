@@ -4,10 +4,10 @@
  *
  * @description
  *   Directive for rendering a percentage used progress chart. Will render one or more
- *   bars based on data 
+ *   bars based on data
  *
  *
- * @param {string} charts model data to be displalayed
+ * @param {string} charts model data to be displayed
  * @param {string} id the ID iof the container that the chart should bind to
  *
  * @example
@@ -43,7 +43,7 @@ angular.module('patternfly.charts')
     link: function($scope) {
       $scope.$watch('charts', function(newVal, oldVal){
         if (typeof(newVal) !== 'undefined') {
-          //Calculate the perentage used  
+          //Calculate the percentage used
           angular.forEach($scope.charts, function(chart, index) {
             chart.percentageUsed = 100 * (chart.start/chart.end);
           }, $scope.charts);
