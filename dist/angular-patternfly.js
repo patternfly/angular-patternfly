@@ -135,7 +135,7 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
   return {
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-buttons.html',
+    templateUrl: 'form/form-buttons/form-buttons.html',
     scope: {
       pfHandleCancel: '&pfOnCancel',
       pfHandleSave: '&pfOnSave',
@@ -233,7 +233,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     transclude: true,
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-group.html',
+    templateUrl: 'form/form-group/form-group.html',
     scope: {
       'pfLabel': '@',
       'pfField': '@',
@@ -252,7 +252,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
       if (!iAttrs.pfInputClass) {
         iAttrs.pfInputClass = 'col-sm-5';
       }
-      
+
       if (!scope.pfField) {
         scope.pfField = input.attr('id');
       }
@@ -530,7 +530,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       'pfNotificationIndex': '='
     },
     restrict: 'E',
-    templateUrl: 'notification/views/notification.html'
+    templateUrl: 'notification/notification.html'
   };
 })
 /**
@@ -597,7 +597,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
 .directive('pfNotificationList', function () {
   return {
     restrict: 'E',
-    templateUrl: 'notification/views/notification-list.html'
+    templateUrl: 'notification/notification-list.html'
   };
 });
 ;'use strict';
@@ -864,12 +864,12 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 });;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('form/views/form-buttons.html',
+  $templateCache.put('form/form-buttons/form-buttons.html',
     "<div class=form-group><div class=\"{{ pfButtonContainerClass }}\"><div class=\"control-group buttons\"><button class=\"btn btn-default\" type=button ng-click=pfHandleCancel() ng-disabled=pfWorking translate>Cancel</button> <button class=\"btn btn-primary\" ng-click=\"pfHandleSave(); pfWorking = true\" ng-disabled=\"isInvalid() || pfWorking\"><i class=\"icon-spinner icon-spin\" ng-show=pfWorking></i> <span ng-show=pfWorking translate>Saving...</span> <span ng-hide=pfWorking translate>Save</span></button></div></div></div>"
   );
 
 
-  $templateCache.put('form/views/form-group.html',
+  $templateCache.put('form/form-group/form-group.html',
     "<div class=form-group ng-class=\"{ 'has-error' : hasErrors() }\"><label for=\"{{ pfField }}\" class=\"control-label {{ pfLabelClass }}\">{{ pfLabel }}</label><div class=\"{{ pfInputClass }}\"><span ng-transclude></span> <span class=help-block ng-show=error.messages><ul><li ng-repeat=\"message in error.messages\">{{ message }}</li></ul></span></div></div>"
   );
 
@@ -877,12 +877,12 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 ;angular.module('patternfly.notification').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('notification/views/notification-list.html',
+  $templateCache.put('notification/notification-list.html',
     "<div data-ng-show=\"notifications.data.length > 0\"><div ng-repeat=\"notification in notifications.data\"><pf-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-notification></div></div>"
   );
 
 
-  $templateCache.put('notification/views/notification.html',
+  $templateCache.put('notification/notification.html',
     "<div class=\"alert alert-{{pfNotificationType}}\"><button ng-show=pfNotificationPersistent type=button class=close ng-click=$parent.notifications.remove($index)><span aria-hidden=true>&times;</span><span class=sr-only>Close</span></button> <span class=\"pficon pficon-ok\" ng-show=\"pfNotificationType == 'success'\"></span> <span class=\"pficon pficon-info\" ng-show=\"pfNotificationType == 'info'\"></span> <span class=pficon-layered ng-show=\"pfNotificationType == 'danger'\"><span class=\"pficon pficon-error-octagon\"></span> <span class=\"pficon pficon-error-exclamation\"></span></span> <span class=pficon-layered ng-show=\"pfNotificationType == 'warning'\"><span class=\"pficon pficon-warning-triangle\"></span> <span class=\"pficon pficon-warning-exclamation\"></span></span> <strong>{{pfNotificationHeader}}</strong> {{pfNotificationMessage}}</div>"
   );
 

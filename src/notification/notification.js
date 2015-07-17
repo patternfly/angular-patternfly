@@ -252,7 +252,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       'pfNotificationIndex': '='
     },
     restrict: 'E',
-    templateUrl: 'notification/views/notification.html'
+    templateUrl: 'notification/notification.html'
   };
 })
 /**
@@ -319,6 +319,6 @@ angular.module('patternfly.notification', []).provider('Notifications', function
 .directive('pfNotificationList', function () {
   return {
     restrict: 'E',
-    templateUrl: 'notification/views/notification-list.html'
+    templateUrl: 'notification/notification-list.html'
   };
 });

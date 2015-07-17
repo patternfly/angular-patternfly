@@ -4,8 +4,8 @@ describe('pf-notification', function () {
 
   beforeEach(module(
     'patternfly.notification',
-    'notification/views/notification.html',
-    'notification/views/notification-list.html'
+    'notification/notification.html',
+    'notification/notification-list.html'
   ));
 
   beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_, _Notifications_) {
