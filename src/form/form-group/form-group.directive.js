@@ -68,7 +68,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     transclude: true,
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-group.html',
+    templateUrl: 'form/form-group/form-group.html',
     scope: {
       'pfLabel': '@',
       'pfField': '@',
@@ -87,7 +87,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
       if (!iAttrs.pfInputClass) {
         iAttrs.pfInputClass = 'col-sm-5';
       }
-      
+
       if (!scope.pfField) {
         scope.pfField = input.attr('id');
       }

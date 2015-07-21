@@ -3,7 +3,7 @@ describe('Directive: pfFormButtons', function() {
 
   beforeEach(module(
     'patternfly.form',
-    'form/views/form-buttons.html'
+    'form/form-buttons/form-buttons.html'
   ));
 
   beforeEach(inject(function(_$compile_, _$rootScope_) {

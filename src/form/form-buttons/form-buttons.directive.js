@@ -57,7 +57,7 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
   return {
     replace: true,
     require: '^form',
-    templateUrl: 'form/views/form-buttons.html',
+    templateUrl: 'form/form-buttons/form-buttons.html',
     scope: {
       pfHandleCancel: '&pfOnCancel',
       pfHandleSave: '&pfOnSave',
