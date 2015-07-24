@@ -1,8 +1,8 @@
-<div class="card-pf">
+<div ng-class="getClasses()" id="cardcontainer">
 	<div class="card-pf-heading">
-        <h2 class="card-pf-title">{{headtitle}}</h2>
+        <h2 class="card-pf-title" id="headtitle">{{headtitle}}</h2>
     </div>
-    <span ng-if="subtitle" class="card-pf-subtitle">{{subtitle}}</span>
+    <span ng-if="subtitle" class="card-pf-subtitle" id="subtitle">{{subtitle}}</span>
     <div class="card-pf-body">
         <ng-transclude></ng-transclude>
     </div>

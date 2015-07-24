@@ -110,6 +110,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
  * @element ANY
  * @param {headtitle=} Title for the card - required
  * @param {subtitle=} Subtitle for the card - optional
+ * @param {hidetopborder=} Hide Top Border, true hides top border, false (default) shows top border - optional
  *
  * @description
  * Directive for easily displaying a card with transcluded content
@@ -118,7 +119,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
  <example module="patternfly.card">
 
  <file name="index.html">
-    <div pf-card headtitle="My Card Title" subtitle="My card subtitle">Inner content goes here</div>
+    <div pf-card headtitle="My Card Title" subtitle="My card subtitle" hidetopborder="false">Inner content goes here</div>
  </file>
 
  </example>
@@ -131,8 +132,19 @@ angular.module('patternfly.card').directive('pfCard', function() {
     templateUrl: 'card/basic/card.html',
     scope: {
       headtitle: '@',
-      subtitle: '@'
-    }
+      subtitle: '@',
+      hidetopborder: '@'
+    },
+    controller: ['$scope',
+      function($scope) {
+        $scope.getClasses = function() {
+          if($scope.hidetopborder) {
+            return $scope.hidetopborder.toString() === 'true' ? 'card-pf' : 'card-pf card-pf-accented';
+          } else {
+            return 'card-pf card-pf-accented';
+          }
+        };
+      }]
   };
 });
 ;angular.module( 'patternfly.card' ).directive('pfObjStatus', function() {
@@ -1713,7 +1725,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 
 
   $templateCache.put('card/basic/card.html',
-    "<div class=card-pf><div class=card-pf-heading><h2 class=card-pf-title>{{headtitle}}</h2></div><span ng-if=subtitle class=card-pf-subtitle>{{subtitle}}</span><div class=card-pf-body><ng-transclude></ng-transclude></div></div>"
+    "<div ng-class=getClasses() id=cardcontainer><div class=card-pf-heading><h2 class=card-pf-title id=headtitle>{{headtitle}}</h2></div><span ng-if=subtitle class=card-pf-subtitle id=subtitle>{{subtitle}}</span><div class=card-pf-body><ng-transclude></ng-transclude></div></div>"
   );
 
 
