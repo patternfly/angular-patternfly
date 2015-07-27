@@ -8,8 +8,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'lib/patternfly/components/jquery/jquery.js',
-      'lib/patternfly/components/bootstrap-select/bootstrap-select.js',
+      'lib/patternfly/components/jquery/dist/jquery.js',
+      'lib/patternfly/components/bootstrap-select/js/bootstrap-select.js',
       'lib/angular/angular.js',
       'lib/angular-mocks/angular-mocks.js',
       'misc/test-lib/helpers.js',
