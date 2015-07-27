@@ -1,0 +1,8 @@
+/*
+ * This is needed since ngDocs has bootstrap as a default file to load
+ * patternfly assumes that the consuming application is not loading the bootstrap.css directly
+ */
+
+.form-horizontal .col-sm-2.control-label {
+	width: 16.66666667%;
+}
