@@ -171,7 +171,6 @@ module.exports = function(grunt) {
             grunt.fail.warn('Unable to build module \'' + file + '\'. The module doesn\'t exist.');
           }
         });
-
       } else {
         concatSrc = 'src/**/*.js';
       }
