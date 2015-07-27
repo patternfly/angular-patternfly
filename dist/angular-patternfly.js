@@ -76,80 +76,6 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
     }
   };
 });
-;/**
- * @ngdoc directive
- * @name patternfly.form.directive:pfDatepicker
- *
- * @description
- *  Angular directive to wrap the bootstrap datepicker http://bootstrap-datepicker.readthedocs.org/en/latest/
- *
- * @param {string} date the date model
- * @param {string} options the configuration options for the date picker
- *
- * @example
- <example module="patternfly.form">
-
-   <file name="index.html">
-     <form class="form-horizontal" ng-controller="FormDemoCtrl">
-     <div>
-       <button ng-click=setToday()>Set Today in Angular Model</button>
-      </div>
-      Date: <span ng-bind="date | date:'MM/dd/yyyy'"></span>
-      <div pf-datepicker options="options" date="date"></div>
-     </form>
-   </file>
-
-   <file name="script.js">
-     function FormDemoCtrl ($scope) {
-        $scope.setToday = function () {
-          $scope.date = new Date();
-        }
-
-        $scope.options = {
-          autoclose: true,
-          todayBtn: 'linked',
-          todayHighlight: true
-        };
-      }
-   </file>
- </example>
- */
-angular.module('patternfly.form').directive('pfDatepicker', function() {
-  'use strict';
-  return {
-    replace: true,
-    restrict: 'A',
-    require: '^form',
-    templateUrl: 'form/datepicker/datepicker.html',
-    scope: {
-      options: '=',
-      date: '='
-    },
-    link: function($scope, element) {
-
-      //Make sure the date picker is set with the correct options
-      element.datepicker($scope.options);
-
-      //Set the initial value of the date picker
-      element.datepicker('update', $scope.date);
-
-
-      //Change happened on the date picker side. Update the underlying date model
-      element.datepicker($scope.date).on('changeDate', function(elem) {
-        $scope.$apply(function(){
-          $scope.date = elem.date;
-        });
-      });
-
-      //Update the date picker if there is a change on the date model
-      $scope.$watch('date', function(newValue, oldValue) {
-        if (oldValue !== newValue) {
-          element.datepicker('update', newValue);
-        }
-      });
-    }
-  };
-});
 ;'use strict';
 /**
  * @ngdoc directive
@@ -937,11 +863,6 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
   };
 });;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
   'use strict';
-
-  $templateCache.put('form/datepicker/datepicker.html',
-    "<div class=\"input-group date\"><input class=\"form-control\"><span class=input-group-addon><span class=\"fa fa-calendar\"></span></span></div>"
-  );
-
 
   $templateCache.put('form/form-buttons/form-buttons.html',
     "<div class=form-group><div class=\"{{ pfButtonContainerClass }}\"><div class=\"control-group buttons\"><button class=\"btn btn-default\" type=button ng-click=pfHandleCancel() ng-disabled=pfWorking translate>Cancel</button> <button class=\"btn btn-primary\" ng-click=\"pfHandleSave(); pfWorking = true\" ng-disabled=\"isInvalid() || pfWorking\"><i class=\"icon-spinner icon-spin\" ng-show=pfWorking></i> <span ng-show=pfWorking translate>Saving...</span> <span ng-hide=pfWorking translate>Save</span></button></div></div></div>"
