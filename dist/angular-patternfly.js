@@ -620,7 +620,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  <file name="index.html">
  <div ng-controller="SelectDemoCtrl">
 
- <form>
+ <form class="form-horizontal">
    <div class="form-group">
      <label class="col-sm-2 control-label" for="pet">Preferred pet:</label>
      <div class="col-sm-10">

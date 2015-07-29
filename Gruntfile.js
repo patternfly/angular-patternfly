@@ -96,14 +96,18 @@ module.exports = function(grunt) {
         options: {
           title: 'Angular-Patternfly Documentation',
           dest: 'dist/docs',
-          scripts: ['lib/patternfly/components/jquery/jquery.js',
+          scripts: ['lib/patternfly/components/jquery/dist/jquery.js',
             'lib/patternfly/components/bootstrap/dist/js/bootstrap.js',
-            'lib/patternfly/components/bootstrap-select/bootstrap-select.js',
+            'lib/patternfly/components/bootstrap-combobox/js/bootstrap-combobox.js',
+            'lib/patternfly/components/bootstrap-select/js/bootstrap-select.js',
+            'lib/patternfly/components/bootstrap-treeview/src/js/bootstrap-treeview.js',
+            'lib/patternfly/components/c3/c3.js',
+            'lib/patternfly/components/d3/d3.js',
             'angular.js',
             'dist/angular-patternfly.js',
             'lib/patternfly/dist/js/patternfly.js'],
           html5Mode: false,
-          styles: ['lib/patternfly/dist/css/patternfly.css']
+          styles: ['lib/patternfly/dist/css/patternfly.css', 'lib/patternfly/dist/css/patternfly-additions.css', 'misc/bootstrap-overrides.css']
         },
         all: ['src/**/*.js']
       },
