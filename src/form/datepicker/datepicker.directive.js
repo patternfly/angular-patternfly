@@ -55,7 +55,6 @@ angular.module('patternfly.form').directive('pfDatepicker', function() {
       //Set the initial value of the date picker
       element.datepicker('update', $scope.date);
 
-
       //Change happened on the date picker side. Update the underlying date model
       element.datepicker($scope.date).on('changeDate', function(elem) {
         $scope.$apply(function(){

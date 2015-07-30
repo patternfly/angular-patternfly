@@ -1,5 +1,5 @@
 describe('Directive: pfDatepicker', function() {
-  var $scope, $compile, $timeout, element, dateInput;
+  var $scope, $compile, $timeout, element, datepicker, dateInput;
 
   beforeEach(module('patternfly.form', 'form/datepicker/datepicker.html'));
 
@@ -17,13 +17,12 @@ describe('Directive: pfDatepicker', function() {
   it("should set the date picker input", function() {
     $scope.options = {};
 
-    var datepicker = compileDatepicker('<form><div pf-datepicker options="options" date="date"></div></form>', $scope);
-    var dateInput = angular.element(datepicker).find('input');
+    datepicker = compileDatepicker('<form><div pf-datepicker options="options" date="date"></div></form>', $scope);
+    dateInput = angular.element(datepicker).find('input');
     expect(dateInput.val()).toBe('');
 
-    $scope.$apply(function(){
-      $scope.date = new Date("October 13, 2014 11:13:00");
-    });
+    $scope.date = new Date("October 13, 2014 11:13:00");
+    $scope.$digest();
 
     expect(dateInput.val()).toBe('10/13/2014');
   });
@@ -31,14 +30,11 @@ describe('Directive: pfDatepicker', function() {
   it("should set the angular model", function() {
     $scope.options = {};
 
-    var datepicker = compileDatepicker('<form><div pf-datepicker options="options" date="date"></div></form>', $scope);
-    var dateInput = angular.element(datepicker).find('input');
-
-    var newDate = new Date("October 4, 2015 11:13:00");
-    dateInput.datepicker('update', newDate);
+    datepicker = compileDatepicker('<form><div pf-datepicker options="options" date="date"></div></form>', $scope);
+    dateInput = angular.element(datepicker).find('input');
+    dateInput.datepicker('update', new Date("October 4, 2015 11:13:00"));
 
     $scope.$digest();
-    console.log($scope.date);
 
     expect(dateInput.val()).toBe('10/04/2015');
   });

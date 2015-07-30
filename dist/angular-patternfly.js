@@ -133,7 +133,6 @@ angular.module('patternfly.form').directive('pfDatepicker', function() {
       //Set the initial value of the date picker
       element.datepicker('update', $scope.date);
 
-
       //Change happened on the date picker side. Update the underlying date model
       element.datepicker($scope.date).on('changeDate', function(elem) {
         $scope.$apply(function(){
@@ -939,7 +938,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
   'use strict';
 
   $templateCache.put('form/datepicker/datepicker.html',
-    "<div class=\"input-group date\"><input class=\"form-control\"><span class=input-group-addon><span class=\"fa fa-calendar\"></span></span></div>"
+    "<div class=\"input-group date\"><input class=\"form-control\"> <span class=input-group-addon><span class=\"fa fa-calendar\"></span></span></div>"
   );
 
 
