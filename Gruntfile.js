@@ -99,6 +99,7 @@ module.exports = function(grunt) {
           scripts: ['lib/patternfly/components/jquery/dist/jquery.js',
             'lib/patternfly/components/bootstrap/dist/js/bootstrap.js',
             'lib/patternfly/components/bootstrap-combobox/js/bootstrap-combobox.js',
+            'lib/patternfly/components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
             'lib/patternfly/components/bootstrap-select/js/bootstrap-select.js',
             'lib/patternfly/components/bootstrap-treeview/src/js/bootstrap-treeview.js',
             'lib/patternfly/components/c3/c3.js',
