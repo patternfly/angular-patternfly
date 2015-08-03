@@ -1,0 +1,9 @@
+<div ng-class="showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'">
+  <div class="card-pf-heading">
+    <h2 class="card-pf-title">{{headTitle}}</h2>
+  </div>
+  <span ng-if="subTitle" class="card-pf-subtitle">{{subTitle}}</span>
+  <div class="card-pf-body">
+    <div ng-transclude></div>
+  </div>
+</div>

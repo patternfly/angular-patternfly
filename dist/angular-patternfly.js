@@ -1,4 +1,12 @@
 /**
+ * @name  patternfly card
+ *
+ * @description
+ *   Card module for patternfly.
+ *
+ */
+angular.module('patternfly.card', []);
+;/**
  * @name  patternfly.form
  *
  * @description
@@ -13,6 +21,7 @@ angular.module('patternfly.form', []);
  */
 angular.module('patternfly', [
   'patternfly.autofocus',
+  'patternfly.card',
   'patternfly.form',
   'patternfly.notification',
   'patternfly.select',
@@ -76,6 +85,45 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
     }
   };
 });
+;/**
+ * @ngdoc directive
+ * @name patternfly.card:pfCard
+ * @restrict A
+ * @element ANY
+ * @param {headTitle=} Title for the card - required
+ * @param {subtTtle=} Subtitle for the card - optional
+ * @param {showTopBorder=} Show Top Border, true shows top border, false (default) hides top border - optional
+ *
+ * @description
+ * Directive for easily displaying a card with html content
+ *
+ * @example
+ <example module="patternfly.card">
+
+ <file name="index.html">
+    <div pf-card head-title="My Card Title" sub-title="My card subtitle" show-top-border="true">
+      <button>Click Me</button>
+    </div>
+ </file>
+
+ </example>
+ */
+angular.module('patternfly.card').directive('pfCard', function() {
+  'use strict';
+
+  return {
+    restrict: 'A',
+    transclude: true,
+    templateUrl: 'card/basic/card.html',
+    scope: {
+      headTitle: '@',
+      subTitle: '@',
+      showTopBorder: '@'
+    }
+  };
+});
+
+
 ;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfDatepicker
@@ -934,7 +982,15 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       }
     }
   };
-});;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
+});;angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('card/basic/card.html',
+    "<div ng-class=\"showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div class=card-pf-heading><h2 class=card-pf-title>{{headTitle}}</h2></div><span ng-if=subTitle class=card-pf-subtitle>{{subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div></div>"
+  );
+
+}]);
+;angular.module('patternfly.form').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('form/datepicker/datepicker.html',
