@@ -134,6 +134,11 @@ module.exports = function(grunt) {
           cwd: 'src/',
           src: ['notification/**/*.html'],
           dest: 'templates/notification.js'
+        },
+        'patternfly.card': {
+          cwd: 'src/',
+          src: ['card/**/*.html'],
+          dest: 'templates/card.js'
         }
       },
       uglify: {
