@@ -115,6 +115,8 @@ module.exports = function(grunt) {
           scripts: ['lib/patternfly/components/jquery/dist/jquery.js',
             'lib/patternfly/components/bootstrap/dist/js/bootstrap.js',
             'lib/patternfly/components/bootstrap-select/bootstrap-select.js',
+            'lib/patternfly/components/d3/d3.js',
+            'lib/patternfly/components/c3/c3.js',
             'angular.js',
             'dist/angular-patternfly.js',
             'lib/patternfly/dist/js/patternfly.js'],
