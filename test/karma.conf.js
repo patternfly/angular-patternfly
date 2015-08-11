@@ -11,6 +11,8 @@ module.exports = function(config) {
       'lib/patternfly/components/jquery/dist/jquery.js',
       'lib/patternfly/components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
       'lib/patternfly/components/bootstrap-select/js/bootstrap-select.js',
+      'lib/patternfly/components/d3/d3.js',
+      'lib/patternfly/components/c3/c3.js',
       'lib/angular/angular.js',
       'lib/angular-mocks/angular-mocks.js',
       'misc/test-lib/helpers.js',

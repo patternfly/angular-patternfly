@@ -21,6 +21,9 @@ You have to install required software before you're able to use grunt:
 
         bower install
 
+Note: The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
+In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application.
+
 You should have your environment ready now.
 
 Angular-PatternFly can now be built with:
