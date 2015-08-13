@@ -10,6 +10,6 @@ angular.module('patternfly', [
   'patternfly.form',
   'patternfly.notification',
   'patternfly.select',
-  'patternfly.validation',
+  'patternfly.validation'
 ]);
 
