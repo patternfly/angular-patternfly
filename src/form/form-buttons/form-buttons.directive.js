@@ -1,4 +1,3 @@
-'use strict';
 /**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormButtons
@@ -54,6 +53,8 @@
  </example>
  */
 angular.module('patternfly.form').directive('pfFormButtons', function () {
+  'use strict';
+
   return {
     replace: true,
     require: '^form',

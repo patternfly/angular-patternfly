@@ -136,7 +136,7 @@
 
      $scope.newUsed = $scope.data.used;
 
-     $scope.$watch('newUsed', function(val) {
+     $scope.$watch('newUsed', function (val) {
        $scope.data.used = val;
      });
 
@@ -210,8 +210,9 @@
  </example>
  */
 angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaults', '$timeout',
-  function(c3ChartDefaults, $timeout) {
+  function (c3ChartDefaults, $timeout) {
     'use strict';
+
     return {
       restrict: 'A',
       scope: {
@@ -222,7 +223,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
       replace: true,
       templateUrl: 'charts/donut/donut-pct-chart.html',
       controller: ['$scope',
-        function($scope) {
+        function ($scope) {
           var donutTooltip;
 
           $scope.donutChartId = 'donutChart';
@@ -230,7 +231,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
             $scope.donutChartId = $scope.config.chartId + $scope.donutChartId;
           }
 
-          $scope.updateAvailable = function(){
+          $scope.updateAvailable = function () {
             $scope.data.available = $scope.data.total - $scope.data.used;
           };
 
@@ -238,7 +239,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
             $scope.updateAvailable();
           }
 
-          $scope.getStatusColor = function(used, thresholds) {
+          $scope.getStatusColor = function (used, thresholds) {
             var color = '#0088CE';
 
             if (thresholds) {
@@ -252,7 +253,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
             return color;
           };
 
-          $scope.statusDonutColor = function(scope) {
+          $scope.statusDonutColor = function (scope) {
             var color, percentUsed;
 
             color = { pattern: [] };
@@ -262,26 +263,27 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
             return color;
           };
 
-          donutTooltip = function(scope) {
+          donutTooltip = function (scope) {
             return {
               contents: function (d) {
-                var tootipHtml;
+                var tooltipHtml;
 
                 if (scope.config.tooltipFn) {
-                  tootipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                  tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
                                   scope.config.tooltipFn(d) +
                                '</span>';
-                  return tootipHtml;
                 } else {
-                  return '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                  tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
                             Math.round(d[0].ratio * 100) + '%' + ' ' + $scope.config.units + ' ' + d[0].name +
                          '</span>';
                 }
+
+                return tooltipHtml;
               }
             };
           };
 
-          $scope.getDonutData = function(scope) {
+          $scope.getDonutData = function (scope) {
             return {
               columns: [
                 ['Used', scope.data.used],
@@ -300,7 +302,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
             };
           };
 
-          $scope.updateAll = function(scope) {
+          $scope.updateAll = function (scope) {
             $scope.updateAvailable();
             $scope.config.data = $scope.getDonutData($scope);
             $scope.config.color = $scope.statusDonutColor($scope);
@@ -311,29 +313,15 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
           $scope.updateAll($scope);
         }
       ],
-      link: function(scope, element, attrs) {
-        scope.$watch('config', function() {
-          scope.updateAll(scope);
-          setupDonutChartTitle();
-        },true);
-
-        scope.$watch('data', function() {
-          scope.updateAll(scope);
-          setupDonutChartTitle();
-        },true);
-
-        attrs.$observe('centerLabel', function() {
-          setupDonutChartTitle();
-        });
-
-        var setupDonutChartTitle = function() {
-          $timeout(function() {
+      link: function (scope, element, attrs) {
+        var setupDonutChartTitle = function () {
+          $timeout(function () {
             var donutChartTitle, bigText, smText;
 
             donutChartTitle = element[0].querySelector('text.c3-chart-arcs-title');
             if (scope.config.centerLabelFn) {
               donutChartTitle.innerHTML = scope.config.centerLabelFn(scope);
-            } else if(attrs.centerLabel === 'none') {
+            } else if (attrs.centerLabel === 'none') {
               donutChartTitle.innerHTML = '';
             } else {
               // default to 'used' info.
@@ -359,6 +347,20 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
             }
           }, 300);
         };
+
+        scope.$watch('config', function () {
+          scope.updateAll(scope);
+          setupDonutChartTitle();
+        }, true);
+
+        scope.$watch('data', function () {
+          scope.updateAll(scope);
+          setupDonutChartTitle();
+        }, true);
+
+        attrs.$observe('centerLabel', function () {
+          setupDonutChartTitle();
+        });
       }
     };
   }]);
