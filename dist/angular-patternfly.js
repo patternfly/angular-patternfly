@@ -77,11 +77,11 @@ angular.module('patternfly', [
  </example>
  */
 
-angular.module('patternfly.autofocus', []).directive('pfFocused', function($timeout) {
+angular.module('patternfly.autofocus', []).directive('pfFocused', function ($timeout) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
-      scope.$watch(attrs.pfFocused, function(newValue) {
+      scope.$watch(attrs.pfFocused, function (newValue) {
         $timeout(function () {
           if (newValue) {
             element[0].focus();
@@ -117,7 +117,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function($time
 
  </example>
  */
-angular.module('patternfly.card').directive('pfCard', function() {
+angular.module('patternfly.card').directive('pfCard', function () {
   'use strict';
 
   return {
@@ -189,11 +189,11 @@ angular.module('patternfly.card').directive('pfCard', function() {
                       }
                   };
 
-    $scope.updateAvailable = function(val){
+    $scope.updateAvailable = function (val) {
       $scope.available =  $scope.total - $scope.used;
     }
 
-    $scope.submitform = function(val){
+    $scope.submitform = function (val) {
       $scope.used = val;
       $scope.updateAvailable();
       $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
@@ -202,11 +202,11 @@ angular.module('patternfly.card').directive('pfCard', function() {
  </file>
  </example>
  */
-(function(c3){
+(function (c3) {
   'use strict';
 
   angular.module('patternfly.charts')
-  .directive('pfC3Chart', ['$timeout', function($timeout) {
+  .directive('pfC3Chart', ['$timeout', function ($timeout) {
 
     return {
       restrict: 'A',
@@ -215,15 +215,15 @@ angular.module('patternfly.card').directive('pfCard', function() {
       },
       template: '<div id=""></div>',
       replace: true,
-      link: function(scope, element, attrs) {
-        scope.$watch('config', function() {
+      link: function (scope, element, attrs) {
+        scope.$watch('config', function () {
           $timeout(function () {
             //generate c3 chart data
             var chartData = scope.config;
             chartData.bindto = '#' + attrs.id;
             c3.generate(chartData);
           });
-        },true);
+        }, true);
       }
     };
   }]);
@@ -266,7 +266,7 @@ angular.module('patternfly.card').directive('pfCard', function() {
    </file>
  </example>
  */
-angular.module('patternfly.form').directive('pfDatepicker', function() {
+angular.module('patternfly.form').directive('pfDatepicker', function () {
   'use strict';
   return {
     replace: true,
@@ -277,7 +277,7 @@ angular.module('patternfly.form').directive('pfDatepicker', function() {
       options: '=',
       date: '='
     },
-    link: function($scope, element) {
+    link: function ($scope, element) {
 
       //Make sure the date picker is set with the correct options
       element.datepicker($scope.options);
@@ -286,14 +286,14 @@ angular.module('patternfly.form').directive('pfDatepicker', function() {
       element.datepicker('update', $scope.date);
 
       //Change happened on the date picker side. Update the underlying date model
-      element.datepicker($scope.date).on('changeDate', function(elem) {
-        $scope.$apply(function(){
+      element.datepicker($scope.date).on('changeDate', function (elem) {
+        $scope.$apply(function () {
           $scope.date = elem.date;
         });
       });
 
       //Update the date picker if there is a change on the date model
-      $scope.$watch('date', function(newValue, oldValue) {
+      $scope.$watch('date', function (newValue, oldValue) {
         if (oldValue !== newValue) {
           element.datepicker('update', newValue);
         }
@@ -529,7 +529,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
  *
  * ## Configuration Example
  * ```js
- * angular.module('myApp', []).config(function(NotificationsProvider){
+ * angular.module('myApp', []).config(function (NotificationsProvider) {
  *   NotificationsProvider.setDelay(10000).setVerbose(false).setPersist({'error': true, 'httpError': true, 'warn': true});
  * });
  * ```
@@ -575,7 +575,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     $scope.type = $scope.types[0];
     $scope.message = 'Default notification message.';
 
-    $scope.notify = function(){
+    $scope.notify = function () {
       typeMap[$scope.type]($scope.message);
     }
   }
@@ -583,7 +583,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
 
  </example>
  */
-angular.module('patternfly.notification', []).provider('Notifications', function() {
+angular.module('patternfly.notification', []).provider('Notifications', function () {
   // time (in ms) the notifications are shown
 
   this.delay = 5000;
@@ -591,21 +591,21 @@ angular.module('patternfly.notification', []).provider('Notifications', function
   this.notifications = {};
   this.persist = {'error': true, 'httpError': true};
 
-  this.setDelay = function(delay){
+  this.setDelay = function (delay) {
     this.delay = delay;
     return this;
   };
 
-  this.setVerbose = function(verbose){
+  this.setVerbose = function (verbose) {
     this.verbose = verbose;
     return this;
   };
 
-  this.setPersist = function(persist){
+  this.setPersist = function (persist) {
     this.persist = persist;
   };
 
-  this.$get = ['$rootScope', '$timeout', '$log', function($rootScope, $timeout, $log) {
+  this.$get = ['$rootScope', '$timeout', '$log', function ($rootScope, $timeout, $log) {
 
     var delay = this.delay;
     var notifications = this.notifications;
@@ -615,15 +615,15 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     $rootScope.notifications = {};
     $rootScope.notifications.data = [];
 
-    $rootScope.notifications.remove = function(index){
-      $rootScope.notifications.data.splice(index,1);
+    $rootScope.notifications.remove = function (index) {
+      $rootScope.notifications.data.splice(index, 1);
     };
 
-    var scheduleMessagePop = function() {
-      $timeout(function() {
-        for (var i = 0; i < $rootScope.notifications.data.length; i++){
-          if (!$rootScope.notifications.data[i].isPersistent){
-            $rootScope.notifications.data.splice(i,1);
+    var scheduleMessagePop = function () {
+      $timeout(function () {
+        for (var i = 0; i < $rootScope.notifications.data.length; i++) {
+          if (!$rootScope.notifications.data[i].isPersistent) {
+            $rootScope.notifications.data.splice(i, 1);
           }
         }
       }, delay);
@@ -633,7 +633,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       $rootScope.notifications.data = [];
     }
 
-    notifications.message = function(type, header, message, isPersistent) {
+    notifications.message = function (type, header, message, isPersistent) {
       $rootScope.notifications.data.push({
         type : type,
         header: header,
@@ -651,7 +651,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       warn: { type: 'warning', header: 'Warning!', log: 'warn'}
     };
 
-    function createNotifyMethod(mode){
+    function createNotifyMethod(mode) {
       return function (message) {
         notifications.message(modes[mode].type, modes[mode].header, message, persist[mode]);
         if (verbose) {
@@ -664,7 +664,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       notifications[mode] = createNotifyMethod(mode);
     }
 
-    notifications.httpError = function(message, httpResponse) {
+    notifications.httpError = function (message, httpResponse) {
       message += ' (' + (httpResponse.data.message || httpResponse.data.cause || httpResponse.data.cause || httpResponse.data.errorMessage) + ')';
       notifications.message('danger', 'Error!', message, persist.httpError);
       if (verbose) {
@@ -811,7 +811,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     $scope.type = $scope.types[0];
     $scope.message = 'Default notification message.';
 
-    $scope.notify = function(){
+    $scope.notify = function () {
       typeMap[$scope.type]($scope.message);
     }
   }
@@ -890,7 +890,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
 
  </example>
  */
-angular.module('patternfly.select', []).directive('pfSelect', function($timeout) {
+angular.module('patternfly.select', []).directive('pfSelect', function ($timeout) {
   return {
     restrict: 'A',
     require: '?ngModel',
@@ -902,23 +902,23 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
 
       var $render = ngModel.$render;
 
-      ngModel.$render = function(){
+      ngModel.$render = function () {
         $render.apply(this, arguments);
-        $timeout(function() {
+        $timeout(function () {
           element.selectpicker('refresh');
-        },0,false);
+        }, 0, false);
       };
 
-      if (attrs.ngOptions){
+      if (attrs.ngOptions) {
         var optionCollectionList = attrs.ngOptions.split('in ');
         var optionCollection = optionCollectionList[optionCollectionList.length - 1];
 
-        scope.$watchCollection(optionCollection, function() {
+        scope.$watchCollection(optionCollection, function () {
           element.selectpicker('refresh');
         });
       }
 
-      attrs.$observe('disabled', function() {
+      attrs.$observe('disabled', function () {
         element.selectpicker('refresh');
       });
     }
@@ -984,8 +984,8 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
     $scope.myValueValid = 42;
     $scope.isValidationDisabled = false;
 
-    $scope.isNumber = function(value) {
-      if (isNaN(value)){
+    $scope.isNumber = function (value) {
+      if (isNaN(value)) {
         return false;
       }
 
@@ -996,7 +996,7 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
 
  </example>
  */
-angular.module('patternfly.validation', []).directive('pfValidation', function($timeout) {
+angular.module('patternfly.validation', []).directive('pfValidation', function ($timeout) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -1009,10 +1009,10 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       scope.inputCtrl = ctrl;
       scope.valEnabled = !attrs.pfValidationDisabled;
 
-      scope.$watch('pfValidationDisabled', function(newVal){
+      scope.$watch('pfValidationDisabled', function (newVal) {
         scope.valEnabled = !newVal;
         if (newVal) {
-          scope.inputCtrl.$setValidity('pfValidation',true);
+          scope.inputCtrl.$setValidity('pfValidation', true);
           toggleErrorClass(false);
         } else {
           validate();
@@ -1025,11 +1025,11 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
         $timeout(function () {
           validate();
         }, 0);
-      } else if (!scope.inputCtrl.$valid && scope.inputCtrl.$dirty){
+      } else if (!scope.inputCtrl.$valid && scope.inputCtrl.$dirty) {
         toggleErrorClass(true);
       }
 
-      scope.$watch('inputCtrl.$valid', function(isValid){
+      scope.$watch('inputCtrl.$valid', function (isValid) {
         if (isValid) {
           toggleErrorClass(false);
         } else {
@@ -1037,21 +1037,21 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
         }
       });
 
-      scope.$watch('inputCtrl.$modelValue', function(){
+      scope.$watch('inputCtrl.$modelValue', function () {
         validate();
       });
 
       function validate() {
         var val = scope.inputCtrl.$modelValue;
 
-        var valFunc = scope.pfValidation({'input':val});
+        var valFunc = scope.pfValidation({'input': val});
 
-        if(!attrs.pfValidation){
+        if (!attrs.pfValidation) {
           valFunc = true;
         }
         var valid = !val || valFunc  || val === '';
 
-        if (scope.valEnabled && !valid){
+        if (scope.valEnabled && !valid) {
           toggleErrorClass(true);
         } else {
           toggleErrorClass(false);
@@ -1066,17 +1066,17 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 
         scope.inputCtrl.$setValidity('pf-validation', !add);
 
-        if (add){
+        if (add) {
           if (!hasErrorM) {
             parentElement.addClass('has-error');
           }
-          if (wasHidden){
+          if (wasHidden) {
             messageElement.removeClass('ng-hide');
           }
         }
 
-        if (!add){
-          if(hasErrorM) {
+        if (!add) {
+          if (hasErrorM) {
             parentElement.removeClass('has-error');
           }
           if (!wasHidden) {
@@ -1086,7 +1086,8 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       }
     }
   };
-});;angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
+});
+;angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('card/basic/card.html',

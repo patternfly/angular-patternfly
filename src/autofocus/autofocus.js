@@ -38,11 +38,11 @@
  </example>
  */
 
-angular.module('patternfly.autofocus', []).directive('pfFocused', function($timeout) {
+angular.module('patternfly.autofocus', []).directive('pfFocused', function ($timeout) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
-      scope.$watch(attrs.pfFocused, function(newValue) {
+      scope.$watch(attrs.pfFocused, function (newValue) {
         $timeout(function () {
           if (newValue) {
             element[0].focus();
