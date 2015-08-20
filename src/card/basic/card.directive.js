@@ -21,7 +21,7 @@
 
  </example>
  */
-angular.module('patternfly.card').directive('pfCard', function() {
+angular.module('patternfly.card').directive('pfCard', function () {
   'use strict';
 
   return {

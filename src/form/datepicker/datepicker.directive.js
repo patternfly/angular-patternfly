@@ -36,7 +36,7 @@
    </file>
  </example>
  */
-angular.module('patternfly.form').directive('pfDatepicker', function() {
+angular.module('patternfly.form').directive('pfDatepicker', function () {
   'use strict';
   return {
     replace: true,
@@ -47,7 +47,7 @@ angular.module('patternfly.form').directive('pfDatepicker', function() {
       options: '=',
       date: '='
     },
-    link: function($scope, element) {
+    link: function ($scope, element) {
 
       //Make sure the date picker is set with the correct options
       element.datepicker($scope.options);
@@ -56,14 +56,14 @@ angular.module('patternfly.form').directive('pfDatepicker', function() {
       element.datepicker('update', $scope.date);
 
       //Change happened on the date picker side. Update the underlying date model
-      element.datepicker($scope.date).on('changeDate', function(elem) {
-        $scope.$apply(function(){
+      element.datepicker($scope.date).on('changeDate', function (elem) {
+        $scope.$apply(function () {
           $scope.date = elem.date;
         });
       });
 
       //Update the date picker if there is a change on the date model
-      $scope.$watch('date', function(newValue, oldValue) {
+      $scope.$watch('date', function (newValue, oldValue) {
         if (oldValue !== newValue) {
           element.datepicker('update', newValue);
         }

@@ -63,7 +63,7 @@
 
  </example>
  */
-angular.module('patternfly.select', []).directive('pfSelect', function($timeout) {
+angular.module('patternfly.select', []).directive('pfSelect', function ($timeout) {
   return {
     restrict: 'A',
     require: '?ngModel',
@@ -75,23 +75,23 @@ angular.module('patternfly.select', []).directive('pfSelect', function($timeout)
 
       var $render = ngModel.$render;
 
-      ngModel.$render = function(){
+      ngModel.$render = function () {
         $render.apply(this, arguments);
-        $timeout(function() {
+        $timeout(function () {
           element.selectpicker('refresh');
-        },0,false);
+        }, 0, false);
       };
 
-      if (attrs.ngOptions){
+      if (attrs.ngOptions) {
         var optionCollectionList = attrs.ngOptions.split('in ');
         var optionCollection = optionCollectionList[optionCollectionList.length - 1];
 
-        scope.$watchCollection(optionCollection, function() {
+        scope.$watchCollection(optionCollection, function () {
           element.selectpicker('refresh');
         });
       }
 
-      attrs.$observe('disabled', function() {
+      attrs.$observe('disabled', function () {
         element.selectpicker('refresh');
       });
     }

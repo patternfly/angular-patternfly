@@ -58,8 +58,8 @@
     $scope.myValueValid = 42;
     $scope.isValidationDisabled = false;
 
-    $scope.isNumber = function(value) {
-      if (isNaN(value)){
+    $scope.isNumber = function (value) {
+      if (isNaN(value)) {
         return false;
       }
 
@@ -70,7 +70,7 @@
 
  </example>
  */
-angular.module('patternfly.validation', []).directive('pfValidation', function($timeout) {
+angular.module('patternfly.validation', []).directive('pfValidation', function ($timeout) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -83,10 +83,10 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
       scope.inputCtrl = ctrl;
       scope.valEnabled = !attrs.pfValidationDisabled;
 
-      scope.$watch('pfValidationDisabled', function(newVal){
+      scope.$watch('pfValidationDisabled', function (newVal) {
         scope.valEnabled = !newVal;
         if (newVal) {
-          scope.inputCtrl.$setValidity('pfValidation',true);
+          scope.inputCtrl.$setValidity('pfValidation', true);
           toggleErrorClass(false);
         } else {
           validate();
@@ -99,11 +99,11 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
         $timeout(function () {
           validate();
         }, 0);
-      } else if (!scope.inputCtrl.$valid && scope.inputCtrl.$dirty){
+      } else if (!scope.inputCtrl.$valid && scope.inputCtrl.$dirty) {
         toggleErrorClass(true);
       }
 
-      scope.$watch('inputCtrl.$valid', function(isValid){
+      scope.$watch('inputCtrl.$valid', function (isValid) {
         if (isValid) {
           toggleErrorClass(false);
         } else {
@@ -111,21 +111,21 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
         }
       });
 
-      scope.$watch('inputCtrl.$modelValue', function(){
+      scope.$watch('inputCtrl.$modelValue', function () {
         validate();
       });
 
       function validate() {
         var val = scope.inputCtrl.$modelValue;
 
-        var valFunc = scope.pfValidation({'input':val});
+        var valFunc = scope.pfValidation({'input': val});
 
-        if(!attrs.pfValidation){
+        if (!attrs.pfValidation) {
           valFunc = true;
         }
         var valid = !val || valFunc  || val === '';
 
-        if (scope.valEnabled && !valid){
+        if (scope.valEnabled && !valid) {
           toggleErrorClass(true);
         } else {
           toggleErrorClass(false);
@@ -140,17 +140,17 @@ angular.module('patternfly.validation', []).directive('pfValidation', function($
 
         scope.inputCtrl.$setValidity('pf-validation', !add);
 
-        if (add){
+        if (add) {
           if (!hasErrorM) {
             parentElement.addClass('has-error');
           }
-          if (wasHidden){
+          if (wasHidden) {
             messageElement.removeClass('ng-hide');
           }
         }
 
-        if (!add){
-          if(hasErrorM) {
+        if (!add) {
+          if (hasErrorM) {
             parentElement.removeClass('has-error');
           }
           if (!wasHidden) {
