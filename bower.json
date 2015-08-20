@@ -23,7 +23,10 @@
     "README.md",
     "bower.json"
   ],
-  "main": "dist/angular-patternfly.js",
+  "main": [
+    "dist/angular-patternfly.js",
+    "dist/angular-patternfly.css"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/patternfly/angular-patternfly.git"

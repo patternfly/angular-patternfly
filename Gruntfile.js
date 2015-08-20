@@ -60,6 +60,23 @@ module.exports = function(grunt) {
           src: ['components/font-awesome/**'],
           dest: 'dist/docs',
           expand: true
+        },
+        styles: {
+          cwd: 'styles/',
+          src: ['*.css', '!*.min.css'],
+          dest: 'dist/styles',
+          expand: true
+        }
+      },
+      cssmin: {
+        target: {
+          files: [{
+            expand: true,
+            cwd: 'styles',
+            src: ['*.css', '!*.min.css'],
+            dest: 'dist/styles',
+            ext: '.min.css'
+          }]
         }
       },
       htmlhint: {
@@ -108,7 +125,8 @@ module.exports = function(grunt) {
             'dist/angular-patternfly.js',
             'lib/patternfly/dist/js/patternfly.js'],
           html5Mode: false,
-          styles: ['lib/patternfly/dist/css/patternfly.css', 'lib/patternfly/dist/css/patternfly-additions.css', 'misc/bootstrap-overrides.css']
+          styles: ['lib/patternfly/dist/css/patternfly.css', 'lib/patternfly/dist/css/patternfly-additions.css',
+                   'misc/bootstrap-overrides.css', 'dist/styles/angular-patternfly.css']
         },
         all: ['src/**/*.js']
       },
@@ -186,7 +204,7 @@ module.exports = function(grunt) {
         concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'jshint:beforeconcat', 'lint', 'test', 'ngtemplates', 'concat', 'uglify:build', 'ngdocs', 'copy', 'clean:templates']);
+      grunt.task.run(['clean', 'jshint:beforeconcat', 'lint', 'test', 'ngtemplates', 'concat', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);
