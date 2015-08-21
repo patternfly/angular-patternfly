@@ -54,11 +54,11 @@
                       }
                   };
 
-    $scope.updateAvailable = function(val){
+    $scope.updateAvailable = function (val) {
       $scope.available =  $scope.total - $scope.used;
     }
 
-    $scope.submitform = function(val){
+    $scope.submitform = function (val) {
       $scope.used = val;
       $scope.updateAvailable();
       $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
@@ -67,11 +67,11 @@
  </file>
  </example>
  */
-(function(c3){
+(function (c3) {
   'use strict';
 
   angular.module('patternfly.charts')
-  .directive('pfC3Chart', ['$timeout', function($timeout) {
+  .directive('pfC3Chart', ['$timeout', function ($timeout) {
 
     return {
       restrict: 'A',
@@ -80,15 +80,15 @@
       },
       template: '<div id=""></div>',
       replace: true,
-      link: function(scope, element, attrs) {
-        scope.$watch('config', function() {
+      link: function (scope, element, attrs) {
+        scope.$watch('config', function () {
           $timeout(function () {
             //generate c3 chart data
             var chartData = scope.config;
             chartData.bindto = '#' + attrs.id;
             c3.generate(chartData);
           });
-        },true);
+        }, true);
       }
     };
   }]);

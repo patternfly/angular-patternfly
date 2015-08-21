@@ -1,4 +1,3 @@
-'use strict';
 /**
  * @ngdoc service
  * @name patternfly.notification.Notification
@@ -26,7 +25,7 @@
  *
  * ## Configuration Example
  * ```js
- * angular.module('myApp', []).config(function(NotificationsProvider){
+ * angular.module('myApp', []).config(function (NotificationsProvider) {
  *   NotificationsProvider.setDelay(10000).setVerbose(false).setPersist({'error': true, 'httpError': true, 'warn': true});
  * });
  * ```
@@ -72,7 +71,7 @@
     $scope.type = $scope.types[0];
     $scope.message = 'Default notification message.';
 
-    $scope.notify = function(){
+    $scope.notify = function () {
       typeMap[$scope.type]($scope.message);
     }
   }
@@ -80,57 +79,66 @@
 
  </example>
  */
-angular.module('patternfly.notification', []).provider('Notifications', function() {
-  // time (in ms) the notifications are shown
+angular.module('patternfly.notification', []).provider('Notifications', function () {
+  'use strict';
 
+  // time (in ms) the notifications are shown
   this.delay = 5000;
   this.verbose = true;
   this.notifications = {};
   this.persist = {'error': true, 'httpError': true};
 
-  this.setDelay = function(delay){
+  this.setDelay = function (delay) {
     this.delay = delay;
     return this;
   };
 
-  this.setVerbose = function(verbose){
+  this.setVerbose = function (verbose) {
     this.verbose = verbose;
     return this;
   };
 
-  this.setPersist = function(persist){
+  this.setPersist = function (persist) {
     this.persist = persist;
   };
 
-  this.$get = ['$rootScope', '$timeout', '$log', function($rootScope, $timeout, $log) {
-
+  this.$get = ['$rootScope', '$timeout', '$log', function ($rootScope, $timeout, $log) {
     var delay = this.delay;
     var notifications = this.notifications;
     var verbose = this.verbose;
     var persist = this.persist;
 
-    $rootScope.notifications = {};
-    $rootScope.notifications.data = [];
+    var scheduleMessagePop = function () {
+      $timeout(function () {
+        var i;
 
-    $rootScope.notifications.remove = function(index){
-      $rootScope.notifications.data.splice(index,1);
-    };
-
-    var scheduleMessagePop = function() {
-      $timeout(function() {
-        for (var i = 0; i < $rootScope.notifications.data.length; i++){
-          if (!$rootScope.notifications.data[i].isPersistent){
-            $rootScope.notifications.data.splice(i,1);
+        for (i = 0; i < $rootScope.notifications.data.length; i++) {
+          if (!$rootScope.notifications.data[i].isPersistent) {
+            $rootScope.notifications.data.splice(i, 1);
           }
         }
       }, delay);
+    };
+
+    var modes = {
+      info: { type: 'info', header: 'Info!', log: 'info'},
+      success: { type: 'success', header: 'Success!', log: 'info'},
+      error: { type: 'danger', header: 'Error!', log: 'error'},
+      warn: { type: 'warning', header: 'Warning!', log: 'warn'}
+    };
+
+    $rootScope.notifications = {};
+    $rootScope.notifications.data = [];
+
+    $rootScope.notifications.remove = function (index) {
+      $rootScope.notifications.data.splice(index, 1);
     };
 
     if (!$rootScope.notifications) {
       $rootScope.notifications.data = [];
     }
 
-    notifications.message = function(type, header, message, isPersistent) {
+    notifications.message = function (type, header, message, isPersistent) {
       $rootScope.notifications.data.push({
         type : type,
         header: header,
@@ -141,14 +149,8 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       scheduleMessagePop();
     };
 
-    var modes = {
-      info: { type: 'info', header: 'Info!', log: 'info'},
-      success: { type: 'success', header: 'Success!', log: 'info'},
-      error: { type: 'danger', header: 'Error!', log: 'error'},
-      warn: { type: 'warning', header: 'Warning!', log: 'warn'}
-    };
 
-    function createNotifyMethod(mode){
+    function createNotifyMethod (mode) {
       return function (message) {
         notifications.message(modes[mode].type, modes[mode].header, message, persist[mode]);
         if (verbose) {
@@ -157,11 +159,12 @@ angular.module('patternfly.notification', []).provider('Notifications', function
       };
     }
 
-    for (var mode in modes) {
-      notifications[mode] = createNotifyMethod(mode);
-    }
+    angular.forEach(modes, function (mode, index) {
+      notifications[index] = createNotifyMethod(index);
+    });
 
-    notifications.httpError = function(message, httpResponse) {
+
+    notifications.httpError = function (message, httpResponse) {
       message += ' (' + (httpResponse.data.message || httpResponse.data.cause || httpResponse.data.cause || httpResponse.data.errorMessage) + ')';
       notifications.message('danger', 'Error!', message, persist.httpError);
       if (verbose) {
@@ -243,6 +246,8 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 .directive('pfNotification', function () {
+  'use strict';
+
   return {
     scope: {
       'pfNotificationType': '=',
@@ -308,7 +313,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     $scope.type = $scope.types[0];
     $scope.message = 'Default notification message.';
 
-    $scope.notify = function(){
+    $scope.notify = function () {
       typeMap[$scope.type]($scope.message);
     }
   }
@@ -317,6 +322,8 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </example>
  */
 .directive('pfNotificationList', function () {
+  'use strict';
+
   return {
     restrict: 'E',
     templateUrl: 'notification/notification-list.html'

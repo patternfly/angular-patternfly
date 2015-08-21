@@ -1,10 +1,9 @@
-'use strict';
-
-module.exports = function(grunt) {
+module.exports = function (grunt) {
+  'use strict';
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-  function init() {
+  function init () {
 
     grunt.initConfig({
       availabletasks: {
@@ -16,7 +15,7 @@ module.exports = function(grunt) {
               'build': 'Builds the project (including documentation) into the dist directory. You can specify modules to be built as arguments (' +
                 'grunt build:buttons:notification) otherwise all available modules are built.',
               'test': 'Executes the karma testsuite.',
-              'watch': 'Whenever js source files (from the src directory) change, the tasks executes jshint and documentation build.',
+              'watch': 'Whenever js source files (from the src directory) change, the tasks executes jslint and documentation build.',
               'ngdocs': 'Builds documentation into dist/docs.',
               'ngdocs:view': 'Builds documentation into dist/docs and runs a web server. The docs can be accessed on http://localhost:8000/'
             },
@@ -87,20 +86,14 @@ module.exports = function(grunt) {
           }
         }
       },
-      jshint: {
-        files: ['Gruntfile.js', 'src/**/*.js'],
+      eslint: {
         options: {
-          jshintrc: '.jshintrc'
+          configFile: 'eslint.yaml'
         },
-        beforeconcat: {
-          options: {
-            force: true,
-            ignores: ['**.min.js']
-          },
-          files: {
-            src: 'src/**/*.js'
-          }
-        }
+        target: [
+          'Gruntfile.js',
+          'src/**/*.js'
+        ]
       },
       karma: {
         unit: {
@@ -177,7 +170,7 @@ module.exports = function(grunt) {
       watch: {
         main: {
           files: ['Gruntfile.js'],
-          tasks: ['jshint']
+          tasks: ['eslint']
         },
         js: {
           files: ['Gruntfile.js', 'src/**/*.js'],
@@ -187,11 +180,11 @@ module.exports = function(grunt) {
     });
 
     // You can specify which modules to build as arguments of the build task.
-    grunt.registerTask('build', 'Create bootstrap build files', function() {
+    grunt.registerTask('build', 'Create bootstrap build files', function () {
       var concatSrc = [];
 
       if (this.args.length) {
-        this.args.forEach(function(file) {
+        this.args.forEach(function (file) {
           if (grunt.file.exists('./src/' + file)) {
             grunt.log.ok('Adding ' + file + ' to the build queue.');
             concatSrc.push('src/' + file + '/*.js');
@@ -204,13 +197,14 @@ module.exports = function(grunt) {
         concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'jshint:beforeconcat', 'lint', 'test', 'ngtemplates', 'concat', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);
     grunt.registerTask('ngdocs:view', ['build', 'connect:docs', 'watch']);
-    grunt.registerTask('lint', ['jshint', 'htmlhint']);
+    grunt.registerTask('lint', ['eslint', 'htmlhint']);
     grunt.registerTask('test', ['karma']);
+    grunt.registerTask('check', ['lint', 'test']);
     grunt.registerTask('help', ['availabletasks']);
 
   }
