@@ -1,0 +1,20 @@
+<div class="utilization-chart-pf">
+    <span class="title">{{config.title}}</span>
+    <div class="current-values">
+        <div class="available-count pull-left">
+          <span>{{currentValue}}</span>
+        </div>
+        <div class="available-text pull-left">
+            <div>
+                <span>{{currentText}}</span>
+            </div>
+            <div>
+                <span> of {{chartData.total}} {{config.units}}</span>
+            </div>
+        </div>
+    </div>
+    <div pf-donut-pct-chart config="donutConfig" data="chartData" center-label="centerLabel"></div>
+    <div pf-sparkline-chart config="sparklineConfig" chart-data="chartData" chart-height="sparklineChartHeight" show-x-axis="showSparklineXAxis" show-y-axis="showSparklineYAxis"></div>
+    <span class="pull-left legend-text">{{legendLeftText}}</span>
+    <span class="pull-right legend-text">{{legendRightText}}</span>
+</div>

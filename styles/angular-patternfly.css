@@ -24,4 +24,58 @@
   color: #333;
 }
 
+.utilization-chart-pf {
+}
+
+.utilization-chart-pf .current-values {
+  border-bottom: 1px solid #d1d1d1;
+  float: left;
+  padding: 0 5px 10px 0;
+  width: 100%;
+}
+
+.utilization-chart-pf .available-count {
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 22px;
+  margin-bottom: 2px;
+  padding-left: 0;
+  padding-right: 5px;
+}
+
+.utilization-chart-pf .title {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.utilization-chart-pf .available-text {
+  color: #333;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 12px;
+  margin-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.utilization-chart-pf .radial-chart {
+  float: left;
+  padding-top: 10px;
+  width: 100%;
+}
+
+.utilization-chart-pf .sparkline-chart {
+  float: left;
+  margin-left: -5px;
+  margin-right: -5px;
+  width: 100%;
+}
+
+.utilization-chart-pf .legend-text {
+  color: inherit;
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 0;
+}
 

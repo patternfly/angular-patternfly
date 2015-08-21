@@ -221,7 +221,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
       scope: {
         config: '=',
         data: '=',
-        centerLabel: '@'
+        centerLabel: '=?'
       },
       replace: true,
       templateUrl: 'charts/donut/donut-pct-chart.html',
@@ -316,7 +316,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
           $scope.updateAll($scope);
         }
       ],
-      link: function (scope, element, attrs) {
+      link: function (scope, element) {
         var setupDonutChartTitle = function () {
           $timeout(function () {
             var donutChartTitle, bigText, smText;
@@ -324,18 +324,18 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
             donutChartTitle = element[0].querySelector('text.c3-chart-arcs-title');
             if (scope.config.centerLabelFn) {
               donutChartTitle.innerHTML = scope.config.centerLabelFn(scope);
-            } else if (attrs.centerLabel === 'none') {
+            } else if (scope.centerLabel === 'none') {
               donutChartTitle.innerHTML = '';
             } else {
               // default to 'used' info.
               bigText = scope.data.used;
               smText = scope.config.units + ' Used';
 
-              if (attrs.centerLabel === 'available') {
+              if (scope.centerLabel === 'available') {
                 bigText = scope.data.available;
                 smText = scope.config.units + ' Available';
-              } else if (attrs.centerLabel === 'percent') {
-                bigText = scope.data.used / scope.data.total * 100.0 + '%';
+              } else if (scope.centerLabel === 'percent') {
+                bigText = Math.round(scope.data.used / scope.data.total * 100.0) + '%';
                 smText = 'of ' + scope.data.total + ' ' + scope.config.units;
               }
               if (donutChartTitle) {
@@ -361,7 +361,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
           setupDonutChartTitle();
         }, true);
 
-        attrs.$observe('centerLabel', function () {
+        scope.$watch('centerLabel', function () {
           setupDonutChartTitle();
         });
       }
