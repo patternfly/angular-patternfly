@@ -14,6 +14,9 @@
  *   </ul>
  *   The directive will calculate the Available Percentage (Total - Used), and display it as a grey radial fill.
  *
+ *   <br><br>
+ *   See http://c3js.org/reference.html for a full list of C3 chart options.
+ *
  * @param {object} config configuration properties for the donut chart:<br/>
  * <ul style='list-style-type: none'>
  * <li>.chartId       - the unique id of the donut chart
