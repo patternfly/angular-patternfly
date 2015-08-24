@@ -22,7 +22,9 @@
    </file>
 
    <file name="script.js">
-     function FormDemoCtrl ($scope) {
+
+     angular.module( 'patternfly.form' )
+      .controller( 'FormDemoCtrl', ['$scope', function( $scope ) {
         $scope.setToday = function () {
           $scope.date = new Date();
         }
@@ -32,7 +34,7 @@
           todayBtn: 'linked',
           todayHighlight: true
         };
-      }
+      }]);
    </file>
  </example>
  */

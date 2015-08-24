@@ -132,7 +132,8 @@
  </file>
 
  <file name="script.js">
- function ChartCtrl($scope) {
+ angular.module( 'patternfly.charts' )
+   .controller( 'ChartCtrl', ['$scope', function( $scope ) {
 
      $scope.config = {
        title: 'Memory',
@@ -174,7 +175,7 @@
        $scope.data.xData.push(newDate);
        $scope.data.yData.push(newData);
      };
-   };
+   }]);
  </file>
  </example>
  */

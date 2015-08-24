@@ -124,8 +124,8 @@
 </file>
 
 <file name="script.js">
-   function ChartCtrl($scope) {
-
+angular.module( 'patternfly.charts' )
+  .controller( 'ChartCtrl', ['$scope', function( $scope ) {
      $scope.config = {
        'chartId': 'chartA',
        'units': 'GB',
@@ -207,8 +207,7 @@
          'used': '670',
          'total': '1000'
      };
-
-   };
+   }]);
  </file>
  </example>
  */

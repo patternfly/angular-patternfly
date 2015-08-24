@@ -52,7 +52,8 @@
  </file>
 
  <file name="script.js">
- function ValidationDemoCtrl($scope) {
+ angular.module( 'patternfly.validation' )
+   .controller( 'ValidationDemoCtrl', ['$scope', function( $scope ) {
     $scope.myValue = "Change this value to be a number";
     $scope.myValueValid = 42;
     $scope.isValidationDisabled = false;
@@ -64,7 +65,7 @@
 
       return true;
     }
-  }
+  }]);
  </file>
 
  </example>
