@@ -555,7 +555,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
       scope: {
         config: '=',
         data: '=',
-        centerLabel: '@'
+        centerLabel: '=?'
       },
       replace: true,
       templateUrl: 'charts/donut/donut-pct-chart.html',
@@ -650,7 +650,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
           $scope.updateAll($scope);
         }
       ],
-      link: function (scope, element, attrs) {
+      link: function (scope, element) {
         var setupDonutChartTitle = function () {
           $timeout(function () {
             var donutChartTitle, bigText, smText;
@@ -658,18 +658,18 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
             donutChartTitle = element[0].querySelector('text.c3-chart-arcs-title');
             if (scope.config.centerLabelFn) {
               donutChartTitle.innerHTML = scope.config.centerLabelFn(scope);
-            } else if (attrs.centerLabel === 'none') {
+            } else if (scope.centerLabel === 'none') {
               donutChartTitle.innerHTML = '';
             } else {
               // default to 'used' info.
               bigText = scope.data.used;
               smText = scope.config.units + ' Used';
 
-              if (attrs.centerLabel === 'available') {
+              if (scope.centerLabel === 'available') {
                 bigText = scope.data.available;
                 smText = scope.config.units + ' Available';
-              } else if (attrs.centerLabel === 'percent') {
-                bigText = scope.data.used / scope.data.total * 100.0 + '%';
+              } else if (scope.centerLabel === 'percent') {
+                bigText = Math.round(scope.data.used / scope.data.total * 100.0) + '%';
                 smText = 'of ' + scope.data.total + ' ' + scope.config.units;
               }
               if (donutChartTitle) {
@@ -695,7 +695,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
           setupDonutChartTitle();
         }, true);
 
-        attrs.$observe('centerLabel', function () {
+        scope.$watch('centerLabel', function () {
           setupDonutChartTitle();
         });
       }
@@ -1027,6 +1027,235 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ['c3ChartDefau
     };
   }
 ]);
+;/**
+ * @ngdoc directive
+ * @name patternfly.charts.directive:pfUtilizationChart
+ *
+ * @description
+ *   Directive for rendering a utilization chart. The utilization chart combines overall data with a pfDonutPctChart and
+ *   a pfSparklineChart. Add the options for the pfDonutChart via the donutConfig parameter. Add the options for the
+ *   pfSparklineChart via the sparklineConfig parameter.
+ *   <br><br>
+ *   See http://c3js.org/reference.html for a full list of C3 chart options.
+ *
+ * @param {object} config configuration settings for the utilization chart:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.title        - title of the Utilization chart
+ * <li>.units        - unit label for values, ex: 'MHz','GB', etc..
+ * </ul>
+ *
+ * @param {object} donutConfig configuration settings for the donut pct chart, see pfDonutPctChart for specifics<br/>
+ * @param {object} sparklineConfig configuration settings for the sparkline chart, see pfSparklineChart for specifics<br/>
+ *
+ * @param {object} chartData the data to be shown in the donut and sparkline charts<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.used   - number representing the amount used
+ * <li>.total  - number representing the total amount
+ * <li>.xData  - Array, X values for the data points, first element must be the name of the data
+ * <li>.yData  - Array, Y Values for the data points, first element must be the name of the data
+ * </ul>
+ *
+ * @param {string=} donutCenterLabel specifies the contents of the donut's center label.<br/>
+ * <strong>Values:</strong>
+ * <ul style='list-style-type: none'>
+ * <li> 'used'      - displays the Used amount in the center label (default)
+ * <li> 'available' - displays the Available amount in the center label
+ * <li> 'percent'   - displays the Usage Percent of the Total amount in the center label
+ * <li> 'none'      - does not display the center label
+ * </ul>
+ * @param {int=} sparklineChartHeight   height of the sparkline chart
+ * @param {boolean=} showSparklineXAxis override sparkline config settings for showing the X Axis
+ * @param {boolean=} showSparklineYAxis override sparkline config settings for showing the Y Axis
+
+ * @example
+ <example module="patternfly.charts">
+ <file name="index.html">
+   <style>
+     hr {
+         display: block;
+         height: 10px;
+         border: 0;
+         border-top: 1px solid #525252;
+         margin: 1em 0;
+         padding: 0;
+     }
+   </style>
+   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
+     <div class="col-md-12">
+       <div pf-utilization-chart config="config"
+            chart-data="data" center-label="centerLabel"
+            donut-config="donutConfig" sparkline-config="sparklineConfig"
+            sparkline-chart-height="custChartHeight"
+            show-sparkline-x-axis="custShowXAxis"
+            show-sparkline-y-axis="custShowYAxis">
+       </div>
+     </div>
+     <hr class="col-md-12">
+     <div class="col-md-12">
+       <form role="form">
+         <div class="form-group">
+         <label>Donut Center Label Type</label>
+         </br>
+         <label class="radio-inline">
+           <input type="radio" ng-model="centerLabel" value="used">Used</input>
+         </label>
+         <label class="radio-inline">
+           <input type="radio" ng-model="centerLabel" value="available">Available</input>
+         </label>
+         <label class="radio-inline">
+           <input type="radio" ng-model="centerLabel" value="percent">Percent</input>
+         </label>
+         <label class="radio-inline">
+           <input type="radio" ng-model="centerLabel" value="none">None</input>
+         </label>
+         </div>
+       </form>
+       <form role="form">
+         <div class="form-group">
+           <label>Sparkline Tooltip Type</label>
+             </br>
+           <label class="radio-inline">
+             <input type="radio" ng-model="sparklineConfig.tooltipType" value="default">Default</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="sparklineConfig.tooltipType" value="usagePerDay">Usage Per Day</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="sparklineConfig.tooltipType" value="valuePerDay">Value Per Day</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="sparklineConfig.tooltipType" value="percentage">Percentage</input>
+           </label>
+         </div>
+       </form>
+       <div class="row">
+         <div class="col-md-6">
+           <form role="form"">
+             <div class="form-group">
+               <label>Show</label>
+               </br>
+               <label class="checkbox-inline">
+                 <input type="checkbox" ng-model="custShowXAxis">Sparkline X Axis</input>
+               </label>
+               <label class="checkbox-inline">
+                 <input type="checkbox" ng-model="custShowYAxis">Sparkline Y Axis</input>
+               </label>
+             </div>
+           </form>
+         </div>
+         <div class="col-md-3">
+         <form role="form" >
+           <div class="form-group">
+             <label>Chart Height</label>
+             </br>
+             <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+           </div>
+         </form>
+         </div>
+         <div class="col-md-3">
+           <button ng-click="addDataPoint()">Add Data Point</button>
+         </div>
+       </div>
+     </div>
+   </div>
+ </file>
+
+ <file name="script.js">
+ function ChartCtrl($scope) {
+
+     $scope.config = {
+       title: 'Memory',
+       units: 'GB'
+     };
+     $scope.donutConfig = {
+       chartId: 'chartA',
+       thresholds: {'warning':'60','error':'90'}
+     };
+     $scope.sparklineConfig = {
+       'chartId': 'exampleSparkline',
+       'tooltipType': 'default'
+     };
+
+    var today = new Date();
+    var dates = ['dates'];
+    for (var d = 20 - 1; d >= 0; d--) {
+        dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
+    }
+
+     $scope.data = {
+         used: 76,
+         total: 100,
+         xData: dates,
+         yData: ['used', '10', '20', '30', '20', '30', '10', '14', '20', '25', '68', '54', '56', '78', '56', '67', '88', '76', '65', '87', '76']
+     };
+
+     $scope.centerLabel = 'used';
+
+     $scope.custShowXAxis = false;
+     $scope.custShowYAxis = false;
+     $scope.custChartHeight = 60;
+
+     $scope.addDataPoint = function () {
+       var newData = Math.round(Math.random() * 100);
+       var newDate = new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000));
+
+       $scope.data.used = newData;
+       $scope.data.xData.push(newDate);
+       $scope.data.yData.push(newData);
+     };
+   };
+ </file>
+ </example>
+ */
+angular.module('patternfly.charts').directive('pfUtilizationChart',
+  function () {
+    'use strict';
+    return {
+      restrict: 'A',
+      scope: {
+        chartData: '=',
+        config: '=',
+        centerLabel: '=?',
+        donutConfig: '=',
+        sparklineConfig: '=',
+        sparklineChartHeight: '=?',
+        showSparklineXAxis: '=?',
+        showSparklineYAxis: '=?'
+      },
+      replace: true,
+      templateUrl: 'charts/utilization/utilization-chart.html',
+      controller: ['$scope',
+        function ($scope) {
+          if ($scope.centerLabel === undefined) {
+            $scope.centerLabel = 'used';
+
+          }
+          if ($scope.donutConfig.units === undefined) {
+            $scope.donutConfig.units = $scope.config.units;
+          }
+          if ($scope.chartData.available === undefined) {
+            $scope.chartData.available = $scope.chartData.total - $scope.chartData.used;
+          }
+          $scope.config.units = $scope.config.units || $scope.units;
+        }
+      ],
+      link: function (scope, element) {
+        var setupCurrentValues = function () {
+          if (scope.centerLabel === 'available') {
+            scope.currentValue = scope.chartData.used;
+            scope.currentText = 'Used';
+          } else {
+            scope.currentValue = scope.chartData.total - scope.chartData.used;
+            scope.currentText = 'Available';
+          }
+        };
+        scope.$watch('centerLabel', function () {
+          setupCurrentValues();
+        });
+      }
+    };
+  }
+);
 ;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfDatepicker
@@ -1919,6 +2148,11 @@ angular.module('patternfly.validation', []).directive('pfValidation', function (
 
   $templateCache.put('charts/sparkline/sparkline-chart.html',
     "<div class=sparkline-chart><div pf-c3-chart id={{sparklineChartId}} config=config></div></div>"
+  );
+
+
+  $templateCache.put('charts/utilization/utilization-chart.html',
+    "<div class=utilization-chart-pf><span class=title>{{config.title}}</span><div class=current-values><div class=\"available-count pull-left\"><span>{{currentValue}}</span></div><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div pf-donut-pct-chart config=donutConfig data=chartData center-label=centerLabel></div><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
   );
 
 }]);
