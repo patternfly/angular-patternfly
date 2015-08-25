@@ -108,7 +108,8 @@
  </file>
 
  <file name="script.js">
- function ChartCtrl($scope) {
+ angular.module( 'patternfly.charts' )
+   .controller( 'ChartCtrl', ['$scope', function( $scope ) {
 
      $scope.config = {
        'chartId': 'exampleSparkline',
@@ -135,7 +136,7 @@
        $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
        $scope.data.yData.push(Math.round(Math.random() * 100));
      };
-   };
+   }]);
  </file>
  </example>
  */

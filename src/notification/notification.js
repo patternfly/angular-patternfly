@@ -59,7 +59,8 @@
  </file>
 
  <file name="script.js">
- function NotificationDemoCtrl($scope, Notifications) {
+ angular.module( 'patternfly.notification' )
+  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
 
     var typeMap = { 'Info': Notifications.info,
                     'Success': Notifications.success,
@@ -74,7 +75,7 @@
     $scope.notify = function () {
       typeMap[$scope.type]($scope.message);
     }
-  }
+  }]);
  </file>
 
  </example>
@@ -175,7 +176,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     return notifications;
   }];
 
-})
+});
 
 /**
  * @ngdoc directive
@@ -233,19 +234,21 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </file>
 
  <file name="script.js">
- function NotificationDemoCtrl($scope) {
+
+  angular.module( 'patternfly.notification' )
+  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
     $scope.types = ['success','info','danger', 'warning'];
     $scope.type = $scope.types[0];
     $scope.isPersistent = false;
 
     $scope.header = 'Default Header.';
     $scope.message = 'Default Message.';
-  }
+  }]);
  </file>
 
  </example>
  */
-.directive('pfNotification', function () {
+angular.module( 'patternfly.notification' ).directive('pfNotification', function () {
   'use strict';
 
   return {
@@ -259,7 +262,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     restrict: 'E',
     templateUrl: 'notification/notification.html'
   };
-})
+});
 /**
  * @ngdoc directive
  * @name patternfly.notification:pfNotificationList
@@ -299,8 +302,8 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </file>
 
  <file name="script.js">
- function NotificationDemoCtrl($scope, Notifications) {
-
+ angular.module( 'patternfly.notification' )
+  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
     $scope.message = 'Default Message.';
 
     var typeMap = { 'Info': Notifications.info,
@@ -316,12 +319,12 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     $scope.notify = function () {
       typeMap[$scope.type]($scope.message);
     }
-  }
+  }]);
  </file>
 
  </example>
  */
-.directive('pfNotificationList', function () {
+angular.module( 'patternfly.notification' ).directive('pfNotificationList', function () {
   'use strict';
 
   return {

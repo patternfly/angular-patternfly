@@ -13,7 +13,7 @@
  * @param {expression} config the c3 configuration options for the chart
  *
  * @example
- <example module="patternfly.charts">
+<example module="patternfly.charts">
 <file name="index.html">
  <div ng-controller="ChartCtrl">
    <div pf-c3-chart id="chartId"  config="chartConfig"></div>
@@ -30,7 +30,9 @@
  </file>
 
 <file name="script.js">
- function ChartCtrl($scope) {
+
+angular.module( 'patternfly.charts' )
+  .controller( 'ChartCtrl', ['$scope', function( $scope ) {
     $scope.used = 950;
     $scope.total = 1000;
     $scope.available =  $scope.total - $scope.used;
@@ -63,7 +65,7 @@
       $scope.updateAvailable();
       $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
    };
- }
+  }]);
  </file>
  </example>
  */

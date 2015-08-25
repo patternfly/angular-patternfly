@@ -252,7 +252,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
  * @param {expression} config the c3 configuration options for the chart
  *
  * @example
- <example module="patternfly.charts">
+<example module="patternfly.charts">
 <file name="index.html">
  <div ng-controller="ChartCtrl">
    <div pf-c3-chart id="chartId"  config="chartConfig"></div>
@@ -269,7 +269,9 @@ angular.module('patternfly.card').directive('pfCard', function () {
  </file>
 
 <file name="script.js">
- function ChartCtrl($scope) {
+
+angular.module( 'patternfly.charts' )
+  .controller( 'ChartCtrl', ['$scope', function( $scope ) {
     $scope.used = 950;
     $scope.total = 1000;
     $scope.available =  $scope.total - $scope.used;
@@ -302,7 +304,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
       $scope.updateAvailable();
       $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
    };
- }
+  }]);
  </file>
  </example>
  */
@@ -458,8 +460,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
 </file>
 
 <file name="script.js">
-   function ChartCtrl($scope) {
-
+angular.module( 'patternfly.charts' )
+  .controller( 'ChartCtrl', ['$scope', function( $scope ) {
      $scope.config = {
        'chartId': 'chartA',
        'units': 'GB',
@@ -541,8 +543,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
          'used': '670',
          'total': '1000'
      };
-
-   };
+  }]);
  </file>
  </example>
  */
@@ -811,7 +812,8 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
  </file>
 
  <file name="script.js">
- function ChartCtrl($scope) {
+ angular.module( 'patternfly.charts' )
+   .controller( 'ChartCtrl', ['$scope', function( $scope ) {
 
      $scope.config = {
        'chartId': 'exampleSparkline',
@@ -838,7 +840,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
        $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
        $scope.data.yData.push(Math.round(Math.random() * 100));
      };
-   };
+   }]);
  </file>
  </example>
  */
@@ -1161,7 +1163,8 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ['c3ChartDefau
  </file>
 
  <file name="script.js">
- function ChartCtrl($scope) {
+ angular.module( 'patternfly.charts' )
+   .controller( 'ChartCtrl', ['$scope', function( $scope ) {
 
      $scope.config = {
        title: 'Memory',
@@ -1203,7 +1206,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ['c3ChartDefau
        $scope.data.xData.push(newDate);
        $scope.data.yData.push(newData);
      };
-   };
+   }]);
  </file>
  </example>
  */
@@ -1280,7 +1283,9 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
    </file>
 
    <file name="script.js">
-     function FormDemoCtrl ($scope) {
+
+     angular.module( 'patternfly.form' )
+      .controller( 'FormDemoCtrl', ['$scope', function( $scope ) {
         $scope.setToday = function () {
           $scope.date = new Date();
         }
@@ -1290,7 +1295,7 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
           todayBtn: 'linked',
           todayHighlight: true
         };
-      }
+      }]);
    </file>
  </example>
  */
@@ -1363,7 +1368,8 @@ angular.module('patternfly.form').directive('pfDatepicker', function () {
    </file>
 
    <file name="script.js">
-     function FormButtonCtrl ($scope, $timeout) {
+     angular.module( 'patternfly.form' )
+      .controller( 'FormButtonCtrl', ['$scope', '$timeout', function( $scope, $timeout ) {
        $scope.status = 'Not yet Saved'
        $scope.working = false;
 
@@ -1380,7 +1386,7 @@ angular.module('patternfly.form').directive('pfDatepicker', function () {
          $scope.status = 'cancelled';
          $scope.input = null;
        };
-     }
+     }]);
    </file>
  </example>
  */
@@ -1455,12 +1461,13 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
    </file>
 
    <file name="script.js">
-     function FormDemoCtrl ($scope) {
+     angular.module( 'patternfly.form' )
+      .controller( 'FormDemoCtrl', ['$scope', function( $scope ) {
         $scope.item = {
           name: 'Homer Simpson',
           description: 'I like donuts and Duff.  Doh!'
         };
-      }
+      }]);
    </file>
  </example>
  */
@@ -1593,7 +1600,8 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
  </file>
 
  <file name="script.js">
- function NotificationDemoCtrl($scope, Notifications) {
+ angular.module( 'patternfly.notification' )
+  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
 
     var typeMap = { 'Info': Notifications.info,
                     'Success': Notifications.success,
@@ -1608,7 +1616,7 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
     $scope.notify = function () {
       typeMap[$scope.type]($scope.message);
     }
-  }
+  }]);
  </file>
 
  </example>
@@ -1709,7 +1717,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     return notifications;
   }];
 
-})
+});
 
 /**
  * @ngdoc directive
@@ -1767,19 +1775,21 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </file>
 
  <file name="script.js">
- function NotificationDemoCtrl($scope) {
+
+  angular.module( 'patternfly.notification' )
+  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
     $scope.types = ['success','info','danger', 'warning'];
     $scope.type = $scope.types[0];
     $scope.isPersistent = false;
 
     $scope.header = 'Default Header.';
     $scope.message = 'Default Message.';
-  }
+  }]);
  </file>
 
  </example>
  */
-.directive('pfNotification', function () {
+angular.module( 'patternfly.notification' ).directive('pfNotification', function () {
   'use strict';
 
   return {
@@ -1793,7 +1803,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     restrict: 'E',
     templateUrl: 'notification/notification.html'
   };
-})
+});
 /**
  * @ngdoc directive
  * @name patternfly.notification:pfNotificationList
@@ -1833,8 +1843,8 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </file>
 
  <file name="script.js">
- function NotificationDemoCtrl($scope, Notifications) {
-
+ angular.module( 'patternfly.notification' )
+  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
     $scope.message = 'Default Message.';
 
     var typeMap = { 'Info': Notifications.info,
@@ -1850,12 +1860,12 @@ angular.module('patternfly.notification', []).provider('Notifications', function
     $scope.notify = function () {
       typeMap[$scope.type]($scope.message);
     }
-  }
+  }]);
  </file>
 
  </example>
  */
-.directive('pfNotificationList', function () {
+angular.module( 'patternfly.notification' ).directive('pfNotificationList', function () {
   'use strict';
 
   return {
@@ -1918,11 +1928,12 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  </file>
 
  <file name="script.js">
- function SelectDemoCtrl($scope) {
+ angular.module( 'patternfly.select' )
+   .controller( 'SelectDemoCtrl', ['$scope', function( $scope ) {
     $scope.drinks = ['tea', 'coffee', 'water'];
     $scope.pets = ['Dog', 'Cat', 'Chicken'];
     $scope.pet = $scope.pets[0];
-  }
+  }]);
  </file>
 
  </example>
@@ -2017,7 +2028,8 @@ angular.module('patternfly.select', []).directive('pfSelect', function ($timeout
  </file>
 
  <file name="script.js">
- function ValidationDemoCtrl($scope) {
+ angular.module( 'patternfly.validation' )
+   .controller( 'ValidationDemoCtrl', ['$scope', function( $scope ) {
     $scope.myValue = "Change this value to be a number";
     $scope.myValueValid = 42;
     $scope.isValidationDisabled = false;
@@ -2029,7 +2041,7 @@ angular.module('patternfly.select', []).directive('pfSelect', function ($timeout
 
       return true;
     }
-  }
+  }]);
  </file>
 
  </example>
@@ -2183,7 +2195,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', function (
 
 
   $templateCache.put('notification/notification.html',
-    "<div class=\"alert alert-{{pfNotificationType}}\"><button ng-show=pfNotificationPersistent type=button class=close ng-click=$parent.notifications.remove($index)><span aria-hidden=true>&times;</span><span class=sr-only>Close</span></button> <span class=\"pficon pficon-ok\" ng-show=\"pfNotificationType == 'success'\"></span> <span class=\"pficon pficon-info\" ng-show=\"pfNotificationType == 'info'\"></span> <span class=pficon-layered ng-show=\"pfNotificationType == 'danger'\"><span class=\"pficon pficon-error-octagon\"></span> <span class=\"pficon pficon-error-exclamation\"></span></span> <span class=pficon-layered ng-show=\"pfNotificationType == 'warning'\"><span class=\"pficon pficon-warning-triangle\"></span> <span class=\"pficon pficon-warning-exclamation\"></span></span> <strong>{{pfNotificationHeader}}</strong> {{pfNotificationMessage}}</div>"
+    "<div class=\"alert alert-{{pfNotificationType}}\"><button ng-show=pfNotificationPersistent type=button class=close ng-click=$parent.notifications.remove($index)><span aria-hidden=true>&times;</span><span class=sr-only>Close</span></button> <span class=\"pficon pficon-ok\" ng-show=\"pfNotificationType === 'success'\"></span> <span class=\"pficon pficon-info\" ng-show=\"pfNotificationType === 'info'\"></span> <span class=\"pficon pficon-error-circle-o\" ng-show=\"pfNotificationType === 'danger'\"></span> <span class=\"pficon pficon-warning-triangle-o\" ng-show=\"pfNotificationType === 'warning'\"></span> <strong>{{pfNotificationHeader}}</strong> {{pfNotificationMessage}}</div>"
   );
 
 }]);
