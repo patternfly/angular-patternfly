@@ -1,0 +1,17 @@
+<div class="data-list-pf">
+    <div class="list-group-item"
+       ng-repeat="item in items track by $index"
+       ng-class="{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item)}">
+        <div class="row list-row">
+            <div pf-transclude="parent"
+                 class="list-content"
+                 ng-class="{'with-check-box': config.showSelectBox, 'with-menu':config.showActionMenus}"
+                 ng-click="itemClick($event, item)"
+                 ng-dblclick="dblClick($event, item)">
+            </div>
+            <div class="list-check-box" ng-if="config.showSelectBox" style="padding-top: {{(config.rowHeight - 32) / 2}}px;">
+                <input type="checkbox" value="item.selected" ng-model="item.selected" ng-disabled="checkDisabled(item)" ng-change="checkBoxChange(item)"/>
+            </div>
+        </div>
+    </div>
+</div>

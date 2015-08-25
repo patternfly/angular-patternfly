@@ -116,6 +116,7 @@ module.exports = function (grunt) {
             'lib/patternfly/components/d3/d3.js',
             'lib/angular/angular.js',
             'lib/angular-animate/angular-animate.js',
+            'lib/lodash/lodash.min.js',
             'dist/angular-patternfly.js',
             'lib/patternfly/dist/js/patternfly.js'],
           html5Mode: false,
@@ -156,6 +157,11 @@ module.exports = function (grunt) {
           cwd: 'src/',
           src: ['charts/**/*.html'],
           dest: 'templates/charts.js'
+        },
+        'patternfly.views': {
+          cwd: 'src/',
+          src: ['views/**/*.html'],
+          dest: 'templates/views.js'
         }
       },
       // ng-annotate tries to make the code safe for minification automatically
