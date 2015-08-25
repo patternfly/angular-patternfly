@@ -207,7 +207,7 @@ angular.module( 'patternfly.charts' )
          'used': '670',
          'total': '1000'
      };
-   }]);
+  }]);
  </file>
  </example>
  */

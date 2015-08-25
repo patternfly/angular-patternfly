@@ -21,7 +21,7 @@
     "grunt-eslint": "^17.1.0",
     "grunt-htmlhint": "0.4.1",
     "grunt-karma": "0.8.3",
-    "grunt-ngdocs": "0.2.5",
+    "grunt-ngdocs": "0.2.9",
     "karma": "0.12.23",
     "karma-chrome-launcher": "0.1.4",
     "karma-firefox-launcher": "0.1.3",

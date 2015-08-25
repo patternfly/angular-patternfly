@@ -79,14 +79,8 @@ describe('pf-notification', function () {
       var alertElement = angular.element(notifyElement.children().get(0));
       var iconOk = angular.element(alertElement.find('span.pficon-ok'));
       var iconInfo = angular.element(alertElement.find('span.pficon-info'));
-      var iconError = angular.element(alertElement.find('span.pficon-layered').get(0));
-      var iconWarning = angular.element(alertElement.find('span.pficon-layered').get(1));
-
-      var iE = iconError.find('span.pficon-error-octagon');
-      var iW = iconWarning.find('span.pficon-warning-triangle');
-
-      expect(iE[0]).toBeTruthy();
-      expect(iW[0]).toBeTruthy();
+      var iconError = angular.element(alertElement.find('span.pficon-error-circle-o'));
+      var iconWarning = angular.element(alertElement.find('span.pficon-warning-triangle-o'));
 
       expect(alertElement.text()).toContain('×Close');
       expect(alertElement.text()).toContain('head1 defaultMes');
