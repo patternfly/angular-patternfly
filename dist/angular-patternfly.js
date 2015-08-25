@@ -101,7 +101,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function ($tim
  * @restrict A
  * @element ANY
  * @param {headTitle=} Title for the card - required
- * @param {subtTtle=} Subtitle for the card - optional
+ * @param {subTitle=} Subtitle for the card - optional
  * @param {showTopBorder=} Show Top Border, true shows top border, false (default) hides top border - optional
  *
  * @description
@@ -111,7 +111,11 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function ($tim
  <example module="patternfly.card">
 
  <file name="index.html">
-    <div pf-card head-title="My Card Title" sub-title="My card subtitle" show-top-border="true">
+    <div pf-card head-title="My Card Title" sub-title="My card subtitle">
+      <button>Click Me</button>
+    </div>
+
+    <div pf-card head-title="Card With Top Border" sub-title="My card subtitle" show-top-border="true">
       <button>Click Me</button>
     </div>
  </file>
@@ -127,8 +131,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
     templateUrl: 'card/basic/card.html',
     scope: {
       headTitle: '@',
-      subTitle: '@',
-      showTopBorder: '@'
+      subTitle: '@?',
+      showTopBorder: '@?'
     }
   };
 });
