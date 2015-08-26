@@ -40,101 +40,99 @@
 
  * @example
  <example module="patternfly.charts">
- <file name="index.html">
-   <style>
-     hr {
-         display: block;
-         height: 10px;
-         border: 0;
-         border-top: 1px solid #525252;
-         margin: 1em 0;
-         padding: 0;
-     }
-   </style>
-   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
-     <div class="col-md-12">
-       <div pf-utilization-chart config="config"
-            chart-data="data" center-label="centerLabel"
-            donut-config="donutConfig" sparkline-config="sparklineConfig"
-            sparkline-chart-height="custChartHeight"
-            show-sparkline-x-axis="custShowXAxis"
-            show-sparkline-y-axis="custShowYAxis">
+   <file name="index.html">
+     <style>
+       hr {
+           display: block;
+           height: 10px;
+           border: 0;
+           border-top: 1px solid #525252;
+           margin: 1em 0;
+           padding: 0;
+       }
+     </style>
+     <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
+       <div class="col-md-12">
+         <div pf-utilization-chart config="config"
+              chart-data="data" center-label="centerLabel"
+              donut-config="donutConfig" sparkline-config="sparklineConfig"
+              sparkline-chart-height="custChartHeight"
+              show-sparkline-x-axis="custShowXAxis"
+              show-sparkline-y-axis="custShowYAxis">
+         </div>
        </div>
-     </div>
-     <hr class="col-md-12">
-     <div class="col-md-12">
-       <form role="form">
-         <div class="form-group">
-         <label>Donut Center Label Type</label>
-         </br>
-         <label class="radio-inline">
-           <input type="radio" ng-model="centerLabel" value="used">Used</input>
-         </label>
-         <label class="radio-inline">
-           <input type="radio" ng-model="centerLabel" value="available">Available</input>
-         </label>
-         <label class="radio-inline">
-           <input type="radio" ng-model="centerLabel" value="percent">Percent</input>
-         </label>
-         <label class="radio-inline">
-           <input type="radio" ng-model="centerLabel" value="none">None</input>
-         </label>
-         </div>
-       </form>
-       <form role="form">
-         <div class="form-group">
-           <label>Sparkline Tooltip Type</label>
-             </br>
-           <label class="radio-inline">
-             <input type="radio" ng-model="sparklineConfig.tooltipType" value="default">Default</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="sparklineConfig.tooltipType" value="usagePerDay">Usage Per Day</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="sparklineConfig.tooltipType" value="valuePerDay">Value Per Day</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="sparklineConfig.tooltipType" value="percentage">Percentage</input>
-           </label>
-         </div>
-       </form>
-       <div class="row">
-         <div class="col-md-6">
-           <form role="form"">
-             <div class="form-group">
-               <label>Show</label>
-               </br>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowXAxis">Sparkline X Axis</input>
-               </label>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowYAxis">Sparkline Y Axis</input>
-               </label>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-         <form role="form" >
+       <hr class="col-md-12">
+       <div class="col-md-12">
+         <form role="form">
            <div class="form-group">
-             <label>Chart Height</label>
-             </br>
-             <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+           <label>Donut Center Label Type</label>
+           </br>
+           <label class="radio-inline">
+             <input type="radio" ng-model="centerLabel" value="used">Used</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="centerLabel" value="available">Available</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="centerLabel" value="percent">Percent</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="centerLabel" value="none">None</input>
+           </label>
            </div>
          </form>
-         </div>
-         <div class="col-md-3">
-           <button ng-click="addDataPoint()">Add Data Point</button>
+         <form role="form">
+           <div class="form-group">
+             <label>Sparkline Tooltip Type</label>
+               </br>
+             <label class="radio-inline">
+               <input type="radio" ng-model="sparklineConfig.tooltipType" value="default">Default</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="sparklineConfig.tooltipType" value="usagePerDay">Usage Per Day</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="sparklineConfig.tooltipType" value="valuePerDay">Value Per Day</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="sparklineConfig.tooltipType" value="percentage">Percentage</input>
+             </label>
+           </div>
+         </form>
+         <div class="row">
+           <div class="col-md-6">
+             <form role="form"">
+               <div class="form-group">
+                 <label>Show</label>
+                 </br>
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="custShowXAxis">Sparkline X Axis</input>
+                 </label>
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="custShowYAxis">Sparkline Y Axis</input>
+                 </label>
+               </div>
+             </form>
+           </div>
+           <div class="col-md-3">
+           <form role="form" >
+             <div class="form-group">
+               <label>Chart Height</label>
+               </br>
+               <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+             </div>
+           </form>
+           </div>
+           <div class="col-md-3">
+             <button ng-click="addDataPoint()">Add Data Point</button>
+           </div>
          </div>
        </div>
      </div>
-   </div>
- </file>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.charts' )
-   .controller( 'ChartCtrl', ['$scope', function( $scope ) {
-
+   <file name="script.js">
+   angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
      $scope.config = {
        title: 'Memory',
        units: 'GB'
@@ -175,8 +173,8 @@
        $scope.data.xData.push(newDate);
        $scope.data.yData.push(newData);
      };
-   }]);
- </file>
+   });
+   </file>
  </example>
  */
 angular.module('patternfly.charts').directive('pfUtilizationChart',

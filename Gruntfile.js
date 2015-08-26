@@ -158,6 +158,16 @@ module.exports = function (grunt) {
           dest: 'templates/charts.js'
         }
       },
+      // ng-annotate tries to make the code safe for minification automatically
+      // by using the Angular long form for dependency injection.
+      ngAnnotate: {
+        dist: {
+          files: [{
+            src: 'dist/angular-patternfly.js',
+            dest: 'dist/angular-patternfly.js'
+          }]
+        }
+      },
       uglify: {
         options: {
           mangle: false
@@ -198,7 +208,7 @@ module.exports = function (grunt) {
         concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);

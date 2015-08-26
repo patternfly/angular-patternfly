@@ -32,51 +32,50 @@
  * @example
  <example module="patternfly.notification">
 
- <file name="index.html">
-   <div ng-controller="NotificationDemoCtrl">
-     <pf-notification-list></pf-notification-list>
+   <file name="index.html">
+     <div ng-controller="NotificationDemoCtrl">
+       <pf-notification-list></pf-notification-list>
 
-     <form class="form-horizontal">
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="message">Message:</label>
-         <div class="col-sm-10">
-          <input type="text" class="form-control" ng-model="message" id="message"/>
+       <form class="form-horizontal">
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="message">Message:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="message" id="message"/>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="type">Type:</label>
-         <div class="col-sm-10">
-          <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Type:</label>
+           <div class="col-sm-10">
+            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <div class="col-sm-12">
-          <button ng-click="notify()">Add notification</button>
+         <div class="form-group">
+           <div class="col-sm-12">
+            <button ng-click="notify()">Add notification</button>
+           </div>
          </div>
-       </div>
-     </form>
-   </div>
- </file>
+       </form>
+     </div>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.notification' )
-  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
+   <file name="script.js">
+     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
 
-    var typeMap = { 'Info': Notifications.info,
-                    'Success': Notifications.success,
-                    'Warning': Notifications.warn,
-                    'Danger': Notifications.error };
+       var typeMap = { 'Info': Notifications.info,
+                       'Success': Notifications.success,
+                       'Warning': Notifications.warn,
+                       'Danger': Notifications.error };
 
-    $scope.types = Object.keys(typeMap);
+       $scope.types = Object.keys(typeMap);
 
-    $scope.type = $scope.types[0];
-    $scope.message = 'Default notification message.';
+       $scope.type = $scope.types[0];
+       $scope.message = 'Default notification message.';
 
-    $scope.notify = function () {
-      typeMap[$scope.type]($scope.message);
-    }
-  }]);
- </file>
+       $scope.notify = function () {
+         typeMap[$scope.type]($scope.message);
+       }
+     });
+   </file>
 
  </example>
  */
@@ -195,56 +194,54 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  * @example
  <example module="patternfly.notification">
 
- <file name="index.html">
-   <div ng-controller="NotificationDemoCtrl">
+   <file name="index.html">
+     <div ng-controller="NotificationDemoCtrl">
 
-     <pf-notification pf-notification-type="type"
-                      pf-notification-header="header"
-                      pf-notification-message="message"
-                      pf-notification-persistent="isPersistent">
-     </pf-notification>
+       <pf-notification pf-notification-type="type"
+                        pf-notification-header="header"
+                        pf-notification-message="message"
+                        pf-notification-persistent="isPersistent">
+       </pf-notification>
 
-     <form class="form-horizontal">
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="header">Header:</label>
-         <div class="col-sm-10">
-          <input type="text" class="form-control" ng-model="header" id="header"/>
+       <form class="form-horizontal">
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="header">Header:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="header" id="header"/>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="message">Message:</label>
-         <div class="col-sm-10">
-          <input type="text" class="form-control" ng-model="message" id="message"/>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="message">Message:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="message" id="message"/>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="type">Type:</label>
-         <div class="col-sm-10">
-          <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Type:</label>
+           <div class="col-sm-10">
+            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="type">Persistent:</label>
-         <div class="col-sm-10">
-          <input type="checkbox" ng-model="isPersistent"></input>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Persistent:</label>
+           <div class="col-sm-10">
+            <input type="checkbox" ng-model="isPersistent"></input>
+           </div>
          </div>
-       </div>
-     </form>
-   </div>
- </file>
+       </form>
+     </div>
+   </file>
 
- <file name="script.js">
+   <file name="script.js">
+     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
+       $scope.types = ['success','info','danger', 'warning'];
+       $scope.type = $scope.types[0];
+       $scope.isPersistent = false;
 
-  angular.module( 'patternfly.notification' )
-  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
-    $scope.types = ['success','info','danger', 'warning'];
-    $scope.type = $scope.types[0];
-    $scope.isPersistent = false;
-
-    $scope.header = 'Default Header.';
-    $scope.message = 'Default Message.';
-  }]);
- </file>
+       $scope.header = 'Default Header.';
+       $scope.message = 'Default Message.';
+     });
+   </file>
 
  </example>
  */
@@ -274,53 +271,52 @@ angular.module( 'patternfly.notification' ).directive('pfNotification', function
  * @example
  <example module="patternfly.notification">
 
- <file name="index.html">
-   <div ng-controller="NotificationDemoCtrl">
+   <file name="index.html">
+     <div ng-controller="NotificationDemoCtrl">
 
-     <pf-notification-list></pf-notification-list>
+       <pf-notification-list></pf-notification-list>
 
-     <form class="form-horizontal">
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="type">Type:</label>
-         <div class="col-sm-10">
-          <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+       <form class="form-horizontal">
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Type:</label>
+           <div class="col-sm-10">
+            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="message">Message:</label>
-         <div class="col-sm-10">
-          <input type="text" class="form-control" ng-model="message" id="message"/>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="message">Message:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="message" id="message"/>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <div class="col-sm-12">
-          <button ng-click="notify()">Add notification - Click me several times</button>
+         <div class="form-group">
+           <div class="col-sm-12">
+            <button ng-click="notify()">Add notification - Click me several times</button>
+           </div>
          </div>
-       </div>
-     </form>
-   </div>
- </file>
+       </form>
+     </div>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.notification' )
-  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
-    $scope.message = 'Default Message.';
+   <file name="script.js">
+     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
+       $scope.message = 'Default Message.';
 
-    var typeMap = { 'Info': Notifications.info,
-                    'Success': Notifications.success,
-                    'Warning': Notifications.warn,
-                    'Danger': Notifications.error };
+       var typeMap = { 'Info': Notifications.info,
+                       'Success': Notifications.success,
+                       'Warning': Notifications.warn,
+                       'Danger': Notifications.error };
 
-    $scope.types = Object.keys(typeMap);
+       $scope.types = Object.keys(typeMap);
 
-    $scope.type = $scope.types[0];
-    $scope.message = 'Default notification message.';
+       $scope.type = $scope.types[0];
+       $scope.message = 'Default notification message.';
 
-    $scope.notify = function () {
-      typeMap[$scope.type]($scope.message);
-    }
-  }]);
- </file>
+       $scope.notify = function () {
+         typeMap[$scope.type]($scope.message);
+       }
+     });
+   </file>
 
  </example>
  */

@@ -76,7 +76,7 @@ angular.module('patternfly', [
  </example>
  */
 
-angular.module('patternfly.autofocus', []).directive('pfFocused', function ($timeout) {
+angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", function ($timeout) {
   'use strict';
 
   return {
@@ -94,7 +94,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', function ($tim
       });
     }
   };
-});
+}]);
 ;/**
  * @ngdoc directive
  * @name patternfly.card:pfCard
@@ -256,68 +256,66 @@ angular.module('patternfly.card').directive('pfCard', function () {
  * @param {expression} config the c3 configuration options for the chart
  *
  * @example
-<example module="patternfly.charts">
-<file name="index.html">
- <div ng-controller="ChartCtrl">
-   <div pf-c3-chart id="chartId"  config="chartConfig"></div>
 
-   <form role="form" style="width:300px">
-     Total = {{total}}, Used = {{used}}, Available = {{available}}
-     <div class="form-group">
-       <label>Used</label>
-       <input type="text" class="form-control" ng-model="newUsed">
+ <example module="patternfly.charts">
+   <file name="index.html">
+     <div ng-controller="ChartCtrl">
+        <div pf-c3-chart id="chartId"  config="chartConfig"></div>
+
+        <form role="form" style="width:300px">
+          Total = {{total}}, Used = {{used}}, Available = {{available}}
+          <div class="form-group">
+            <label>Used</label>
+            <input type="text" class="form-control" ng-model="newUsed">
+          </div>
+          <input type="button" ng-click="submitform(newUsed)" value="Go" />
+        </form>
      </div>
-     <input type="button" ng-click="submitform(newUsed)" value="Go" />
-   </form>
- </div>
- </file>
+   </file>
 
-<file name="script.js">
+   <file name="script.js">
+     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
+       $scope.used = 950;
+       $scope.total = 1000;
+       $scope.available =  $scope.total - $scope.used;
 
-angular.module( 'patternfly.charts' )
-  .controller( 'ChartCtrl', ['$scope', function( $scope ) {
-    $scope.used = 950;
-    $scope.total = 1000;
-    $scope.available =  $scope.total - $scope.used;
+       $scope.chartConfig = {
+         "donut": {
+           "title":"MHz Used",
+           "label":{"show":false},
+           "width":10
+          },
+          "size": {"height":130},
+          "legend": {"show":false},
+          "color": {"pattern":["#0088CE","#D1D1D1"]},
+          "tooltip": {},
+          "data": {"columns":[["Used","950"],["Available",50]],
+          "type": "donut",
+          "donut": {
+            "label": {"show":false}
+          },
+          "groups": [["used","available"]],
+            "order":null
+          }
+       };
 
-    $scope.chartConfig = {"donut":
-                     {"title":"MHz Used",
-                      "label":{"show":false},
-                      "width":10
-                     },
-                     "size":{"height":130},
-                     "legend":{"show":false},
-                     "color":{"pattern":["#0088CE","#D1D1D1"]},
-                     "tooltip":{},
-                     "data":{"columns":[["Used","950"],["Available",50]],
-                     "type":"donut",
-                     "donut":{
-                         "label":{"show":false}
-                      },
-                      "groups":[["used","available"]],
-                      "order":null
-                      }
-                  };
+       $scope.updateAvailable = function (val) {
+         $scope.available =  $scope.total - $scope.used;
+       }
 
-    $scope.updateAvailable = function (val) {
-      $scope.available =  $scope.total - $scope.used;
-    }
-
-    $scope.submitform = function (val) {
-      $scope.used = val;
-      $scope.updateAvailable();
-      $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
-   };
-  }]);
- </file>
+       $scope.submitform = function (val) {
+         $scope.used = val;
+         $scope.updateAvailable();
+         $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
+       };
+     });
+   </file>
  </example>
  */
 (function (c3) {
   'use strict';
 
-  angular.module('patternfly.charts')
-  .directive('pfC3Chart', ['$timeout', function ($timeout) {
-
+  angular.module('patternfly.charts').directive('pfC3Chart', ["$timeout", function ($timeout) {
     return {
       restrict: 'A',
       scope: {
@@ -382,330 +380,328 @@ angular.module( 'patternfly.charts' )
  * </ul>
  * @example
  <example module="patternfly.charts">
- <file name="index.html">
-   <style>
-     hr {
-       display: block;
-       height: 1px;
-       border: 0;
-       border-top: 1px solid #525252;
-       margin: 1em 0;
-       padding: 0;
-     }
-   </style>
-   <div ng-controller="ChartCtrl" style="display:inline-block;">
+   <file name="index.html">
+     <style>
+       hr {
+         display: block;
+         height: 1px;
+         border: 0;
+         border-top: 1px solid #525252;
+         margin: 1em 0;
+         padding: 0;
+       }
+     </style>
+     <div ng-controller="ChartCtrl" style="display:inline-block;">
 
-     <div class="col-md-4">
-       </br> <div pf-donut-pct-chart config="config" data="data"></div>
-     </div>
-
-     <div class="col-md-8">
-       Total = {{data.total}}, Used = {{data.used}}, Available = {{data.available}}<br/>
-       Percent Used = {{(data.used / data.total) * 100;}} %</br>
-       Thresholds:</br>
-       <div class="col-md-2">
-         Error:</br>
-         Warning:</br>
-         Ok:
-       </div>
-       <div class="col-md-10">
-         {{config.thresholds.error}}% Used (red)</br>
-         {{config.thresholds.warning}}% Used (orange)</br>
-         Not reached a threshold (blue)
+       <div class="col-md-4">
+         </br> <div pf-donut-pct-chart config="config" data="data"></div>
        </div>
 
-       <form role="form" style="width:200px">
-         <div class="form-group">
-           <label>Show</label>
-           </br>
-           <label class="radio-inline">
-             <input type="radio" ng-model="newUsed" value="950">Error</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="newUsed" value="650">Warning</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="newUsed" value="350">Ok</input>
-           </label>
+       <div class="col-md-8">
+         Total = {{data.total}}, Used = {{data.used}}, Available = {{data.available}}<br/>
+         Percent Used = {{(data.used / data.total) * 100;}} %</br>
+         Thresholds:</br>
+         <div class="col-md-2">
+           Error:</br>
+           Warning:</br>
+           Ok:
          </div>
-       </form>
-     </div>
+         <div class="col-md-10">
+           {{config.thresholds.error}}% Used (red)</br>
+           {{config.thresholds.warning}}% Used (orange)</br>
+           Not reached a threshold (blue)
+         </div>
 
-     <div class="col-md-12">
-       <hr>
-     </div>
+         <form role="form" style="width:200px">
+           <div class="form-group">
+             <label>Show</label>
+             </br>
+             <label class="radio-inline">
+               <input type="radio" ng-model="newUsed" value="950">Error</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="newUsed" value="650">Warning</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="newUsed" value="350">Ok</input>
+             </label>
+           </div>
+         </form>
+       </div>
 
-     <div class="col-md-3">
-       <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="used"></div>
-       center-label =<br> 'used'
-     </div>
-     <div class="col-md-3">
-       <div pf-donut-pct-chart config="availConfig" data="availData" center-label="available"></div>
-       center-label =<br> 'available'
-     </div>
-     <div class="col-md-3">
-       <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="percent"></div>
-       center-label =<br> 'percent'
-     </div>
-     <div class="col-md-3">
-       <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="none"></div>
-       center-label =<br> ' none'
-     </div>
+       <div class="col-md-12">
+         <hr>
+       </div>
 
-     <div class="col-md-12">
-       <hr>
+       <div class="col-md-3">
+         <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="used"></div>
+         center-label =<br> 'used'
+       </div>
+       <div class="col-md-3">
+         <div pf-donut-pct-chart config="availConfig" data="availData" center-label="available"></div>
+         center-label =<br> 'available'
+       </div>
+       <div class="col-md-3">
+         <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="percent"></div>
+         center-label =<br> 'percent'
+       </div>
+       <div class="col-md-3">
+         <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="none"></div>
+         center-label =<br> ' none'
+       </div>
+
+       <div class="col-md-12">
+         <hr>
+       </div>
+
+       <div class="col-md-12">
+         Custom Tooltip and Center Label
+         <div pf-donut-pct-chart config="custConfig" data="custData"></div>
+       </div>
      </div>
+   </file>
 
-     <div class="col-md-12">
-       Custom Tooltip and Center Label
-       <div pf-donut-pct-chart config="custConfig" data="custData"></div>
-     </div>
-   </div>
-</file>
+   <file name="script.js">
+     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
+       $scope.config = {
+         'chartId': 'chartA',
+         'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
+       };
 
-<file name="script.js">
-angular.module( 'patternfly.charts' )
-  .controller( 'ChartCtrl', ['$scope', function( $scope ) {
-     $scope.config = {
-       'chartId': 'chartA',
-       'units': 'GB',
-       'thresholds':{'warning':'60','error':'90'}
-     };
-
-     $scope.data = {
+       $scope.data = {
          'used': '950',
          'total': '1000'
-     };
+       };
 
-     $scope.newUsed = $scope.data.used;
+       $scope.newUsed = $scope.data.used;
 
-     $scope.$watch('newUsed', function (val) {
-       $scope.data.used = val;
-     });
+       $scope.$watch('newUsed', function (val) {
+         $scope.data.used = val;
+       });
 
-     $scope.usedConfig = {
-       'chartId': 'usedChart',
-       'units': 'GB',
-       'thresholds':{'warning':'60','error':'90'}
-     };
+       $scope.usedConfig = {
+         'chartId': 'usedChart',
+         'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
+       };
 
-     $scope.usedData = {
+       $scope.usedData = {
          'used': '350',
          'total': '1000'
-     };
-     $scope.availConfig = {
-       'chartId': 'availChart',
-       'units': 'GB',
-       'thresholds':{'warning':'60','error':'90'}
-     };
+       };
 
-     $scope.availData = {
-         'used': '350',
-         'total': '1000'
-     };
-     $scope.pctConfig = {
-       'chartId': 'pctChart',
-       'units': 'GB',
-       'thresholds':{'warning':'60','error':'90'}
-     };
+       $scope.availConfig = {
+         'chartId': 'availChart',
+         'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
+       };
 
-     $scope.pctData = {
-         'used': '350',
-         'total': '1000'
-     };
-     $scope.noneConfig = {
-       'chartId': 'noneChart',
-       'units': 'GB',
-       'thresholds':{'warning':'60','error':'90'}
-     };
-
-     $scope.noneData = {
-         'used': '350',
-         'total': '1000'
-     };
-
-     $scope.custConfig = {
-       'chartId': 'custChart',
-       'units': 'MHz',
-       'thresholds':{'warning':'60','error':'90'},
-       "legend":{"show":true},
-       'tooltipFn': function (d) {
-         return '<span class="donut-tooltip-pf"style="white-space: nowrap;">' +
-                   d[0].value + ' ' + d[0].name +
-                '</span>';
-       },
-       'centerLabelFn': function (scope) {
-         return '<tspan dy="0" x="0" class="donut-title-big-pf">' +
-                  scope.data.available + '</tspan>' +
-                '<tspan dy="20" x="0" class="donut-title-small-pf">' +
-                  'Free' +
-                '</tspan>';
-       }
-     };
-
-     $scope.custData = {
-         'used': '670',
-         'total': '1000'
-     };
-  }]);
- </file>
- </example>
- */
-angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaults', '$timeout',
-  function (c3ChartDefaults, $timeout) {
-    'use strict';
-
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=',
-        data: '=',
-        centerLabel: '=?'
-      },
-      replace: true,
-      templateUrl: 'charts/donut/donut-pct-chart.html',
-      controller: ['$scope',
-        function ($scope) {
-          var donutTooltip;
-
-          $scope.donutChartId = 'donutChart';
-          if ($scope.config.chartId) {
-            $scope.donutChartId = $scope.config.chartId + $scope.donutChartId;
-          }
-
-          $scope.updateAvailable = function () {
-            $scope.data.available = $scope.data.total - $scope.data.used;
-          };
-
-          if ($scope.data.available === undefined) {
-            $scope.updateAvailable();
-          }
-
-          $scope.getStatusColor = function (used, thresholds) {
-            var color = '#0088CE';
-
-            if (thresholds) {
-              if (used >= thresholds.error) {
-                color = '#CC0000';
-              } else if (used >= thresholds.warning) {
-                color = '#EC7A08';
-              }
-            }
-
-            return color;
-          };
-
-          $scope.statusDonutColor = function (scope) {
-            var color, percentUsed;
-
-            color = { pattern: [] };
-            percentUsed = scope.data.used / scope.data.total * 100.0;
-            color.pattern[0] = $scope.getStatusColor(percentUsed, scope.config.thresholds);
-            color.pattern[1] = '#D1D1D1';
-            return color;
-          };
-
-          donutTooltip = function (scope) {
-            return {
-              contents: function (d) {
-                var tooltipHtml;
-
-                if (scope.config.tooltipFn) {
-                  tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
-                                  scope.config.tooltipFn(d) +
-                               '</span>';
-                } else {
-                  tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
-                            Math.round(d[0].ratio * 100) + '%' + ' ' + $scope.config.units + ' ' + d[0].name +
-                         '</span>';
-                }
-
-                return tooltipHtml;
-              }
-            };
-          };
-
-          $scope.getDonutData = function (scope) {
-            return {
-              columns: [
-                ['Used', scope.data.used],
-                ['Available', scope.data.available]
-              ],
-              type: 'donut',
-              donut: {
-                label: {
-                  show: false
-                }
-              },
-              groups: [
-                ['used', 'available']
-              ],
-              order: null
-            };
-          };
-
-          $scope.updateAll = function (scope) {
-            $scope.updateAvailable();
-            $scope.config.data = $scope.getDonutData($scope);
-            $scope.config.color = $scope.statusDonutColor($scope);
-            $scope.config.tooltip = donutTooltip(scope);
-          };
-
-          $scope.config = $.extend(true, c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
-          $scope.updateAll($scope);
-        }
-      ],
-      link: function (scope, element) {
-        var setupDonutChartTitle = function () {
-          $timeout(function () {
-            var donutChartTitle, bigText, smText;
-
-            donutChartTitle = element[0].querySelector('text.c3-chart-arcs-title');
-            if (scope.config.centerLabelFn) {
-              donutChartTitle.innerHTML = scope.config.centerLabelFn(scope);
-            } else if (scope.centerLabel === 'none') {
-              donutChartTitle.innerHTML = '';
-            } else {
-              // default to 'used' info.
-              bigText = scope.data.used;
-              smText = scope.config.units + ' Used';
-
-              if (scope.centerLabel === 'available') {
-                bigText = scope.data.available;
-                smText = scope.config.units + ' Available';
-              } else if (scope.centerLabel === 'percent') {
-                bigText = Math.round(scope.data.used / scope.data.total * 100.0) + '%';
-                smText = 'of ' + scope.data.total + ' ' + scope.config.units;
-              }
-              if (donutChartTitle) {
-                donutChartTitle.innerHTML =
-                  '<tspan dy="0" x="0" class="donut-title-big-pf">' +
-                  bigText +
-                  '</tspan>' +
-                  '<tspan dy="20" x="0" class="donut-title-small-pf">' +
-                  smText +
-                  '</tspan>';
-              }
-            }
-          }, 300);
+       $scope.availData = {
+           'used': '350',
+            'total': '1000'
         };
 
-        scope.$watch('config', function () {
-          scope.updateAll(scope);
-          setupDonutChartTitle();
-        }, true);
+       $scope.pctConfig = {
+         'chartId': 'pctChart',
+         'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
+       };
 
-        scope.$watch('data', function () {
-          scope.updateAll(scope);
-          setupDonutChartTitle();
-        }, true);
+       $scope.pctData = {
+         'used': '350',
+         'total': '1000'
+       };
 
-        scope.$watch('centerLabel', function () {
-          setupDonutChartTitle();
-        });
+       $scope.noneConfig = {
+         'chartId': 'noneChart',
+         'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
+       };
+
+       $scope.noneData = {
+         'used': '350',
+         'total': '1000'
+       };
+
+       $scope.custConfig = {
+         'chartId': 'custChart',
+         'units': 'MHz',
+         'thresholds':{'warning':'60','error':'90'},
+         "legend":{"show":true},
+         'tooltipFn': function (d) {
+           return '<span class="donut-tooltip-pf"style="white-space: nowrap;">' +
+                    d[0].value + ' ' + d[0].name +
+                  '</span>';
+           },
+         'centerLabelFn': function (scope) {
+           return '<tspan dy="0" x="0" class="donut-title-big-pf">' + scope.data.available + '</tspan>' +
+                    '<tspan dy="20" x="0" class="donut-title-small-pf">Free</tspan>';
+           }
+         };
+
+       $scope.custData = {
+         'used': '670',
+         'total': '1000'
+       };
+     });
+   </file>
+ </example>
+ */
+angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaults", "$timeout", function (c3ChartDefaults, $timeout) {
+  'use strict';
+
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=',
+      data: '=',
+      centerLabel: '=?'
+    },
+    replace: true,
+    templateUrl: 'charts/donut/donut-pct-chart.html',
+    controller: ['$scope',
+      function ($scope) {
+        var donutTooltip;
+
+        $scope.donutChartId = 'donutChart';
+        if ($scope.config.chartId) {
+          $scope.donutChartId = $scope.config.chartId + $scope.donutChartId;
+        }
+
+        $scope.updateAvailable = function () {
+          $scope.data.available = $scope.data.total - $scope.data.used;
+        };
+
+        if ($scope.data.available === undefined) {
+          $scope.updateAvailable();
+        }
+
+        $scope.getStatusColor = function (used, thresholds) {
+          var color = '#0088CE';
+
+          if (thresholds) {
+            if (used >= thresholds.error) {
+              color = '#CC0000';
+            } else if (used >= thresholds.warning) {
+              color = '#EC7A08';
+            }
+          }
+
+          return color;
+        };
+
+        $scope.statusDonutColor = function (scope) {
+          var color, percentUsed;
+
+          color = { pattern: [] };
+          percentUsed = scope.data.used / scope.data.total * 100.0;
+          color.pattern[0] = $scope.getStatusColor(percentUsed, scope.config.thresholds);
+          color.pattern[1] = '#D1D1D1';
+          return color;
+        };
+
+        donutTooltip = function (scope) {
+          return {
+            contents: function (d) {
+              var tooltipHtml;
+
+              if (scope.config.tooltipFn) {
+                tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                                scope.config.tooltipFn(d) +
+                             '</span>';
+              } else {
+                tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                          Math.round(d[0].ratio * 100) + '%' + ' ' + $scope.config.units + ' ' + d[0].name +
+                       '</span>';
+              }
+
+              return tooltipHtml;
+            }
+          };
+        };
+
+        $scope.getDonutData = function (scope) {
+          return {
+            columns: [
+              ['Used', scope.data.used],
+              ['Available', scope.data.available]
+            ],
+            type: 'donut',
+            donut: {
+              label: {
+                show: false
+              }
+            },
+            groups: [
+              ['used', 'available']
+            ],
+            order: null
+          };
+        };
+
+        $scope.updateAll = function (scope) {
+          $scope.updateAvailable();
+          $scope.config.data = $scope.getDonutData($scope);
+          $scope.config.color = $scope.statusDonutColor($scope);
+          $scope.config.tooltip = donutTooltip(scope);
+        };
+
+        $scope.config = $.extend(true, c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
+        $scope.updateAll($scope);
       }
-    };
-  }]);
+    ],
+    link: function (scope, element) {
+      var setupDonutChartTitle = function () {
+        $timeout(function () {
+          var donutChartTitle, bigText, smText;
+
+          donutChartTitle = element[0].querySelector('text.c3-chart-arcs-title');
+          if (scope.config.centerLabelFn) {
+            donutChartTitle.innerHTML = scope.config.centerLabelFn(scope);
+          } else if (scope.centerLabel === 'none') {
+            donutChartTitle.innerHTML = '';
+          } else {
+            // default to 'used' info.
+            bigText = scope.data.used;
+            smText = scope.config.units + ' Used';
+
+            if (scope.centerLabel === 'available') {
+              bigText = scope.data.available;
+              smText = scope.config.units + ' Available';
+            } else if (scope.centerLabel === 'percent') {
+              bigText = Math.round(scope.data.used / scope.data.total * 100.0) + '%';
+              smText = 'of ' + scope.data.total + ' ' + scope.config.units;
+            }
+            if (donutChartTitle) {
+              donutChartTitle.innerHTML =
+                '<tspan dy="0" x="0" class="donut-title-big-pf">' +
+                bigText +
+                '</tspan>' +
+                '<tspan dy="20" x="0" class="donut-title-small-pf">' +
+                smText +
+                '</tspan>';
+            }
+          }
+        }, 300);
+      };
+
+      scope.$watch('config', function () {
+        scope.updateAll(scope);
+        setupDonutChartTitle();
+      }, true);
+
+      scope.$watch('data', function () {
+        scope.updateAll(scope);
+        setupDonutChartTitle();
+      }, true);
+
+      scope.$watch('centerLabel', function () {
+        setupDonutChartTitle();
+      });
+    }
+  };
+}]);
 ;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfSparklineChart
@@ -748,291 +744,289 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ['c3ChartDefaul
 
  * @example
  <example module="patternfly.charts">
- <file name="index.html">
-   <style>
-   hr {
-         display: block;
-         height: 10px;
-         border: 0;
-         border-top: 1px solid #525252;
-         margin: 1em 0;
-         padding: 0;
-       }
-   </style>
-   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
-     <div class="col-md-12">
-       <div pf-sparkline-chart config="config" chart-data="data" chart-height="custChartHeight" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
-     </div>
-     <hr class="col-md-12">
-     <div class="col-md-12">
-       <form role="form">
-         <div class="form-group">
-           <label>Tooltip Type</label>
-           </br>
-           <label class="radio-inline">
-             <input type="radio" ng-model="config.tooltipType" value="default">Default</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="config.tooltipType" value="usagePerDay">Usage Per Day</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="config.tooltipType" value="valuePerDay">Value Per Day</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="config.tooltipType" value="percentage">Percentage</input>
-           </label>
-         </div>
-       </form>
-       <div class="row">
-         <div class="col-md-6">
-           <form role="form"">
-             <div class="form-group">
-               <label>Show</label>
-               </br>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowXAxis">X Axis</input>
-               </label>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowYAxis">Y Axis</input>
-               </label>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-           <form role="form" >
-             <div class="form-group">
-               <label>Chart Height</label>
-               </br>
-               <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-               <button ng-click="addDataPoint()">Add Data Point</button>
+   <file name="index.html">
+     <style>
+     hr {
+           display: block;
+           height: 10px;
+           border: 0;
+           border-top: 1px solid #525252;
+           margin: 1em 0;
+           padding: 0;
+         }
+     </style>
+     <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
+       <div class="col-md-12">
+         <div pf-sparkline-chart config="config" chart-data="data" chart-height="custChartHeight" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+       </div>
+       <hr class="col-md-12">
+       <div class="col-md-12">
+         <form role="form">
+           <div class="form-group">
+             <label>Tooltip Type</label>
+             </br>
+             <label class="radio-inline">
+               <input type="radio" ng-model="config.tooltipType" value="default">Default</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="config.tooltipType" value="usagePerDay">Usage Per Day</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="config.tooltipType" value="valuePerDay">Value Per Day</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="config.tooltipType" value="percentage">Percentage</input>
+             </label>
+           </div>
+         </form>
+         <div class="row">
+           <div class="col-md-6">
+             <form role="form"">
+               <div class="form-group">
+                 <label>Show</label>
+                 </br>
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="custShowXAxis">X Axis</input>
+                 </label>
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="custShowYAxis">Y Axis</input>
+                 </label>
+               </div>
+             </form>
+           </div>
+           <div class="col-md-3">
+             <form role="form" >
+               <div class="form-group">
+                 <label>Chart Height</label>
+                 </br>
+                 <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+               </div>
+             </form>
+           </div>
+           <div class="col-md-3">
+                 <button ng-click="addDataPoint()">Add Data Point</button>
+           </div>
          </div>
        </div>
      </div>
-   </div>
- </file>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.charts' )
-   .controller( 'ChartCtrl', ['$scope', function( $scope ) {
+   <file name="script.js">
+     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
 
-     $scope.config = {
-       'chartId': 'exampleSparkline',
-       'tooltipType': 'default'
-     };
+       $scope.config = {
+         'chartId': 'exampleSparkline',
+         'tooltipType': 'default'
+       };
 
-    var today = new Date();
-    var dates = ['dates'];
-    for (var d = 20 - 1; d >= 0; d--) {
-        dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
-    }
+      var today = new Date();
+      var dates = ['dates'];
+      for (var d = 20 - 1; d >= 0; d--) {
+          dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
+      }
 
-     $scope.data = {
-         'total': '100',
-         'xData': dates,
-         'yData': ['used', '10', '20', '30', '20', '30', '10', '14', '20', '25', '68', '54', '56', '78', '56', '67', '88', '76', '65', '87', '76']
-     };
+       $scope.data = {
+           'total': '100',
+           'xData': dates,
+           'yData': ['used', '10', '20', '30', '20', '30', '10', '14', '20', '25', '68', '54', '56', '78', '56', '67', '88', '76', '65', '87', '76']
+       };
 
-     $scope.custShowXAxis = false;
-     $scope.custShowYAxis = false;
-     $scope.custChartHeight = 60;
+       $scope.custShowXAxis = false;
+       $scope.custShowYAxis = false;
+       $scope.custChartHeight = 60;
 
-     $scope.addDataPoint = function () {
-       $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
-       $scope.data.yData.push(Math.round(Math.random() * 100));
-     };
-   }]);
- </file>
+       $scope.addDataPoint = function () {
+         $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
+         $scope.data.yData.push(Math.round(Math.random() * 100));
+       };
+     });
+   </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfSparklineChart', ['c3ChartDefaults',
-  function (c3ChartDefaults) {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=',
-        chartData: '=',
-        chartHeight: '=?',
-        showXAxis: '=?',
-        showYAxis: '=?'
-      },
-      replace: true,
-      templateUrl: 'charts/sparkline/sparkline-chart.html',
-      controller: ['$scope',
-        function ($scope) {
+angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefaults", function (c3ChartDefaults) {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=',
+      chartData: '=',
+      chartHeight: '=?',
+      showXAxis: '=?',
+      showYAxis: '=?'
+    },
+    replace: true,
+    templateUrl: 'charts/sparkline/sparkline-chart.html',
+    controller: ['$scope',
+      function ($scope) {
 
-          // Create an ID for the chart based on the chartId in the config if given
-          $scope.sparklineChartId = 'sparklineChart';
-          if ($scope.config.chartId) {
-            $scope.sparklineChartId = $scope.config.chartId + $scope.sparklineChartId;
-          }
+        // Create an ID for the chart based on the chartId in the config if given
+        $scope.sparklineChartId = 'sparklineChart';
+        if ($scope.config.chartId) {
+          $scope.sparklineChartId = $scope.config.chartId + $scope.sparklineChartId;
+        }
 
-          /*
-           * Convert the config data to C3 Data
-           */
-          $scope.getSparklineData = function (chartData) {
-            return {
-              x: chartData.xData[0],
-              columns: [
-                chartData.xData,
-                chartData.yData
-              ],
-              type: 'area'
-            };
+        /*
+         * Convert the config data to C3 Data
+         */
+        $scope.getSparklineData = function (chartData) {
+          return {
+            x: chartData.xData[0],
+            columns: [
+              chartData.xData,
+              chartData.yData
+            ],
+            type: 'area'
           };
+        };
 
-          $scope.getTooltipTableHTML = function (tipRows) {
-            return '<div class="module-triangle-bottom">' +
-              '  <table class="c3-tooltip">' +
-              '    <tbody>' +
-              tipRows +
-              '    </tbody>' +
-              '  </table>' +
-              '</div>';
-          };
+        $scope.getTooltipTableHTML = function (tipRows) {
+          return '<div class="module-triangle-bottom">' +
+            '  <table class="c3-tooltip">' +
+            '    <tbody>' +
+            tipRows +
+            '    </tbody>' +
+            '  </table>' +
+            '</div>';
+        };
 
-          $scope.sparklineTooltip = function () {
-            return {
-              contents: function (d) {
-                var tipRows;
-                var percentUsed;
+        $scope.sparklineTooltip = function () {
+          return {
+            contents: function (d) {
+              var tipRows;
+              var percentUsed;
 
-                if ($scope.config.tooltipFn) {
-                  tipRows = $scope.config.tooltipFn(d);
-                } else {
-                  switch ($scope.config.tooltipType) {
-                  case 'usagePerDay':
-                    percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
-                    tipRows =
-                      '<tr>' +
-                      '  <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +
-                      '</tr>' +
-                      '<tr>' +
-                      '  <td class="name">' + percentUsed + '%:' + '</td>' +
-                      '  <td class="value text-nowrap">' + d[0].value + ' ' + $scope.config.units + ' ' + d[0].name + '</td>' +
-                      '</tr>';
-                    break;
-                  case 'valuePerDay':
-                    tipRows =
-                      '<tr>' +
-                      '  <td class="value">' +  d[0].x.toLocaleDateString() + '</td>' +
-                      '  <td class="value text-nowrap">' +  d[0].value + ' ' + d[0].name + '</td>' +
-                      '</tr>';
-                    break;
-                  case 'percentage':
-                    percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
-                    tipRows =
-                      '<tr>' +
-                      '  <td class="name">' + percentUsed + '%' + '</td>' +
-                      '</tr>';
-                    break;
-                  default:
-                    tipRows = c3ChartDefaults.getDefaultSparklineTooltip().contents(d);
-                  }
-                }
-                return $scope.getTooltipTableHTML(tipRows);
-              },
-              position: function (data, width, height, element) {
-                var center;
-                var top;
-                var chartBox;
-                var graphOffsetX;
-                var x;
-
-                try {
-                  center = parseInt(element.getAttribute('x'));
-                  top = parseInt(element.getAttribute('y'));
-                  chartBox = document.querySelector('#' + $scope.sparklineChartId).getBoundingClientRect();
-                  graphOffsetX = document.querySelector('#' + $scope.sparklineChartId + ' g.c3-axis-y').getBoundingClientRect().right;
-                  x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
-
-                  return {
-                    top: top - height,
-                    left: Math.min(x, chartBox.width - width)
-                  };
-                } catch (e) {
+              if ($scope.config.tooltipFn) {
+                tipRows = $scope.config.tooltipFn(d);
+              } else {
+                switch ($scope.config.tooltipType) {
+                case 'usagePerDay':
+                  percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
+                  tipRows =
+                    '<tr>' +
+                    '  <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '  <td class="name">' + percentUsed + '%:' + '</td>' +
+                    '  <td class="value text-nowrap">' + d[0].value + ' ' + $scope.config.units + ' ' + d[0].name + '</td>' +
+                    '</tr>';
+                  break;
+                case 'valuePerDay':
+                  tipRows =
+                    '<tr>' +
+                    '  <td class="value">' +  d[0].x.toLocaleDateString() + '</td>' +
+                    '  <td class="value text-nowrap">' +  d[0].value + ' ' + d[0].name + '</td>' +
+                    '</tr>';
+                  break;
+                case 'percentage':
+                  percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
+                  tipRows =
+                    '<tr>' +
+                    '  <td class="name">' + percentUsed + '%' + '</td>' +
+                    '</tr>';
+                  break;
+                default:
+                  tipRows = c3ChartDefaults.getDefaultSparklineTooltip().contents(d);
                 }
               }
-            };
-          };
-
-          /*
-           * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
-           *   1) in the config, setting showAxis to true will show both axes
-           *   2) in the attributes showXAxis and showYAxis will override the config if set
-           *
-           * By default only line and the tick marks are shown, no labels. This is a sparkline and should be used
-           * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
-           */
-
-          if ($scope.showXAxis === undefined) {
-            $scope.showXAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-          }
-
-          if ($scope.showYAxis === undefined) {
-            $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-          }
-
-          $scope.defaultConfig = c3ChartDefaults.getDefaultSparklineConfig();
-          $scope.defaultConfig.axis = {
-            x: {
-              show: $scope.showXAxis === true,
-              type: 'timeseries',
-              tick: {
-                format: function () {
-                  return '';
-                }
-              }
+              return $scope.getTooltipTableHTML(tipRows);
             },
-            y: {
-              show: $scope.showYAxis === true,
-              tick: {
-                format: function () {
-                  return '';
-                }
+            position: function (data, width, height, element) {
+              var center;
+              var top;
+              var chartBox;
+              var graphOffsetX;
+              var x;
+
+              try {
+                center = parseInt(element.getAttribute('x'));
+                top = parseInt(element.getAttribute('y'));
+                chartBox = document.querySelector('#' + $scope.sparklineChartId).getBoundingClientRect();
+                graphOffsetX = document.querySelector('#' + $scope.sparklineChartId + ' g.c3-axis-y').getBoundingClientRect().right;
+                x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
+
+                return {
+                  top: top - height,
+                  left: Math.min(x, chartBox.width - width)
+                };
+              } catch (e) {
               }
             }
           };
+        };
 
-          // Setup the default configuration
-          $scope.defaultConfig.tooltip = $scope.sparklineTooltip();
-          if ($scope.chartHeight) {
-            $scope.defaultConfig.size.height = $scope.chartHeight;
-          }
-          $scope.defaultConfig.units = '';
+        /*
+         * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
+         *   1) in the config, setting showAxis to true will show both axes
+         *   2) in the attributes showXAxis and showYAxis will override the config if set
+         *
+         * By default only line and the tick marks are shown, no labels. This is a sparkline and should be used
+         * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
+         */
 
-          // Override defaults with callers specifications
-          $scope.config = $.extend(true, angular.copy($scope.defaultConfig), $scope.config);
-
-          // Convert the given data to C3 chart format
-          $scope.config.data = $scope.getSparklineData($scope.chartData);
+        if ($scope.showXAxis === undefined) {
+          $scope.showXAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
         }
-      ],
 
-      link: function (scope) {
-        scope.$watch('config', function () {
-          scope.config = $.extend(true, angular.copy(scope.defaultConfig), scope.config);
-        }, true);
-        scope.$watch('chartHeight', function () {
-          scope.config.size.height = scope.chartHeight;
-        });
-        scope.$watch('showXAxis', function () {
-          scope.config.axis.x.show = scope.showXAxis === true;
-        });
-        scope.$watch('showYAxis', function () {
-          scope.config.axis.y.show = scope.showYAxis === true;
-        });
-        scope.$watch('chartData', function () {
-          scope.config.data = scope.getSparklineData(scope.chartData);
-        }, true);
+        if ($scope.showYAxis === undefined) {
+          $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
+        }
+
+        $scope.defaultConfig = c3ChartDefaults.getDefaultSparklineConfig();
+        $scope.defaultConfig.axis = {
+          x: {
+            show: $scope.showXAxis === true,
+            type: 'timeseries',
+            tick: {
+              format: function () {
+                return '';
+              }
+            }
+          },
+          y: {
+            show: $scope.showYAxis === true,
+            tick: {
+              format: function () {
+                return '';
+              }
+            }
+          }
+        };
+
+        // Setup the default configuration
+        $scope.defaultConfig.tooltip = $scope.sparklineTooltip();
+        if ($scope.chartHeight) {
+          $scope.defaultConfig.size.height = $scope.chartHeight;
+        }
+        $scope.defaultConfig.units = '';
+
+        // Override defaults with callers specifications
+        $scope.config = $.extend(true, angular.copy($scope.defaultConfig), $scope.config);
+
+        // Convert the given data to C3 chart format
+        $scope.config.data = $scope.getSparklineData($scope.chartData);
       }
-    };
-  }
-]);
+    ],
+
+    link: function (scope) {
+      scope.$watch('config', function () {
+        scope.config = $.extend(true, angular.copy(scope.defaultConfig), scope.config);
+      }, true);
+      scope.$watch('chartHeight', function () {
+        scope.config.size.height = scope.chartHeight;
+      });
+      scope.$watch('showXAxis', function () {
+        scope.config.axis.x.show = scope.showXAxis === true;
+      });
+      scope.$watch('showYAxis', function () {
+        scope.config.axis.y.show = scope.showYAxis === true;
+      });
+      scope.$watch('chartData', function () {
+        scope.config.data = scope.getSparklineData(scope.chartData);
+      }, true);
+    }
+  };
+}]
+);
 ;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfUtilizationChart
@@ -1075,101 +1069,99 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ['c3ChartDefau
 
  * @example
  <example module="patternfly.charts">
- <file name="index.html">
-   <style>
-     hr {
-         display: block;
-         height: 10px;
-         border: 0;
-         border-top: 1px solid #525252;
-         margin: 1em 0;
-         padding: 0;
-     }
-   </style>
-   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
-     <div class="col-md-12">
-       <div pf-utilization-chart config="config"
-            chart-data="data" center-label="centerLabel"
-            donut-config="donutConfig" sparkline-config="sparklineConfig"
-            sparkline-chart-height="custChartHeight"
-            show-sparkline-x-axis="custShowXAxis"
-            show-sparkline-y-axis="custShowYAxis">
+   <file name="index.html">
+     <style>
+       hr {
+           display: block;
+           height: 10px;
+           border: 0;
+           border-top: 1px solid #525252;
+           margin: 1em 0;
+           padding: 0;
+       }
+     </style>
+     <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
+       <div class="col-md-12">
+         <div pf-utilization-chart config="config"
+              chart-data="data" center-label="centerLabel"
+              donut-config="donutConfig" sparkline-config="sparklineConfig"
+              sparkline-chart-height="custChartHeight"
+              show-sparkline-x-axis="custShowXAxis"
+              show-sparkline-y-axis="custShowYAxis">
+         </div>
        </div>
-     </div>
-     <hr class="col-md-12">
-     <div class="col-md-12">
-       <form role="form">
-         <div class="form-group">
-         <label>Donut Center Label Type</label>
-         </br>
-         <label class="radio-inline">
-           <input type="radio" ng-model="centerLabel" value="used">Used</input>
-         </label>
-         <label class="radio-inline">
-           <input type="radio" ng-model="centerLabel" value="available">Available</input>
-         </label>
-         <label class="radio-inline">
-           <input type="radio" ng-model="centerLabel" value="percent">Percent</input>
-         </label>
-         <label class="radio-inline">
-           <input type="radio" ng-model="centerLabel" value="none">None</input>
-         </label>
-         </div>
-       </form>
-       <form role="form">
-         <div class="form-group">
-           <label>Sparkline Tooltip Type</label>
-             </br>
-           <label class="radio-inline">
-             <input type="radio" ng-model="sparklineConfig.tooltipType" value="default">Default</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="sparklineConfig.tooltipType" value="usagePerDay">Usage Per Day</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="sparklineConfig.tooltipType" value="valuePerDay">Value Per Day</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="sparklineConfig.tooltipType" value="percentage">Percentage</input>
-           </label>
-         </div>
-       </form>
-       <div class="row">
-         <div class="col-md-6">
-           <form role="form"">
-             <div class="form-group">
-               <label>Show</label>
-               </br>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowXAxis">Sparkline X Axis</input>
-               </label>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowYAxis">Sparkline Y Axis</input>
-               </label>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-         <form role="form" >
+       <hr class="col-md-12">
+       <div class="col-md-12">
+         <form role="form">
            <div class="form-group">
-             <label>Chart Height</label>
-             </br>
-             <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+           <label>Donut Center Label Type</label>
+           </br>
+           <label class="radio-inline">
+             <input type="radio" ng-model="centerLabel" value="used">Used</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="centerLabel" value="available">Available</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="centerLabel" value="percent">Percent</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="centerLabel" value="none">None</input>
+           </label>
            </div>
          </form>
-         </div>
-         <div class="col-md-3">
-           <button ng-click="addDataPoint()">Add Data Point</button>
+         <form role="form">
+           <div class="form-group">
+             <label>Sparkline Tooltip Type</label>
+               </br>
+             <label class="radio-inline">
+               <input type="radio" ng-model="sparklineConfig.tooltipType" value="default">Default</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="sparklineConfig.tooltipType" value="usagePerDay">Usage Per Day</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="sparklineConfig.tooltipType" value="valuePerDay">Value Per Day</input>
+             </label>
+             <label class="radio-inline">
+               <input type="radio" ng-model="sparklineConfig.tooltipType" value="percentage">Percentage</input>
+             </label>
+           </div>
+         </form>
+         <div class="row">
+           <div class="col-md-6">
+             <form role="form"">
+               <div class="form-group">
+                 <label>Show</label>
+                 </br>
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="custShowXAxis">Sparkline X Axis</input>
+                 </label>
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="custShowYAxis">Sparkline Y Axis</input>
+                 </label>
+               </div>
+             </form>
+           </div>
+           <div class="col-md-3">
+           <form role="form" >
+             <div class="form-group">
+               <label>Chart Height</label>
+               </br>
+               <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+             </div>
+           </form>
+           </div>
+           <div class="col-md-3">
+             <button ng-click="addDataPoint()">Add Data Point</button>
+           </div>
          </div>
        </div>
      </div>
-   </div>
- </file>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.charts' )
-   .controller( 'ChartCtrl', ['$scope', function( $scope ) {
-
+   <file name="script.js">
+   angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
      $scope.config = {
        title: 'Memory',
        units: 'GB'
@@ -1210,8 +1202,8 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ['c3ChartDefau
        $scope.data.xData.push(newDate);
        $scope.data.yData.push(newData);
      };
-   }]);
- </file>
+   });
+   </file>
  </example>
  */
 angular.module('patternfly.charts').directive('pfUtilizationChart',
@@ -1275,7 +1267,6 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
  *
  * @example
  <example module="patternfly.form">
-
    <file name="index.html">
      <form class="form-horizontal" ng-controller="FormDemoCtrl">
      <div>
@@ -1287,19 +1278,17 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
    </file>
 
    <file name="script.js">
+     angular.module( 'patternfly.form' ).controller( 'FormDemoCtrl', function( $scope ) {
+       $scope.setToday = function () {
+         $scope.date = new Date();
+       }
 
-     angular.module( 'patternfly.form' )
-      .controller( 'FormDemoCtrl', ['$scope', function( $scope ) {
-        $scope.setToday = function () {
-          $scope.date = new Date();
-        }
-
-        $scope.options = {
-          autoclose: true,
-          todayBtn: 'linked',
-          todayHighlight: true
-        };
-      }]);
+       $scope.options = {
+         autoclose: true,
+         todayBtn: 'linked',
+         todayHighlight: true
+       };
+     });
    </file>
  </example>
  */
@@ -1372,8 +1361,7 @@ angular.module('patternfly.form').directive('pfDatepicker', function () {
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.form' )
-      .controller( 'FormButtonCtrl', ['$scope', '$timeout', function( $scope, $timeout ) {
+     angular.module( 'patternfly.form' ).controller( 'FormButtonCtrl', function( $scope, $timeout ) {
        $scope.status = 'Not yet Saved'
        $scope.working = false;
 
@@ -1390,7 +1378,7 @@ angular.module('patternfly.form').directive('pfDatepicker', function () {
          $scope.status = 'cancelled';
          $scope.input = null;
        };
-     }]);
+     });
    </file>
  </example>
  */
@@ -1465,13 +1453,12 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.form' )
-      .controller( 'FormDemoCtrl', ['$scope', function( $scope ) {
-        $scope.item = {
-          name: 'Homer Simpson',
-          description: 'I like donuts and Duff.  Doh!'
-        };
-      }]);
+     angular.module( 'patternfly.form' ).controller( 'FormDemoCtrl', function( $scope ) {
+       $scope.item = {
+         name: 'Homer Simpson',
+         description: 'I like donuts and Duff.  Doh!'
+       };
+     });
    </file>
  </example>
  */
@@ -1577,51 +1564,50 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
  * @example
  <example module="patternfly.notification">
 
- <file name="index.html">
-   <div ng-controller="NotificationDemoCtrl">
-     <pf-notification-list></pf-notification-list>
+   <file name="index.html">
+     <div ng-controller="NotificationDemoCtrl">
+       <pf-notification-list></pf-notification-list>
 
-     <form class="form-horizontal">
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="message">Message:</label>
-         <div class="col-sm-10">
-          <input type="text" class="form-control" ng-model="message" id="message"/>
+       <form class="form-horizontal">
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="message">Message:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="message" id="message"/>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="type">Type:</label>
-         <div class="col-sm-10">
-          <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Type:</label>
+           <div class="col-sm-10">
+            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <div class="col-sm-12">
-          <button ng-click="notify()">Add notification</button>
+         <div class="form-group">
+           <div class="col-sm-12">
+            <button ng-click="notify()">Add notification</button>
+           </div>
          </div>
-       </div>
-     </form>
-   </div>
- </file>
+       </form>
+     </div>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.notification' )
-  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
+   <file name="script.js">
+     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
 
-    var typeMap = { 'Info': Notifications.info,
-                    'Success': Notifications.success,
-                    'Warning': Notifications.warn,
-                    'Danger': Notifications.error };
+       var typeMap = { 'Info': Notifications.info,
+                       'Success': Notifications.success,
+                       'Warning': Notifications.warn,
+                       'Danger': Notifications.error };
 
-    $scope.types = Object.keys(typeMap);
+       $scope.types = Object.keys(typeMap);
 
-    $scope.type = $scope.types[0];
-    $scope.message = 'Default notification message.';
+       $scope.type = $scope.types[0];
+       $scope.message = 'Default notification message.';
 
-    $scope.notify = function () {
-      typeMap[$scope.type]($scope.message);
-    }
-  }]);
- </file>
+       $scope.notify = function () {
+         typeMap[$scope.type]($scope.message);
+       }
+     });
+   </file>
 
  </example>
  */
@@ -1740,56 +1726,54 @@ angular.module('patternfly.notification', []).provider('Notifications', function
  * @example
  <example module="patternfly.notification">
 
- <file name="index.html">
-   <div ng-controller="NotificationDemoCtrl">
+   <file name="index.html">
+     <div ng-controller="NotificationDemoCtrl">
 
-     <pf-notification pf-notification-type="type"
-                      pf-notification-header="header"
-                      pf-notification-message="message"
-                      pf-notification-persistent="isPersistent">
-     </pf-notification>
+       <pf-notification pf-notification-type="type"
+                        pf-notification-header="header"
+                        pf-notification-message="message"
+                        pf-notification-persistent="isPersistent">
+       </pf-notification>
 
-     <form class="form-horizontal">
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="header">Header:</label>
-         <div class="col-sm-10">
-          <input type="text" class="form-control" ng-model="header" id="header"/>
+       <form class="form-horizontal">
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="header">Header:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="header" id="header"/>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="message">Message:</label>
-         <div class="col-sm-10">
-          <input type="text" class="form-control" ng-model="message" id="message"/>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="message">Message:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="message" id="message"/>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="type">Type:</label>
-         <div class="col-sm-10">
-          <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Type:</label>
+           <div class="col-sm-10">
+            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="type">Persistent:</label>
-         <div class="col-sm-10">
-          <input type="checkbox" ng-model="isPersistent"></input>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Persistent:</label>
+           <div class="col-sm-10">
+            <input type="checkbox" ng-model="isPersistent"></input>
+           </div>
          </div>
-       </div>
-     </form>
-   </div>
- </file>
+       </form>
+     </div>
+   </file>
 
- <file name="script.js">
+   <file name="script.js">
+     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
+       $scope.types = ['success','info','danger', 'warning'];
+       $scope.type = $scope.types[0];
+       $scope.isPersistent = false;
 
-  angular.module( 'patternfly.notification' )
-  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
-    $scope.types = ['success','info','danger', 'warning'];
-    $scope.type = $scope.types[0];
-    $scope.isPersistent = false;
-
-    $scope.header = 'Default Header.';
-    $scope.message = 'Default Message.';
-  }]);
- </file>
+       $scope.header = 'Default Header.';
+       $scope.message = 'Default Message.';
+     });
+   </file>
 
  </example>
  */
@@ -1819,53 +1803,52 @@ angular.module( 'patternfly.notification' ).directive('pfNotification', function
  * @example
  <example module="patternfly.notification">
 
- <file name="index.html">
-   <div ng-controller="NotificationDemoCtrl">
+   <file name="index.html">
+     <div ng-controller="NotificationDemoCtrl">
 
-     <pf-notification-list></pf-notification-list>
+       <pf-notification-list></pf-notification-list>
 
-     <form class="form-horizontal">
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="type">Type:</label>
-         <div class="col-sm-10">
-          <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+       <form class="form-horizontal">
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Type:</label>
+           <div class="col-sm-10">
+            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <label class="col-sm-2 control-label" for="message">Message:</label>
-         <div class="col-sm-10">
-          <input type="text" class="form-control" ng-model="message" id="message"/>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="message">Message:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="message" id="message"/>
+           </div>
          </div>
-       </div>
-       <div class="form-group">
-         <div class="col-sm-12">
-          <button ng-click="notify()">Add notification - Click me several times</button>
+         <div class="form-group">
+           <div class="col-sm-12">
+            <button ng-click="notify()">Add notification - Click me several times</button>
+           </div>
          </div>
-       </div>
-     </form>
-   </div>
- </file>
+       </form>
+     </div>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.notification' )
-  .controller( 'NotificationDemoCtrl', ['$scope', 'Notifications', function( $scope, Notifications ) {
-    $scope.message = 'Default Message.';
+   <file name="script.js">
+     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
+       $scope.message = 'Default Message.';
 
-    var typeMap = { 'Info': Notifications.info,
-                    'Success': Notifications.success,
-                    'Warning': Notifications.warn,
-                    'Danger': Notifications.error };
+       var typeMap = { 'Info': Notifications.info,
+                       'Success': Notifications.success,
+                       'Warning': Notifications.warn,
+                       'Danger': Notifications.error };
 
-    $scope.types = Object.keys(typeMap);
+       $scope.types = Object.keys(typeMap);
 
-    $scope.type = $scope.types[0];
-    $scope.message = 'Default notification message.';
+       $scope.type = $scope.types[0];
+       $scope.message = 'Default notification message.';
 
-    $scope.notify = function () {
-      typeMap[$scope.type]($scope.message);
-    }
-  }]);
- </file>
+       $scope.notify = function () {
+         typeMap[$scope.type]($scope.message);
+       }
+     });
+   </file>
 
  </example>
  */
@@ -1893,56 +1876,55 @@ angular.module( 'patternfly.notification' ).directive('pfNotificationList', func
  * @example
  <example module="patternfly.select">
 
- <file name="index.html">
- <div ng-controller="SelectDemoCtrl">
+   <file name="index.html">
+     <div ng-controller="SelectDemoCtrl">
 
- <form class="form-horizontal">
-   <div class="form-group">
-     <label class="col-sm-2 control-label" for="pet">Preferred pet:</label>
-     <div class="col-sm-10">
-      <select pf-select ng-model="pet" id="pet" ng-options="o as o for o in pets"></select>
+     <form class="form-horizontal">
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="pet">Preferred pet:</label>
+         <div class="col-sm-10">
+          <select pf-select ng-model="pet" id="pet" ng-options="o as o for o in pets"></select>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="fruit">Preferred fruit:</label>
+         <div class="col-sm-10">
+           <select pf-select ng-model="fruit" id="fruit">
+             <option value="orange">Orange</option>
+             <option value="apple" ng-selected="true" selected>Apple</option>
+             <option value="banana">Banana</option>
+           </select>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="drink">Preferred drink:</label>
+         <div class="col-sm-10">
+           <select pf-select="{ noneSelectedText: 'None' }" ng-model="drink" id="drink" ng-options="o as o for o in drinks">
+             <option value="">No drink selected</option>
+           </select>
+         </div>
+       </div>
+
+     </form>
+
+     <p>Your preferred pet is {{pet}}.</p>
+
      </div>
-   </div>
+   </file>
 
-   <div class="form-group">
-     <label class="col-sm-2 control-label" for="fruit">Preferred fruit:</label>
-     <div class="col-sm-10">
-       <select pf-select ng-model="fruit" id="fruit">
-         <option value="orange">Orange</option>
-         <option value="apple" ng-selected="true" selected>Apple</option>
-         <option value="banana">Banana</option>
-       </select>
-     </div>
-   </div>
-
-   <div class="form-group">
-     <label class="col-sm-2 control-label" for="drink">Preferred drink:</label>
-     <div class="col-sm-10">
-       <select pf-select="{ noneSelectedText: 'None' }" ng-model="drink" id="drink" ng-options="o as o for o in drinks">
-         <option value="">No drink selected</option>
-       </select>
-     </div>
-   </div>
-
- </form>
-
- <p>Your preferred pet is {{pet}}.</p>
-
- </div>
- </file>
-
- <file name="script.js">
- angular.module( 'patternfly.select' )
-   .controller( 'SelectDemoCtrl', ['$scope', function( $scope ) {
-    $scope.drinks = ['tea', 'coffee', 'water'];
-    $scope.pets = ['Dog', 'Cat', 'Chicken'];
-    $scope.pet = $scope.pets[0];
-  }]);
- </file>
+   <file name="script.js">
+     angular.module( 'patternfly.select' ).controller( 'SelectDemoCtrl', function( $scope ) {
+       $scope.drinks = ['tea', 'coffee', 'water'];
+       $scope.pets = ['Dog', 'Cat', 'Chicken'];
+       $scope.pet = $scope.pets[0];
+     });
+   </file>
 
  </example>
  */
-angular.module('patternfly.select', []).directive('pfSelect', function ($timeout) {
+angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", function ($timeout) {
   'use strict';
 
   return {
@@ -1977,7 +1959,7 @@ angular.module('patternfly.select', []).directive('pfSelect', function ($timeout
       });
     }
   };
-});
+}]);
 ;/**
  * @ngdoc directive
  * @name patternfly.validation:pfValidation
@@ -1993,64 +1975,63 @@ angular.module('patternfly.select', []).directive('pfSelect', function ($timeout
  * @example
  <example module="patternfly.validation">
 
- <file name="index.html">
-   <div ng-controller="ValidationDemoCtrl">
-   <form class="form-horizontal">
+   <file name="index.html">
+     <div ng-controller="ValidationDemoCtrl">
+     <form class="form-horizontal">
 
-     <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Initially valid:</label>
-       <div class="col-sm-10">
-         <input class="form-control" type="text" ng-model="myValueValid" pf-validation="isNumber(input)"/>
-         <span class="help-block">The value you typed is not a number.</span>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="message">Initially valid:</label>
+         <div class="col-sm-10">
+           <input class="form-control" type="text" ng-model="myValueValid" pf-validation="isNumber(input)"/>
+           <span class="help-block">The value you typed is not a number.</span>
+         </div>
        </div>
-     </div>
 
-     <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Fixed Number:</label>
-       <div class="col-sm-10">
-         <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)"/>
-         <span class="help-block">The value you typed is not a number.</span>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="message">Fixed Number:</label>
+         <div class="col-sm-10">
+           <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)"/>
+           <span class="help-block">The value you typed is not a number.</span>
+         </div>
        </div>
-     </div>
 
-     <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Number:</label>
-       <div class="col-sm-10">
-         <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)" pf-validation-disabled="isValidationDisabled"/>
-         <span class="help-block">The value you typed is not a number.</span>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="message">Number:</label>
+         <div class="col-sm-10">
+           <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)" pf-validation-disabled="isValidationDisabled"/>
+           <span class="help-block">The value you typed is not a number.</span>
+         </div>
        </div>
-     </div>
 
-     <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Validation disabled:</label>
-       <div class="col-sm-10">
-         <input class="form-control" type="checkbox" ng-model="isValidationDisabled"/>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="message">Validation disabled:</label>
+         <div class="col-sm-10">
+           <input class="form-control" type="checkbox" ng-model="isValidationDisabled"/>
+         </div>
        </div>
+     </form>
      </div>
-   </form>
-   </div>
- </file>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.validation' )
-   .controller( 'ValidationDemoCtrl', ['$scope', function( $scope ) {
-    $scope.myValue = "Change this value to be a number";
-    $scope.myValueValid = 42;
-    $scope.isValidationDisabled = false;
+   <file name="script.js">
+     angular.module( 'patternfly.validation' ).controller( 'ValidationDemoCtrl', function( $scope ) {
+       $scope.myValue = "Change this value to be a number";
+       $scope.myValueValid = 42;
+       $scope.isValidationDisabled = false;
 
-    $scope.isNumber = function (value) {
-      if (isNaN(value)) {
-        return false;
-      }
+       $scope.isNumber = function (value) {
+         if (isNaN(value)) {
+           return false;
+         }
 
-      return true;
-    }
-  }]);
- </file>
+         return true;
+       }
+     });
+   </file>
 
  </example>
  */
-angular.module('patternfly.validation', []).directive('pfValidation', function ($timeout) {
+angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout", function ($timeout) {
   'use strict';
 
   return {
@@ -2145,7 +2126,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', function (
       }
     }
   };
-});
+}]);
 ;angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
   'use strict';
 
