@@ -14,52 +14,51 @@
  * @example
  <example module="patternfly.select">
 
- <file name="index.html">
- <div ng-controller="SelectDemoCtrl">
+   <file name="index.html">
+     <div ng-controller="SelectDemoCtrl">
 
- <form class="form-horizontal">
-   <div class="form-group">
-     <label class="col-sm-2 control-label" for="pet">Preferred pet:</label>
-     <div class="col-sm-10">
-      <select pf-select ng-model="pet" id="pet" ng-options="o as o for o in pets"></select>
+     <form class="form-horizontal">
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="pet">Preferred pet:</label>
+         <div class="col-sm-10">
+          <select pf-select ng-model="pet" id="pet" ng-options="o as o for o in pets"></select>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="fruit">Preferred fruit:</label>
+         <div class="col-sm-10">
+           <select pf-select ng-model="fruit" id="fruit">
+             <option value="orange">Orange</option>
+             <option value="apple" ng-selected="true" selected>Apple</option>
+             <option value="banana">Banana</option>
+           </select>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="drink">Preferred drink:</label>
+         <div class="col-sm-10">
+           <select pf-select="{ noneSelectedText: 'None' }" ng-model="drink" id="drink" ng-options="o as o for o in drinks">
+             <option value="">No drink selected</option>
+           </select>
+         </div>
+       </div>
+
+     </form>
+
+     <p>Your preferred pet is {{pet}}.</p>
+
      </div>
-   </div>
+   </file>
 
-   <div class="form-group">
-     <label class="col-sm-2 control-label" for="fruit">Preferred fruit:</label>
-     <div class="col-sm-10">
-       <select pf-select ng-model="fruit" id="fruit">
-         <option value="orange">Orange</option>
-         <option value="apple" ng-selected="true" selected>Apple</option>
-         <option value="banana">Banana</option>
-       </select>
-     </div>
-   </div>
-
-   <div class="form-group">
-     <label class="col-sm-2 control-label" for="drink">Preferred drink:</label>
-     <div class="col-sm-10">
-       <select pf-select="{ noneSelectedText: 'None' }" ng-model="drink" id="drink" ng-options="o as o for o in drinks">
-         <option value="">No drink selected</option>
-       </select>
-     </div>
-   </div>
-
- </form>
-
- <p>Your preferred pet is {{pet}}.</p>
-
- </div>
- </file>
-
- <file name="script.js">
- angular.module( 'patternfly.select' )
-   .controller( 'SelectDemoCtrl', ['$scope', function( $scope ) {
-    $scope.drinks = ['tea', 'coffee', 'water'];
-    $scope.pets = ['Dog', 'Cat', 'Chicken'];
-    $scope.pet = $scope.pets[0];
-  }]);
- </file>
+   <file name="script.js">
+     angular.module( 'patternfly.select' ).controller( 'SelectDemoCtrl', function( $scope ) {
+       $scope.drinks = ['tea', 'coffee', 'water'];
+       $scope.pets = ['Dog', 'Cat', 'Chicken'];
+       $scope.pet = $scope.pets[0];
+     });
+   </file>
 
  </example>
  */

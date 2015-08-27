@@ -13,60 +13,59 @@
  * @example
  <example module="patternfly.validation">
 
- <file name="index.html">
-   <div ng-controller="ValidationDemoCtrl">
-   <form class="form-horizontal">
+   <file name="index.html">
+     <div ng-controller="ValidationDemoCtrl">
+     <form class="form-horizontal">
 
-     <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Initially valid:</label>
-       <div class="col-sm-10">
-         <input class="form-control" type="text" ng-model="myValueValid" pf-validation="isNumber(input)"/>
-         <span class="help-block">The value you typed is not a number.</span>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="message">Initially valid:</label>
+         <div class="col-sm-10">
+           <input class="form-control" type="text" ng-model="myValueValid" pf-validation="isNumber(input)"/>
+           <span class="help-block">The value you typed is not a number.</span>
+         </div>
        </div>
-     </div>
 
-     <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Fixed Number:</label>
-       <div class="col-sm-10">
-         <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)"/>
-         <span class="help-block">The value you typed is not a number.</span>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="message">Fixed Number:</label>
+         <div class="col-sm-10">
+           <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)"/>
+           <span class="help-block">The value you typed is not a number.</span>
+         </div>
        </div>
-     </div>
 
-     <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Number:</label>
-       <div class="col-sm-10">
-         <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)" pf-validation-disabled="isValidationDisabled"/>
-         <span class="help-block">The value you typed is not a number.</span>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="message">Number:</label>
+         <div class="col-sm-10">
+           <input class="form-control" type="text" ng-model="myValue" pf-validation="isNumber(input)" pf-validation-disabled="isValidationDisabled"/>
+           <span class="help-block">The value you typed is not a number.</span>
+         </div>
        </div>
-     </div>
 
-     <div class="form-group">
-       <label class="col-sm-2 control-label" for="message">Validation disabled:</label>
-       <div class="col-sm-10">
-         <input class="form-control" type="checkbox" ng-model="isValidationDisabled"/>
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="message">Validation disabled:</label>
+         <div class="col-sm-10">
+           <input class="form-control" type="checkbox" ng-model="isValidationDisabled"/>
+         </div>
        </div>
+     </form>
      </div>
-   </form>
-   </div>
- </file>
+   </file>
 
- <file name="script.js">
- angular.module( 'patternfly.validation' )
-   .controller( 'ValidationDemoCtrl', ['$scope', function( $scope ) {
-    $scope.myValue = "Change this value to be a number";
-    $scope.myValueValid = 42;
-    $scope.isValidationDisabled = false;
+   <file name="script.js">
+     angular.module( 'patternfly.validation' ).controller( 'ValidationDemoCtrl', function( $scope ) {
+       $scope.myValue = "Change this value to be a number";
+       $scope.myValueValid = 42;
+       $scope.isValidationDisabled = false;
 
-    $scope.isNumber = function (value) {
-      if (isNaN(value)) {
-        return false;
-      }
+       $scope.isNumber = function (value) {
+         if (isNaN(value)) {
+           return false;
+         }
 
-      return true;
-    }
-  }]);
- </file>
+         return true;
+       }
+     });
+   </file>
 
  </example>
  */

@@ -31,8 +31,7 @@
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.form' )
-      .controller( 'FormButtonCtrl', ['$scope', '$timeout', function( $scope, $timeout ) {
+     angular.module( 'patternfly.form' ).controller( 'FormButtonCtrl', function( $scope, $timeout ) {
        $scope.status = 'Not yet Saved'
        $scope.working = false;
 
@@ -49,7 +48,7 @@
          $scope.status = 'cancelled';
          $scope.input = null;
        };
-     }]);
+     });
    </file>
  </example>
  */

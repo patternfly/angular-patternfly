@@ -13,68 +13,66 @@
  * @param {expression} config the c3 configuration options for the chart
  *
  * @example
-<example module="patternfly.charts">
-<file name="index.html">
- <div ng-controller="ChartCtrl">
-   <div pf-c3-chart id="chartId"  config="chartConfig"></div>
 
-   <form role="form" style="width:300px">
-     Total = {{total}}, Used = {{used}}, Available = {{available}}
-     <div class="form-group">
-       <label>Used</label>
-       <input type="text" class="form-control" ng-model="newUsed">
+ <example module="patternfly.charts">
+   <file name="index.html">
+     <div ng-controller="ChartCtrl">
+        <div pf-c3-chart id="chartId"  config="chartConfig"></div>
+
+        <form role="form" style="width:300px">
+          Total = {{total}}, Used = {{used}}, Available = {{available}}
+          <div class="form-group">
+            <label>Used</label>
+            <input type="text" class="form-control" ng-model="newUsed">
+          </div>
+          <input type="button" ng-click="submitform(newUsed)" value="Go" />
+        </form>
      </div>
-     <input type="button" ng-click="submitform(newUsed)" value="Go" />
-   </form>
- </div>
- </file>
+   </file>
 
-<file name="script.js">
+   <file name="script.js">
+     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
+       $scope.used = 950;
+       $scope.total = 1000;
+       $scope.available =  $scope.total - $scope.used;
 
-angular.module( 'patternfly.charts' )
-  .controller( 'ChartCtrl', ['$scope', function( $scope ) {
-    $scope.used = 950;
-    $scope.total = 1000;
-    $scope.available =  $scope.total - $scope.used;
+       $scope.chartConfig = {
+         "donut": {
+           "title":"MHz Used",
+           "label":{"show":false},
+           "width":10
+          },
+          "size": {"height":130},
+          "legend": {"show":false},
+          "color": {"pattern":["#0088CE","#D1D1D1"]},
+          "tooltip": {},
+          "data": {"columns":[["Used","950"],["Available",50]],
+          "type": "donut",
+          "donut": {
+            "label": {"show":false}
+          },
+          "groups": [["used","available"]],
+            "order":null
+          }
+       };
 
-    $scope.chartConfig = {"donut":
-                     {"title":"MHz Used",
-                      "label":{"show":false},
-                      "width":10
-                     },
-                     "size":{"height":130},
-                     "legend":{"show":false},
-                     "color":{"pattern":["#0088CE","#D1D1D1"]},
-                     "tooltip":{},
-                     "data":{"columns":[["Used","950"],["Available",50]],
-                     "type":"donut",
-                     "donut":{
-                         "label":{"show":false}
-                      },
-                      "groups":[["used","available"]],
-                      "order":null
-                      }
-                  };
+       $scope.updateAvailable = function (val) {
+         $scope.available =  $scope.total - $scope.used;
+       }
 
-    $scope.updateAvailable = function (val) {
-      $scope.available =  $scope.total - $scope.used;
-    }
-
-    $scope.submitform = function (val) {
-      $scope.used = val;
-      $scope.updateAvailable();
-      $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
-   };
-  }]);
- </file>
+       $scope.submitform = function (val) {
+         $scope.used = val;
+         $scope.updateAvailable();
+         $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
+       };
+     });
+   </file>
  </example>
  */
 (function (c3) {
   'use strict';
 
-  angular.module('patternfly.charts')
-  .directive('pfC3Chart', ['$timeout', function ($timeout) {
-
+  angular.module('patternfly.charts').directive('pfC3Chart', function ($timeout) {
     return {
       restrict: 'A',
       scope: {
@@ -93,5 +91,5 @@ angular.module( 'patternfly.charts' )
         }, true);
       }
     };
-  }]);
+  });
 }(c3));

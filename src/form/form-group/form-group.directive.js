@@ -35,13 +35,12 @@
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.form' )
-      .controller( 'FormDemoCtrl', ['$scope', function( $scope ) {
-        $scope.item = {
-          name: 'Homer Simpson',
-          description: 'I like donuts and Duff.  Doh!'
-        };
-      }]);
+     angular.module( 'patternfly.form' ).controller( 'FormDemoCtrl', function( $scope ) {
+       $scope.item = {
+         name: 'Homer Simpson',
+         description: 'I like donuts and Duff.  Doh!'
+       };
+     });
    </file>
  </example>
  */

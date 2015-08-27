@@ -10,7 +10,6 @@
  *
  * @example
  <example module="patternfly.form">
-
    <file name="index.html">
      <form class="form-horizontal" ng-controller="FormDemoCtrl">
      <div>
@@ -22,19 +21,17 @@
    </file>
 
    <file name="script.js">
+     angular.module( 'patternfly.form' ).controller( 'FormDemoCtrl', function( $scope ) {
+       $scope.setToday = function () {
+         $scope.date = new Date();
+       }
 
-     angular.module( 'patternfly.form' )
-      .controller( 'FormDemoCtrl', ['$scope', function( $scope ) {
-        $scope.setToday = function () {
-          $scope.date = new Date();
-        }
-
-        $scope.options = {
-          autoclose: true,
-          todayBtn: 'linked',
-          todayHighlight: true
-        };
-      }]);
+       $scope.options = {
+         autoclose: true,
+         todayBtn: 'linked',
+         todayHighlight: true
+       };
+     });
    </file>
  </example>
  */
