@@ -1,0 +1,51 @@
+/* This is needed since ngDocs has bootstrap as a default file to load
+ * patternfly assumes that the consuming application is not loading the bootstrap.css directly
+  */
+
+.form-horizontal .col-sm-2.control-label {
+	width: 16.66666667%;
+}
+
+.content h1,
+.content h2 {
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.content h3,
+.content h4,
+.content h5 {
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.content h1,
+.content h2,
+.content h3 {
+  margin: 20px 0 10px 0;
+}
+
+.content h4,
+.content h5 {
+  margin: 10px 0;
+}
+
+.content h1 {
+  font-size: 24px;
+}
+
+.content h2 {
+  font-size: 22px;
+}
+
+.content h3 {
+  font-size: 16px;
+}
+
+.content h4 {
+  font-size: 15px;
+}
+
+.content h5 {
+  font-size: 13px;
+}

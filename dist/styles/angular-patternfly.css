@@ -29,7 +29,7 @@
 .donut-chart-pf {
   width: 100%;
   float: left;
-  padding-top: 10px;
+  padding-top: 15px;
 }
 
 .donut-tooltip-pf {
@@ -41,8 +41,8 @@
 }
 
 .donut-title-big-pf {
-  font-size: 22px;
-  font-weight: 400;
+  font-size: 30px;
+  font-weight: 300;
   color: #333;
 }
 
@@ -50,6 +50,10 @@
   font-size: 12px;
   font-weight: 400;
   color: #333;
+}
+
+.utilization-chart-pf h3 {
+  font-weight: 400;
 }
 
 .utilization-chart-pf .current-values {
@@ -60,27 +64,18 @@
 }
 
 .utilization-chart-pf .available-count {
-  font-size: 22px;
-  font-weight: 300;
-  line-height: 22px;
-  margin-bottom: 2px;
+  margin: 3px 0;
   padding-left: 0;
   padding-right: 5px;
-}
-
-.utilization-chart-pf .title {
-  font-size: 15px;
-  font-weight: 400;
 }
 
 .utilization-chart-pf .available-text {
   color: #333;
   font-size: 12px;
   font-weight: 400;
-  line-height: 12px;
-  margin-bottom: 2px;
-  padding-left: 5px;
-  padding-right: 5px;
+  line-height: 14px;
+  margin: 2px 0;
+  padding: 0 5px;
 }
 
 .utilization-chart-pf .radial-chart {

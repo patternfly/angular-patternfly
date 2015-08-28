@@ -8,12 +8,12 @@
         label: {
           show: false
         },
-        width: 10
+        width: 12
       };
     },
     getDefaultDonutSize: function () {
       return {
-        height: 130
+        height: 185
       };
     },
     getDefaultDonutColor: function () {
