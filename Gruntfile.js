@@ -121,7 +121,7 @@ module.exports = function (grunt) {
             'lib/patternfly/dist/js/patternfly.js'],
           html5Mode: false,
           styles: ['lib/patternfly/dist/css/patternfly.css', 'lib/patternfly/dist/css/patternfly-additions.css',
-                   'misc/bootstrap-overrides.css', 'dist/styles/angular-patternfly.css']
+                   'misc/ngdocs-overrides.css', 'dist/styles/angular-patternfly.css']
         },
         all: ['src/**/*.js']
       },

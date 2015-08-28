@@ -257,12 +257,12 @@ angular.module('patternfly.card').directive('pfCard', function () {
         label: {
           show: false
         },
-        width: 10
+        width: 12
       };
     },
     getDefaultDonutSize: function () {
       return {
-        height: 130
+        height: 185
       };
     },
     getDefaultDonutColor: function () {
@@ -2743,7 +2743,7 @@ angular.module('patternfly.views').directive('pfDataList', [
 
 
   $templateCache.put('charts/utilization/utilization-chart.html',
-    "<div class=utilization-chart-pf><span class=title>{{config.title}}</span><div class=current-values><div class=\"available-count pull-left\"><span>{{currentValue}}</span></div><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div pf-donut-pct-chart config=donutConfig data=chartData center-label=centerLabel></div><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
+    "<div class=utilization-chart-pf><h3>{{config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\"><span>{{currentValue}}</span></h1><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div pf-donut-pct-chart config=donutConfig data=chartData center-label=centerLabel></div><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
   );
 
 }]);
