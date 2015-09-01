@@ -96,19 +96,19 @@
        </div>
 
        <div class="col-md-3">
-         <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="used"></div>
+         <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="usedLabel"></div>
          center-label =<br> 'used'
        </div>
        <div class="col-md-3">
-         <div pf-donut-pct-chart config="availConfig" data="availData" center-label="available"></div>
+         <div pf-donut-pct-chart config="availConfig" data="availData" center-label="availLabel"></div>
          center-label =<br> 'available'
        </div>
        <div class="col-md-3">
-         <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="percent"></div>
+         <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="pctLabel"></div>
          center-label =<br> 'percent'
        </div>
        <div class="col-md-3">
-         <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="none"></div>
+         <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></div>
          center-label =<br> ' none'
        </div>
 
@@ -153,6 +153,8 @@
          'total': '1000'
        };
 
+       $scope.usedLabel = "used";
+
        $scope.availConfig = {
          'chartId': 'availChart',
          'units': 'GB',
@@ -163,6 +165,8 @@
            'used': '350',
             'total': '1000'
         };
+
+       $scope.availLabel = "available";
 
        $scope.pctConfig = {
          'chartId': 'pctChart',
@@ -175,6 +179,8 @@
          'total': '1000'
        };
 
+       $scope.pctLabel = "percent";
+
        $scope.noneConfig = {
          'chartId': 'noneChart',
          'units': 'GB',
@@ -185,6 +191,8 @@
          'used': '350',
          'total': '1000'
        };
+
+       $scope.noLabel = "none";
 
        $scope.custConfig = {
          'chartId': 'custChart',
