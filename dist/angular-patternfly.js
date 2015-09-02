@@ -2491,11 +2491,16 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
       <div class="col-md-12">
         <form role="form">
           <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="config.showSelectBox">Checkbox Selection</input>
+            <label>Selection</label>
+            </br>
+            <label class="radio-inline">
+              <input type="radio" ng-model="selectType" value="checkbox" ng-change="updateSelectionType()">Checkbox</input>
             </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="config.selectItems">Row Selection</input>
+            <label class="radio-inline">
+              <input type="radio" ng-model="selectType" value="row" ng-change="updateSelectionType()">Row</input>
+            </label>
+            <label class="radio-inline">
+              <input type="radio" ng-model="selectType" value="none" ng-change="updateSelectionType()">None</input>
             </label>
           </div>
         </form>
@@ -2556,6 +2561,20 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
 
         var checkDisabledItem = function(item) {
           return $scope.showDisabled && (item.name === "John Smith");
+        };
+
+        $scope.selectType = 'checkbox';
+        $scope.updateSelectionType = function() {
+          if ($scope.selectType === 'checkbox') {
+            $scope.config.selectItems = false;
+            $scope.config.showSelectBox = true;
+          } else if ($scope.selectType === 'row') {
+            $scope.config.selectItems = true;
+            $scope.config.showSelectBox = false;
+          } else {
+            $scope.config.selectItems = true
+            $scope.config.showSelectBox = true;
+          }
         };
 
         $scope.showDisabled = false;
@@ -2644,6 +2663,11 @@ angular.module('patternfly.views').directive('pfDataList', [
           };
 
           $scope.config = $.extend(true, angular.copy($scope.defaultConfig), $scope.config);
+          if ($scope.config.selectItems && $scope.config.showSelectBox) {
+            throw new Error('pfDataList - ' +
+            'Illegal use of pfDataList directive! ' +
+            'Cannot allow both select box and click selection in the same data list.');
+          }
         }
       ],
 
@@ -2724,12 +2748,16 @@ angular.module('patternfly.views').directive('pfDataList', [
 
         scope.isSelected = function (item) {
           var matchProp = scope.config.selectionMatchProp;
-          if (scope.config.selectedItems.length) {
-            return _.find(scope.config.selectedItems, function (itemObj) {
+          var selected = false;
+
+          if (scope.config.showSelectBox) {
+            selected = item.selected;
+          } else if (scope.config.selectItems && scope.config.selectedItems.length) {
+            selected = _.find(scope.config.selectedItems, function (itemObj) {
               return itemObj[matchProp] === item[matchProp];
             });
           }
-          return false;
+          return selected;
         };
 
         scope.checkDisabled = function (item) {

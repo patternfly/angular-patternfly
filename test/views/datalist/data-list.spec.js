@@ -20,7 +20,6 @@ describe('Directive:  pfDataList', function () {
     $compile(element)(scope);
 
     scope.$digest();
-    scope.$apply();
   };
 
   beforeEach(function () {
@@ -35,7 +34,7 @@ describe('Directive:  pfDataList', function () {
       selectedItems: []
     };
 
-    var htmlTmp = '<div pf-data-list items="systemModel" config="listConfig">'+
+    var htmlTmp = '<div pf-data-list items="systemModel" config="listConfig">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
       '</div>';
 
@@ -48,7 +47,7 @@ describe('Directive:  pfDataList', function () {
 
   });
 
-  it('should show the select checkbox by default', function (){
+  it('should show the select checkbox by default', function () {
     var items;
     var checkItems;
 
@@ -59,12 +58,12 @@ describe('Directive:  pfDataList', function () {
     // allow item selection
     $scope.listConfig.selectItems = false;
 
-    eventFire(items[1],'click');
+    eventFire(items[1], 'click');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(0);
   });
 
-  it('should not show the select checkboxes when showSelectBox is false', function (){
+  it('should not show the select checkboxes when showSelectBox is false', function () {
     var checkItems;
 
     checkItems = element.find('.list-check-box');
@@ -78,7 +77,7 @@ describe('Directive:  pfDataList', function () {
     expect(checkItems.length).toBe(0);
   });
 
-  it('should not allow selection when selectItems is false', function (){
+  it('should not allow selection when selectItems is false', function () {
     var items;
     var selectedItems;
 
@@ -89,12 +88,12 @@ describe('Directive:  pfDataList', function () {
     // allow item selection
     $scope.listConfig.selectItems = false;
 
-    eventFire(items[1],'click');
+    eventFire(items[1], 'click');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(0);
   });
 
-  it('should add selected class to clicked list item', function (){
+  it('should add selected class to clicked list item', function () {
     var items;
     var selectedItems;
 
@@ -104,13 +103,14 @@ describe('Directive:  pfDataList', function () {
 
     // allow item selection
     $scope.listConfig.selectItems = true;
+    $scope.listConfig.showSelectBox = false;
 
-    eventFire(items[1],'click');
+    eventFire(items[1], 'click');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(1);
   });
 
-  it('should manage selected array', function (){
+  it('should manage selected array', function () {
     var items;
     var selectedItems;
 
@@ -119,18 +119,19 @@ describe('Directive:  pfDataList', function () {
 
     // allow item selection
     $scope.listConfig.selectItems = true;
+    $scope.listConfig.showSelectBox = false;
 
-    eventFire(items[1],'click');
+    eventFire(items[1], 'click');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(1);
     expect($scope.listConfig.selectedItems.length).toBe(1);
 
   });
 
-  it('should handle double click event', function (){
+  it('should handle double click event', function () {
     var items;
     var doubleClickWorking = false;
-    var onDoubleClick = function (){
+    var onDoubleClick = function () {
       doubleClickWorking = true;
     };
 
@@ -139,12 +140,12 @@ describe('Directive:  pfDataList', function () {
     items = element.find('.list-content');
     expect(doubleClickWorking).toBe(false);
 
-    eventFire(items[1],'dblclick');
+    eventFire(items[1], 'dblclick');
     expect(doubleClickWorking).toBe(true);
 
   });
 
-  it('should respect the multiSelect setting', function (){
+  it('should respect the multiSelect setting', function () {
     var items;
     var selectedItems;
 
@@ -154,30 +155,35 @@ describe('Directive:  pfDataList', function () {
 
     // allow item selection
     $scope.listConfig.selectItems = true;
+    $scope.listConfig.showSelectBox = false;
     $scope.listConfig.multiSelect = false;
 
-    eventFire(items[1],'click');
+    eventFire(items[1], 'click');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(1);
 
-    eventFire(items[2],'click');
+    eventFire(items[2], 'click');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(1);
 
     $scope.listConfig.multiSelect = true;
 
-    eventFire(items[3],'click');
+    eventFire(items[3], 'click');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(2);
   });
 
-  it('should set disabled rows correctly', function (){
+  it('should set disabled rows correctly', function () {
     var items;
     var selectedItems;
     var disabledItems;
-    var checkDisabled = function (item){
+    var checkDisabled = function (item) {
       return item.uuid === '2';
     };
+
+    // allow item selection
+    $scope.listConfig.selectItems = true;
+    $scope.listConfig.showSelectBox = false;
 
     $scope.listConfig.checkDisabled = checkDisabled;
 
@@ -187,8 +193,30 @@ describe('Directive:  pfDataList', function () {
     disabledItems = element.find('.disabled');
     expect(disabledItems.length).toBe(1);
 
-    eventFire(items[1],'click');
+    eventFire(items[1], 'click');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(0);
   });
-});
+
+  it('should not allow both row and checkbox selection', function () {
+    var exceptionRaised = false;
+
+    $scope.badConfig = {
+      selectItems: true,
+      showSelectBox: true
+    };
+
+    var htmlTmp = '<div pf-data-list items="systemModel" config="badConfig">' +
+      '<div class="nameLabel1">{{item.name}}</div>' +
+      '</div>';
+
+
+    try {
+      compileHTML(htmlTmp, $scope);
+      scope.$digest();
+    } catch (e) {
+      exceptionRaised = true;
+    }
+    expect(exceptionRaised).toBe(true);
+  });
+})
