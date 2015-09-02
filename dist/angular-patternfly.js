@@ -543,19 +543,19 @@ angular.module('patternfly.card').directive('pfCard', function () {
        </div>
 
        <div class="col-md-3">
-         <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="used"></div>
+         <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="usedLabel"></div>
          center-label =<br> 'used'
        </div>
        <div class="col-md-3">
-         <div pf-donut-pct-chart config="availConfig" data="availData" center-label="available"></div>
+         <div pf-donut-pct-chart config="availConfig" data="availData" center-label="availLabel"></div>
          center-label =<br> 'available'
        </div>
        <div class="col-md-3">
-         <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="percent"></div>
+         <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="pctLabel"></div>
          center-label =<br> 'percent'
        </div>
        <div class="col-md-3">
-         <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="none"></div>
+         <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></div>
          center-label =<br> ' none'
        </div>
 
@@ -600,6 +600,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
          'total': '1000'
        };
 
+       $scope.usedLabel = "used";
+
        $scope.availConfig = {
          'chartId': 'availChart',
          'units': 'GB',
@@ -610,6 +612,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
            'used': '350',
             'total': '1000'
         };
+
+       $scope.availLabel = "available";
 
        $scope.pctConfig = {
          'chartId': 'pctChart',
@@ -622,6 +626,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
          'total': '1000'
        };
 
+       $scope.pctLabel = "percent";
+
        $scope.noneConfig = {
          'chartId': 'noneChart',
          'units': 'GB',
@@ -633,6 +639,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
          'total': '1000'
        };
 
+       $scope.noLabel = "none";
+
        $scope.custConfig = {
          'chartId': 'custChart',
          'units': 'MHz',
@@ -643,8 +651,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
                     d[0].value + ' ' + d[0].name +
                   '</span>';
            },
-         'centerLabelFn': function (scope) {
-           return '<tspan dy="0" x="0" class="donut-title-big-pf">' + scope.data.available + '</tspan>' +
+         'centerLabelFn': function () {
+           return '<tspan dy="0" x="0" class="donut-title-big-pf">' + $scope.custData.available + '</tspan>' +
                     '<tspan dy="20" x="0" class="donut-title-small-pf">Free</tspan>';
            }
          };
@@ -749,6 +757,30 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
           };
         };
 
+        $scope.getCenterLabelText = function () {
+          var centerLabelText;
+
+          // default to 'used' info.
+          centerLabelText = { bigText: $scope.data.used,
+                              smText:  $scope.config.units + ' Used' };
+
+          if ($scope.config.centerLabelFn) {
+            centerLabelText.bigText = $scope.config.centerLabelFn();
+            centerLabelText.smText = '';
+          } else if ($scope.centerLabel === 'none') {
+            centerLabelText.bigText = '';
+            centerLabelText.smText = '';
+          } else if ($scope.centerLabel === 'available') {
+            centerLabelText.bigText = $scope.data.available;
+            centerLabelText.smText = $scope.config.units + ' Available';
+          } else if ($scope.centerLabel === 'percent') {
+            centerLabelText.bigText = Math.round($scope.data.used / $scope.data.total * 100.0) + '%';
+            centerLabelText.smText = 'of ' + $scope.data.total + ' ' + $scope.config.units;
+          }
+
+          return centerLabelText;
+        };
+
         $scope.updateAll = function (scope) {
           $scope.updateAvailable();
           $scope.config.data = $scope.getDonutData($scope);
@@ -763,34 +795,25 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
     link: function (scope, element) {
       var setupDonutChartTitle = function () {
         $timeout(function () {
-          var donutChartTitle, bigText, smText;
+          var donutChartTitle, centerLabelText;
 
           donutChartTitle = element[0].querySelector('text.c3-chart-arcs-title');
-          if (scope.config.centerLabelFn) {
-            donutChartTitle.innerHTML = scope.config.centerLabelFn(scope);
-          } else if (scope.centerLabel === 'none') {
-            donutChartTitle.innerHTML = '';
-          } else {
-            // default to 'used' info.
-            bigText = scope.data.used;
-            smText = scope.config.units + ' Used';
+          if (!donutChartTitle) {
+            return;
+          }
 
-            if (scope.centerLabel === 'available') {
-              bigText = scope.data.available;
-              smText = scope.config.units + ' Available';
-            } else if (scope.centerLabel === 'percent') {
-              bigText = Math.round(scope.data.used / scope.data.total * 100.0) + '%';
-              smText = 'of ' + scope.data.total + ' ' + scope.config.units;
-            }
-            if (donutChartTitle) {
-              donutChartTitle.innerHTML =
-                '<tspan dy="0" x="0" class="donut-title-big-pf">' +
-                bigText +
-                '</tspan>' +
-                '<tspan dy="20" x="0" class="donut-title-small-pf">' +
-                smText +
-                '</tspan>';
-            }
+          centerLabelText = scope.getCenterLabelText();
+
+          if (centerLabelText.bigText && !centerLabelText.smText) {
+            donutChartTitle.innerHTML = centerLabelText.bigText;
+          } else {
+            donutChartTitle.innerHTML =
+              '<tspan dy="0" x="0" class="donut-title-big-pf">' +
+              centerLabelText.bigText +
+              '</tspan>' +
+              '<tspan dy="20" x="0" class="donut-title-small-pf">' +
+              centerLabelText.smText +
+              '</tspan>';
           }
         }, 300);
       };
