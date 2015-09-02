@@ -28,16 +28,6 @@
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
-    <style>
-      hr {
-        display: block;
-        height: 10px;
-        border: 0;
-        border-top: 1px solid #525252;
-        margin: 1em 0;
-        padding: 0;
-      }
-    </style>
     <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
       <div class="col-md-12">
         <div pf-data-list id="exampleDataList" config="config" items="items">

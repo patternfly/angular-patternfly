@@ -19,7 +19,7 @@
      <div class="form-group">
        <label class="col-sm-2 control-label" for="i1">Focus next input:</label>
        <div class="col-sm-10">
-         <input class="form-control" id="i1" ng-model="isFocus" type="checkbox"></input>
+         <input id="i1" ng-model="isFocus" type="checkbox"></input>
        </div>
      </div>
 

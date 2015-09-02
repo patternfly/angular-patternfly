@@ -70,7 +70,7 @@ angular.module('patternfly.views', ['patternfly.utils']);
      <div class="form-group">
        <label class="col-sm-2 control-label" for="i1">Focus next input:</label>
        <div class="col-sm-10">
-         <input class="form-control" id="i1" ng-model="isFocus" type="checkbox"></input>
+         <input id="i1" ng-model="isFocus" type="checkbox"></input>
        </div>
      </div>
 
@@ -490,16 +490,6 @@ angular.module('patternfly.card').directive('pfCard', function () {
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
-     <style>
-       hr {
-         display: block;
-         height: 1px;
-         border: 0;
-         border-top: 1px solid #525252;
-         margin: 1em 0;
-         padding: 0;
-       }
-     </style>
      <div ng-controller="ChartCtrl" style="display:inline-block;">
 
        <div class="col-md-4">
@@ -877,16 +867,6 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
-     <style>
-     hr {
-           display: block;
-           height: 10px;
-           border: 0;
-           border-top: 1px solid #525252;
-           margin: 1em 0;
-           padding: 0;
-         }
-     </style>
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
          <div pf-sparkline-chart config="config" chart-data="data" chart-height="custChartHeight" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
@@ -1202,16 +1182,6 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
-     <style>
-       hr {
-           display: block;
-           height: 10px;
-           border: 0;
-           border-top: 1px solid #525252;
-           margin: 1em 0;
-           padding: 0;
-       }
-     </style>
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
          <div pf-utilization-chart config="config"
@@ -2112,36 +2082,6 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
  *
  * @example
 <example module="patternfly.utils">
-  <file name="example.css">
-   .pf-transclude-example div {
-      border: 1px solid #337ab7;
-      margin-bottom: 20px;
-      margin-left:   20px;
-    }
-
-   .pf-transclude-example p {
-      background-color: #337ab7;
-      margin: 0;
-      padding: 5px 10px;
-    }
-
-   .pf-transclude-example id {
-      display: inline-block;
-      background-color: #def3ff;
-      color: #000000;
-      border-radius: 10px;
-      width: 20px;
-      height: 20px;
-      text-align: center;
-      line-height: 20px;
-      margin-left: 5px;
-    }
-
-   .pf-transclude-example pre {
-      padding: 5px;
-      border-width: 0px;
-    }
-  </file>
   <file name="index.html">
     <div ng-controller="UtilCtrl" class="row pf-transclude-example" style="display:inline-block; width: 100%;">
       <span>Here the scope id is: <id>{{$id}}</id></span>
@@ -2458,16 +2398,6 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
-    <style>
-      hr {
-        display: block;
-        height: 10px;
-        border: 0;
-        border-top: 1px solid #525252;
-        margin: 1em 0;
-        padding: 0;
-      }
-    </style>
     <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
       <div class="col-md-12">
         <div pf-data-list id="exampleDataList" config="config" items="items">
