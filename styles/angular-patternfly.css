@@ -171,3 +171,76 @@
 .data-list-pf .row-column {
   padding-right: 5px;
 }
+
+.tiles-view-pf {
+  overflow: auto;
+  padding-top: 20px;
+}
+
+.tiles-view-pf .tile {
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .175);
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.175);
+  display: block;
+  float: left;
+  height: 290px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+  width: 260px;
+}
+
+.tiles-view-pf .tile-check-box {
+  left: 10px;
+  position: absolute;
+  top: 8px;
+  width: 20px;
+  z-index: 3;
+}
+
+.tiles-view-pf .tile-content {
+  height: 100%;
+  margin: 2px 0 10px 0;
+  overflow: auto;
+  width: 100%;
+}
+
+.tiles-view-pf .tile-title {
+  color: #1186C1;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.1;
+  margin-top: 0px;
+}
+
+.tiles-view-pf .tile.active,
+.tiles-view-pf .tile.active:hover,
+.tiles-view-pf .tile.active:focus {
+  border: solid 3px #39a5dc;
+}
+
+.tiles-view-pf .tile:hover,
+.tiles-view-pf .tile:focus {
+  -webkit-box-shadow: 0px 3px 10px -2px rgba(0,0,0,0.24);
+  -moz-box-shadow: 0px 3px 10px -2px rgba(0,0,0,0.24);
+  box-shadow: 0px 3px 10px -2px rgba(0,0,0,0.24);
+  border: 1px solid #d1d1d1
+}
+
+.tiles-view-pf .tile.active .pficon,
+.tiles-view-pf .tile.active:hover .pficon,
+.tiles-view-pf .tile.active:focus .pficon {
+  color: #ffffff;
+}
+
+.tiles-view-pf .tile.disabled, .tile.disabled:hover, .tile.disabled:focus {
+  border: 1px solid #eee;
+  color: #999999;
+  cursor: not-allowed;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
