@@ -46,11 +46,21 @@ describe('Directive: pfDonutPctChart', function() {
     expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#EC7A08');  //orange
   });
 
-  it("should trigger no threshold", function() {
+  it("should trigger ok threshold", function() {
     element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
 
     $scope.data.used = 550;
     $scope.$digest();
+    expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#3f9c35');  //green
+  });
+
+  it("should show no threshold", function() {
+    $scope.config = {
+      'units': 'MHz'
+    };
+
+    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+
     expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#0088CE');  //blue
   });
 

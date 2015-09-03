@@ -621,7 +621,6 @@ angular.module('patternfly.card').directive('pfCard', function () {
        $scope.noneConfig = {
          'chartId': 'noneChart',
          'units': 'GB',
-         'thresholds':{'warning':'60','error':'90'}
        };
 
        $scope.noneData = {
@@ -688,6 +687,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
           var color = '#0088CE';
 
           if (thresholds) {
+            color = '#3f9c35';
             if (used >= thresholds.error) {
               color = '#CC0000';
             } else if (used >= thresholds.warning) {
