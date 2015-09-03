@@ -41,16 +41,6 @@
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
-     <style>
-     hr {
-           display: block;
-           height: 10px;
-           border: 0;
-           border-top: 1px solid #525252;
-           margin: 1em 0;
-           padding: 0;
-         }
-     </style>
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
          <div pf-sparkline-chart config="config" chart-data="data" chart-height="custChartHeight" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>

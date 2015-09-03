@@ -43,16 +43,6 @@
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
-     <style>
-       hr {
-         display: block;
-         height: 1px;
-         border: 0;
-         border-top: 1px solid #525252;
-         margin: 1em 0;
-         padding: 0;
-       }
-     </style>
      <div ng-controller="ChartCtrl" style="display:inline-block;">
 
        <div class="col-md-4">

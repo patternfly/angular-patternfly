@@ -18,36 +18,6 @@
  *
  * @example
 <example module="patternfly.utils">
-  <file name="example.css">
-   .pf-transclude-example div {
-      border: 1px solid #337ab7;
-      margin-bottom: 20px;
-      margin-left:   20px;
-    }
-
-   .pf-transclude-example p {
-      background-color: #337ab7;
-      margin: 0;
-      padding: 5px 10px;
-    }
-
-   .pf-transclude-example id {
-      display: inline-block;
-      background-color: #def3ff;
-      color: #000000;
-      border-radius: 10px;
-      width: 20px;
-      height: 20px;
-      text-align: center;
-      line-height: 20px;
-      margin-left: 5px;
-    }
-
-   .pf-transclude-example pre {
-      padding: 5px;
-      border-width: 0px;
-    }
-  </file>
   <file name="index.html">
     <div ng-controller="UtilCtrl" class="row pf-transclude-example" style="display:inline-block; width: 100%;">
       <span>Here the scope id is: <id>{{$id}}</id></span>
