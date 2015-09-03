@@ -244,3 +244,31 @@
   -moz-box-shadow: none;
   box-shadow: none;
 }
+
+.trend-title-big-pf {
+  font-size: 24px;
+  font-weight: 300;
+  color: #333;
+  margin-left: 10px;
+}
+
+.trend-title-small-pf {
+  font-size: 12px;
+  font-weight: 400;
+  color: #333;
+}
+
+.trend-header-pf {
+  display: block;
+  font-size: 18px;
+  font-weight: 400;
+  color: #333;
+  margin-left: 10px;
+}
+
+.trend-footer-pf {
+  font-size: 12px;
+  font-weight: 400;
+  color: #333;
+  margin-left: 10px;
+}

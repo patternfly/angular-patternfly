@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.card:pfCard
+ * @name patternfly.card.directive:pfCard
  * @restrict A
  * @element ANY
  * @param {headTitle=} Title for the card - required

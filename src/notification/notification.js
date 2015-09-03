@@ -179,7 +179,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
 
 /**
  * @ngdoc directive
- * @name patternfly.notification:pfNotification
+ * @name patternfly.notification.directive:pfNotification
  * @restrict E
  * @scope
  *
@@ -262,7 +262,7 @@ angular.module( 'patternfly.notification' ).directive('pfNotification', function
 });
 /**
  * @ngdoc directive
- * @name patternfly.notification:pfNotificationList
+ * @name patternfly.notification.directive:pfNotificationList
  * @restrict E
  *
  * @description

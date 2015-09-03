@@ -109,7 +109,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
 }]);
 ;/**
  * @ngdoc directive
- * @name patternfly.card:pfAggregateStatusCard
+ * @name patternfly.card.directive:pfAggregateStatusCard
  * @restrict A
  * @element ANY
  * @param {object} status Status configuration information<br/>
@@ -206,7 +206,7 @@ angular.module( 'patternfly.card' ).directive('pfAggregateStatusCard', function 
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.card:pfCard
+ * @name patternfly.card.directive:pfCard
  * @restrict A
  * @element ANY
  * @param {headTitle=} Title for the card - required
@@ -1141,6 +1141,126 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
 );
 ;/**
  * @ngdoc directive
+ * @name patternfly.charts.directive:pfTrendsChart
+ *
+ * @description
+ *   Directive for rendering a trend chart. The trend chart combines overall data with a
+ *   pfSparklineChart.
+ *   <br><br>
+ *   See http://c3js.org/reference.html for a full list of C3 chart options.<br>
+ *   See also: {@link patternfly.charts.directive:pfSparklineChart}
+ *
+ * @param {object} config configuration settings for the trends chart:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.chartId      - the unique id of this trends chart
+ * <li>.title        - (optional) title of the Trends chart
+ * <li>.timeFrame    - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
+ * <li>.units        - unit label for values, ex: 'MHz','GB', etc..
+ * </ul>
+ *
+ * @param {object} chartData the data to be shown in the sparkline charts<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.total  - number representing the total amount
+ * <li>.xData  - Array, X values for the data points, first element must be the name of the data
+ * <li>.yData  - Array, Y Values for the data points, first element must be the name of the data
+ * </ul>
+ *
+ * @param {int=} chartHeight   height of the sparkline chart
+ * @param {boolean=} showXAxis override sparkline config settings for showing the X Axis
+ * @param {boolean=} showYAxis override sparkline config settings for showing the Y Axis
+ * @example
+ <example module="patternfly.charts">
+ <file name="index.html">
+   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
+     <div class="col-md-12">
+       <div pf-trends-chart config="config" chart-data="data" chart-height="custChartHeight"
+            show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+     </div>
+     <hr class="col-md-12">
+     <div class="col-md-12">
+     <div class="row">
+       <div class="col-md-4">
+         <form role="form"">
+           <div class="form-group">
+             <label>Show</label></br>
+             <label class="checkbox-inline">
+               <input type="checkbox" ng-model="custShowXAxis">X Axis</input>
+             </label>
+             <label class="checkbox-inline">
+               <input type="checkbox" ng-model="custShowYAxis">Y Axis</input>
+             </label>
+           </div>
+         </form>
+       </div>
+       <div class="col-md-4">
+         <form role="form" >
+           <div class="form-group">
+             <label>Chart Height</label></br>
+             <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+           </div>
+         </form>
+       </div>
+       <div class="col-md-4">
+         <button ng-click="addDataPoint()">Add Data Point</button>
+       </div>
+     </div>
+   </div>
+ </file>
+ <file name="script.js">
+ angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
+
+       $scope.config = {
+         'chartId'      : 'exampleTrendsChart',
+         'title'        : 'Network Utilization Trends',
+         'timeFrame'    : 'Last 15 Minutes',
+         'units'        : 'MHz',
+         'showTopBorder': 'true',
+         'tooltipType'  : 'percentage'
+       };
+
+      var today = new Date();
+      var dates = ['dates'];
+      for (var d = 20 - 1; d >= 0; d--) {
+          dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
+      }
+
+       $scope.data = {
+           'total': '100',
+           'xData': dates,
+           'yData': ['used', '10', '20', '30', '20', '30', '10', '14', '20', '25', '68', '54', '56', '78', '56', '67', '88', '76', '65', '87', '76']
+       };
+
+       $scope.custShowXAxis = false;
+       $scope.custShowYAxis = false;
+       $scope.custChartHeight = 60;
+
+       $scope.addDataPoint = function () {
+         $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
+         $scope.data.yData.push(Math.round(Math.random() * 100));
+       };
+     });
+ </file>
+ </example>
+ */
+angular.module('patternfly.charts').directive('pfTrendsChart',
+  function () {
+    'use strict';
+    return {
+      restrict: 'A',
+      scope: {
+        config: '=',
+        chartData: '=',
+        chartHeight: '=?',
+        showXAxis: '=?',
+        showYAxis: '=?'
+      },
+      replace: true,
+      templateUrl: 'charts/trends/trends-chart.html'
+    };
+  }
+);
+;/**
+ * @ngdoc directive
  * @name patternfly.charts.directive:pfUtilizationChart
  *
  * @description
@@ -1813,7 +1933,7 @@ angular.module('patternfly.notification', []).provider('Notifications', function
 
 /**
  * @ngdoc directive
- * @name patternfly.notification:pfNotification
+ * @name patternfly.notification.directive:pfNotification
  * @restrict E
  * @scope
  *
@@ -1896,7 +2016,7 @@ angular.module( 'patternfly.notification' ).directive('pfNotification', function
 });
 /**
  * @ngdoc directive
- * @name patternfly.notification:pfNotificationList
+ * @name patternfly.notification.directive:pfNotificationList
  * @restrict E
  *
  * @description
@@ -3046,6 +3166,11 @@ angular.module('patternfly.views').directive('pfDataTiles', [
 
   $templateCache.put('charts/sparkline/sparkline-chart.html',
     "<div class=sparkline-chart><div pf-c3-chart id={{sparklineChartId}} config=config></div></div>"
+  );
+
+
+  $templateCache.put('charts/trends/trends-chart.html',
+    "<div><span class=trend-header-pf ng-if=config.title>{{config.title}}</span> <span class=trend-title-big-pf>{{chartData.yData[chartData.yData.length-1]}}</span> <span class=trend-title-small-pf>{{config.units}}</span><div pf-sparkline-chart config=config chart-data=chartData chart-height=chartHeight show-x-axis=showXAxis show-y-axis=showYAxis></div><span class=trend-footer-pf ng-if=config.timeFrame>{{config.timeFrame}}</span></div>"
   );
 
 
