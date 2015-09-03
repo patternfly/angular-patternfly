@@ -175,12 +175,13 @@
 .tiles-view-pf {
   overflow: auto;
   padding-top: 20px;
+  padding-left: 2px;
 }
 
 .tiles-view-pf .tile {
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .175);
   background: #fff;
-  border: 1px solid #eee;
+  border-top: 2px solid transparent;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.175);
   display: block;
   float: left;
