@@ -273,3 +273,16 @@
   color: #333;
   margin-left: 10px;
 }
+
+.simple-filter a {
+  cursor: pointer;
+}
+
+.filter-select .btn-default {
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  background-color: #ffffff;
+  background-image: none;
+  color: #999999;
+}
