@@ -40,3 +40,29 @@ hr {
   display:inline-block;
   width: 100%;
 }
+
+.list-view-container {
+  border: 1px solid #000000;
+  min-height: 25px;
+  margin: 10px;
+}
+
+.list-view-container .list-row {
+  padding-top: 2px;
+}
+
+.list-view-container span {
+  padding-left: 5px;
+}
+
+.tiles-view-container {
+  border: 1px solid #000000;
+  margin: 10px;
+  min-height: 25px;
+  padding: 5px;
+}
+
+.tiles-view-container .tiles-view-pf .tile {
+  height: 90px;
+  width: 300px;
+}

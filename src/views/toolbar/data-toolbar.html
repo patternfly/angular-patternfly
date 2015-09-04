@@ -1,0 +1,14 @@
+<div class="row toolbar-pf">
+  <div class="col-sm-12">
+    <div class="toolbar-pf-view-selector pull-right" ng-if="config.viewsConfig && config.viewsConfig.views">
+      <ul class="list-inline">
+        <li ng-repeat="view in config.viewsConfig.viewsList" ng-class="{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}" title={{view.title}}>
+          <a>
+            <i class="view-selector {{view.iconClass}}" ng-click="viewSelected(view.id)"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div pf-simple-filter id="{{filterDomId}}" config="config.filterConfig" ng-if="config.filterConfig"></div>
+  </div>
+</div>
