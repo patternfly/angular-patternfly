@@ -421,7 +421,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
    </file>
  </example>
  */
-(function (c3) {
+(function () {
   'use strict';
 
   angular.module('patternfly.charts').directive('pfC3Chart', ["$timeout", function ($timeout) {
@@ -444,7 +444,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
       }
     };
   }]);
-}(c3));
+}());
 ;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfDonutPctChart
