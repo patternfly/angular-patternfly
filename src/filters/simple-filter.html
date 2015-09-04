@@ -1,0 +1,47 @@
+<div class="simple-filter">
+  <form>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-default dropdown-toggle filter-fields" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{currentField.title}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="item in config.fields">
+              <a class="filter-field" role="menuitem" tabindex="-1" ng-click="selectField(item)">
+                {{item.title}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <input class="form-control" type="{{currentField.filterType}}" ng-model="config.currentValue"
+               placeholder="{{currentField.placeholder}}"
+               ng-keypress="onValueKeyPress($event)"
+               ng-if="currentField.filterType !== 'select'"/>
+        <select pf-select class="form-control filter-select" id="currentValue"
+                ng-model="config.currentValue"
+                ng-options="o as o for o in currentField.filterValues"
+                ng-if="currentField.filterType === 'select'"
+                ng-change="selectValue(config.currentValue)">
+          <option value="">{{currentField.placeholder}}</option>
+        </select>
+      </div><!-- /input-group -->
+    </div>
+  </form>
+  <div class="row toolbar-pf-results">
+    <div class="col-sm-12">
+      <h5>{{config.resultsCount}} Results</h5>
+      <p ng-if="config.appliedFilters.length > 0">Active filters:</p>
+      <ul class="list-inline">
+        <li ng-repeat="filter in config.appliedFilters">
+          <span class="active-filter label label-info">
+            {{filter.title}}: {{filter.value}}
+            <a href=""><span class="pficon pficon-close" ng-click="clearFilter(filter)"></span></a>
+          </span>
+        </li>
+      </ul>
+      <p><a class="clear-filters" ng-click="clearAllFilters()" ng-if="config.appliedFilters.length > 0">Clear All Filters</a></p>
+    </div><!-- /col -->
+  </div><!-- /row -->
+</div>

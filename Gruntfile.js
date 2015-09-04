@@ -158,6 +158,11 @@ module.exports = function (grunt) {
           src: ['charts/**/*.html'],
           dest: 'templates/charts.js'
         },
+        'patternfly.filters': {
+          cwd: 'src/',
+          src: ['filters/**/*.html'],
+          dest: 'templates/filters.js'
+        },
         'patternfly.views': {
           cwd: 'src/',
           src: ['views/**/*.html'],
