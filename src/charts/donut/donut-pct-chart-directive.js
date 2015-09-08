@@ -40,6 +40,14 @@
  * <li> 'percent'   - displays the Usage Percent of the Total amount in the center label
  * <li> 'none'      - does not display the center label
  * </ul>
+ *
+ * @param {object} lang translated i18n strings<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.used   - string representing the amount used
+ * <li>.available  - string representing the amount available
+ * <li>.of  - string to represent part of percentage
+ * </ul>
+
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
@@ -101,14 +109,19 @@
          <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></div>
          center-label =<br> ' none'
        </div>
-
        <div class="col-md-12">
          <hr>
        </div>
-
        <div class="col-md-12">
          Custom Tooltip and Center Label
          <div pf-donut-pct-chart config="custConfig" data="custData"></div>
+       </div>
+       <div class="col-md-12">
+         <hr>
+       </div>
+       <div class="col-md-12">
+         i18n String replacement for Available
+         <div pf-donut-pct-chart config="availConfigLang" data="availData" center-label="availLabel" lang="lang"></div>
        </div>
      </div>
    </file>
@@ -125,6 +138,10 @@
          'used': '950',
          'total': '1000'
        };
+
+       $scope.lang = {
+         'available': 'Free',
+       }
 
        $scope.newUsed = $scope.data.used;
 
@@ -147,6 +164,12 @@
 
        $scope.availConfig = {
          'chartId': 'availChart',
+         'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
+       };
+
+      $scope.availConfigLang = {
+         'chartId': 'availChartLang',
          'units': 'GB',
          'thresholds':{'warning':'60','error':'90'}
        };
@@ -207,6 +230,7 @@
    </file>
  </example>
  */
+
 angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3ChartDefaults, $timeout) {
   'use strict';
 
@@ -215,6 +239,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
     scope: {
       config: '=',
       data: '=',
+      lang: '=',
       centerLabel: '=?'
     },
     replace: true,
@@ -305,7 +330,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
 
           // default to 'used' info.
           centerLabelText = { bigText: $scope.data.used,
-                              smText:  $scope.config.units + ' Used' };
+                              smText:  $scope.config.units + ' ' + $scope.lang.used };
 
           if ($scope.config.centerLabelFn) {
             centerLabelText.bigText = $scope.config.centerLabelFn();
@@ -315,10 +340,10 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
             centerLabelText.smText = '';
           } else if ($scope.centerLabel === 'available') {
             centerLabelText.bigText = $scope.data.available;
-            centerLabelText.smText = $scope.config.units + ' Available';
+            centerLabelText.smText = $scope.config.units + ' ' + $scope.lang.available;
           } else if ($scope.centerLabel === 'percent') {
             centerLabelText.bigText = Math.round($scope.data.used / $scope.data.total * 100.0) + '%';
-            centerLabelText.smText = 'of ' + $scope.data.total + ' ' + $scope.config.units;
+            centerLabelText.smText = $scope.lang.of + ' ' + $scope.data.total + ' ' + $scope.config.units;
           }
 
           return centerLabelText;
@@ -336,6 +361,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
       }
     ],
     link: function (scope, element) {
+
       var setupDonutChartTitle = function () {
         $timeout(function () {
           var donutChartTitle, centerLabelText;
@@ -360,6 +386,14 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
           }
         }, 300);
       };
+
+      var langDefaults = {
+        'available': 'Available',
+        'used': 'Used',
+        'of': 'of'
+      };
+
+      scope.lang = angular.extend({}, langDefaults, scope.lang);
 
       scope.$watch('config', function () {
         scope.updateAll(scope);
