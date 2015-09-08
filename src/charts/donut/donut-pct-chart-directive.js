@@ -40,6 +40,7 @@
  * <li> 'percent'   - displays the Usage Percent of the Total amount in the center label
  * <li> 'none'      - does not display the center label
  * </ul>
+ *
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
@@ -152,9 +153,9 @@
        };
 
        $scope.availData = {
-           'used': '350',
-            'total': '1000'
-        };
+         'used': '350',
+         'total': '1000'
+       };
 
        $scope.availLabel = "available";
 
@@ -207,7 +208,7 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3ChartDefaults, pfUtils, $timeout) {
+angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3ChartDefaults, pfUtils, $timeout, $i18next) {
   'use strict';
 
   return {
@@ -305,7 +306,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
 
           // default to 'used' info.
           centerLabelText = { bigText: $scope.data.used,
-                              smText:  $scope.config.units + ' Used' };
+                              smText:  $i18next('pfDonutPctChart.used', { units: $scope.config.units }) };
 
           if ($scope.config.centerLabelFn) {
             centerLabelText.bigText = $scope.config.centerLabelFn();
@@ -315,10 +316,10 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
             centerLabelText.smText = '';
           } else if ($scope.centerLabel === 'available') {
             centerLabelText.bigText = $scope.data.available;
-            centerLabelText.smText = $scope.config.units + ' Available';
+            centerLabelText.smText = $i18next('pfDonutPctChart.available', { units: $scope.config.units });
           } else if ($scope.centerLabel === 'percent') {
             centerLabelText.bigText = Math.round($scope.data.used / $scope.data.total * 100.0) + '%';
-            centerLabelText.smText = 'of ' + $scope.data.total + ' ' + $scope.config.units;
+            centerLabelText.smText = $i18next('pfDonutPctChart.percentOf', { units: $scope.config.units, value: $scope.data.total });
           }
 
           return centerLabelText;
@@ -336,6 +337,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
       }
     ],
     link: function (scope, element) {
+
       var setupDonutChartTitle = function () {
         $timeout(function () {
           var donutChartTitle, centerLabelText;

@@ -65,6 +65,12 @@ module.exports = function (grunt) {
           src: ['*.css', '!*.min.css'],
           dest: 'dist/styles',
           expand: true
+        },
+        i18n: {
+          cwd: 'i18n/en/',
+          src: ['*.json'],
+          dest: 'dist/docs/i18n/en/',
+          expand: true
         }
       },
       cssmin: {
@@ -117,6 +123,10 @@ module.exports = function (grunt) {
             'lib/patternfly/components/d3/d3.js',
             'lib/angular/angular.js',
             'lib/angular-animate/angular-animate.js',
+            'lib/angular-sanitize/angular-sanitize.js',
+            'lib/i18next/i18next.js',
+            'lib/ng-i18next/dist/ng-i18next.js',
+            'i18n/demo-i18n.js',
             'lib/lodash/lodash.min.js',
             'dist/angular-patternfly.js',
             'lib/patternfly/dist/js/patternfly.js'],
@@ -204,6 +214,10 @@ module.exports = function (grunt) {
         },
         all: {
           files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],
+          tasks: ['build']
+        },
+        json: {
+          files: ['misc/i18n/**/*.json'],
           tasks: ['build']
         }
       }

@@ -1,3 +1,28 @@
+// Reading in json to fix unit testing issue where i18n isn't reading resources stored in JSON files
+// Tried to resolve the base path issue with a proxy but resources still did not load
+// https://github.com/i18next/ng-i18next/issues/88
+var jsonToTranslate = readJSON('i18n/en/patternfly-resources.json');
+
+var i18nextOptions = {
+  lng: 'en',
+  useCookie: false,
+  useLocalStorage: false,
+  fallbackLng: 'en',
+  defaultLoadingValue: '',
+  resStore: {
+   'en': {
+       translation: jsonToTranslate
+    }
+  }
+};
+
+beforeEach(function () {
+  module('jm.i18next', function ($i18nextProvider) {
+    $i18nextProvider.options = i18nextOptions;
+  });
+});
+
+
 // jasmine matcher for expecting an element to have a css class
 // https://github.com/angular/angular.js/blob/master/test/matchers.js
 beforeEach(function() {

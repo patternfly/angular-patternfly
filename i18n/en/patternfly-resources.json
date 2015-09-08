@@ -1,0 +1,7 @@
+{
+  "pfDonutPctChart": {
+    "available": "__units__ Available",
+    "used": "__units__ Used",
+    "percentOf": "of __value__ __units__"
+  }
+}
