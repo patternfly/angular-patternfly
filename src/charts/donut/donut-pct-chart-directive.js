@@ -331,7 +331,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
           $scope.config.tooltip = donutTooltip(scope);
         };
 
-        $scope.config = $.extend(true, c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
+        $scope.config = angular.merge({}, c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
         $scope.updateAll($scope);
       }
     ],

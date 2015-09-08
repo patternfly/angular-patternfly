@@ -105,7 +105,7 @@ describe('Directive: pfSparklineChart', function() {
 
     expect(isolateScope.config.data.x).toBe("dates");
     expect(isolateScope.config.data.columns.length).toBe(2);
-    expect(isolateScope.config.data.columns[0][1]).toBe($scope.data.xData[1]);
+    expect(isolateScope.config.data.columns[0][1].toString()).toBe($scope.data.xData[1].toString());
     expect(isolateScope.config.data.columns[1][1]).toBe('10');
 
     var now = new Date();
@@ -114,7 +114,7 @@ describe('Directive: pfSparklineChart', function() {
 
     $scope.$digest();
 
-    expect(isolateScope.config.data.columns[0][1]).toBe(now);
+    expect(isolateScope.config.data.columns[0][1].toString()).toBe(now.toString());
     expect(isolateScope.config.data.columns[1][1]).toBe('1000');
   });
 

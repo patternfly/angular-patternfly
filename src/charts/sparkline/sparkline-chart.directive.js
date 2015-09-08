@@ -32,6 +32,7 @@
  * <ul style='list-style-type: none'>
  * <li>.xData      - Array, X values for the data points, first element must be the name of the data
  * <li>.yData      - Array, Y Values for the data points, first element must be the name of the data
+ * <li>.total      - (optional) The Total amount, used when determining percentages
  * </ul>
  *
  * @param {int=} chartHeight   height of the sparkline chart
@@ -286,7 +287,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (c3Ch
         $scope.defaultConfig.units = '';
 
         // Override defaults with callers specifications
-        $scope.config = $.extend(true, angular.copy($scope.defaultConfig), $scope.config);
+        $scope.config = angular.merge({},$scope.defaultConfig, $scope.config);
 
         // Convert the given data to C3 chart format
         $scope.config.data = $scope.getSparklineData($scope.chartData);
@@ -295,7 +296,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (c3Ch
 
     link: function (scope) {
       scope.$watch('config', function () {
-        scope.config = $.extend(true, angular.copy(scope.defaultConfig), scope.config);
+        scope.config = angular.merge({}, scope.defaultConfig, scope.config);
       }, true);
       scope.$watch('chartHeight', function () {
         scope.config.size.height = scope.chartHeight;

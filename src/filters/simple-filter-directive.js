@@ -186,7 +186,7 @@ angular.module('patternfly.filters').directive('pfSimpleFilter',
         };
 
         $scope.setupConfig = function () {
-          $scope.config = $.extend(true, angular.copy(defaultConfig), $scope.config);
+          $scope.config = angular.merge({}, defaultConfig, $scope.config);
 
           if (!$scope.currentField) {
             $scope.currentField = $scope.config.fields[0];

@@ -219,7 +219,7 @@ angular.module('patternfly.views').directive('pfDataTiles', [
           onDblClick: null
         };
 
-        $scope.config = $.extend(true, angular.copy($scope.defaultConfig), $scope.config);
+        $scope.config = angular.merge({}, $scope.defaultConfig, $scope.config);
         if ($scope.config.selectItems && $scope.config.showSelectBox) {
           throw new Error('pfDataTiles - ' +
           'Illegal use of pfDataTiles directive! ' +
@@ -228,7 +228,7 @@ angular.module('patternfly.views').directive('pfDataTiles', [
       },
       link: function (scope, element, attrs) {
         attrs.$observe('config', function () {
-          scope.config = $.extend(true, angular.copy(scope.defaultConfig), scope.config);
+          scope.config = angular.merge({}, scope.defaultConfig, scope.config);
           if (!scope.config.selectItems) {
             scope.config.selectedItems = [];
           }
