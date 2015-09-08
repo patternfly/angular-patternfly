@@ -32,6 +32,7 @@
  * <ul style='list-style-type: none'>
  * <li>.xData      - Array, X values for the data points, first element must be the name of the data
  * <li>.yData      - Array, Y Values for the data points, first element must be the name of the data
+ * <li>.total      - (optional) The Total amount, used when determining percentages
  * </ul>
  *
  * @param {int=} chartHeight   height of the sparkline chart
