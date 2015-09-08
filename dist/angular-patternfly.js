@@ -39,7 +39,7 @@ angular.module('patternfly.form', []);
 angular.module('patternfly', [
   'patternfly.autofocus',
   'patternfly.card',
-  'patternfly.filter',
+  'patternfly.filters',
   'patternfly.form',
   'patternfly.notification',
   'patternfly.select',
