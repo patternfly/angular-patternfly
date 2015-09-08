@@ -23,6 +23,11 @@ describe('Directive: pfDonutPctChart', function() {
       "total": 1000
     };
 
+    $scope.lang = {
+      "available": "Free",
+      "used": "Not available"
+    };
+
   });
 
   var compileDonut = function (markup, scope) {
@@ -78,6 +83,14 @@ describe('Directive: pfDonutPctChart', function() {
     expect(isoScope.getCenterLabelText(isoScope).smText).toContain('Available');
   });
 
+  it("should show 'free' center label - i18n", function() {
+    element = compileDonut('<div pf-donut-pct-chart config="config" data="data" center-label="cntrLabel" lang="lang"></div>', $scope);
+
+    $scope.cntrLabel = 'available';
+    $scope.$digest();
+    expect(isoScope.getCenterLabelText(isoScope).smText).toContain('Free');
+  });
+
   it("should show 'percent' center label", function() {
     element = compileDonut('<div pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></div>', $scope);
 
@@ -101,6 +114,14 @@ describe('Directive: pfDonutPctChart', function() {
     $scope.cntrLabel = 'used';
     $scope.$digest();
     expect(isoScope.getCenterLabelText(isoScope).smText).toContain('Used');
+  });
+
+  it("should show 'not available' center label - i18n", function() {
+    element = compileDonut('<div pf-donut-pct-chart config="config" data="data" center-label="cntrLabel" lang="lang"></div>', $scope);
+
+    $scope.cntrLabel = 'used';
+    $scope.$digest();
+    expect(isoScope.getCenterLabelText(isoScope).smText).toContain('Not available');
   });
 
   it("should use center label funtion", function() {
