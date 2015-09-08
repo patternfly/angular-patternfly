@@ -787,7 +787,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
           $scope.config.tooltip = donutTooltip(scope);
         };
 
-        $scope.config = $.extend(true, c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
+        $scope.config = angular.merge({}, c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
         $scope.updateAll($scope);
       }
     ],
@@ -1121,7 +1121,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
         $scope.defaultConfig.units = '';
 
         // Override defaults with callers specifications
-        $scope.config = $.extend(true, angular.copy($scope.defaultConfig), $scope.config);
+        $scope.config = angular.merge({},$scope.defaultConfig, $scope.config);
 
         // Convert the given data to C3 chart format
         $scope.config.data = $scope.getSparklineData($scope.chartData);
@@ -1130,7 +1130,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
 
     link: function (scope) {
       scope.$watch('config', function () {
-        scope.config = $.extend(true, angular.copy(scope.defaultConfig), scope.config);
+        scope.config = angular.merge({}, scope.defaultConfig, scope.config);
       }, true);
       scope.$watch('chartHeight', function () {
         scope.config.size.height = scope.chartHeight;
@@ -1674,7 +1674,7 @@ angular.module('patternfly.filters').directive('pfSimpleFilter',
         };
 
         $scope.setupConfig = function () {
-          $scope.config = $.extend(true, angular.copy(defaultConfig), $scope.config);
+          $scope.config = angular.merge({}, defaultConfig, $scope.config);
 
           if (!$scope.currentField) {
             $scope.currentField = $scope.config.fields[0];
@@ -2998,7 +2998,7 @@ angular.module('patternfly.views').directive('pfDataList', [
             onDblClick: null
           };
 
-          $scope.config = $.extend(true, angular.copy($scope.defaultConfig), $scope.config);
+          $scope.config = angular.merge({}, $scope.defaultConfig, $scope.config);
           if ($scope.config.selectItems && $scope.config.showSelectBox) {
             throw new Error('pfDataList - ' +
             'Illegal use of pfDataList directive! ' +
@@ -3009,7 +3009,7 @@ angular.module('patternfly.views').directive('pfDataList', [
 
       link: function (scope, element, attrs) {
         attrs.$observe('config', function () {
-          scope.config = $.extend(true, angular.copy(scope.defaultConfig), scope.config);
+          scope.config = angular.merge({}, scope.defaultConfig, scope.config);
           if (!scope.config.selectItems) {
             scope.config.selectedItems = [];
           }
@@ -3324,7 +3324,7 @@ angular.module('patternfly.views').directive('pfDataTiles', [
           onDblClick: null
         };
 
-        $scope.config = $.extend(true, angular.copy($scope.defaultConfig), $scope.config);
+        $scope.config = angular.merge({}, $scope.defaultConfig, $scope.config);
         if ($scope.config.selectItems && $scope.config.showSelectBox) {
           throw new Error('pfDataTiles - ' +
           'Illegal use of pfDataTiles directive! ' +
@@ -3333,7 +3333,7 @@ angular.module('patternfly.views').directive('pfDataTiles', [
       }],
       link: function (scope, element, attrs) {
         attrs.$observe('config', function () {
-          scope.config = $.extend(true, angular.copy(scope.defaultConfig), scope.config);
+          scope.config = angular.merge({}, scope.defaultConfig, scope.config);
           if (!scope.config.selectItems) {
             scope.config.selectedItems = [];
           }
