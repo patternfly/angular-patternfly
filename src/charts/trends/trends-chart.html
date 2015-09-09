@@ -1,6 +1,15 @@
 <div>
   <span class="trend-header-pf" ng-if="config.title">{{config.title}}</span>
-  <span class="trend-title-big-pf">{{chartData.yData[chartData.yData.length-1]}}</span> <span class="trend-title-small-pf">{{config.units}}</span>
+
+  <span ng-if="!config.valueType || config.valueType === 'actual'">
+    <span class="trend-title-big-pf">{{chartData.yData[chartData.yData.length-1]}}</span>
+    <span class="trend-title-small-pf">{{config.units}}</span>
+  </span>
+  <span ng-if="config.valueType === 'percentage'">
+    <span class="trend-title-big-pf">{{getPercentage() + '%'}}</span>
+    <span class="trend-title-small-pf">of {{chartData.total + ' ' + config.units}}</span>
+  </span>
+
   <div pf-sparkline-chart config="config" chart-data="chartData" chart-height="chartHeight"
        show-x-axis="showXAxis" show-y-axis="showYAxis"></div>
   <span class="trend-footer-pf" ng-if="config.timeFrame">{{config.timeFrame}}</span>

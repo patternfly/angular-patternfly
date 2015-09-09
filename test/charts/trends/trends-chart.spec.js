@@ -55,4 +55,12 @@ describe('Directive: pfTrendsChart', function() {
     expect(angular.element(element).find('.trend-footer-pf').html()).toBe("Last 15 Minutes");
   });
 
+  it("should show the percentage in the trend heading", function() {
+
+    $scope.config.valueType = 'percentage';
+    $scope.$digest();
+
+    expect(angular.element(element).find('.trend-title-big-pf').html()).toBe("76%");
+    expect(angular.element(element).find('.trend-title-small-pf').html()).toBe("of 100 MHz");
+  });
 });

@@ -11,10 +11,11 @@
  *
  * @param {object} config configuration settings for the trends chart:<br/>
  * <ul style='list-style-type: none'>
- * <li>.chartId      - the unique id of this trends chart
- * <li>.title        - (optional) title of the Trends chart
- * <li>.timeFrame    - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
- * <li>.units        - unit label for values, ex: 'MHz','GB', etc..
+ * <li>.chartId    - the unique id of this trends chart
+ * <li>.title      - (optional) title of the Trends chart
+ * <li>.timeFrame  - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
+ * <li>.units      - unit label for values, ex: 'MHz','GB', etc..
+ * <li>.valueType  - the format of the latest data point which is shown in the title. Values are 'actual' or 'percentage'
  * </ul>
  *
  * @param {object} chartData the data to be shown in the sparkline charts<br/>
@@ -51,7 +52,7 @@
            </div>
          </form>
        </div>
-       <div class="col-md-4">
+       <div class="col-md-3">
          <form role="form" >
            <div class="form-group">
              <label>Chart Height</label></br>
@@ -59,7 +60,18 @@
            </div>
          </form>
        </div>
-       <div class="col-md-4">
+       <div class="col-md-3">
+         <form role="form" >
+           <div class="form-group">
+             <label>Title Value Type</label></br>
+             <select pf-select style="height:25px; width:120px;" ng-model="valueType" id="valueType">
+               <option value="actual" ng-selected="true" selected>Actual</option>
+               <option value="percentage">Percentage</option>
+             </select>
+           </div>
+         </form>
+       </div>
+       <div class="col-md-2">
          <button ng-click="addDataPoint()">Add Data Point</button>
        </div>
      </div>
@@ -71,9 +83,9 @@
        $scope.config = {
          'chartId'      : 'exampleTrendsChart',
          'title'        : 'Network Utilization Trends',
+         'valueType'    : 'actual',
          'timeFrame'    : 'Last 15 Minutes',
          'units'        : 'MHz',
-         'showTopBorder': 'true',
          'tooltipType'  : 'percentage'
        };
 
@@ -84,7 +96,7 @@
       }
 
        $scope.data = {
-           'total': '100',
+           'total': '250',
            'xData': dates,
            'yData': ['used', '10', '20', '30', '20', '30', '10', '14', '20', '25', '68', '54', '56', '78', '56', '67', '88', '76', '65', '87', '76']
        };
@@ -97,6 +109,11 @@
          $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
          $scope.data.yData.push(Math.round(Math.random() * 100));
        };
+
+       $scope.$watch('valueType', function (newValue) {
+           $scope.config.valueType = newValue;
+       });
+
      });
  </file>
  </example>
@@ -114,7 +131,14 @@ angular.module('patternfly.charts').directive('pfTrendsChart',
         showYAxis: '=?'
       },
       replace: true,
-      templateUrl: 'charts/trends/trends-chart.html'
+      templateUrl: 'charts/trends/trends-chart.html',
+      controller: ['$scope',
+        function ($scope) {
+          $scope.getPercentage = function () {
+            return Math.round($scope.chartData.yData[$scope.chartData.yData.length - 1] / $scope.chartData.total * 100.0);
+          };
+        }
+      ]
     };
   }
 );
