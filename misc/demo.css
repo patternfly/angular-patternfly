@@ -66,3 +66,7 @@ hr {
   height: 90px;
   width: 300px;
 }
+
+.dropdown-menu > li > a:hover {
+  background-image: none;
+}

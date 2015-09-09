@@ -1,0 +1,22 @@
+<div class="simple-sort">
+  <form>
+    <div class="form-group">
+      <div class="input-group">
+        <div dropdown class="input-group-btn">
+          <button dropdown-toggle type="button" class="btn btn-default dropdown-toggle sort-fields" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{config.currentField.title}}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="item in config.fields" ng-class="{'selected': item === config.currentField}">
+              <a class="sort-field" role="menuitem" tabindex="-1" ng-click="selectField(item)">
+                {{item.title}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <a><i class="sort-direction" ng-class="getSortIconClass()" ng-click="changeDirection()"></i></a>
+      </div>
+    </div>
+  </form>
+</div>

@@ -11,6 +11,7 @@ angular.module('patternfly', [
   'patternfly.form',
   'patternfly.notification',
   'patternfly.select',
+  'patternfly.sort',
   'patternfly.utils',
   'patternfly.validation',
   'patternfly.views'
