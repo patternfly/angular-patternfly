@@ -286,3 +286,24 @@
   background-image: none;
   color: #999999;
 }
+
+.simple-sort .sort-direction {
+  font-size: 22px;
+  color: #222222;
+  margin-left: 5px;
+  border: none;
+  padding: 2px;
+}
+.simple-sort .sort-direction:hover {
+  color: #0099d3;
+}
+
+.simple-sort a {
+  cursor: pointer;
+}
+
+.input-group .input-group-btn .dropdown-menu > .selected > a {
+  background-color: #0099d3 !important;
+  border-color: #0076b7 !important;
+  color: #fff !important;
+}
