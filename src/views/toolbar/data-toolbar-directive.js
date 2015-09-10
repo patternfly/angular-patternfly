@@ -231,7 +231,33 @@ angular.module('patternfly.views').directive('pfDataToolbar',
         $scope.checkViewDisabled = function (view) {
           return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
         };
+
+        $scope.filterExists = function (filter) {
+          var found = false;
+          $scope.config.filterConfig.appliedFilters.forEach(function (nextFilter) {
+            if (nextFilter.title === filter.title && nextFilter.value === filter.value) {
+              found = true;
+            }
+          });
+          return found;
+        };
+
+        $scope.addFilter = function (field, value) {
+          var newFilter = {
+            id: field.id,
+            title: field.title,
+            value: value
+          };
+          if (!$scope.filterExists(newFilter)) {
+            $scope.config.filterConfig.appliedFilters.push(newFilter);
+
+            if ($scope.config.filterConfig.onFilterChange) {
+              $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
+            }
+          }
+        };
       },
+
       link: function (scope, element, attrs) {
         scope.$watch('config', function () {
           if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {

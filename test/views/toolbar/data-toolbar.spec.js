@@ -6,7 +6,8 @@ describe('Directive:  pfDataToolbar', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.views', 'patternfly.filters', 'patternfly.select', 'views/toolbar/data-toolbar.html',  'filters/simple-filter.html');
+    module('patternfly.views', 'patternfly.filters', 'patternfly.select', 'views/toolbar/data-toolbar.html',
+           'filters/simple-filter.html', 'filters/simple-filter-fields.html', 'filters/simple-filter-results.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_, pfViewUtils) {
@@ -170,7 +171,7 @@ describe('Directive:  pfDataToolbar', function () {
 
   it ('should not show filters when a filter config is not supplied', function () {
     var filter = element.find('.simple-filter');
-    expect(filter.length).toBe(1);
+    expect(filter.length).toBe(2);
 
     $scope.config = {
       viewsConfig: {

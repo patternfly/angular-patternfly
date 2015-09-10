@@ -170,48 +170,15 @@
 </example>
  */
 angular.module('patternfly.filters').directive('pfSimpleFilter',
-  function ($document) {
+  function () {
     'use strict';
     return {
       restrict: 'A',
       scope: {
         config: '='
       },
-      transclude: false,
       templateUrl: 'filters/simple-filter.html',
       controller: function ($scope) {
-        var defaultConfig = {
-          fields: [],
-          resultsCount: 0
-        };
-
-        $scope.setupConfig = function () {
-          $scope.config = angular.merge({}, defaultConfig, $scope.config);
-
-          if (!$scope.currentField) {
-            $scope.currentField = $scope.config.fields[0];
-            $scope.config.currentValue = null;
-          }
-
-          if ($scope.config.currentValue === undefined) {
-            $scope.config.currentValue = null;
-          }
-
-          if (!$scope.config.appliedFilters) {
-            $scope.config.appliedFilters = [];
-          }
-        };
-
-        $scope.selectField = function (item) {
-          $scope.currentField = item;
-          $scope.config.currentValue = null;
-        };
-
-        $scope.selectValue = function (filterValue) {
-          $scope.addFilter($scope.currentField, filterValue);
-          $scope.config.currentValue = null;
-        };
-
         $scope.filterExists = function (filter) {
           var found = false;
           $scope.config.appliedFilters.forEach(function (nextFilter) {
@@ -236,41 +203,6 @@ angular.module('patternfly.filters').directive('pfSimpleFilter',
             }
           }
         };
-
-        $scope.onValueKeyPress = function (keyEvent) {
-          if (keyEvent.which === 13) {
-            $scope.addFilter($scope.currentField, $scope.config.currentValue);
-            $scope.config.currentValue = undefined;
-          }
-        };
-
-        $scope.clearFilter = function (item) {
-          var newFilters = [];
-          $scope.config.appliedFilters.forEach(function (filter) {
-            if (item.title !== filter.title || item.value !== filter.value) {
-              newFilters.push(filter);
-            }
-          });
-          $scope.config.appliedFilters = newFilters;
-
-          if ($scope.config.onFilterChange) {
-            $scope.config.onFilterChange($scope.config.appliedFilters);
-          }
-        };
-
-        $scope.clearAllFilters = function () {
-          $scope.config.appliedFilters = [];
-
-          if ($scope.config.onFilterChange) {
-            $scope.config.onFilterChange($scope.config.appliedFilters);
-          }
-        };
-      },
-
-      link: function (scope, element, attrs) {
-        scope.$watch('config', function () {
-          scope.setupConfig();
-        }, true);
       }
     };
   }
