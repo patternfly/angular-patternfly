@@ -3,5 +3,10 @@
     "available": "__units__ Available",
     "used": "__units__ Used",
     "percentOf": "of __value__ __units__"
+  },
+  "pfUtilizationChart": {
+    "available": "Available",
+    "used": "Used",
+    "percentOf": "of __value__ __units__"
   }
 }

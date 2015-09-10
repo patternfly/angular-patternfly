@@ -9,7 +9,7 @@
                 <span>{{currentText}}</span>
             </div>
             <div>
-                <span> of {{chartData.total}} {{config.units}}</span>
+                <span>{{'pfUtilizationChart.percentOf' | i18next:{units: config.units, value: chartData.total} }}</span>
             </div>
         </div>
     </div>

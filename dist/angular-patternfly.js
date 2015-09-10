@@ -1504,7 +1504,7 @@ angular.module('patternfly.charts').directive('pfTrendsChart',
  </example>
  */
 angular.module('patternfly.charts').directive('pfUtilizationChart',
-  function () {
+  ["$i18next", function ($i18next) {
     'use strict';
     return {
       restrict: 'A',
@@ -1539,10 +1539,10 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
         var setupCurrentValues = function () {
           if (scope.centerLabel === 'available') {
             scope.currentValue = scope.chartData.used;
-            scope.currentText = 'Used';
+            scope.currentText = $i18next('pfUtilizationChart.used');
           } else {
             scope.currentValue = scope.chartData.total - scope.chartData.used;
-            scope.currentText = 'Available';
+            scope.currentText = $i18next('pfUtilizationChart.available');
           }
         };
         scope.$watch('centerLabel', function () {
@@ -1550,7 +1550,7 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
         });
       }
     };
-  }
+  }]
 );
 ;/**
  * @ngdoc directive
@@ -4358,7 +4358,7 @@ angular.module('patternfly.views').directive('pfDataToolbar',
 
 
   $templateCache.put('charts/utilization/utilization-chart.html',
-    "<div class=utilization-chart-pf><h3>{{config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\"><span>{{currentValue}}</span></h1><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div pf-donut-pct-chart config=donutConfig data=chartData center-label=centerLabel></div><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
+    "<div class=utilization-chart-pf><h3>{{config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\"><span>{{currentValue}}</span></h1><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>{{'pfUtilizationChart.percentOf' | i18next:{units: config.units, value: chartData.total} }}</span></div></div></div><div pf-donut-pct-chart config=donutConfig data=chartData center-label=centerLabel></div><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
   );
 
 }]);
