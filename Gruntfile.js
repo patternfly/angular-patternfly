@@ -201,8 +201,8 @@ module.exports = function (grunt) {
           files: ['Gruntfile.js'],
           tasks: ['eslint']
         },
-        js: {
-          files: ['Gruntfile.js', 'src/**/*.js'],
+        all: {
+          files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],
           tasks: ['build']
         }
       }
