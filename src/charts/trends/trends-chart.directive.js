@@ -13,9 +13,10 @@
  * <ul style='list-style-type: none'>
  * <li>.chartId    - the unique id of this trends chart
  * <li>.title      - (optional) title of the Trends chart
+ * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), and 'small'
  * <li>.timeFrame  - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
  * <li>.units      - unit label for values, ex: 'MHz','GB', etc..
- * <li>.valueType  - the format of the latest data point which is shown in the title. Values are 'actual' or 'percentage'
+ * <li>.valueType  - (optional) the format of the latest data point which is shown in the title. Values are 'actual'(default) or 'percentage'
  * </ul>
  *
  * @param {object} chartData the data to be shown in the sparkline charts<br/>
@@ -33,7 +34,7 @@
  <file name="index.html">
    <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <div pf-trends-chart config="config" chart-data="data" chart-height="custChartHeight"
+       <div pf-trends-chart config="config" chart-data="data"
             show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
      </div>
      <hr class="col-md-12">
@@ -55,18 +56,21 @@
        <div class="col-md-3">
          <form role="form" >
            <div class="form-group">
-             <label>Chart Height</label></br>
-             <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+             <label>Title Value Type</label></br>
+             <select pf-select style="height:25px; width:120px;" ng-model="valueType" id="valueType">
+               <option value="actual" ng-selected="true" selected>Actual</option>
+               <option value="percentage">Percentage</option>
+             </select>
            </div>
          </form>
        </div>
        <div class="col-md-3">
          <form role="form" >
            <div class="form-group">
-             <label>Title Value Type</label></br>
-             <select pf-select style="height:25px; width:120px;" ng-model="valueType" id="valueType">
-               <option value="actual" ng-selected="true" selected>Actual</option>
-               <option value="percentage">Percentage</option>
+             <label>Layout</label></br>
+             <select pf-select style="height:25px; width:120px;" ng-model="layout" id="layout">
+               <option value="large" ng-selected="true" selected>Large</option>
+               <option value="small">Small</option>
              </select>
            </div>
          </form>
@@ -83,6 +87,7 @@
        $scope.config = {
          'chartId'      : 'exampleTrendsChart',
          'title'        : 'Network Utilization Trends',
+         'layout'       : 'large',
          'valueType'    : 'actual',
          'timeFrame'    : 'Last 15 Minutes',
          'units'        : 'MHz',
@@ -103,7 +108,6 @@
 
        $scope.custShowXAxis = false;
        $scope.custShowYAxis = false;
-       $scope.custChartHeight = 60;
 
        $scope.addDataPoint = function () {
          $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
@@ -111,7 +115,11 @@
        };
 
        $scope.$watch('valueType', function (newValue) {
-           $scope.config.valueType = newValue;
+         $scope.config.valueType = newValue;
+       });
+
+       $scope.$watch('layout', function (newValue) {
+         $scope.config.layout = newValue;
        });
 
      });
@@ -134,11 +142,31 @@ angular.module('patternfly.charts').directive('pfTrendsChart',
       templateUrl: 'charts/trends/trends-chart.html',
       controller: ['$scope',
         function ($scope) {
-          $scope.getPercentage = function () {
-            return Math.round($scope.chartData.yData[$scope.chartData.yData.length - 1] / $scope.chartData.total * 100.0);
+          $scope.getPercentageValue = function () {
+            return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
+          };
+          $scope.getLatestValue = function () {
+            return $scope.chartData.yData[$scope.chartData.yData.length - 1];
+          };
+          $scope.getChartHeight = function () {
+            var retValue = 60;
+            if ($scope.chartHeight) {
+              retValue = $scope.chartHeight;
+            } else if ($scope.config.layout === 'small') {
+              retValue = 30;
+            }
+            return retValue;
           };
         }
-      ]
+      ],
+      link: function (scope) {
+        scope.$watch('config', function () {
+          scope.showLargeCardLayout = (!scope.config.layout || scope.config.layout === 'large');
+          scope.showSmallCardLayout = (scope.config.layout === 'small');
+          scope.showActualValue = (!scope.config.valueType || scope.config.valueType === 'actual');
+          scope.showPercentageValue = (scope.config.valueType === 'percentage');
+        }, true);
+      }
     };
   }
 );
