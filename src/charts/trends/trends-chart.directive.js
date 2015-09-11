@@ -57,7 +57,7 @@
          <form role="form" >
            <div class="form-group">
              <label>Title Value Type</label></br>
-             <select pf-select style="height:25px; width:120px;" ng-model="valueType" id="valueType">
+             <select pf-select class="pf-select-sm" ng-model="valueType" id="valueType">
                <option value="actual" ng-selected="true" selected>Actual</option>
                <option value="percentage">Percentage</option>
              </select>
@@ -68,7 +68,7 @@
          <form role="form" >
            <div class="form-group">
              <label>Layout</label></br>
-             <select pf-select style="height:25px; width:120px;" ng-model="layout" id="layout">
+             <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
                <option value="large" ng-selected="true" selected>Large</option>
                <option value="small">Small</option>
              </select>
@@ -140,25 +140,25 @@ angular.module('patternfly.charts').directive('pfTrendsChart',
       },
       replace: true,
       templateUrl: 'charts/trends/trends-chart.html',
-      controller: ['$scope',
-        function ($scope) {
-          $scope.getPercentageValue = function () {
-            return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
-          };
-          $scope.getLatestValue = function () {
-            return $scope.chartData.yData[$scope.chartData.yData.length - 1];
-          };
-          $scope.getChartHeight = function () {
-            var retValue = 60;
-            if ($scope.chartHeight) {
-              retValue = $scope.chartHeight;
-            } else if ($scope.config.layout === 'small') {
-              retValue = 30;
-            }
-            return retValue;
-          };
-        }
-      ],
+      controller: function ($scope) {
+        var SMALL = 30, LARGE = 60;
+
+        $scope.getPercentageValue = function () {
+          return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
+        };
+        $scope.getLatestValue = function () {
+          return $scope.chartData.yData[$scope.chartData.yData.length - 1];
+        };
+        $scope.getChartHeight = function () {
+          var retValue = LARGE;
+          if ($scope.chartHeight) {
+            retValue = $scope.chartHeight;
+          } else if ($scope.config.layout === 'small') {
+            retValue = SMALL;
+          }
+          return retValue;
+        };
+      },
       link: function (scope) {
         scope.$watch('config', function () {
           scope.showLargeCardLayout = (!scope.config.layout || scope.config.layout === 'large');

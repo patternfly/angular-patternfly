@@ -70,3 +70,8 @@ hr {
 .dropdown-menu > li > a:hover {
   background-image: none;
 }
+
+.pf-select-sm {
+  height :25px;
+  width  :120px;
+}

@@ -40,17 +40,17 @@ describe('Directive: pfTrendsChart', function() {
   var compileChart = function (markup, scope) {
     var el = $compile(markup)(scope);
     scope.$digest();
-    return el;
+    return angular.element(el);
   };
 
   it("should show the last data point of sparkline chart as the trend heading", function() {
-    expect(angular.element(element).find('.trend-title-big-pf').html()).toBe("76");
-    expect(angular.element(element).find('.trend-title-small-pf').html()).toBe("MHz");
+    expect(element.find('.trend-title-big-pf').html()).toBe("76");
+    expect(element.find('.trend-title-small-pf').html()).toBe("MHz");
   });
 
   it("should show the correct card heading and time frame", function() {
-    expect(angular.element(element).find('.trend-header-pf').html()).toBe("Network Utilization Trends");
-    expect(angular.element(element).find('.trend-footer-pf').html()).toBe("Last 15 Minutes");
+    expect(element.find('.trend-header-pf').html()).toBe("Network Utilization Trends");
+    expect(element.find('.trend-footer-pf').html()).toBe("Last 15 Minutes");
   });
 
   it("should show the percentage in the trend heading", function() {
@@ -58,23 +58,27 @@ describe('Directive: pfTrendsChart', function() {
     $scope.config.valueType = 'percentage';
     $scope.$digest();
 
-    expect(angular.element(element).find('.trend-title-big-pf').html()).toBe("76%");
-    expect(angular.element(element).find('.trend-title-small-pf').html()).toBe("of 100 MHz");
+    expect(element.find('.trend-title-big-pf').html()).toBe("76%");
+    expect(element.find('.trend-title-small-pf').html()).toBe("of 100 MHz");
   });
 
   it("should show large or small trend card layouts", function() {
     // by default, should show a large card
-    var trendCard = angular.element(element.find('.trend-card-large-pf'));
+    var trendCard = element.find('.trend-card-large-pf');
     expect(trendCard.size()).toBe(1);
+    // check small card isn't being shown by default
+    expect(trendCard.hasClass('.trend-card-small-pf')).toBeFalsy();
 
     $scope.config.layout = 'small';
     $scope.$digest();
-    trendCard = angular.element(element.find('.trend-card-small-pf'));
+    trendCard = element.find('.trend-card-small-pf');
     expect(trendCard.size()).toBe(1);
+    expect(trendCard.hasClass('.trend-card-large-pf')).toBeFalsy();
 
     $scope.config.layout = 'large';
     $scope.$digest();
-    trendCard = angular.element(element.find('.trend-card-large-pf'));
+    trendCard = element.find('.trend-card-large-pf');
     expect(trendCard.size()).toBe(1);
+    expect(trendCard.hasClass('.trend-card-small-pf')).toBeFalsy();
   });
 });
