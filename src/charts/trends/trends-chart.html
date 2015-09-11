@@ -1,5 +1,5 @@
-<span>
-  <div ng-class="{'trend-card-large-pf': showLargeCardLayout,'trend-card-small-pf': showSmallCardLayout}">
+<span ng-switch on="config.layout">
+  <div ng-switch-default ng-class="{'trend-card-large-pf': showLargeCardLayout,'trend-card-small-pf': showSmallCardLayout}">
 
     <span class="trend-header-pf" ng-if="config.title">{{config.title}}</span>
 
@@ -16,5 +16,25 @@
          show-x-axis="showXAxis" show-y-axis="showYAxis"></div>
 
     <span class="trend-footer-pf" ng-if="config.timeFrame">{{config.timeFrame}}</span>
+  </div>
+  <div ng-switch-when="compact">
+    <div class="row trend-compact-row">
+      <div class="col-md-4" style="padding-right:0px">
+        <span ng-if="showActualValue">
+          <span class="trend-title-compact-big-pf">{{getLatestValue()}}</span>
+          <span class="trend-title-compact-small-pf">{{config.units}}</span>
+        </span>
+        <span ng-if="showPercentageValue">
+          <span class="trend-title-compact-big-pf">{{getPercentageValue() + '%'}}</span>
+          <span class="trend-title-compact-small-pf">of {{chartData.total + ' ' + config.units}}</span>
+        </span>
+
+        <span class="trend-header-compact-pf" ng-if="config.title">{{config.title}}</span>
+      </div>
+      <div class="col-md-8" style="padding-left:0px">
+        <div pf-sparkline-chart config="config" chart-data="chartData" chart-height="getChartHeight()"
+             show-x-axis="showXAxis" show-y-axis="showYAxis"></div>
+      </div>
+    </div>
   </div>
 </span>

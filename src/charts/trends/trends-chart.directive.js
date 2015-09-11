@@ -13,7 +13,7 @@
  * <ul style='list-style-type: none'>
  * <li>.chartId    - the unique id of this trends chart
  * <li>.title      - (optional) title of the Trends chart
- * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), and 'small'
+ * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), 'small', and 'compact'
  * <li>.timeFrame  - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
  * <li>.units      - unit label for values, ex: 'MHz','GB', etc..
  * <li>.valueType  - (optional) the format of the latest data point which is shown in the title. Values are 'actual'(default) or 'percentage'
@@ -71,6 +71,7 @@
              <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
                <option value="large" ng-selected="true" selected>Large</option>
                <option value="small">Small</option>
+               <option value="compact">Compact</option>
              </select>
            </div>
          </form>

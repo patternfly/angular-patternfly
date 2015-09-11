@@ -1173,7 +1173,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
  * <ul style='list-style-type: none'>
  * <li>.chartId    - the unique id of this trends chart
  * <li>.title      - (optional) title of the Trends chart
- * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), and 'small'
+ * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), 'small', and 'compact'
  * <li>.timeFrame  - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
  * <li>.units      - unit label for values, ex: 'MHz','GB', etc..
  * <li>.valueType  - (optional) the format of the latest data point which is shown in the title. Values are 'actual'(default) or 'percentage'
@@ -1231,6 +1231,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
              <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
                <option value="large" ng-selected="true" selected>Large</option>
                <option value="small">Small</option>
+               <option value="compact">Compact</option>
              </select>
            </div>
          </form>
@@ -4349,7 +4350,7 @@ angular.module('patternfly.views').directive('pfDataToolbar',
 
 
   $templateCache.put('charts/trends/trends-chart.html',
-    "<span><div ng-class=\"{'trend-card-large-pf': showLargeCardLayout,'trend-card-small-pf': showSmallCardLayout}\"><span class=trend-header-pf ng-if=config.title>{{config.title}}</span> <span ng-if=showActualValue><span class=trend-title-big-pf>{{getLatestValue()}}</span> <span class=trend-title-small-pf>{{config.units}}</span></span> <span ng-if=showPercentageValue><span class=trend-title-big-pf>{{getPercentageValue() + '%'}}</span> <span class=trend-title-small-pf>of {{chartData.total + ' ' + config.units}}</span></span><div pf-sparkline-chart config=config chart-data=chartData chart-height=getChartHeight() show-x-axis=showXAxis show-y-axis=showYAxis></div><span class=trend-footer-pf ng-if=config.timeFrame>{{config.timeFrame}}</span></div></span>"
+    "<span ng-switch on=config.layout><div ng-switch-default ng-class=\"{'trend-card-large-pf': showLargeCardLayout,'trend-card-small-pf': showSmallCardLayout}\"><span class=trend-header-pf ng-if=config.title>{{config.title}}</span> <span ng-if=showActualValue><span class=trend-title-big-pf>{{getLatestValue()}}</span> <span class=trend-title-small-pf>{{config.units}}</span></span> <span ng-if=showPercentageValue><span class=trend-title-big-pf>{{getPercentageValue() + '%'}}</span> <span class=trend-title-small-pf>of {{chartData.total + ' ' + config.units}}</span></span><div pf-sparkline-chart config=config chart-data=chartData chart-height=getChartHeight() show-x-axis=showXAxis show-y-axis=showYAxis></div><span class=trend-footer-pf ng-if=config.timeFrame>{{config.timeFrame}}</span></div><div ng-switch-when=compact><div class=\"row trend-compact-row\"><div class=col-md-4 style=padding-right:0px><span ng-if=showActualValue><span class=trend-title-compact-big-pf>{{getLatestValue()}}</span> <span class=trend-title-compact-small-pf>{{config.units}}</span></span> <span ng-if=showPercentageValue><span class=trend-title-compact-big-pf>{{getPercentageValue() + '%'}}</span> <span class=trend-title-compact-small-pf>of {{chartData.total + ' ' + config.units}}</span></span> <span class=trend-header-compact-pf ng-if=config.title>{{config.title}}</span></div><div class=col-md-8 style=padding-left:0px><div pf-sparkline-chart config=config chart-data=chartData chart-height=getChartHeight() show-x-axis=showXAxis show-y-axis=showYAxis></div></div></div></div></span>"
   );
 
 

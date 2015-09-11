@@ -282,6 +282,33 @@
   font-weight: 400;
 }
 
+.trend-title-compact-big-pf {
+  font-size: 36px;
+  font-weight: 300;
+  margin-left: 10px;
+}
+
+.trend-title-compact-small-pf {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.trend-header-compact-pf {
+  font-size: 12px;
+  font-weight: 400;
+  display: block;
+  margin-left: 10px;
+  margin-top: -5px;
+}
+
+.trend-compact-row > * {
+  float: none;
+  display: inline-block;
+}
+.trend-compact-row > *:last-child {
+  vertical-align: bottom;
+}
+
 .trend-footer-pf {
   font-size: 10px;
   font-weight: 400;

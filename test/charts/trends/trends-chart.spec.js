@@ -81,4 +81,16 @@ describe('Directive: pfTrendsChart', function() {
     expect(trendCard.size()).toBe(1);
     expect(trendCard.hasClass('.trend-card-small-pf')).toBeFalsy();
   });
+
+  it("should show compact card layout", function() {
+    $scope.config.layout = 'compact';
+    $scope.$digest();
+
+    var trendCard = element.find('.trend-compact-row');
+    expect(trendCard.size()).toBe(1);
+    var trendCard = element.find('.trend-title-compact-big-pf');
+    expect(trendCard.size()).toBe(1);
+    var trendCard = element.find('.trend-title-compact-small-pf');
+    expect(trendCard.size()).toBe(1);
+  });
 });
