@@ -21,7 +21,7 @@
                ng-if="currentField.filterType !== 'select'"/>
         <select pf-select class="form-control filter-select" id="currentValue"
                 ng-model="config.currentValue"
-                ng-options="o as o for o in currentField.filterValues"
+                ng-options="filterValue for filterValue in currentField.filterValues"
                 ng-if="currentField.filterType === 'select'"
                 ng-change="selectValue(config.currentValue)">
           <option value="">{{currentField.placeholder}}</option>
