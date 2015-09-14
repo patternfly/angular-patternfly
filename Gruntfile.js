@@ -120,9 +120,11 @@ module.exports = function (grunt) {
             'dist/angular-patternfly.js',
             'lib/patternfly/dist/js/patternfly.js'],
           html5Mode: false,
+          template: 'grunt-ngdocs-index.tmpl',
           styles: ['lib/patternfly/dist/css/patternfly.css', 'lib/patternfly/dist/css/patternfly-additions.css',
-                   'misc/ngdocs-overrides.css', 'dist/styles/angular-patternfly.css', 'misc/demo.css']
+            'dist/styles/angular-patternfly.css', 'misc/demo.css']
         },
+
         all: ['src/**/*.js']
       },
       ngtemplates: {
