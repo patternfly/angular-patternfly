@@ -130,7 +130,7 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfSparklineChart', function (c3ChartDefaults) {
+angular.module('patternfly.charts').directive('pfSparklineChart', function (c3ChartDefaults, pfUtils) {
   'use strict';
   return {
     restrict: 'A',
@@ -287,7 +287,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (c3Ch
         $scope.defaultConfig.units = '';
 
         // Override defaults with callers specifications
-        $scope.config = angular.merge({},$scope.defaultConfig, $scope.config);
+        $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
 
         // Convert the given data to C3 chart format
         $scope.config.data = $scope.getSparklineData($scope.chartData);
@@ -296,7 +296,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (c3Ch
 
     link: function (scope) {
       scope.$watch('config', function () {
-        scope.config = angular.merge({}, scope.defaultConfig, scope.config);
+        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
       }, true);
       scope.$watch('chartHeight', function () {
         scope.config.size.height = scope.chartHeight;

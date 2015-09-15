@@ -13,7 +13,7 @@ angular.module('patternfly.card', []);
  *   Charts module for patternfly. Must Include d3.js and c3.js to use
  *
  */
-angular.module('patternfly.charts', []);
+angular.module('patternfly.charts', ['patternfly.utils']);
 
 ;/**
  * @name  patternfly card
@@ -672,7 +672,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaults", "$timeout", function (c3ChartDefaults, $timeout) {
+angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaults", "pfUtils", "$timeout", function (c3ChartDefaults, pfUtils, $timeout) {
   'use strict';
 
   return {
@@ -796,7 +796,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
           $scope.config.tooltip = donutTooltip(scope);
         };
 
-        $scope.config = angular.merge({}, c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
+        $scope.config = pfUtils.merge(c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
         $scope.updateAll($scope);
       }
     ],
@@ -974,7 +974,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefaults", function (c3ChartDefaults) {
+angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefaults", "pfUtils", function (c3ChartDefaults, pfUtils) {
   'use strict';
   return {
     restrict: 'A',
@@ -1131,7 +1131,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
         $scope.defaultConfig.units = '';
 
         // Override defaults with callers specifications
-        $scope.config = angular.merge({},$scope.defaultConfig, $scope.config);
+        $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
 
         // Convert the given data to C3 chart format
         $scope.config.data = $scope.getSparklineData($scope.chartData);
@@ -1140,7 +1140,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
 
     link: function (scope) {
       scope.$watch('config', function () {
-        scope.config = angular.merge({}, scope.defaultConfig, scope.config);
+        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
       }, true);
       scope.$watch('chartHeight', function () {
         scope.config.size.height = scope.chartHeight;
@@ -2969,6 +2969,58 @@ angular
       }
     };
   });
+;(function () {
+  'use strict';
+
+  angular.module('patternfly.utils').constant('pfUtils', {
+    merge: function (source1, source2) {
+      var retValue;
+
+      if (typeof angular.merge === 'function') {
+        retValue = this.angularMerge(source1, source2);
+      } else if (typeof _.merge === 'function') {
+        retValue = this._merge(source1, source2);
+      } else if (typeof $.extend === 'function') {
+        retValue = this.$extend(source1, source2);
+      } else {
+        retValue = this.mergeDeep(source1, source2);
+      }
+
+      return retValue;
+    },
+    angularMerge: function (source1, source2) {
+      return angular.merge({}, source1, source2);
+    },
+    _merge: function (source1, source2) {
+      return _.merge({}, source1, source2);
+    },
+    $extend: function (source1, source2) {
+      return $.extend(true, angular.copy(source1), source2);
+    },
+    mergeDeep: function (source1, source2) {
+      return mergeDeep({}, angular.copy(source1), angular.copy(source2));
+    }
+  });
+})();
+
+/* This function does not merge/concat Arrays.
+ * It replaces the earlier Array with any latter Array.
+ */
+function mergeDeep (dst) {
+  'use strict';
+  angular.forEach(arguments, function (obj) {
+    if (obj !== dst) {
+      angular.forEach(obj, function (value, key) {
+        if (dst[key] && dst[key].constructor && dst[key].constructor === Object) {
+          mergeDeep(dst[key], value);
+        } else {
+          dst[key] = value;
+        }
+      });
+    }
+  });
+  return dst;
+}
 ;/**
  * @ngdoc directive
  * @name patternfly.validation:pfValidation
@@ -3330,8 +3382,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfDataList', [
-  function () {
+angular.module('patternfly.views').directive('pfDataList', ["pfUtils", function (pfUtils) {
     'use strict';
     return {
       restrict: 'A',
@@ -3360,7 +3411,7 @@ angular.module('patternfly.views').directive('pfDataList', [
             onDblClick: null
           };
 
-          $scope.config = angular.merge({}, $scope.defaultConfig, $scope.config);
+          $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
           if ($scope.config.selectItems && $scope.config.showSelectBox) {
             throw new Error('pfDataList - ' +
             'Illegal use of pfDataList directive! ' +
@@ -3371,7 +3422,7 @@ angular.module('patternfly.views').directive('pfDataList', [
 
       link: function (scope, element, attrs) {
         attrs.$observe('config', function () {
-          scope.config = angular.merge({}, scope.defaultConfig, scope.config);
+          scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
           if (!scope.config.selectItems) {
             scope.config.selectedItems = [];
           }
@@ -3463,8 +3514,8 @@ angular.module('patternfly.views').directive('pfDataList', [
         };
       }
     };
-  }
-]);
+  }]
+);
 ;/**
  * @ngdoc directive
  * @name patternfly.views.directive:pfDataTiles
@@ -3658,8 +3709,7 @@ angular.module('patternfly.views').directive('pfDataList', [
  </file>
  </example>
  */
-angular.module('patternfly.views').directive('pfDataTiles', [
-  function () {
+angular.module('patternfly.views').directive('pfDataTiles', ["pfUtils", function (pfUtils) {
     'use strict';
     return {
       restrict: 'A',
@@ -3686,7 +3736,7 @@ angular.module('patternfly.views').directive('pfDataTiles', [
           onDblClick: null
         };
 
-        $scope.config = angular.merge({}, $scope.defaultConfig, $scope.config);
+        $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
         if ($scope.config.selectItems && $scope.config.showSelectBox) {
           throw new Error('pfDataTiles - ' +
           'Illegal use of pfDataTiles directive! ' +
@@ -3695,7 +3745,7 @@ angular.module('patternfly.views').directive('pfDataTiles', [
       }],
       link: function (scope, element, attrs) {
         attrs.$observe('config', function () {
-          scope.config = angular.merge({}, scope.defaultConfig, scope.config);
+          scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
           if (!scope.config.selectItems) {
             scope.config.selectedItems = [];
           }
@@ -3789,8 +3839,8 @@ angular.module('patternfly.views').directive('pfDataTiles', [
         };
       }
     };
-  }
-]);
+  }]
+);
 ;/**
  * @ngdoc directive
  * @name patternfly.views.directive:pfDataToolbar

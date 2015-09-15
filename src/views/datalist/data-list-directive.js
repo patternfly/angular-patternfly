@@ -192,8 +192,7 @@
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfDataList', [
-  function () {
+angular.module('patternfly.views').directive('pfDataList', function (pfUtils) {
     'use strict';
     return {
       restrict: 'A',
@@ -222,7 +221,7 @@ angular.module('patternfly.views').directive('pfDataList', [
             onDblClick: null
           };
 
-          $scope.config = angular.merge({}, $scope.defaultConfig, $scope.config);
+          $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
           if ($scope.config.selectItems && $scope.config.showSelectBox) {
             throw new Error('pfDataList - ' +
             'Illegal use of pfDataList directive! ' +
@@ -233,7 +232,7 @@ angular.module('patternfly.views').directive('pfDataList', [
 
       link: function (scope, element, attrs) {
         attrs.$observe('config', function () {
-          scope.config = angular.merge({}, scope.defaultConfig, scope.config);
+          scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
           if (!scope.config.selectItems) {
             scope.config.selectedItems = [];
           }
@@ -326,4 +325,4 @@ angular.module('patternfly.views').directive('pfDataList', [
       }
     };
   }
-]);
+);
