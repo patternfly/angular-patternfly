@@ -416,3 +416,15 @@
 .toolbar-pf-actions .dropdown-menu a {
   cursor: pointer;
 }
+
+/* Utilization bar chart - Animate load */
+.pf-utilization-bar-chart .progress-bar {
+  -webkit-transition: width .75s ease-in-out;
+  -moz-transition: width .75s ease-in-out;
+  -o-transition: width .75s ease-in-out;
+  transition: width .75s ease-in-out;
+}
+
+.pf-utilization-bar-chart .progress-bar.animate {
+  width: 0% !important;
+}
