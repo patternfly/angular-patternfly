@@ -229,6 +229,12 @@ module.exports = function (grunt) {
       grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
     });
 
+    // Runs all the tasks of build with the exception of tests
+    grunt.registerTask('deploy', 'Prepares the project for deployment. Does not run unit tests', function () {
+      var concatSrc = 'src/**/*.js';
+      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
+    });
+
     grunt.registerTask('default', ['build']);
     grunt.registerTask('ngdocs:view', ['build', 'connect:docs', 'watch']);
     grunt.registerTask('lint', ['eslint', 'htmlhint']);
