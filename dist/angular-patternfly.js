@@ -1720,56 +1720,18 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
 </example>
  */
 angular.module('patternfly.filters').directive('pfSimpleFilter',
-  ["$document", function ($document) {
+  function () {
     'use strict';
     return {
       restrict: 'A',
       scope: {
         config: '='
       },
-      transclude: false,
       templateUrl: 'filters/simple-filter.html',
       controller: ["$scope", function ($scope) {
-        var defaultConfig = {
-          fields: [],
-          resultsCount: 0
-        };
-
-        $scope.setupConfig = function () {
-          $scope.config = angular.merge({}, defaultConfig, $scope.config);
-
-          if (!$scope.currentField) {
-            $scope.currentField = $scope.config.fields[0];
-            $scope.config.currentValue = null;
-          }
-
-          if ($scope.config.currentValue === undefined) {
-            $scope.config.currentValue = null;
-          }
-
-          if (!$scope.config.appliedFilters) {
-            $scope.config.appliedFilters = [];
-          }
-        };
-
-        $scope.selectField = function (item) {
-          $scope.currentField = item;
-          $scope.config.currentValue = null;
-        };
-
-        $scope.selectValue = function (filterValue) {
-          $scope.addFilter($scope.currentField, filterValue);
-          $scope.config.currentValue = null;
-        };
-
         $scope.filterExists = function (filter) {
-          var found = false;
-          $scope.config.appliedFilters.forEach(function (nextFilter) {
-            if (nextFilter.title === filter.title && nextFilter.value === filter.value) {
-              found = true;
-            }
-          });
-          return found;
+          var foundFilter = _.findWhere($scope.config.appliedFilters, {title: filter.title, value: filter.value});
+          return foundFilter !== undefined;
         };
 
         $scope.addFilter = function (field, value) {
@@ -1786,44 +1748,155 @@ angular.module('patternfly.filters').directive('pfSimpleFilter',
             }
           }
         };
+      }]
+    };
+  }
+);
+;/**
+ * @ngdoc directive
+ * @name patternfly.filters.directive:pfSimpleFilterFields
+ *
+ * @description
+ *   Directive for the simple filter bar's filter entry components
+ *   <br><br>
+ *
+ * @param {object} config configuration settings for the filters:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.fields          - (Array) List of filterable fields containing:
+ * <ul style='list-style-type: none'>
+ * <li>.id          - (String) Optional unique Id for the filter field, useful for comparisons
+ * <li>.title       - (String) The title to display for the filter field
+ * <li>.placeholder - (String) Text to display when no filter value has been entered
+ * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a select box)
+ * <li>.filterValues - (Array) List of valid select values used when filterType is 'select'
+ * </ul>
+ * <li>.appliedFilters - (Array) List of the currently applied filters
+ * </ul>
+ *
+ */
+angular.module('patternfly.filters').directive('pfSimpleFilterFields',
+  function () {
+    'use strict';
+    return {
+      restrict: 'A',
+      scope: {
+        config: '=',
+        addFilterFn: '='
+      },
+      templateUrl: 'filters/simple-filter-fields.html',
+      controller: ["$scope", function ($scope) {
+        $scope.setupConfig = function () {
+          if ($scope.fields === undefined) {
+            $scope.fields = [];
+          }
+          if (!$scope.currentField) {
+            $scope.currentField = $scope.config.fields[0];
+            $scope.config.currentValue = null;
+          }
 
-        $scope.onValueKeyPress = function (keyEvent) {
-          if (keyEvent.which === 13) {
-            $scope.addFilter($scope.currentField, $scope.config.currentValue);
-            $scope.config.currentValue = undefined;
+          if ($scope.config.currentValue === undefined) {
+            $scope.config.currentValue = null;
           }
         };
 
-        $scope.clearFilter = function (item) {
+        $scope.$watch('config', function () {
+          $scope.setupConfig();
+        }, true);
+      }],
+
+      link: function (scope, element, attrs) {
+        scope.selectField = function (item) {
+          scope.currentField = item;
+          scope.config.currentValue = null;
+        };
+
+        scope.selectValue = function (filterValue) {
+          scope.addFilterFn(scope.currentField, filterValue);
+          scope.config.currentValue = null;
+        };
+
+        scope.onValueKeyPress = function (keyEvent) {
+          if (keyEvent.which === 13) {
+            scope.addFilterFn(scope.currentField, scope.config.currentValue);
+            scope.config.currentValue = undefined;
+          }
+        };
+      }
+    };
+  }
+);
+;/**
+ * @ngdoc directive
+ * @name patternfly.filters.directive:pfSimpleFilterResults
+ *
+ * @description
+ *   Directive for the simple filter results components
+ *   <br><br>
+ *
+ * @param {object} config configuration settings for the filter results:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.fields          - (Array) List of filterable fields containing:
+ * <ul style='list-style-type: none'>
+ * <li>.id          - (String) Optional unique Id for the filter field, useful for comparisons
+ * <li>.title       - (String) The title to display for the filter field
+ * <li>.placeholder - (String) Text to display when no filter value has been entered
+ * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a select box)
+ * <li>.filterValues - (Array) List of valid select values used when filterType is 'select'
+ * </ul>
+ * <li>.appliedFilters - (Array) List of the currently applied filters
+ * <li>.resultsCount   - (int) The number of results returned after the current applied filters have been applied
+ * <li>.onFilterChange - ( function(array of filters) ) Function to call when the applied filters list changes
+ * </ul>
+ *
+ */
+angular.module('patternfly.filters').directive('pfSimpleFilterResults',
+  function () {
+    'use strict';
+    return {
+      restrict: 'A',
+      scope: {
+        config: '='
+      },
+      templateUrl: 'filters/simple-filter-results.html',
+      controller: ["$scope", function ($scope) {
+        $scope.setupConfig = function () {
+          if (!$scope.config.appliedFilters) {
+            $scope.config.appliedFilters = [];
+          }
+          if ($scope.config.resultsCount === undefined) {
+            $scope.config.resultsCount = 0;
+          }
+        };
+
+        $scope.$watch('config', function () {
+          $scope.setupConfig();
+        }, true);
+      }],
+      link: function (scope, element, attrs) {
+        scope.clearFilter = function (item) {
           var newFilters = [];
-          $scope.config.appliedFilters.forEach(function (filter) {
+          scope.config.appliedFilters.forEach(function (filter) {
             if (item.title !== filter.title || item.value !== filter.value) {
               newFilters.push(filter);
             }
           });
-          $scope.config.appliedFilters = newFilters;
+          scope.config.appliedFilters = newFilters;
 
-          if ($scope.config.onFilterChange) {
-            $scope.config.onFilterChange($scope.config.appliedFilters);
+          if (scope.config.onFilterChange) {
+            scope.config.onFilterChange(scope.config.appliedFilters);
           }
         };
 
-        $scope.clearAllFilters = function () {
-          $scope.config.appliedFilters = [];
+        scope.clearAllFilters = function () {
+          scope.config.appliedFilters = [];
 
-          if ($scope.config.onFilterChange) {
-            $scope.config.onFilterChange($scope.config.appliedFilters);
+          if (scope.config.onFilterChange) {
+            scope.config.onFilterChange(scope.config.appliedFilters);
           }
         };
-      }],
-
-      link: function (scope, element, attrs) {
-        scope.$watch('config', function () {
-          scope.setupConfig();
-        }, true);
       }
     };
-  }]
+  }
 );
 ;/**
  * @ngdoc directive
@@ -3951,7 +4024,28 @@ angular.module('patternfly.views').directive('pfDataToolbar',
         $scope.checkViewDisabled = function (view) {
           return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
         };
+
+        $scope.filterExists = function (filter) {
+          var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
+          return foundFilter !== undefined;
+        };
+
+        $scope.addFilter = function (field, value) {
+          var newFilter = {
+            id: field.id,
+            title: field.title,
+            value: value
+          };
+          if (!$scope.filterExists(newFilter)) {
+            $scope.config.filterConfig.appliedFilters.push(newFilter);
+
+            if ($scope.config.filterConfig.onFilterChange) {
+              $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
+            }
+          }
+        };
       }],
+
       link: function (scope, element, attrs) {
         scope.$watch('config', function () {
           if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
@@ -4046,8 +4140,18 @@ angular.module('patternfly.views').directive('pfDataToolbar',
 ;angular.module('patternfly.filters').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('filters/simple-filter-fields.html',
+    "<div class=\"simple-filter filter-fields\"><form><div class=form-group><div class=input-group><div dropdown class=input-group-btn><button dropdown-toggle type=button class=\"btn btn-default dropdown-toggle filter-fields\" data-toggle=dropdown aria-haspopup=true aria-expanded=false>{{currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=onValueKeyPress($event) ng-if=\"currentField.filterType !== 'select'\"><select pf-select class=\"form-control filter-select\" id=currentValue ng-model=config.currentValue ng-options=\"filterValue for filterValue in currentField.filterValues\" ng-if=\"currentField.filterType === 'select'\" ng-change=selectValue(config.currentValue)><option value=\"\">{{currentField.placeholder}}</option></select></div></div></form></div>"
+  );
+
+
+  $templateCache.put('filters/simple-filter-results.html',
+    "<div class=simple-filter><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{config.resultsCount}} Results</h5><p ng-if=\"config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a href=#><span class=\"pficon pficon-close\" ng-click=clearFilter(filter)></span></a></span></li></ul><p><a href=# class=clear-filters ng-click=clearAllFilters() ng-if=\"config.appliedFilters.length > 0\">Clear All Filters</a></p></div><!-- /col --></div><!-- /row --></div>"
+  );
+
+
   $templateCache.put('filters/simple-filter.html',
-    "<div class=simple-filter><form><div class=form-group><div class=input-group><div dropdown class=input-group-btn><button dropdown-toggle type=button class=\"btn btn-default dropdown-toggle filter-fields\" data-toggle=dropdown aria-haspopup=true aria-expanded=false>{{currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=onValueKeyPress($event) ng-if=\"currentField.filterType !== 'select'\"><select pf-select class=\"form-control filter-select\" id=currentValue ng-model=config.currentValue ng-options=\"o as o for o in currentField.filterValues\" ng-if=\"currentField.filterType === 'select'\" ng-change=selectValue(config.currentValue)><option value=\"\">{{currentField.placeholder}}</option></select></div><!-- /input-group --></div></form><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{config.resultsCount}} Results</h5><p ng-if=\"config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a href=#><span class=\"pficon pficon-close\" ng-click=clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=clearAllFilters() ng-if=\"config.appliedFilters.length > 0\">Clear All Filters</a></p></div><!-- /col --></div><!-- /row --></div>"
+    "<div class=simple-filter><div pf-simple-filter-fields config=config add-filter-fn=addFilter></div><div pf-simple-filter-results config=config></div></div>"
   );
 
 }]);
@@ -4104,7 +4208,7 @@ angular.module('patternfly.views').directive('pfDataToolbar',
 
 
   $templateCache.put('views/toolbar/data-toolbar.html',
-    "<div class=\"row toolbar-pf\"><div class=col-sm-12><div class=\"toolbar-pf-view-selector pull-right\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><ul class=list-inline><li ng-repeat=\"view in config.viewsConfig.viewsList\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}}><a><i class=\"view-selector {{view.iconClass}}\" ng-click=viewSelected(view.id)></i></a></li></ul></div><div pf-simple-filter id={{filterDomId}} config=config.filterConfig ng-if=config.filterConfig></div></div></div>"
+    "<div class=\"row toolbar-pf\"><div class=col-sm-12><div class=\"toolbar-pf-view-selector pull-right\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><ul class=list-inline><li ng-repeat=\"view in config.viewsConfig.viewsList\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}}><a href=#><i class=\"view-selector {{view.iconClass}}\" ng-click=viewSelected(view.id)></i></a></li></ul></div><div pf-simple-filter-fields id={{filterDomId}}_fields config=config.filterConfig ng-if=config.filterConfig add-filter-fn=addFilter></div><div pf-simple-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div></div>"
   );
 
 }]);

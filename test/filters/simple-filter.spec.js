@@ -5,7 +5,7 @@ describe('Directive:  pfSimpleFilter', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.filters', 'patternfly.select', 'filters/simple-filter.html');
+    module('patternfly.filters', 'patternfly.select', 'filters/simple-filter.html', 'filters/simple-filter-fields.html', 'filters/simple-filter-results.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {

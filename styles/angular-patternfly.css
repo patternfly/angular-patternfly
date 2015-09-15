@@ -293,6 +293,11 @@
   cursor: pointer;
 }
 
+.simple-filter.filter-fields .form-group {
+  padding-left: 0;
+  width: 275px;
+}
+
 .filter-select .btn-default {
   font-size: 12px;
   font-style: italic;
