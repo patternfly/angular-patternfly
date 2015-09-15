@@ -1,0 +1,8 @@
+<div class="pf-utilization-bar-chart">
+  <div class="progress-description">{{description}}</div>
+  <div class="progress progress-label-top-right">
+    <div class="progress-bar" role="progressbar" ng-class="{'animate': animate}" style="width:{{chartData.percentageUsed}}%; background: {{chartColor}}" tooltip="{{tooltipText}}">
+      <span>{{chartData.used}} of {{chartData.total}} {{units}}</span>
+    </div>
+  </div>
+</div>
