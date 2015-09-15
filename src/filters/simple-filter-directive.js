@@ -180,13 +180,8 @@ angular.module('patternfly.filters').directive('pfSimpleFilter',
       templateUrl: 'filters/simple-filter.html',
       controller: function ($scope) {
         $scope.filterExists = function (filter) {
-          var found = false;
-          $scope.config.appliedFilters.forEach(function (nextFilter) {
-            if (nextFilter.title === filter.title && nextFilter.value === filter.value) {
-              found = true;
-            }
-          });
-          return found;
+          var foundFilter = _.findWhere($scope.config.appliedFilters, {title: filter.title, value: filter.value});
+          return foundFilter !== undefined;
         };
 
         $scope.addFilter = function (field, value) {

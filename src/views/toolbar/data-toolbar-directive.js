@@ -233,13 +233,8 @@ angular.module('patternfly.views').directive('pfDataToolbar',
         };
 
         $scope.filterExists = function (filter) {
-          var found = false;
-          $scope.config.filterConfig.appliedFilters.forEach(function (nextFilter) {
-            if (nextFilter.title === filter.title && nextFilter.value === filter.value) {
-              found = true;
-            }
-          });
-          return found;
+          var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
+          return foundFilter !== undefined;
         };
 
         $scope.addFilter = function (field, value) {
