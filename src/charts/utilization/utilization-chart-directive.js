@@ -203,10 +203,10 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
         var setupCurrentValues = function () {
           if (scope.centerLabel === 'available') {
             scope.currentValue = scope.chartData.used;
-            scope.currentText = $i18next('pfUtilizationChart.used');
+            scope.currentText = $i18next('pfUtilizationChart.used', {defaultValue: 'Used'});
           } else {
             scope.currentValue = scope.chartData.total - scope.chartData.used;
-            scope.currentText = $i18next('pfUtilizationChart.available');
+            scope.currentText = $i18next('pfUtilizationChart.available', {defaultValue: 'Available'});
           }
         };
         scope.$watch('centerLabel', function () {

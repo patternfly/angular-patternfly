@@ -306,7 +306,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
 
           // default to 'used' info.
           centerLabelText = { bigText: $scope.data.used,
-                              smText:  $i18next('pfDonutPctChart.used', { units: $scope.config.units }) };
+                              smText:  $i18next('pfDonutPctChart.used', { defaultValue: $scope.config.units + ' Used', units: $scope.config.units }) };
 
           if ($scope.config.centerLabelFn) {
             centerLabelText.bigText = $scope.config.centerLabelFn();
@@ -316,10 +316,10 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
             centerLabelText.smText = '';
           } else if ($scope.centerLabel === 'available') {
             centerLabelText.bigText = $scope.data.available;
-            centerLabelText.smText = $i18next('pfDonutPctChart.available', { units: $scope.config.units });
+            centerLabelText.smText = $i18next('pfDonutPctChart.available', { defaultValue: $scope.config.units + ' Available', units: $scope.config.units });
           } else if ($scope.centerLabel === 'percent') {
             centerLabelText.bigText = Math.round($scope.data.used / $scope.data.total * 100.0) + '%';
-            centerLabelText.smText = $i18next('pfDonutPctChart.percentOf', { units: $scope.config.units, value: $scope.data.total });
+            centerLabelText.smText = $i18next('pfDonutPctChart.percentOf', { defaultValue: 'of ' + $scope.data.total + ' ' + $scope.config.units, units: $scope.config.units, value: $scope.data.total});
           }
 
           return centerLabelText;
