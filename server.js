@@ -1,34 +1,25 @@
 'use strict';
 
-var fs =require('fs');		//for image upload file handling
-
 var express = require('express');
+var http = require('http');
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
+var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+
 var app = express();
 
-var port =3000;
-var host ='localhost';
-var serverPath ='/';
-var staticPath ='/';
+// A shutdown handler to log when we quit.
+process.on('exit', function() {
+    console.log('%s: INFO - Node server is shutting down.',
+        Date(Date.now()));
+});
 
-var staticFilePath = __dirname + serverPath;
-// remove trailing slash if present
-if(staticFilePath.substr(-1) === '/'){
-	staticFilePath = staticFilePath.substr(0, staticFilePath.length - 1);
+try {
+    app.use(express.static('./dist/docs'));
+    console.log('%s: INFO - Node server started on %s:%d ...',
+        Date(Date.now()), ipaddress, port);
+    http.createServer(app).listen(port, ipaddress);
 }
-
-app.configure(function(){
-	// compress static content
-	app.use(express.compress());
-	app.use(serverPath, express.static(staticFilePath));		//serve static files
-	
-	app.use(express.bodyParser());		//for post content / files - not sure if this is actually necessary?
-});
-
-//catch all route to serve index.html (main frontend app)
-app.get('*', function(req, res){
-	res.sendfile(staticFilePath + staticPath+ 'index.html');
-});
-
-app.listen(port);
-
-console.log('Server running at http://'+host+':'+port.toString()+'/');
+catch (err) {
+    console.log('%s: ERROR - Problem starting node server%s',
+        Date(Date.now()), err);
+}
