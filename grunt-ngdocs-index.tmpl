@@ -92,7 +92,7 @@
   <header class="header">
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container navbar-default">
+        <div class="container-fluid navbar-inverse">
           <% if (image) { %>
             <% if (imageLink) { %>
               <a href="<%= imageLink %>">
@@ -103,6 +103,9 @@
             <% } %>
           <% } %>
           <% if (title) {%>
+            <% if (imageLink) { %>
+              <img class="pull-left" src="<%= imageLink %>">
+            <% } %>
             <a <% if (titleLink) { %> href="<%= titleLink %>" <% } %> class="navbar-brand"><%= title %></a>
           <% } %>
           <%= navContent %>
@@ -111,7 +114,7 @@
     </div>
   </header>
 
-  <div role="main" class="container">
+  <div role="main" class="container-fluid">
     <div class="row clear-navbar"></div>
 
     <div class="row">
@@ -139,8 +142,9 @@
       <div class="col-md-3">
         <form class="form-search" ng-submit="submitForm()">
           <% if (bestMatch) { %>
-          <div class="dropdown search"
+          <div class="dropdown search docs-search"
                ng-class="{open: focused && bestMatch.rank > 0 && bestMatch.page != currentPage}">
+            <span class="fa fa-search search-icon"></span>
             <input type="text" ng-model="search" placeholder="search the docs"
                    tabindex="1" accesskey="s" class="search-query" focused="focused">
             <ul class="dropdown-menu">
@@ -150,8 +154,11 @@
             </ul>
           </div>
           <% } else { %>
-          <input type="text" ng-model="search" placeholder="search the docs"
+          <div class="docs-search">
+            <span class="fa fa-search search-icon"></span>
+            <input type="text" ng-model="search" placeholder="search the docs"
                  tabindex="1" accesskey="s" class="search-query">
+          </div>
           <% } %>
           <div class="spacer"></div>
 
@@ -221,13 +228,12 @@
       </div>
       <div class="col-md-9">
 
-        <ul class="breadcrumb">
-          <li ng-repeat="crumb in breadcrumb">
+        <ol class="breadcrumb">
+          <li ng-repeat="crumb in breadcrumb" ng-class="{'active': !crumb.url}">
             <span ng-hide="crumb.url">{{crumb.name}}</span>
             <a ng-show="crumb.url" href="{{crumb.url}}">{{crumb.name}}</a>
-            <span ng-show="crumb.url" class="divider">/</span>
           </li>
-        </ul>
+        </ol>
 
         <div id="loading" ng-show="loading">Loading...</div>
 

@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.fitlers.directive:pfSimpleFilter
+ * @name patternfly.filters.directive:pfSimpleFilter
  *
  * @description
  *   Directive for a simple filter bar

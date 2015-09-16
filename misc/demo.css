@@ -1,3 +1,55 @@
+/* Docs overrides */
+.navbar img {
+  height: 35px;
+  width: 57px;
+  margin-top: 8px;
+  margin-right: 0px;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #fff;
+  padding: 15px 20px 15px 0;
+  text-transform: uppercase;
+}
+
+.breadcrumb li > * {
+  float: none;
+  margin: 0;
+}
+
+.form-search .module .guide {
+  padding-top: 6px;
+}
+
+.form-search > ul.nav > li.section {
+  min-height: 23px;
+}
+
+.docs-search {
+  margin: 10px 0;
+  padding: 4px 0 4px 20px;
+  background: #fff;
+  border: 1px solid #bbb;
+  vertical-align: middle;
+}
+
+.docs-search > .search-query {
+  font-size: 14px;
+  border: 0;
+  width: 80%;
+  color: #555;
+}
+
+.docs-search > .search-icon {
+  font-size: 15px;
+  margin-right: 10px;
+}
+
+.docs-search > .search-query:focus {
+  outline:0;
+}
+
+/* Demo CSS */
 .pf-transclude-example div {
   border: 1px solid #337ab7;
   margin-bottom: 20px;
