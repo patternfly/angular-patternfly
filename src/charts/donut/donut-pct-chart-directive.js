@@ -207,7 +207,7 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3ChartDefaults, $timeout) {
+angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3ChartDefaults, pfUtils, $timeout) {
   'use strict';
 
   return {
@@ -331,7 +331,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
           $scope.config.tooltip = donutTooltip(scope);
         };
 
-        $scope.config = angular.merge({}, c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
+        $scope.config = pfUtils.merge(c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
         $scope.updateAll($scope);
       }
     ],
