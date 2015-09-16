@@ -307,19 +307,16 @@
   color: #999999;
 }
 
-.simple-sort .sort-direction {
-  font-size: 22px;
-  color: #222222;
-  margin-left: 5px;
-  border: none;
-  padding: 2px;
-}
-.simple-sort .sort-direction:hover {
-  color: #0099d3;
+.simple-sort .form-group .btn-link {
+  color: #222;
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 0;
+  margin-left: 10px;
 }
 
-.simple-sort a {
-  cursor: pointer;
+.simple-sort .form-group .btn-link:hover {
+  color: #0099d3;
 }
 
 .input-group .input-group-btn .dropdown-menu > .selected > a {

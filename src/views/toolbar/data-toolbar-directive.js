@@ -10,6 +10,8 @@
  *   <ul style='list-style-type: none'>
  *     <li>.filterConfig  - (Object) Optional filter config. If undefined, no filtering capabilities are shown.
  *                          See pfSimpleFilter for filter config options.
+ *     <li>.sortConfig  - (Object) Optional sort config. If undefined, no sort capabilities are shown.
+ *                          See pfSimpleSort for sort config options.
  *     <li>.viewsConfig  - (Object) Optional configuration settings for view type selection
  *       <ul style='list-style-type: none'>
  *         <li>.views       - (Array) List of available views for selection. See pfViewUtils for standard available views
@@ -21,10 +23,28 @@
  *         <li>.onViewSelect - ( function(view) ) Function to call when a view is selected
  *         <li>.currentView - the id of the currently selected view
  *       </ul>
+ *     <li>.actionsConfig  - (Object) Optional configuration settings for toolbar actions
+ *       <ul style='list-style-type: none'>
+ *         <li>.primaryActions  - (Array) List of primary actions to display on the toolbar
+ *           <ul style='list-style-type: none'>
+ *             <li>.name - (String) The name of the action, displayed on the button
+ *             <li>.title - (String) Optional title, used for the tooltip
+ *             <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *             <li>.isDisabled - (Boolean) set to true to disable the action
+ *           </ul>
+ *         <li>.moreActions  - (Array) List of secondary actions to display on the toolbar action pulldown menu
+ *           <ul style='list-style-type: none'>
+ *             <li>.name - (String) The name of the action, displayed on the button
+ *             <li>.title - (String) Optional title, used for the tooltip
+ *             <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *             <li>.isDisabled - (Boolean) set to true to disable the action
+ *             <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
+ *           </ul>
+ *       </ul>
  *   </ul>
  *
  * @example
-<example module="patternfly.views" deps="patternfly.filters">
+<example module="patternfly.views" deps="patternfly.filters, patternfly.sort">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
@@ -40,7 +60,10 @@
             <div class="col-md-3">
               <span>{{item.name}}</span>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-1">
+              <span>{{item.age}}</span>
+            </div>
+            <div class="col-md-6">
               <span>{{item.address}}</span>
             </div>
             <div class="col-md-2">
@@ -55,6 +78,9 @@
             <span>{{item.name}}</span>
           </div>
           <div class="col-md-12">
+            <span>Age: {{item.age}}</span>
+          </div>
+          <div class="col-md-12">
             <span>{{item.address}}</span>
           </div>
           <div class="col-md-12">
@@ -62,12 +88,17 @@
           </div>
         </div>
       </div>
-      </br></br>
       <div class="col-md-12">
-      <label class="events-label">Current Filters: </label>
+        <label class="events-label">Current Filters: </label>
       </div>
       <div class="col-md-12">
-      <textarea rows="5" class="col-md-12">{{filtersText}}</textarea>
+        <textarea rows="5" class="col-md-12">{{filtersText}}</textarea>
+      </div>
+      <div class="col-md-12">
+        <label class="actions-label">Actions: </label>
+      </div>
+      <div class="col-md-12">
+        <textarea rows="3" class="col-md-12">{{actionsText}}</textarea>
       </div>
     </div>
   </file>
@@ -80,26 +111,31 @@
       $scope.allItems = [
         {
           name: "Fred Flintstone",
+          age: 57,
           address: "20 Dinosaur Way, Bedrock, Washingstone",
           birthMonth: 'February'
         },
         {
           name: "John Smith",
+          age: 23,
           address: "415 East Main Street, Norfolk, Virginia",
           birthMonth: 'October'
         },
         {
           name: "Frank Livingston",
+          age: 71,
           address: "234 Elm Street, Pittsburgh, Pennsylvania",
           birthMonth: 'March'
         },
         {
           name: "Judy Green",
+          age: 21,
           address: "2 Apple Boulevard, Cincinatti, Ohio",
           birthMonth: 'December'
         },
         {
           name: "Pat Thomas",
+          age: 19,
           address: "50 Second Street, New York, New York",
           birthMonth: 'February'
         }
@@ -111,6 +147,8 @@
 
         if (filter.id === 'name') {
           match = item.name.match(filter.value) !== null;
+        } else if (filter.id === 'age') {
+          match = item.age === filter.value;
         } else if (filter.id === 'address') {
           match = item.address.match(filter.value) !== null;
         } else if (filter.id === 'birthMonth') {
@@ -158,19 +196,25 @@
           {
             id: 'name',
             title:  'Name',
-            placeholder: 'Filter by Name',
+            placeholder: 'Filter by Name...',
+            filterType: 'text'
+          },
+          {
+            id: 'age',
+            title:  'Age',
+            placeholder: 'Filter by Age...',
             filterType: 'text'
           },
           {
             id: 'address',
             title:  'Address',
-            placeholder: 'Filter by Address',
+            placeholder: 'Filter by Address...',
             filterType: 'text'
           },
           {
             id: 'birthMonth',
             title:  'Birth Month',
-            placeholder: 'Filter by Birth Month',
+            placeholder: 'Filter by Birth Month...',
             filterType: 'select',
             filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
           }
@@ -191,9 +235,130 @@
       $scope.viewsConfig.currentView = $scope.viewsConfig.views[0].id;
       $scope.viewType = $scope.viewsConfig.currentView;
 
+      var monthVals = {
+        'January': 1,
+        'February': 2,
+        'March': 3,
+        'April': 4,
+        'May': 5,
+        'June': 6,
+        'July': 7,
+        'August': 8,
+        'September': 9,
+        'October': 10,
+        'November': 11,
+        'December': 12
+      };
+      var compareFn = function(item1, item2) {
+        var compValue = 0;
+        if ($scope.sortConfig.currentField.id === 'name') {
+          compValue = item1.name.localeCompare(item2.name);
+        } else if ($scope.sortConfig.currentField.id === 'age') {
+            compValue = item1.age - item2.age;
+        } else if ($scope.sortConfig.currentField.id === 'address') {
+          compValue = item1.address.localeCompare(item2.address);
+        } else if ($scope.sortConfig.currentField.id === 'birthMonth') {
+          compValue = monthVals[item1.birthMonth] - monthVals[item2.birthMonth];
+        }
+
+        if (!$scope.sortConfig.isAscending) {
+          compValue = compValue * -1;
+        }
+
+        return compValue;
+      };
+
+      var sortChange = function (sortId, isAscending) {
+        $scope.items.sort(compareFn);
+      };
+
+      $scope.sortConfig = {
+        fields: [
+          {
+            id: 'name',
+            title:  'Name',
+            sortType: 'alpha'
+          },
+          {
+            id: 'age',
+            title:  'Age',
+            sortType: 'numeric'
+          },
+          {
+            id: 'address',
+            title:  'Address',
+            sortType: 'alpha'
+          },
+          {
+            id: 'birthMonth',
+            title:  'Birth Month',
+            sortType: 'alpha'
+          }
+        ],
+        onSortChange: sortChange
+      };
+
+      $scope.actionsText = "";
+      var performAction = function (action) {
+        $scope.actionsText = action.name + "\n" + $scope.actionsText;
+      };
+
+      $scope.actionsConfig = {
+        primaryActions: [
+          {
+            name: 'Action 1',
+            title: 'Do the first thing',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 2',
+            title: 'Do something else',
+            actionFn: performAction
+          }
+        ],
+        moreActions: [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ]
+      };
+
       $scope.toolbarConfig = {
         viewsConfig: $scope.viewsConfig,
-        filterConfig: $scope.filterConfig
+        filterConfig: $scope.filterConfig,
+        sortConfig: $scope.sortConfig,
+        actionsConfig: $scope.actionsConfig
       };
 
       $scope.listConfig = {
@@ -249,6 +414,12 @@ angular.module('patternfly.views').directive('pfDataToolbar',
             if ($scope.config.filterConfig.onFilterChange) {
               $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
             }
+          }
+        };
+
+        $scope.handleAction = function (action) {
+          if (action && action.actionFn && (action.isDisabled !== true)) {
+            action.actionFn(action);
           }
         };
       },
