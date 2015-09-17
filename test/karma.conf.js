@@ -15,6 +15,8 @@ module.exports = function(config) {
       'lib/patternfly/components/c3/c3.js',
       'lib/angular/angular.js',
       'lib/angular-mocks/angular-mocks.js',
+      'lib/angular-bootstrap/ui-bootstrap-tpls.js',
+      'misc/angular-bootstrap-prettify.js',
       'lib/lodash/lodash.js',
       'misc/test-lib/helpers.js',
       'src/**/*.module.js',
