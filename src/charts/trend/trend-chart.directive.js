@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.charts.directive:pfTrendsChart
+ * @name patternfly.charts.directive:pfTrendChart
  *
  * @description
  *   Directive for rendering a trend chart. The trend chart combines overall data with a
@@ -9,10 +9,10 @@
  *   See http://c3js.org/reference.html for a full list of C3 chart options.<br>
  *   See also: {@link patternfly.charts.directive:pfSparklineChart}
  *
- * @param {object} config configuration settings for the trends chart:<br/>
+ * @param {object} config configuration settings for the trend chart:<br/>
  * <ul style='list-style-type: none'>
- * <li>.chartId    - the unique id of this trends chart
- * <li>.title      - (optional) title of the Trends chart
+ * <li>.chartId    - the unique id of this trend chart
+ * <li>.title      - (optional) title of the trend chart
  * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), 'small', 'compact', and 'inline'
  * <li>.trendLabel - (optional) the trend label used in the 'inline' layout
  * <li>.timeFrame  - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
@@ -35,7 +35,7 @@
  <file name="index.html">
    <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <div pf-trends-chart config="config" chart-data="data"
+       <div pf-trend-chart config="config" chart-data="data"
             show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
      </div>
      <hr class="col-md-12">
@@ -88,8 +88,8 @@
  angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
 
        $scope.config = {
-         'chartId'      : 'exampleTrendsChart',
-         'title'        : 'Network Utilization Trends',
+         'chartId'      : 'exampleTrendChart',
+         'title'        : 'Network Utilization Trend',
          'layout'       : 'large',
          'trendLabel'   : 'Virtual Disk I/O',
          'valueType'    : 'actual',
@@ -130,7 +130,7 @@
  </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfTrendsChart',
+angular.module('patternfly.charts').directive('pfTrendChart',
   function () {
     'use strict';
     return {
@@ -143,7 +143,7 @@ angular.module('patternfly.charts').directive('pfTrendsChart',
         showYAxis: '=?'
       },
       replace: true,
-      templateUrl: 'charts/trends/trends-chart.html',
+      templateUrl: 'charts/trend/trend-chart.html',
       controller: function ($scope) {
         var SMALL = 30, LARGE = 60;
 
