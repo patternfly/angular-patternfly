@@ -1,9 +1,9 @@
-describe('Directive: pfTrendsChart', function() {
+describe('Directive: pfTrendChart', function() {
   var $scope, $compile, element, isolateScope, trendCard;
 
   beforeEach(module(
     'patternfly.charts',
-    'charts/trends/trends-chart.html',
+    'charts/trend/trend-chart.html',
     'card/basic/card.html',
     'charts/sparkline/sparkline-chart.html'
   ));
@@ -34,7 +34,7 @@ describe('Directive: pfTrendsChart', function() {
       xData: dates
     };
 
-    element = compileChart('<div pf-trends-chart config="config" chart-data="data"></div>',$scope);
+    element = compileChart('<div pf-trend-chart config="config" chart-data="data"></div>',$scope);
   });
 
   var compileChart = function (markup, scope) {
