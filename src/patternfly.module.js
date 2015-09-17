@@ -16,4 +16,3 @@ angular.module('patternfly', [
   'patternfly.validation',
   'patternfly.views'
 ]);
-

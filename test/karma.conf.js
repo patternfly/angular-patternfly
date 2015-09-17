@@ -14,14 +14,19 @@ module.exports = function(config) {
       'lib/patternfly/components/d3/d3.js',
       'lib/patternfly/components/c3/c3.js',
       'lib/angular/angular.js',
+      'lib/angular-sanitize/angular-sanitize.js',
       'lib/angular-mocks/angular-mocks.js',
+      'lib/i18next/i18next.js',
+      'lib/ng-i18next/dist/ng-i18next.js',
       'lib/lodash/lodash.js',
+      'lib/karma-read-json/karma-read-json.js',
       'misc/test-lib/helpers.js',
       'src/**/*.module.js',
       'src/**/*.js',
       'src/**/*.html',
       'test/utils/*.js',
-      'test/**/*.spec.js'
+      'test/**/*.spec.js',
+      { pattern: 'i18n/**/*.json', watched: true, served:  true, included: false }
     ],
 
     // list of files to exclude

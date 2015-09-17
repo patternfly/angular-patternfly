@@ -13,8 +13,7 @@ angular.module('patternfly.card', []);
  *   Charts module for patternfly. Must Include d3.js and c3.js to use
  *
  */
-angular.module('patternfly.charts', ['patternfly.utils']);
-
+angular.module('patternfly.charts', ['patternfly.utils', 'jm.i18next']);
 ;/**
  * @name  patternfly card
  *
@@ -48,7 +47,6 @@ angular.module('patternfly', [
   'patternfly.validation',
   'patternfly.views'
 ]);
-
 ;/**
  * @name  patternfly card
  *
@@ -505,6 +503,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
  * <li> 'percent'   - displays the Usage Percent of the Total amount in the center label
  * <li> 'none'      - does not display the center label
  * </ul>
+ *
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
@@ -617,9 +616,9 @@ angular.module('patternfly.card').directive('pfCard', function () {
        };
 
        $scope.availData = {
-           'used': '350',
-            'total': '1000'
-        };
+         'used': '350',
+         'total': '1000'
+       };
 
        $scope.availLabel = "available";
 
@@ -672,7 +671,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaults", "pfUtils", "$timeout", function (c3ChartDefaults, pfUtils, $timeout) {
+angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaults", "pfUtils", "$timeout", "$i18next", function (c3ChartDefaults, pfUtils, $timeout, $i18next) {
   'use strict';
 
   return {
@@ -770,7 +769,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
 
           // default to 'used' info.
           centerLabelText = { bigText: $scope.data.used,
-                              smText:  $scope.config.units + ' Used' };
+                              smText:  $i18next('pfDonutPctChart.used', { defaultValue: $scope.config.units + ' Used', units: $scope.config.units }) };
 
           if ($scope.config.centerLabelFn) {
             centerLabelText.bigText = $scope.config.centerLabelFn();
@@ -780,10 +779,10 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
             centerLabelText.smText = '';
           } else if ($scope.centerLabel === 'available') {
             centerLabelText.bigText = $scope.data.available;
-            centerLabelText.smText = $scope.config.units + ' Available';
+            centerLabelText.smText = $i18next('pfDonutPctChart.available', { defaultValue: $scope.config.units + ' Available', units: $scope.config.units });
           } else if ($scope.centerLabel === 'percent') {
             centerLabelText.bigText = Math.round($scope.data.used / $scope.data.total * 100.0) + '%';
-            centerLabelText.smText = 'of ' + $scope.data.total + ' ' + $scope.config.units;
+            centerLabelText.smText = $i18next('pfDonutPctChart.percentOf', { defaultValue: 'of ' + $scope.data.total + ' ' + $scope.config.units, units: $scope.config.units, value: $scope.data.total});
           }
 
           return centerLabelText;
@@ -801,6 +800,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
       }
     ],
     link: function (scope, element) {
+
       var setupDonutChartTitle = function () {
         $timeout(function () {
           var donutChartTitle, centerLabelText;
@@ -1504,7 +1504,7 @@ angular.module('patternfly.charts').directive('pfTrendsChart',
  </example>
  */
 angular.module('patternfly.charts').directive('pfUtilizationChart',
-  function () {
+  ["$i18next", function ($i18next) {
     'use strict';
     return {
       restrict: 'A',
@@ -1539,10 +1539,10 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
         var setupCurrentValues = function () {
           if (scope.centerLabel === 'available') {
             scope.currentValue = scope.chartData.used;
-            scope.currentText = 'Used';
+            scope.currentText = $i18next('pfUtilizationChart.used', {defaultValue: 'Used'});
           } else {
             scope.currentValue = scope.chartData.total - scope.chartData.used;
-            scope.currentText = 'Available';
+            scope.currentText = $i18next('pfUtilizationChart.available', {defaultValue: 'Available'});
           }
         };
         scope.$watch('centerLabel', function () {
@@ -1550,7 +1550,7 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
         });
       }
     };
-  }
+  }]
 );
 ;/**
  * @ngdoc directive
@@ -4358,7 +4358,7 @@ angular.module('patternfly.views').directive('pfDataToolbar',
 
 
   $templateCache.put('charts/utilization/utilization-chart.html',
-    "<div class=utilization-chart-pf><h3>{{config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\"><span>{{currentValue}}</span></h1><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div pf-donut-pct-chart config=donutConfig data=chartData center-label=centerLabel></div><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
+    "<div class=utilization-chart-pf><h3>{{config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\"><span>{{currentValue}}</span></h1><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>{{'pfUtilizationChart.percentOf' | i18next:{ 'defaultValue': 'of ' + chartData.total + ' ' + config.units, units: config.units, value: chartData.total} }}</span></div></div></div><div pf-donut-pct-chart config=donutConfig data=chartData center-label=centerLabel></div><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
   );
 
 }]);
