@@ -104,8 +104,9 @@ module.exports = function (grunt) {
       },
       ngdocs: {
         options: {
-          title: 'Angular-Patternfly Documentation',
+          title: 'Angular Patternfly Documentation',
           dest: 'dist/docs',
+          image: 'misc/logo-alt.svg',
           scripts: ['lib/patternfly/components/jquery/dist/jquery.js',
             'lib/patternfly/components/bootstrap/dist/js/bootstrap.js',
             'lib/patternfly/components/bootstrap-combobox/js/bootstrap-combobox.js',
