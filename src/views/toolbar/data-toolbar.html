@@ -1,15 +1,51 @@
-<div class="row toolbar-pf">
-  <div class="col-sm-12">
-    <div class="toolbar-pf-view-selector pull-right" ng-if="config.viewsConfig && config.viewsConfig.views">
-      <ul class="list-inline">
-        <li ng-repeat="view in config.viewsConfig.viewsList" ng-class="{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}" title={{view.title}}>
-          <a href="#">
-            <i class="view-selector {{view.iconClass}}" ng-click="viewSelected(view.id)"></i>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div pf-simple-filter-fields id="{{filterDomId}}_fields" config="config.filterConfig" ng-if="config.filterConfig" add-filter-fn="addFilter"></div>
-    <div pf-simple-filter-results id="{{filterDomId}_results}" config="config.filterConfig" ng-if="config.filterConfig"></div>
-  </div>
-</div>
+<div class="container-fluid">
+  <div class="row toolbar-pf">
+    <div class="col-sm-12">
+      <form class="toolbar-pf-actions">
+        <div pf-simple-filter-fields id="{{filterDomId}}_fields" config="config.filterConfig" ng-if="config.filterConfig" add-filter-fn="addFilter"></div>
+        <div pf-simple-sort id="{{sortDomId}}" config="config.sortConfig" ng-if="config.sortConfig"></div>
+        <div class="form-group toolbar-actions"
+             ng-if="config.actionsConfig &&
+                   ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||
+                    (config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0))">
+          <button class="btn btn-default primary-action" type="button" ng-repeat="action in config.actionsConfig.primaryActions"
+                  title="{{action.title}}"
+                  ng-click="handleAction(action)"
+                  ng-disabled="action.isDisabled === true">
+            {{action.name}}
+          </button>
+          <div class="dropdown btn-group" ng-if="config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0">
+            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="fa fa-ellipsis-v"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li ng-repeat="action in config.actionsConfig.moreActions"
+                  role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
+                  ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
+                <a ng-if="action.isSeparator !== true"
+                   class="secondary-action"
+                   href="#"
+                   title="{{action.title}}"
+                   ng-click="handleAction(action)">
+                  {{action.name}}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="toolbar-pf-view-selector pull-right" ng-if="config.viewsConfig && config.viewsConfig.views">
+          <ul class="list-inline">
+            <li ng-repeat="view in config.viewsConfig.viewsList"
+                ng-class="{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}"
+                title={{view.title}}>
+              <a href="#">
+                <i class="view-selector {{view.iconClass}}" ng-click="viewSelected(view.id)"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </form>
+      <div pf-simple-filter-results id="{{filterDomId}_results}" config="config.filterConfig" ng-if="config.filterConfig"></div>
+    </div><!-- /col -->
+  </div><!-- /row -->
+</div><!-- /container -->

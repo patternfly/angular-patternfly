@@ -2,12 +2,14 @@ describe('Directive:  pfDataToolbar', function () {
   var $scope;
   var $compile;
   var element;
-  var pfViewUtils;
+  var $pfViewUtils;
+  var performedAction;
 
   // load the controller's module
   beforeEach(function () {
     module('patternfly.views', 'patternfly.filters', 'patternfly.select', 'views/toolbar/data-toolbar.html',
-           'filters/simple-filter.html', 'filters/simple-filter-fields.html', 'filters/simple-filter-results.html');
+           'filters/simple-filter.html', 'filters/simple-filter-fields.html', 'filters/simple-filter-results.html',
+           'sort/simple-sort.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_, pfViewUtils) {
@@ -24,10 +26,34 @@ describe('Directive:  pfDataToolbar', function () {
   };
 
   beforeEach(function () {
-    $scope.filterConfig =
+
+    performedAction = undefined;
+    var performAction = function (action) {
+      performedAction = action;
+    };
+
     $scope.config = {
       viewsConfig: {
         views: [$pfViewUtils.getDashboardView(), $pfViewUtils.getListView(), $pfViewUtils.getTilesView(), $pfViewUtils.getTableView(), $pfViewUtils.getTopologyView()]
+      },
+      sortConfig: {
+        fields: [
+          {
+            id: 'name',
+            title:  'Name',
+            sortType: 'alpha'
+          },
+          {
+            id: 'age',
+            title:  'Age',
+            sortType: 'numeric'
+          },
+          {
+            id: 'address',
+            title:  'Address',
+            sortType: 'alpha'
+          }
+        ]
       },
       filterConfig: {
         fields: [
@@ -53,6 +79,56 @@ describe('Directive:  pfDataToolbar', function () {
         ],
         resultsCount: 5,
         appliedFilters: []
+      },
+      actionsConfig: {
+        primaryActions: [
+          {
+            name: 'Action 1',
+            title: 'Do the first thing',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 2',
+            title: 'Do something else',
+            actionFn: performAction
+          }
+        ],
+        moreActions: [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ]
       }
     };
 
@@ -258,4 +334,226 @@ describe('Directive:  pfDataToolbar', function () {
     expect(viewSelector.length).toBe(0);
   });
 
+  it('should have correct number of sort fields', function () {
+    var fields = element.find('.simple-sort .sort-field');
+    expect(fields.length).toBe(3);
+  });
+
+  it('should have default to the first sort field', function () {
+    var results = element.find('.simple-sort .dropdown-toggle');
+    expect(results.length).toBe(1);
+    expect(results.html().trim().slice(0,'Name'.length)).toBe("Name");
+  });
+
+  it('should default to ascending sort', function () {
+    var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
+    expect(sortIcon.length).toBe(1);
+  });
+
+  it('should update the current sort when one is selected', function () {
+    var results = element.find('.simple-sort .dropdown-toggle');
+    var fields = element.find('.simple-sort .sort-field');
+
+    expect(results.length).toBe(1);
+    expect(results.html().trim().slice(0,'Name'.length)).toBe("Name");
+    expect(fields.length).toBe(3);
+
+    eventFire(fields[2], 'click');
+    $scope.$digest();
+
+    results = element.find('.simple-sort .dropdown-toggle');
+    expect(results.length).toBe(1);
+    expect(results.html().trim().slice(0,'Address'.length)).toBe("Address");
+  });
+
+  it('should update the direction icon when the sort type changes', function () {
+    var results = element.find('.simple-sort .dropdown-toggle');
+    var fields = element.find('.simple-sort .sort-field');
+    var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
+
+    expect(results.length).toBe(1);
+    expect(results.html().trim().slice(0,'Name'.length)).toBe("Name");
+    expect(fields.length).toBe(3);
+    expect(sortIcon.length).toBe(1);
+
+    eventFire(fields[1], 'click');
+    $scope.$digest();
+
+    results = element.find('.simple-sort .dropdown-toggle');
+    sortIcon = element.find('.simple-sort .fa-sort-numeric-asc');
+    expect(results.length).toBe(1);
+    expect(results.html().trim().slice(0,'Age'.length)).toBe("Age");
+    expect(sortIcon.length).toBe(1);
+
+  });
+
+  it('should reverse the sort direction when the direction button is clicked', function () {
+    var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
+    expect(sortIcon.length).toBe(1);
+
+    eventFire(sortIcon[0], 'click');
+    $scope.$digest();
+
+    sortIcon = element.find('.simple-sort .fa-sort-alpha-desc');
+    expect(sortIcon.length).toBe(1);
+  });
+
+  it ('should notify when a new sort field is chosen', function() {
+    var notified = false;
+    var chosenField = '';
+    var chosenDir = '';
+    var fields = element.find('.simple-sort .sort-field');
+
+    var watchForNotify = function (sortField, isAscending) {
+      notified = true;
+      chosenField = sortField;
+      chosenDir = isAscending;
+    };
+
+    $scope.config.sortConfig.onSortChange = watchForNotify;
+
+
+    expect(fields.length).toBe(3);
+
+    eventFire(fields[2], 'click');
+    $scope.$digest();
+
+    expect(notified).toBeTruthy();
+    expect(chosenField).toBe($scope.config.sortConfig.fields[2]);
+    expect(chosenDir).toBeTruthy();
+  });
+
+  it ('should notify when the sort direction changes', function() {
+    var notified = false;
+    var chosenField = '';
+    var chosenDir = '';
+    var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
+
+    var watchForNotify = function (sortField, isAscending) {
+      notified = true;
+      chosenField = sortField;
+      chosenDir = isAscending;
+    };
+
+    $scope.config.sortConfig.onSortChange = watchForNotify;
+
+    expect(sortIcon.length).toBe(1);
+
+    eventFire(sortIcon[0], 'click');
+    $scope.$digest();
+
+    expect(notified).toBeTruthy();
+    expect(chosenField).toBe($scope.config.sortConfig.fields[0]);
+    expect(chosenDir).toBeFalsy();
+  });
+
+  it ('should not show sort components when a sort config is not supplied', function () {
+    var filter = element.find('.simple-sort');
+    expect(filter.length).toBe(1);
+
+    $scope.config = {
+      viewsConfig: {
+        views: [$pfViewUtils.getListView(), $pfViewUtils.getTilesView()]
+      }
+    };
+
+    var htmlTmp = '<div pf-data-toolbar config="config"></div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    filter = element.find('.simple-sort');
+    expect(filter.length).toBe(0);
+  });
+
+  it('should have correct number of primary actions', function () {
+    var fields = element.find('.toolbar-pf-actions .primary-action');
+    expect(fields.length).toBe(2);
+  });
+
+  it('should have correct number of secondary actions', function () {
+    var fields = element.find('.toolbar-pf-actions .secondary-action');
+    expect(fields.length).toBe(6);
+  });
+
+  it('should have correct number of separators', function () {
+    var fields = element.find('.toolbar-pf-actions .divider');
+    expect(fields.length).toBe(1);
+  });
+
+  it('should correctly disable actions', function () {
+    var fields = element.find('.toolbar-pf-actions .disabled');
+    expect(fields.length).toBe(1);
+  });
+
+  it('should not show more actions menu when there are no more actions', function () {
+    var menus = element.find('.fa-ellipsis-v');
+    expect(menus.length).toBe(1);
+
+    $scope.config.actionsConfig.moreActions = undefined;
+    $scope.$digest();
+
+    menus = element.find('.toolbar-pf-actions .fa-ellipsis-v');
+    expect(menus.length).toBe(0);
+  });
+
+  it('should call the action function with the appropriate action when an action is clicked', function () {
+    var primaryActions = element.find('.toolbar-pf-actions .primary-action');
+    var moreActions = element.find('.toolbar-pf-actions .secondary-action');
+    expect(primaryActions.length).toBe(2);
+    expect(moreActions.length).toBe(6);
+
+    eventFire(primaryActions[0], 'click');
+    $scope.$digest();
+
+    expect(performedAction.name).toBe('Action 1');
+
+    eventFire(moreActions[3], 'click');
+    $scope.$digest();
+
+    expect(performedAction.name).toBe('Something Else');
+  });
+
+  it('should not call the action function when a disabled action is clicked', function () {
+    var primaryActions = element.find('.toolbar-pf-actions .primary-action');
+    var moreActions = element.find('.toolbar-pf-actions .secondary-action');
+    expect(primaryActions.length).toBe(2);
+    expect(moreActions.length).toBe(6);
+
+    eventFire(moreActions[2], 'click');
+    $scope.$digest();
+
+    expect(performedAction).toBe(undefined);
+
+    eventFire(primaryActions[1], 'click');
+    $scope.$digest();
+
+    expect(performedAction.name).toBe('Action 2');
+
+    performedAction = undefined;
+    $scope.config.actionsConfig.primaryActions[1].isDisabled = true;
+    $scope.$digest();
+
+    eventFire(primaryActions[1], 'click');
+    $scope.$digest();
+
+    expect(performedAction).toBe(undefined);
+  });
+
+  it ('should not show action components when an action config is not supplied', function () {
+    var filter = element.find('.toolbar-actions');
+    expect(filter.length).toBe(1);
+
+    $scope.config = {
+      viewsConfig: {
+        views: [$pfViewUtils.getListView(), $pfViewUtils.getTilesView()]
+      }
+    };
+
+    var htmlTmp = '<div pf-data-toolbar config="config"></div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    filter = element.find('.toolbar-actions');
+    expect(filter.length).toBe(0);
+  });
 })

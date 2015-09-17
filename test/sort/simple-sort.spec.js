@@ -54,7 +54,7 @@ describe('Directive:  pfSimpleSort', function () {
   });
 
   it('should have default to the first sort field', function () {
-    var results = element.find('.simple-sort .sort-fields');
+    var results = element.find('.simple-sort .dropdown-toggle');
     expect(results.length).toBe(1);
     expect(results.html().trim().slice(0,'Name'.length)).toBe("Name");
   });
@@ -65,7 +65,7 @@ describe('Directive:  pfSimpleSort', function () {
   });
 
   it('should update the current sort when one is selected', function () {
-    var results = element.find('.simple-sort .sort-fields');
+    var results = element.find('.simple-sort .dropdown-toggle');
     var fields = element.find('.simple-sort .sort-field');
 
     expect(results.length).toBe(1);
@@ -75,13 +75,13 @@ describe('Directive:  pfSimpleSort', function () {
     eventFire(fields[2], 'click');
     $scope.$digest();
 
-    results = element.find('.simple-sort .sort-fields');
+    results = element.find('.simple-sort .dropdown-toggle');
     expect(results.length).toBe(1);
     expect(results.html().trim().slice(0,'Description'.length)).toBe("Description");
   });
 
   it('should update the direction icon when the sort type changes', function () {
-    var results = element.find('.simple-sort .sort-fields');
+    var results = element.find('.simple-sort .dropdown-toggle');
     var fields = element.find('.simple-sort .sort-field');
     var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
 
@@ -93,7 +93,7 @@ describe('Directive:  pfSimpleSort', function () {
     eventFire(fields[1], 'click');
     $scope.$digest();
 
-    results = element.find('.simple-sort .sort-fields');
+    results = element.find('.simple-sort .dropdown-toggle');
     sortIcon = element.find('.simple-sort .fa-sort-numeric-asc');
     expect(results.length).toBe(1);
     expect(results.html().trim().slice(0,'Count'.length)).toBe("Count");

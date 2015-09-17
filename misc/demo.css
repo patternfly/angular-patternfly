@@ -63,7 +63,7 @@ hr {
 }
 
 .tiles-view-container .tiles-view-pf .tile {
-  height: 90px;
+  height: 110px;
   width: 300px;
 }
 
@@ -74,4 +74,8 @@ hr {
 .pf-select-sm {
   height :25px;
   width  :120px;
+}
+
+.actions-label {
+  margin-top: 5px;
 }
