@@ -436,3 +436,40 @@
 .toolbar-pf-actions .dropdown-menu a {
   cursor: pointer;
 }
+
+/* Heap map */
+.pf-heatmap-container {
+  position: relative;
+}
+
+.pf-heatmap-container .loading {
+  position: absolute;
+  top: 100px;
+  right: 50%;
+  z-index: 10;
+}
+
+.pf-heatmap-legend-container{
+  list-style-type: none;
+  padding: 0;
+  overflow: auto;
+}
+
+.pf-heatmap-legend-items {
+  float: left;
+}
+
+.pf-legend-color-box {
+  width: 11px;
+  height: 11px;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.pf-legend-text {
+  font-size: 11px;
+  font-weight: normal;
+  line-height: 11px;
+  padding-right: 5px;
+}
