@@ -282,6 +282,59 @@
   font-weight: 400;
 }
 
+.trend-flat-details {
+  display: table;
+  margin-top: 5px;
+}
+
+@media (min-width: 768px) {
+.trend-flat-details {
+    margin-top: 25px;
+  }
+}
+
+.trend-flat-details-cell {
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+.trend-header-compact-pf {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.trend-title-compact-big-pf {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.trend-title-compact-small-pf {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.trend-title-flat-big-pf {
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1;
+  margin-right: 15px;
+}
+
+.trend-label-flat-pf {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.trend-label-flat-strong-pf {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .trend-footer-pf {
   font-size: 10px;
   font-weight: 400;

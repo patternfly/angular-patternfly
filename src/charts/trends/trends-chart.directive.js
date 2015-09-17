@@ -13,7 +13,8 @@
  * <ul style='list-style-type: none'>
  * <li>.chartId    - the unique id of this trends chart
  * <li>.title      - (optional) title of the Trends chart
- * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), and 'small'
+ * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), 'small', 'compact', and 'inline'
+ * <li>.trendLabel - (optional) the trend label used in the 'inline' layout
  * <li>.timeFrame  - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
  * <li>.units      - unit label for values, ex: 'MHz','GB', etc..
  * <li>.valueType  - (optional) the format of the latest data point which is shown in the title. Values are 'actual'(default) or 'percentage'
@@ -56,21 +57,23 @@
        <div class="col-md-3">
          <form role="form" >
            <div class="form-group">
-             <label>Title Value Type</label></br>
-             <select pf-select class="pf-select-sm" ng-model="valueType" id="valueType">
-               <option value="actual" ng-selected="true" selected>Actual</option>
-               <option value="percentage">Percentage</option>
+             <label>Layout</label></br>
+             <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
+               <option value="large" ng-selected="true" selected>Large</option>
+               <option value="small">Small</option>
+               <option value="compact">Compact</option>
+               <option value="inline">Inline</option>
              </select>
            </div>
          </form>
        </div>
        <div class="col-md-3">
-         <form role="form" >
+         <form role="form" ng-hide="layout == 'inline'">
            <div class="form-group">
-             <label>Layout</label></br>
-             <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
-               <option value="large" ng-selected="true" selected>Large</option>
-               <option value="small">Small</option>
+             <label>Title Value Type</label></br>
+             <select pf-select class="pf-select-sm" ng-model="valueType" id="valueType">
+               <option value="actual" ng-selected="true" selected>Actual</option>
+               <option value="percentage">Percentage</option>
              </select>
            </div>
          </form>
@@ -88,6 +91,7 @@
          'chartId'      : 'exampleTrendsChart',
          'title'        : 'Network Utilization Trends',
          'layout'       : 'large',
+         'trendLabel'   : 'Virtual Disk I/O',
          'valueType'    : 'actual',
          'timeFrame'    : 'Last 15 Minutes',
          'units'        : 'MHz',

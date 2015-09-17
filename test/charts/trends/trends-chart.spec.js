@@ -1,5 +1,5 @@
 describe('Directive: pfTrendsChart', function() {
-  var $scope, $compile, element, isolateScope;
+  var $scope, $compile, element, isolateScope, trendCard;
 
   beforeEach(module(
     'patternfly.charts',
@@ -64,7 +64,7 @@ describe('Directive: pfTrendsChart', function() {
 
   it("should show large or small trend card layouts", function() {
     // by default, should show a large card
-    var trendCard = element.find('.trend-card-large-pf');
+    trendCard = element.find('.trend-card-large-pf');
     expect(trendCard.size()).toBe(1);
     // check small card isn't being shown by default
     expect(trendCard.hasClass('.trend-card-small-pf')).toBeFalsy();
@@ -80,5 +80,35 @@ describe('Directive: pfTrendsChart', function() {
     trendCard = element.find('.trend-card-large-pf');
     expect(trendCard.size()).toBe(1);
     expect(trendCard.hasClass('.trend-card-small-pf')).toBeFalsy();
+  });
+
+  it("should show compact card layout", function() {
+    $scope.config.layout = 'compact';
+    $scope.$digest();
+
+    trendCard = element.find('.trend-row');
+    expect(trendCard.size()).toBe(1);
+    trendCard = element.find('.trend-title-compact-big-pf');
+    expect(trendCard.size()).toBe(1);
+    trendCard = element.find('.trend-title-compact-small-pf');
+    expect(trendCard.size()).toBe(1);
+  });
+
+  it("should show inline card layout", function() {
+    $scope.config.layout = 'inline';
+    $scope.$digest();
+
+    trendCard = element.find('.trend-row');
+    expect(trendCard.size()).toBe(1);
+    trendCard = element.find('.trend-flat-col');
+    expect(trendCard.size()).toBe(2);
+    trendCard = element.find('.trend-label-flat-strong-pf');
+    expect(trendCard.size()).toBe(1);
+
+    trendCard = element.find('.trend-title-flat-big-pf');
+    expect(trendCard.html()).toBe('76%');
+
+    trendCard = element.find('.trend-label-flat-pf');
+    expect(trendCard.html()).toBe('76 of 100 MHz');
   });
 });
