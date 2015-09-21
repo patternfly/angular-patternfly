@@ -227,15 +227,17 @@ angular.module( 'patternfly.card' ).directive('pfAggregateStatusCard', function 
  * @name patternfly.card.directive:pfCard
  * @restrict A
  * @element ANY
- * @param {headTitle=} Title for the card - required
- * @param {subTitle=} Subtitle for the card - optional
- * @param {showTopBorder=} Show Top Border, true shows top border, false (default) hides top border - optional
+ * @param {string} headTitle Title for the card
+ * @param {string=} subTitle Sub-Title for the card
+ * @param {boolean=} showTopBorder Show/Hide the blue top border. True shows top border, false (default) hides top border
+ * @param {boolean=} showBottomBorder Show/Hide the bottom grey line between the title and sub-title.
+ * True (default) shows the line, false hides the line
  *
  * @description
  * Directive for easily displaying a card with html content
  *
  * @example
- <example module="patternfly.card">
+ <example module="test">
 
  <file name="index.html">
     <div pf-card head-title="My Card Title" sub-title="My card subtitle">
@@ -245,8 +247,68 @@ angular.module( 'patternfly.card' ).directive('pfAggregateStatusCard', function 
     <div pf-card head-title="Card With Top Border" sub-title="My card subtitle" show-top-border="true">
       <button>Click Me</button>
     </div>
- </file>
 
+    <div ng-controller="ChartCtrl">
+      <div pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
+           show-bottom-border="false" style="width: 60%">
+        <div pf-trends-chart config="configVirtual" chart-data="dataVirtual"></div>
+        <div pf-trends-chart config="configPhysical" chart-data="dataPhysical"></div>
+        <div pf-trends-chart config="configMemory" chart-data="dataMemory"></div>
+      </div>
+    </div>
+ </file>
+ <file name="script.js">
+ angular.module( 'test', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
+
+       var today = new Date();
+       var dates = ['dates'];
+       for (var d = 20 - 1; d >= 0; d--) {
+         dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
+       }
+
+       $scope.configVirtual = {
+         'chartId'      : 'virtualTrendsChart',
+         'layout'       : 'inline',
+         'trendLabel'   : 'Virtual Disk I/O',
+         'units'        : 'GB',
+         'tooltipType'  : 'percentage'
+       };
+
+       $scope.dataVirtual = {
+           'total': '250',
+           'xData': dates,
+           'yData': ['used', '90', '20', '30', '20', '20', '10', '14', '20', '25', '68', '44', '56', '78', '56', '67', '88', '76', '65', '87', '76']
+       };
+
+       $scope.configPhysical = {
+         'chartId'      : 'physicalTrendsChart',
+         'layout'       : 'inline',
+         'trendLabel'   : 'Physical Disk I/O',
+         'units'        : 'MHz',
+         'tooltipType'  : 'percentage'
+       };
+
+       $scope.dataPhysical = {
+           'total': '250',
+           'xData': dates,
+           'yData': ['used', '20', '20', '35', '20', '20', '87', '14', '20', '25', '28', '44', '56', '78', '56', '67', '88', '76', '65', '87', '16']
+       };
+
+       $scope.configMemory = {
+         'chartId'      : 'memoryTrendsChart',
+         'layout'       : 'inline',
+         'trendLabel'   : 'Memory Utilization',
+         'units'        : 'GB',
+         'tooltipType'  : 'percentage'
+       };
+
+       $scope.dataMemory = {
+           'total': '250',
+           'xData': dates,
+           'yData': ['used', '20', '20', '35', '70', '20', '87', '14', '95', '25', '28', '44', '56', '66', '16', '67', '88', '76', '65', '87', '56']
+       };
+     });
+ </file>
  </example>
  */
 angular.module('patternfly.card').directive('pfCard', function () {
@@ -259,7 +321,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
     scope: {
       headTitle: '@',
       subTitle: '@?',
-      showTopBorder: '@?'
+      showTopBorder: '@?',
+      showBottomBorder: '@?'
     }
   };
 });
@@ -4484,7 +4547,7 @@ angular.module('patternfly.views').directive('pfDataToolbar',
 
 
   $templateCache.put('card/basic/card.html',
-    "<div ng-class=\"showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div class=card-pf-heading><h2 class=card-pf-title>{{headTitle}}</h2></div><span ng-if=subTitle class=card-pf-subtitle>{{subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div></div>"
+    "<div ng-class=\"showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div ng-class=\"!showBottomBorder || showBottomBorder === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'\"><h2 class=card-pf-title>{{headTitle}}</h2></div><span ng-if=subTitle class=card-pf-subtitle>{{subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div></div>"
   );
 
 }]);

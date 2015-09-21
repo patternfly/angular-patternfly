@@ -1,5 +1,5 @@
 <div ng-class="showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'">
-  <div class="card-pf-heading">
+  <div ng-class="!showBottomBorder || showBottomBorder === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'">
     <h2 class="card-pf-title">{{headTitle}}</h2>
   </div>
   <span ng-if="subTitle" class="card-pf-subtitle">{{subTitle}}</span>

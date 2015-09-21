@@ -26,6 +26,11 @@
   top: -1px;
 }
 
+.card-pf-heading-no-bottom {
+  margin: 0 -20px 0px;
+  padding: 0 20px 0;
+}
+
 .donut-chart-pf {
   width: 100%;
   float: left;
