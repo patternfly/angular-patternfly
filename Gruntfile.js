@@ -117,6 +117,8 @@ module.exports = function (grunt) {
             'lib/patternfly/components/d3/d3.js',
             'lib/angular/angular.js',
             'lib/angular-animate/angular-animate.js',
+            'lib/angular-bootstrap/ui-bootstrap-tpls.js',
+            'misc/angular-bootstrap-prettify.js',
             'lib/lodash/lodash.min.js',
             'dist/angular-patternfly.js',
             'lib/patternfly/dist/js/patternfly.js'],

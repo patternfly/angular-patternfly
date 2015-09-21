@@ -20,7 +20,7 @@
  * @example
  <example module="patternfly.charts">
    <file name="script.js">
-     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
+     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope) {
        $scope.title = 'Utilization - Using Defaults';
        $scope.data = [
        {'id': 9,'value': 0.96,'tooltip': 'Node 8 : My OpenShift Provider<br\>96% : 96 Used of 100 Total<br\>4 Available'},
@@ -94,122 +94,121 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfHeatmap', function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        data: '=',
-        height: '=',
-        chartTitle: '=?',
-        legendLabels: '=?',
-        thresholds: '=?',
-        heatmapColorPattern: '=?'
-      },
-      replace: true,
-      templateUrl: 'charts/heatmap/heatmap.html',
-      link: function (scope, element, attrs) {
-        var thisComponent = element[0].querySelector('.heatmap-svg');
-        var containerWidth, containerHeight, blockSize, numberOfRows;
-        var thresholdDefaults = [0.7, 0.8, 0.9];
-        var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
-        var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
-        var heightDefault = 200;
+angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      data: '=',
+      height: '=',
+      chartTitle: '=?',
+      legendLabels: '=?',
+      thresholds: '=?',
+      heatmapColorPattern: '=?'
+    },
+    replace: true,
+    templateUrl: 'charts/heatmap/heatmap.html',
+    link: function (scope, element, attrs) {
+      var thisComponent = element[0].querySelector('.heatmap-svg');
+      var containerWidth, containerHeight, blockSize, numberOfRows;
+      var thresholdDefaults = [0.7, 0.8, 0.9];
+      var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
+      var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
+      var heightDefault = 200;
 
-        var setSizes = function () {
-          var parentContainer = element[0].querySelector('.heatmap-container');
-          containerWidth = parentContainer.clientWidth;
-          containerHeight = parentContainer.clientHeight;
-          blockSize = determineBlockSize();
-          numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+      var setSizes = function () {
+        var parentContainer = element[0].querySelector('.heatmap-container');
+        containerWidth = parentContainer.clientWidth;
+        containerHeight = parentContainer.clientHeight;
+        blockSize = determineBlockSize();
+        numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+      };
+
+      var determineBlockSize = function () {
+        var x = containerWidth;
+        var y = containerHeight;
+        var n = scope.data.length;
+        var px = Math.ceil(Math.sqrt(n * x / y));
+        var py = Math.ceil(Math.sqrt(n * y / x));
+        var sx, sy;
+
+        if (Math.floor(px * y / x) * px < n) {
+          sx = y / Math.ceil(px * y / x);
+        } else {
+          sx = x / px;
+        }
+
+        if (Math.floor(py * x / y) * py < n) {
+          sy = x / Math.ceil(x * py / y);
+        } else {
+          sy = y / py;
+        }
+        return Math.max(sx, sy);
+      };
+
+      var redraw = function () {
+        var data = scope.data;
+        var blockPadding = 1;
+        var color = d3.scale.threshold().domain(scope.thresholds).range(scope.heatmapColorPattern);
+        var component = thisComponent;
+        var blocks;
+        var highlightBlock = function (block, active) {
+          block.style('fill-opacity', active ? 1 : 0.4);
         };
+        var svg = window.d3.select(thisComponent);
+        svg.selectAll('*').remove();
 
-        var determineBlockSize = function () {
-          var x = containerWidth;
-          var y = containerHeight;
-          var n = scope.data.length;
-          var px = Math.ceil(Math.sqrt(n * x / y));
-          var py = Math.ceil(Math.sqrt(n * y / x));
-          var sx, sy;
-
-          if (Math.floor(px * y / x) * px < n) {
-            sx = y / Math.ceil(px * y / x);
-          } else {
-            sx = x / px;
-          }
-
-          if (Math.floor(py * x / y) * py < n) {
-            sy = x / Math.ceil(x * py / y);
-          } else {
-            sy = y / py;
-          }
-          return Math.max(sx, sy);
-        };
-
-        var redraw = function () {
-          var data = scope.data;
-          var blockPadding = 1;
-          var color = d3.scale.threshold().domain(scope.thresholds).range(scope.heatmapColorPattern);
-          var component = thisComponent;
-          var blocks;
-          var highlightBlock = function (block, active) {
-            block.style('fill-opacity', active ? 1 : 0.4);
-          };
-          var svg = window.d3.select(thisComponent);
-          svg.selectAll('*').remove();
-
-          blocks = svg.selectAll('rect').data(data).enter().append('rect');
-          blocks.attr('x', function (d, i) {
-            return (Math.floor(i / numberOfRows) * blockSize) + blockPadding;
-          }).attr('y', function (d, i) {
-            return (i % numberOfRows * blockSize) + blockPadding;
-          }).attr('width', blockSize - (2 * blockPadding)).attr('height', blockSize - (2 * blockPadding)).style('fill', function (d) {
-            return color(d.value);
-          });
-
-          //Adding events
-          blocks.on('mouseover', function () {
-            blocks.call(highlightBlock, false);
-            d3.select(this).call(highlightBlock, true);
-          });
-          blocks.on('click', function (d) {
-            component.sendAction('click', d);
-          });
-
-          //Tooltip support
-          blocks.each(function (d) {
-            $(this).tooltip({
-              container: 'body',
-              animation: false,
-              placement: 'top',
-              trigger: 'hover',
-              html: true,
-              title: d.tooltip
-            });
-          });
-
-          svg.on('mouseleave', function () {
-            blocks.call(highlightBlock, true);
-          });
-        };
-
-        //Allow overriding of defaults
-        scope.thresholds = angular.extend([], thresholdDefaults, scope.thresholds);
-        scope.heatmapColorPattern = angular.extend([], heatmapColorPatternDefaults, scope.heatmapColorPattern);
-        scope.legendLabels = angular.extend([], legendLabelDefaults, scope.legendLabels);
-        scope.height = scope.height || heightDefault;
-
-        //Shows loading indicator
-        scope.loadingDone = false;
-
-        scope.$watch('data', function (newVal, oldVal) {
-          if (typeof(newVal) !== 'undefined') {
-            scope.loadingDone = true;
-            setSizes();
-            redraw();
-          }
+        blocks = svg.selectAll('rect').data(data).enter().append('rect');
+        blocks.attr('x', function (d, i) {
+          return (Math.floor(i / numberOfRows) * blockSize) + blockPadding;
+        }).attr('y', function (d, i) {
+          return (i % numberOfRows * blockSize) + blockPadding;
+        }).attr('width', blockSize - (2 * blockPadding)).attr('height', blockSize - (2 * blockPadding)).style('fill', function (d) {
+          return color(d.value);
+        }).attr('tooltip-html-unsafe', function (d, i) { //tooltip-html is throwing an exception
+          return d.tooltip;
+        }).attr('tooltip-append-to-body', function (d, i) {
+          return true;
+        }).attr('tooltip-animation', function (d, i) {
+          return false;
         });
-      }
-    };
-  }
-);
+
+        //Adding events
+        blocks.on('mouseover', function () {
+          blocks.call(highlightBlock, false);
+          d3.select(this).call(highlightBlock, true);
+        });
+        blocks.on('click', function (d) {
+          component.sendAction('click', d);
+        });
+
+        //Compiles the tooltips
+        angular.forEach(angular.element(blocks), function (block) {
+          var el = angular.element(block);
+          $compile(el)(scope);
+        });
+
+        svg.on('mouseleave', function () {
+          blocks.call(highlightBlock, true);
+        });
+      };
+
+      //Allow overriding of defaults
+      scope.thresholds = angular.extend([], thresholdDefaults, scope.thresholds);
+      scope.heatmapColorPattern = angular.extend([], heatmapColorPatternDefaults, scope.heatmapColorPattern);
+      scope.legendLabels = angular.extend([], legendLabelDefaults, scope.legendLabels);
+      scope.height = scope.height || heightDefault;
+
+      //Shows loading indicator
+      scope.loadingDone = false;
+
+      scope.$watch('data', function (newVal, oldVal) {
+        if (typeof(newVal) !== 'undefined') {
+          scope.loadingDone = true;
+          setSizes();
+          redraw();
+        }
+      });
+    }
+  };
+});
