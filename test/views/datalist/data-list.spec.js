@@ -1,8 +1,9 @@
 describe('Directive:  pfDataList', function () {
   var $scope;
   var $compile;
-  var $timeout;
   var element;
+  var performedAction;
+  var updateCount;
 
   // load the controller's module
   beforeEach(function () {
@@ -33,8 +34,60 @@ describe('Directive:  pfDataList', function () {
     $scope.listConfig = {
       selectedItems: []
     };
+    updateCount = 0;
+    $scope.updateActionForItemFn = function(action, item) {
+      if (updateCount === 2) {
+        action.isDisabled = true;
+      }
+      if (updateCount === 3) {
+        action.isVisible = false;
+      }
+      updateCount++;
+    };
 
-    var htmlTmp = '<div pf-data-list items="systemModel" config="listConfig">' +
+    performedAction = undefined;
+    var performAction = function (action) {
+      performedAction = action;
+    };
+
+    $scope.actions = [
+      {
+        name: 'Action',
+        title: 'Perform an action',
+        actionFn: performAction
+      },
+      {
+        name: 'Another Action',
+        title: 'Do something else',
+        actionFn: performAction
+      },
+      {
+        name: 'Disabled Action',
+        title: 'Unavailable action',
+        actionFn: performAction,
+      },
+      {
+        name: 'Something Else',
+        title: '',
+        actionFn: performAction
+      },
+      {
+        isSeparator: true
+      },
+      {
+        name: 'Grouped Action 1',
+        title: 'Do something',
+        actionFn: performAction
+      },
+      {
+        name: 'Grouped Action 2',
+        title: 'Do something similar',
+        actionFn: performAction
+      }
+    ];
+
+
+    var htmlTmp = '<div pf-data-list items="systemModel" config="listConfig" actions="actions" update-action-for-item-fn="updateActionForItemFn">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
       '</div>';
 
@@ -190,7 +243,7 @@ describe('Directive:  pfDataList', function () {
     $scope.$digest();
 
     items = element.find('.list-content');
-    disabledItems = element.find('.disabled');
+    disabledItems = element.find('.list-group-item.disabled');
     expect(disabledItems.length).toBe(1);
 
     eventFire(items[1], 'click');
@@ -218,5 +271,105 @@ describe('Directive:  pfDataList', function () {
       exceptionRaised = true;
     }
     expect(exceptionRaised).toBe(true);
+  });
+
+  it('should show the actions menu button for each row', function () {
+    var menuButtons = element.find('.data-list-pf .list-menu .dropdown-toggle');
+    expect(menuButtons.length).toBe(5);
+  });
+
+  it('should show the actions menu with the correct items', function () {
+    var menuButtons = element.find('.data-list-pf .list-menu .dropdown-toggle');
+    var menus = element.find('.data-list-pf .list-menu .dropdown-menu');
+    var separators = element.find('[role=separator]');
+
+    expect(menuButtons.length).toBe(5);
+    expect(menus.length).toBe(0);
+    expect(separators.length).toBe(0);
+
+    eventFire(menuButtons[0], 'click');
+    $scope.$digest();
+
+    menus = element.find('[role=menuitem]');
+    separators = element.find('[role=separator]');
+
+    expect(menus.length).toBe(5);
+    expect(separators.length).toBe(1);
+  });
+
+  it('should correctly disable actions', function () {
+    var menuButtons = element.find('.data-list-pf .list-menu .dropdown-toggle');
+    var disabled = element.find('li .disabled');
+
+    expect(menuButtons.length).toBe(5);
+    expect(disabled.length).toBe(0);
+
+    eventFire(menuButtons[0], 'click');
+    $scope.$digest();
+
+    disabled = element.find('li.disabled');
+
+    expect(disabled.length).toBe(1);
+  });
+
+  it('should call the action function with the appropriate action when an action is clicked', function () {
+    var menuButtons = element.find('.data-list-pf .list-menu .dropdown-toggle');
+    var menus = element.find('.data-list-pf .list-menu .dropdown-menu');
+    var separators = element.find('[role=separator]');
+
+    expect(menuButtons.length).toBe(5);
+    expect(menus.length).toBe(0);
+    expect(separators.length).toBe(0);
+
+    eventFire(menuButtons[0], 'click');
+    $scope.$digest();
+
+    menus = element.find('[role=menuitem] a');
+
+    eventFire(menus[0], 'click');
+    $scope.$digest();
+
+    expect(performedAction.name).toBe('Action');
+
+    eventFire(menus[1], 'click');
+    $scope.$digest();
+
+    expect(performedAction.name).toBe('Another Action');
+  });
+
+  it('should not call the action function when a disabled action is clicked', function () {
+    var menuButtons = element.find('.data-list-pf .list-menu .dropdown-toggle');
+    var menus = element.find('.data-list-pf .list-menu .dropdown-menu');
+    var separators = element.find('[role=separator]');
+
+    expect(menuButtons.length).toBe(5);
+    expect(menus.length).toBe(0);
+    expect(separators.length).toBe(0);
+
+    eventFire(menuButtons[0], 'click');
+    $scope.$digest();
+
+    menus = element.find('[role=menuitem] a');
+
+    eventFire(menus[2], 'click');
+    $scope.$digest();
+
+    expect(performedAction).toBe(undefined);
+  });
+
+  it ('should not show action components when actions are not supplied', function () {
+    var menuButtons = element.find('.data-list-pf .list-menu .dropdown-toggle');
+
+    expect(menuButtons.length).toBe(5);
+
+    var htmlTmp = '<div pf-data-list items="systemModel" config="listConfig">' +
+      '<div class="nameLabel1">{{item.name}}</div>' +
+      '</div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    menuButtons = element.find('.data-list-pf .list-menu .dropdown-toggle');
+
+    expect(menuButtons.length).toBe(0);
   });
 })

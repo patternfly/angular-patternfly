@@ -191,7 +191,8 @@
  </file>
  </example>
  */
-angular.module('patternfly.views').directive('pfDataTiles', function (pfUtils) {
+angular.module('patternfly.views').directive('pfDataTiles',
+  function (pfUtils) {
     'use strict';
     return {
       restrict: 'A',

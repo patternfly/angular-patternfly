@@ -55,8 +55,8 @@
         <label class="events-label">Valid Items: </label>
       </div>
       <div class="col-md-12 list-view-container" ng-if="viewType == 'listView'">
-        <div pf-data-list class="row" config="listConfig" items="items">
-          <div class="row list-row">
+        <div pf-data-list config="listConfig" items="items">
+          <div class="row">
             <div class="col-md-3">
               <span>{{item.name}}</span>
             </div>
