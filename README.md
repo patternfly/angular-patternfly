@@ -1,6 +1,10 @@
-# AngularJS directives for [PatternFly](https://www.patternfly.org) [![Build Status](https://travis-ci.org/patternfly/angular-patternfly.svg?branch=master)](https://travis-ci.org/patternfly/angular-patternfly)
+# AngularJS directives for [PatternFly](https://www.patternfly.org) 
 
 This project will provide a set of common AngularJS directives for use with the PatternFly reference implementation.
+
+* Web site: https://www.patternfly.org
+* API Docs: http://angular-patternfly.rhcloud.com/#/api
+* Build Status: https://travis-ci.org/patternfly/angular-patternfly.svg?branch=master
 
 ## Getting started
 
