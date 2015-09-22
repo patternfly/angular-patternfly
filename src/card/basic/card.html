@@ -6,18 +6,35 @@
   <div class="card-pf-body">
     <div ng-transclude></div>
   </div>
-  <div class="card-pf-footer" ng-if="footer">
-    <a href="{{footer.href}}" ng-if="footer.href">
-      <span class="{{footer.iconClass}}" ng-if="footer.iconClass"></span>
-      <span ng-if="footer.text">{{footer.text}}</span>
-    </a>
-    <a ng-if="footer.callBackFn && !footer.href" ng-click="footerCallBackFn()">
-      <span class="{{footer.iconClass}}" ng-if="footer.iconClass"></span>
-      <span ng-if="footer.text">{{footer.text}}</span>
-    </a>
-    <span ng-if="!footer.href && !footer.callBackFn">
-      <span class="{{footer.iconClass}}" ng-if="footer.iconClass"></span>
-      <span ng-if="footer.text">{{footer.text}}</span>
-    </span>
+  <div class="card-pf-footer row" ng-if="footer">
+    <div class="col-md-6">
+      <a href="{{footer.href}}" ng-if="footer.href">
+        <span class="{{footer.iconClass}} card-pf-footer-text" ng-if="footer.iconClass"></span>
+        <span class="card-pf-footer-text" ng-if="footer.text">{{footer.text}}</span>
+      </a>
+      <a ng-if="footer.callBackFn && !footer.href" ng-click="footerCallBackFn()">
+        <span class="{{footer.iconClass}} card-pf-footer-text" ng-if="footer.iconClass"></span>
+        <span class="card-pf-footer-text" ng-if="footer.text">{{footer.text}}</span>
+      </a>
+      <span ng-if="!footer.href && !footer.callBackFn">
+        <span class="{{footer.iconClass}} card-pf-footer-text" ng-if="footer.iconClass"></span>
+        <span class="card-pf-footer-text" ng-if="footer.text">{{footer.text}}</span>
+      </span>
+    </div>
+    <div class="col-md-6 text-right" ng-if="filter.filters">
+      <div class="dropdown btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{currentFilter.label}}
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li ng-repeat="item in filter.filters" ng-class="{'selected': item === currentFilter}">
+            <a role="menuitem" tabindex="-1" ng-click="filterCallBackFn(item)">
+              {{item.label}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>

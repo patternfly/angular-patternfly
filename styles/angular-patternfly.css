@@ -34,6 +34,11 @@
 .card-pf-footer {
   border-top: 1px solid #d1d1d1;
   background: #fafafa;
+  padding: 20px 0px 20px 0px;
+}
+
+.card-pf-footer-text {
+  font-size: 14px;
 }
 
 .donut-chart-pf {

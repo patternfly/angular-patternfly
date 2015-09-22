@@ -133,6 +133,44 @@ describe('Directive: pfCard', function() {
       expect(spans.eq(1).html()).toBe('View All Events');
     });
 
+    it("should hide the filter in the footer by default", function() {
+
+      // show a footer with a href
+      $scope.actionBarConfig = {
+        'href'      : '#addCluster',
+        'iconClass' : 'fa fa-plus-circle',
+        'text'      : 'Add New Cluster'
+      };
+
+      element = compileCard('<div pf-card head-title="title" footer="actionBarConfig">Inner content</div>', $scope);
+      cardClass = angular.element(element).find('.card-pf-footer').find('button');
+      expect(cardClass.size()).toBe(0);
+    });
+
+    it("should show the filter in the footer if specified", function() {
+
+      $scope.filterConfig = {
+        'filters' : [{label:'Last 30 Days', value:'30'},
+                     {label:'Last 15 Days', value:'15'},
+                     {label:'Today', value:'today'}],
+        'callBackFn': function (f) {
+          return "Footer Callback Fn Called: label='" + f.label + "' value = " + f.value;
+         },
+        'defaultFilter' : 2
+      };
+
+      element = compileCard('<div pf-card head-title="title" footer="{}" filter="filterConfig">Inner content</div>', $scope);
+      cardClass = angular.element(element).find('.card-pf-footer').find('li');
+      expect(cardClass.size()).toBe(3);
+
+      // test default menu item
+      var filterItem = angular.element(element).find('.card-pf-footer').find('button');
+      expect(filterItem.html()).toContain('Today');
+
+      filterItem = cardClass.eq(1).find('a');
+      expect(filterItem.html()).toContain('Last 15 Days');
+    });
+
   });
 
 });
