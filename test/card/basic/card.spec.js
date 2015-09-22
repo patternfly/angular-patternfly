@@ -1,5 +1,5 @@
 describe('Directive: pfCard', function() {
-  var $scope, $compile, element, headTitle, subTitle, cardClass, innerContent;
+  var $scope, $compile, element, headTitle, subTitle, cardClass, innerContent, isoScope;
 
   beforeEach(module(
     'patternfly.card',
@@ -16,6 +16,7 @@ describe('Directive: pfCard', function() {
     var compileCard = function (markup, scope) {
       var el = $compile(markup)(scope);
       scope.$digest();
+      isoScope = el.isolateScope();
       return el;
     };
 
@@ -83,5 +84,55 @@ describe('Directive: pfCard', function() {
 
     });
 
+    it("should hide the action bar footer by default", function() {
+
+      // by default, if footer not defined, footer should not be shown
+      element = compileCard('<div pf-card head-title="My card title" sub-title="My card subtitle title">Inner content goes here</div>', $scope);
+      cardClass = angular.element(element).find('.card-pf-footer');
+      expect(cardClass.size()).toBe(0);
+    });
+
+    it("should show the action bar footer", function() {
+
+      // show a footer with a href
+      $scope.actionBarConfig = {
+        'href'      : '#addCluster',
+        'iconClass' : 'fa fa-plus-circle',
+        'text'      : 'Add New Cluster'
+      };
+
+      element = compileCard('<div pf-card head-title="title" footer="actionBarConfig">Inner content</div>', $scope);
+      cardClass = angular.element(element).find('a');
+      expect(cardClass.attr('href')).toBe('#addCluster');
+      var spans = cardClass.find('span');
+      expect(spans.size()).toBe(2);
+      expect(spans.eq(0)).toHaveClass('fa fa-plus-circle');
+      expect(spans.eq(1).html()).toBe('Add New Cluster');
+
+      // show a footer with a callback function
+      $scope.actionBarConfig = {
+        'iconClass' : 'fa fa-flag',
+        'text'      : 'View All Events',
+        'callBackFn': function () {
+          return "Footer Callback Fn Called";
+        }
+      };
+
+      element = compileCard('<div pf-card head-title="title" footer="actionBarConfig">Inner content</div>', $scope);
+      cardClass = angular.element(element).find('a');
+      expect(cardClass.attr('href')).toBeUndefined();
+
+      cardClass.click();
+      $scope.$digest();
+
+      expect(isoScope.footerCallBackResult).toEqual('Footer Callback Fn Called');
+
+      var spans = cardClass.find('span');
+      expect(spans.size()).toBe(2);
+      expect(spans.eq(0)).toHaveClass('fa fa-flag');
+      expect(spans.eq(1).html()).toBe('View All Events');
+    });
+
   });
+
 });

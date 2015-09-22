@@ -31,6 +31,11 @@
   padding: 0 20px 0;
 }
 
+.card-pf-footer {
+  border-top: 1px solid #d1d1d1;
+  background: #fafafa;
+}
+
 .donut-chart-pf {
   width: 100%;
   float: left;
@@ -337,6 +342,7 @@
 .trend-flat-details-cell {
   display: table-cell;
   vertical-align: bottom;
+  min-width: 70px;
 }
 
 .trend-header-compact-pf {
