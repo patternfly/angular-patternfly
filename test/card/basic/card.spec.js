@@ -3,7 +3,8 @@ describe('Directive: pfCard', function() {
 
   beforeEach(module(
     'patternfly.card',
-    'card/basic/card.html'
+    'card/basic/card.html',
+    'card/basic/card-filter.html'
   ));
 
   beforeEach(inject(function(_$compile_, _$rootScope_) {
@@ -154,21 +155,64 @@ describe('Directive: pfCard', function() {
                      {label:'Last 15 Days', value:'15'},
                      {label:'Today', value:'today'}],
         'callBackFn': function (f) {
-          return "Footer Callback Fn Called: label='" + f.label + "' value = " + f.value;
+          return "Footer Filter Callback Fn Called: label='" + f.label + "' value = " + f.value;
          },
         'defaultFilter' : 2
       };
 
       element = compileCard('<div pf-card head-title="title" footer="{}" filter="filterConfig">Inner content</div>', $scope);
-      cardClass = angular.element(element).find('.card-pf-footer').find('li');
+
+      // should find 3 filters
+      cardClass = angular.element(element).find('.card-pf-footer').find('a');
       expect(cardClass.size()).toBe(3);
 
-      // test default menu item
+      // test setting default menu item
       var filterItem = angular.element(element).find('.card-pf-footer').find('button');
       expect(filterItem.html()).toContain('Today');
 
-      filterItem = cardClass.eq(1).find('a');
-      expect(filterItem.html()).toContain('Last 15 Days');
+      // test callbackfn gets called
+      eventFire(cardClass[0], 'click');
+      $scope.$digest();
+      expect(isoScope.filterCallBackResult).toEqual("Footer Filter Callback Fn Called: label='Last 30 Days' value = 30");
+      // test dropdown set after selection
+      filterItem = angular.element(element).find('.card-pf-footer').find('button');
+      expect(filterItem.html()).toContain('Last 30 Days');
+    });
+
+    it("should show the filter in the header if specified", function() {
+
+      $scope.filterConfig = {
+        'filters' : [{label:'Last 30 Days', value:'30'},
+          {label:'Last 15 Days', value:'15'},
+          {label:'Today', value:'today'}],
+        'callBackFn': function (f) {
+          return "Header Filter Callback Fn Called: label='" + f.label + "' value = " + f.value;
+        },
+        'defaultFilter' : 2,
+        'position' : 'header'
+      };
+
+      element = compileCard('<div pf-card head-title="title" footer="{}" filter="filterConfig">Inner content</div>', $scope);
+
+      // should NOT find any filters in the footer
+      cardClass = angular.element(element).find('.card-pf-footer').find('a');
+      expect(cardClass.size()).toBe(0);
+
+      // should find filters in the header
+      cardClass = angular.element(element).find('.card-pf-heading').find('a');
+      expect(cardClass.size()).toBe(3);
+
+      // test setting default menu item
+      var filterItem = angular.element(element).find('.card-pf-heading').find('button');
+      expect(filterItem.html()).toContain('Today');
+
+      // test callbackfn gets called
+      eventFire(cardClass[0], 'click');
+      $scope.$digest();
+      expect(isoScope.filterCallBackResult).toEqual("Header Filter Callback Fn Called: label='Last 30 Days' value = 30");
+      // test dropdown set after selection
+      filterItem = angular.element(element).find('.card-pf-heading').find('button');
+      expect(filterItem.html()).toContain('Last 30 Days');
     });
 
   });

@@ -34,13 +34,13 @@
 
  <file name="index.html">
    <div ng-controller="ChartCtrl">
-     <div pf-card head-title="My Card Title" sub-title="My card subtitle" style="width: 50%">
-       <button>Click Me</button>
+     <div pf-card head-title="Card Title" sub-title="Card Subtitle" filter="filterConfigHeader" style="width: 50%">
+       [Card Contents] <button>Click Me</button> Timeframe filter in header
      </div>
 
-     <div pf-card head-title="Card With Top Border" sub-title="My card subtitle" show-top-border="true"
+     <div pf-card head-title="Card Title" sub-title="Card Subtitle" show-top-border="true"
           footer="footerConfig" filter="filterConfig" style="width: 50%">
-       <button>Click Me</button>
+       [Card Contents] <button>Click Me</button> Footer with Link & Timeframe filter
      </div>
 
      <div pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
@@ -60,6 +60,16 @@
          'callBackFn': function () {
             alert("Footer Callback Fn Called");
           }
+       }
+
+       $scope.filterConfigHeader = {
+         'filters' : [{label:'Last 30 Days', value:'30'},
+                      {label:'Last 15 Days', value:'15'},
+                      {label:'Today', value:'today'}],
+         'callBackFn': function (f) {
+            alert("Header Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
+          },
+        'position' : 'header'
        }
 
        $scope.filterConfig = {
@@ -160,6 +170,10 @@ angular.module('patternfly.card').directive('pfCard', function () {
       $scope.filterCallBackFn = function (f) {
         $scope.currentFilter = f;
         $scope.filterCallBackResult = $scope.filter.callBackFn(f);
+      };
+
+      $scope.showFilterInHeader = function () {
+        return ($scope.filter && $scope.filter.filters && $scope.filter.position && $scope.filter.position === 'header');
       };
     }
   };

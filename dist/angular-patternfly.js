@@ -258,13 +258,13 @@ angular.module( 'patternfly.card' ).directive('pfAggregateStatusCard', function 
 
  <file name="index.html">
    <div ng-controller="ChartCtrl">
-     <div pf-card head-title="My Card Title" sub-title="My card subtitle" style="width: 50%">
-       <button>Click Me</button>
+     <div pf-card head-title="Card Title" sub-title="Card Subtitle" filter="filterConfigHeader" style="width: 50%">
+       [Card Contents] <button>Click Me</button> Timeframe filter in header
      </div>
 
-     <div pf-card head-title="Card With Top Border" sub-title="My card subtitle" show-top-border="true"
+     <div pf-card head-title="Card Title" sub-title="Card Subtitle" show-top-border="true"
           footer="footerConfig" filter="filterConfig" style="width: 50%">
-       <button>Click Me</button>
+       [Card Contents] <button>Click Me</button> Footer with Link & Timeframe filter
      </div>
 
      <div pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
@@ -284,6 +284,16 @@ angular.module( 'patternfly.card' ).directive('pfAggregateStatusCard', function 
          'callBackFn': function () {
             alert("Footer Callback Fn Called");
           }
+       }
+
+       $scope.filterConfigHeader = {
+         'filters' : [{label:'Last 30 Days', value:'30'},
+                      {label:'Last 15 Days', value:'15'},
+                      {label:'Today', value:'today'}],
+         'callBackFn': function (f) {
+            alert("Header Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
+          },
+        'position' : 'header'
        }
 
        $scope.filterConfig = {
@@ -384,6 +394,10 @@ angular.module('patternfly.card').directive('pfCard', function () {
       $scope.filterCallBackFn = function (f) {
         $scope.currentFilter = f;
         $scope.filterCallBackResult = $scope.filter.callBackFn(f);
+      };
+
+      $scope.showFilterInHeader = function () {
+        return ($scope.filter && $scope.filter.filters && $scope.filter.position && $scope.filter.position === 'header');
       };
     }]
   };
@@ -4608,8 +4622,13 @@ angular.module('patternfly.views').directive('pfDataToolbar',
   );
 
 
+  $templateCache.put('card/basic/card-filter.html',
+    "<button type=button class=\"btn btn-default dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false>{{currentFilter.label}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in filter.filters\" ng-class=\"{'selected': item === currentFilter}\"><a role=menuitem tabindex=-1 ng-click=filterCallBackFn(item)>{{item.label}}</a></li></ul>"
+  );
+
+
   $templateCache.put('card/basic/card.html',
-    "<div ng-class=\"showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div ng-class=\"!showBottomBorder || showBottomBorder === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'\"><h2 class=card-pf-title>{{headTitle}}</h2></div><span ng-if=subTitle class=card-pf-subtitle>{{subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div><div class=\"card-pf-footer row\" ng-if=footer><div class=col-md-6><a href={{footer.href}} ng-if=footer.href><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></a> <a ng-if=\"footer.callBackFn && !footer.href\" ng-click=footerCallBackFn()><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></a> <span ng-if=\"!footer.href && !footer.callBackFn\"><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></span></div><div class=\"col-md-6 text-right\" ng-if=filter.filters><div class=\"dropdown btn-group\"><button type=button class=\"btn btn-default dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false>{{currentFilter.label}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in filter.filters\" ng-class=\"{'selected': item === currentFilter}\"><a role=menuitem tabindex=-1 ng-click=filterCallBackFn(item)>{{item.label}}</a></li></ul></div></div></div></div>"
+    "<div ng-class=\"showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div ng-class=\"!showBottomBorder || showBottomBorder === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'\"><div class=card-pf-table><div class=card-pf-cell><h2 class=card-pf-title ng-class=\"{'card-pf-filter-header': showFilterInHeader()}\">{{headTitle}}</h2></div><div class=\"card-pf-cell text-right\" style=\"padding-right: 0px\" ng-if=showFilterInHeader()><div class=\"dropdown btn-group\"><div ng-include=\"'card/basic/card-filter.html'\"></div></div></div></div></div><span ng-if=subTitle class=card-pf-subtitle>{{subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div><div class=card-pf-footer ng-if=footer><div class=card-pf-table><div class=card-pf-cell><a href={{footer.href}} ng-if=footer.href><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></a> <a ng-if=\"footer.callBackFn && !footer.href\" ng-click=footerCallBackFn()><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></a> <span ng-if=\"!footer.href && !footer.callBackFn\"><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></span></div><div class=\"card-pf-cell text-right\" ng-if=\"filter.filters && (!filter.position || filter.position === 'footer')\"><div class=\"dropdown btn-group\"><div ng-include=\"'card/basic/card-filter.html'\"></div></div></div></div></div></div>"
   );
 
 }]);

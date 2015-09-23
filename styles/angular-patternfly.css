@@ -31,14 +31,13 @@
   padding: 0 20px 0;
 }
 
-.card-pf-footer {
-  border-top: 1px solid #d1d1d1;
-  background: #fafafa;
-  padding: 20px 0px 20px 0px;
+.card-pf-table {
+  display: table;
+  width: 100%;
 }
 
-.card-pf-footer-text {
-  font-size: 14px;
+.card-pf-cell {
+  display: table-cell;
 }
 
 .donut-chart-pf {
