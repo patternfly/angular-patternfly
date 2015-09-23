@@ -33,7 +33,9 @@
       addTag('base', {href: baseUrl});
       // Comment out the use of prettify.css as it changes some sizing which disrupts patternfly styling
       // addTag('link', {rel: 'stylesheet', href: 'css/prettify.css', type: 'text/css'});
-      addTag('link', {rel: 'stylesheet', href: 'css/docs.css', type: 'text/css'});
+      // Comment out the use of grunt-ngdoc's docs.css as it disrupts patternfly styling
+      // customized version in misc/pf-docs.css
+      // addTag('link', {rel: 'stylesheet', href: 'css/docs.css', type: 'text/css'});
       addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});
 
       <% _.forEach(styles, function(url) { %>

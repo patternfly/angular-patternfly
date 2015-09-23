@@ -123,7 +123,7 @@ module.exports = function (grunt) {
           html5Mode: false,
           template: 'grunt-ngdocs-index.tmpl',
           styles: ['lib/patternfly/dist/css/patternfly.css', 'lib/patternfly/dist/css/patternfly-additions.css',
-            'dist/styles/angular-patternfly.css', 'misc/demo.css']
+            'dist/styles/angular-patternfly.css', 'misc/demo.css', 'misc/pf-docs.css']
         },
 
         all: ['src/**/*.js']
