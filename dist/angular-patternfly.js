@@ -407,22 +407,32 @@ angular.module('patternfly.card').directive('pfCard', function () {
        $scope.available =  $scope.total - $scope.used;
 
        $scope.chartConfig = {
-         "donut": {
-           "title":"MHz Used",
-           "label":{"show":false},
-           "width":10
+         type: "donut",
+         donut: {
+           title: "MHz Used",
+           label: {show: false},
+           width: 10
           },
-          "size": {"height":130},
-          "legend": {"show":false},
-          "color": {"pattern":["#0088CE","#D1D1D1"]},
-          "tooltip": {},
-          "data": {"columns":[["Used","950"],["Available",50]],
-          "type": "donut",
-          "donut": {
-            "label": {"show":false}
+          size: {
+            height: 130
           },
-          "groups": [["used","available"]],
-            "order":null
+          legend: {
+            show: false
+            },
+          color: {
+            pattern: ["#0088CE","#D1D1D1"]
+          },
+          tooltip: {},
+          data: {
+            type: "donut",
+            columns: [
+              ["Used", $scope.used],
+              ["Available", $scope.total - $scope.used]
+            ],
+            groups: [
+              ["used", "available"]
+            ],
+            order: null
           }
        };
 
