@@ -70,14 +70,14 @@ describe('Directive: pfCard', function() {
       expect(cardClass.size()).toBe(0);
 
       // setting to false should hide the bottom border
-      element = compileCard('<div pf-card head-title="My card title" sub-title="My card subtitle title" show-bottom-border="false">Inner content goes here</div>', $scope);
+      element = compileCard('<div pf-card head-title="My card title" sub-title="My card subtitle title" show-titles-separator="false">Inner content goes here</div>', $scope);
       cardClass = angular.element(element).find('.card-pf-heading');
       expect(cardClass.size()).toBe(0);
       cardClass = angular.element(element).find('.card-pf-heading-no-bottom');
       expect(cardClass.size()).toBe(1);
 
       // setting to true should show the bottom border
-      element = compileCard('<div pf-card head-title="My card title" sub-title="My card subtitle title" show-bottom-border="true">Inner content goes here</div>', $scope);
+      element = compileCard('<div pf-card head-title="My card title" sub-title="My card subtitle title" show-titles-separator="true">Inner content goes here</div>', $scope);
       cardClass = angular.element(element).find('.card-pf-heading');
       expect(cardClass.size()).toBe(1);
       cardClass = angular.element(element).find('.card-pf-heading-no-bottom');

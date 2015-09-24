@@ -1,10 +1,10 @@
 <div ng-class="showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'">
-  <div ng-class="!showBottomBorder || showBottomBorder === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'">
+  <div ng-class="!showTitlesSeparator || showTitlesSeparator === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'">
     <div class="card-pf-table">
       <div class="card-pf-cell">
         <h2 class="card-pf-title" ng-class="{'card-pf-filter-header': showFilterInHeader()}">{{headTitle}}</h2>
       </div>
-      <div class="card-pf-cell text-right" style="padding-right: 0px" ng-if="showFilterInHeader()">
+      <div class="card-pf-cell text-right" ng-if="showFilterInHeader()">
         <div class="dropdown btn-group">
           <div ng-include="'card/basic/card-filter.html'"></div>
         </div>
@@ -31,7 +31,7 @@
           <span class="card-pf-footer-text" ng-if="footer.text">{{footer.text}}</span>
         </span>
       </div>
-      <div class="card-pf-cell text-right" ng-if="filter.filters && (!filter.position || filter.position === 'footer')">
+      <div class="card-pf-cell text-right" ng-if="filter && filter.filters && (!filter.position || filter.position === 'footer')">
         <div class="dropdown btn-group">
           <div ng-include="'card/basic/card-filter.html'"></div>
         </div>

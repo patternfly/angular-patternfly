@@ -6,7 +6,7 @@
  * @param {string} headTitle Title for the card
  * @param {string=} subTitle Sub-Title for the card
  * @param {boolean=} showTopBorder Show/Hide the blue top border. True shows top border, false (default) hides top border
- * @param {boolean=} showBottomBorder Show/Hide the bottom grey line between the title and sub-title.
+ * @param {boolean=} showTitlesSeparator Show/Hide the grey line between the title and sub-title.
  * True (default) shows the line, false hides the line
  * @param {object=} footer footer configuration properties:<br/>
  * <ul style='list-style-type: none'>
@@ -30,7 +30,7 @@
  * Directive for easily displaying a card with html content
  *
  * @example
- <example module="test">
+ <example module="demo">
 
  <file name="index.html">
    <div ng-controller="ChartCtrl">
@@ -44,7 +44,7 @@
      </div>
 
      <div pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
-          show-bottom-border="false" style="width: 65%" footer="actionBarConfig">
+          show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
        <div pf-trends-chart config="configVirtual" chart-data="dataVirtual"></div>
        <div pf-trends-chart config="configPhysical" chart-data="dataPhysical"></div>
        <div pf-trends-chart config="configMemory" chart-data="dataMemory"></div>
@@ -52,7 +52,7 @@
    </div>
  </file>
  <file name="script.js">
- angular.module( 'test', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
+ angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
 
        $scope.footerConfig = {
          'iconClass' : 'fa fa-flag',
@@ -131,9 +131,11 @@
        };
 
        $scope.actionBarConfig = {
-         'href'      : '#addCluster',
          'iconClass' : 'fa fa-plus-circle',
-         'text'      : 'Add New Cluster'
+         'text'      : 'Add New Cluster',
+         'callBackFn': function () {
+            alert("Footer Callback Fn Called");
+          }
        }
      });
  </file>
@@ -150,7 +152,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
       headTitle: '@',
       subTitle: '@?',
       showTopBorder: '@?',
-      showBottomBorder: '@?',
+      showTitlesSeparator: '@?',
       footer: '=?',
       filter: '=?'
     },
@@ -169,7 +171,9 @@ angular.module('patternfly.card').directive('pfCard', function () {
 
       $scope.filterCallBackFn = function (f) {
         $scope.currentFilter = f;
-        $scope.filterCallBackResult = $scope.filter.callBackFn(f);
+        if ($scope.filter.callBackFn) {
+          $scope.filterCallBackResult = $scope.filter.callBackFn(f);
+        }
       };
 
       $scope.showFilterInHeader = function () {

@@ -31,9 +31,9 @@
  * @param {boolean=} showXAxis override sparkline config settings for showing the X Axis
  * @param {boolean=} showYAxis override sparkline config settings for showing the Y Axis
  * @example
- <example module="patternfly.charts">
+ <example module="demo">
  <file name="index.html">
-   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
+   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 55%;">
      <div class="col-md-12">
        <div pf-trends-chart config="config" chart-data="data"
             show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
@@ -82,10 +82,17 @@
          <button ng-click="addDataPoint()">Add Data Point</button>
        </div>
      </div>
-   </div>
+     <hr class="col-md-12">
+     <div class="col-md-12">
+       <div pf-card head-title="Cluster Utilization" show-top-border="true"
+            footer="footerConfig" filter="filterConfig">
+         <div pf-trends-chart config="config2" chart-data="data"></div>
+       </div>
+     </div>
+    </div>
  </file>
  <file name="script.js">
- angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
+ angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
 
        $scope.config = {
          'chartId'      : 'exampleTrendsChart',
@@ -97,6 +104,32 @@
          'units'        : 'MHz',
          'tooltipType'  : 'percentage'
        };
+
+       $scope.config2 = {
+         'chartId'      : 'example2TrendsChart',
+         'title'        : 'Storage Capacity',
+         'layout'       : 'compact',
+         'valueType'    : 'actual',
+         'units'        : 'TB',
+         'tooltipType'  : 'percentage'
+       };
+
+       $scope.footerConfig = {
+         'iconClass' : 'fa fa-plus-circle',
+         'text'      : 'Add New Cluster',
+         'callBackFn': function () {
+            alert("Footer Callback Fn Called");
+          }
+       }
+
+       $scope.filterConfig = {
+         'filters' : [{label:'Last 30 Days', value:'30'},
+                      {label:'Last 15 Days', value:'15'},
+                      {label:'Today', value:'today'}],
+         'callBackFn': function (f) {
+            alert("Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
+          }
+       }
 
       var today = new Date();
       var dates = ['dates'];
