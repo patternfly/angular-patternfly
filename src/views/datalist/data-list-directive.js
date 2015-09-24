@@ -6,7 +6,8 @@
  *   Directive for rendering a data list.
  *   <br><br>
  *
- * @param {object} config configuration settings for the data list:<br/>
+ * @param {array} items Array of items to display in the list
+ * @param {object} config Configuration settings for the data list:
  * <ul style='list-style-type: none'>
  * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
  * <li>.selectItems            - (boolean) Allow row selection, default is false
@@ -22,28 +23,35 @@
  * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
  * </ul>
- *
- * @param {Array} items the data to be shown in the data list<br/>
- *
+ * @param {array} actions List of actions for dropdown menu in each row
+ *   <ul style='list-style-type: none'>
+ *     <li>.name - (String) The name of the action, displayed on the button
+ *     <li>.title - (String) Optional title, used for the tooltip
+ *     <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *     <li>.isVisible - (Boolean) set to true to disable the action
+ *     <li>.isDisabled - (Boolean) set to true to disable the action
+ *     <li>.isSeparator - (Boolean) set to true if this is a placeholder for a separator rather than an action
+ *   </ul>
+ * @param {function (action, item))} updateActionForItemFn function(action, item) Used to update an action based on the current item
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
-    <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
-      <div class="col-md-12">
-        <div pf-data-list id="exampleDataList" config="config" items="items">
-          <div class="col-md-12 cfme-row-column">
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 list-column">
-              <span>{{item.name}}</span>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 list-column">
-              <span>{{item.address}}</span>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 list-column">
-              <span>{{item.city}}</span>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 list-column">
-              <span>{{item.state}}</span>
-            </div>
+    <div ng-controller="ViewCtrl" class="row example-container">
+      <div class="col-md-12 list-view-container">
+        <div pf-data-list class="example-data-list" id="exampleDataList" config="config" items="items" actions="actions">
+          <div class="row">
+              <div class="col-md-3">
+                <span>{{item.name}}</span>
+              </div>
+              <div class="col-md-3">
+                <span>{{item.address}}</span>
+              </div>
+              <div class="col-md-3">
+                <span>{{item.city}}</span>
+              </div>
+              <div class="col-md-3">
+                <span>{{item.state}}</span>
+              </div>
           </div>
         </div>
       </div>
@@ -175,10 +183,28 @@
             state: "Pennsylvania"
           },
           {
-            name: "Judy Green",
-            address: "2 Apple Boulevard",
-            city: "Cincinatti",
-            state: "Ohio"
+            name: "Linda McGovern",
+            address: "22 Oak Street",
+            city: "Denver",
+            state: "Colorado"
+          },
+          {
+            name: "Jim Beam",
+            address: "72 Bourbon Way",
+            city: "Nashville",
+            state: "Tennessee"
+          },
+          {
+            name: "Holly Nichols",
+            address: "21 Jump Street",
+            city: "Hollywood",
+            state: "California"
+          },
+          {
+            name: "Marie Edwards",
+            address: "17 Cross Street",
+            city: "Boston",
+            state: "Massachusetts"
           },
           {
             name: "Pat Thomas",
@@ -186,25 +212,115 @@
             city: "New York",
             state: "New York"
           },
-        ]
+        ];
+
+        var performAction = function (action, item) {
+          $scope.eventText = item.name + " : " + action.name + "\n" + $scope.eventText;
+        };
+
+        $scope.actions = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ];
       }
     ]);
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfDataList', function (pfUtils) {
+angular.module('patternfly.views').directive('pfDataList',
+  function ($timeout, $window, pfUtils) {
     'use strict';
     return {
       restrict: 'A',
       scope: {
         config: '=?',
         items: '=',
-        eventId: '@id'
+        actions: '=?',
+        updateActionForItemFn: '=?'
       },
       transclude: true,
       templateUrl: 'views/datalist/data-list.html',
-      controller: ['$scope',
-        function ($scope) {
+      controller:
+        function ($scope, $element) {
+          var setDropMenuLocation = function (parentDiv) {
+            var dropButton = parentDiv.querySelector('.dropdown-toggle');
+            var dropMenu =  parentDiv.querySelector('.dropdown-menu');
+            var buttonRect = dropButton.getBoundingClientRect();
+            var menuRect = dropMenu.getBoundingClientRect();
+            var top = buttonRect.top + buttonRect.height;
+            var left = buttonRect.left + buttonRect.width - menuRect.width;
+            var docHeight = $window.innerHeight;
+
+            if (top + menuRect.height > docHeight) {
+              top = docHeight - menuRect.height;
+            }
+
+            dropMenu.style.top = top + "px";
+            dropMenu.style.left = left + "px";
+          };
+
+          var hideOnScroll = function () {
+            $scope.prevMenuItem.showMenu = false;
+            angular.element(angular.element($element).find('.data-list-pf')[0]).unbind("scroll", hideOnScroll);
+            angular.element($window).unbind("scroll", hideOnScroll);
+            $scope.$apply();
+          };
+
+          var showActionMenu = function (item, event) {
+            item.showMenu = true;
+            $scope.prevMenuItem = item;
+
+            $timeout(function () {
+              var parentDiv = undefined;
+              var nextElement;
+
+              nextElement = event.toElement;
+              while (nextElement && !parentDiv) {
+                if (nextElement.className.indexOf('list-menu') === 0) {
+                  parentDiv = nextElement;
+                  setDropMenuLocation (parentDiv);
+                }
+                nextElement = nextElement.parentElement;
+              }
+
+              angular.element(angular.element($element).find('.data-list-pf')[0]).bind("scroll", hideOnScroll);
+              angular.element($window).bind("scroll", hideOnScroll);
+            });
+
+          };
+
           $scope.defaultConfig = {
             selectItems: false,
             multiSelect: false,
@@ -227,8 +343,40 @@ angular.module('patternfly.views').directive('pfDataList', function (pfUtils) {
             'Illegal use of pfDataList directive! ' +
             'Cannot allow both select box and click selection in the same data list.');
           }
-        }
-      ],
+
+          $scope.handleAction = function (action, item) {
+            if (action && action.actionFn && (action.isDisabled !== true)) {
+              action.actionFn(action, item);
+            }
+          };
+
+          $scope.updateActions = function (item) {
+            $scope.actionItem = item;
+            if (typeof $scope.updateActionForItemFn === 'function') {
+              $scope.actions.forEach(function (action) {
+                $scope.updateActionForItemFn(action, item);
+              });
+            }
+          };
+
+          $scope.setupActions = function (item, event) {
+            if ($scope.prevMenuItem) {
+              $scope.prevMenuItem.showMenu = false;
+              $scope.prevMenuItem = undefined;
+            }
+
+            // Ignore disabled items completely
+            if ($scope.checkDisabled(item)) {
+              return;
+            }
+
+            // update the actions based on the current item
+            $scope.updateActions(item);
+
+            // Show the action menu for the item
+            showActionMenu(item, event);
+          };
+        },
 
       link: function (scope, element, attrs) {
         attrs.$observe('config', function () {
