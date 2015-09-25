@@ -1,0 +1,11 @@
+<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  {{currentFilter.label}}
+  <span class="caret"></span>
+</button>
+<ul class="dropdown-menu">
+  <li ng-repeat="item in filter.filters" ng-class="{'selected': item === currentFilter}">
+    <a role="menuitem" tabindex="-1" ng-click="filterCallBackFn(item)">
+      {{item.label}}
+    </a>
+  </li>
+</ul>
