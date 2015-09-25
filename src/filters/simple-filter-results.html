@@ -7,11 +7,11 @@
         <li ng-repeat="filter in config.appliedFilters">
           <span class="active-filter label label-info">
             {{filter.title}}: {{filter.value}}
-            <a href="#"><span class="pficon pficon-close" ng-click="clearFilter(filter)"></span></a>
+            <a><span class="pficon pficon-close" ng-click="clearFilter(filter)"></span></a>
           </span>
         </li>
       </ul>
-      <p><a href="#" class="clear-filters" ng-click="clearAllFilters()" ng-if="config.appliedFilters.length > 0">Clear All Filters</a></p>
+      <p><a class="clear-filters" ng-click="clearAllFilters()" ng-if="config.appliedFilters.length > 0">Clear All Filters</a></p>
     </div><!-- /col -->
   </div><!-- /row -->
 </div>

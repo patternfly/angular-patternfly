@@ -20,7 +20,7 @@
         </button>
         <ul class="dropdown-menu" ng-if="item.showMenu">
           <li ng-repeat="action in actions" ng-if="action.isVisible !== false" role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}" ng-class="{'divider': (action.isSeparator === true), 'disabled': (action.isDisabled === true)}">
-            <a ng-if="action.isSeparator !== true" href="#"  title="{{action.title}}" ng-click="handleAction(action, item)">
+            <a ng-if="action.isSeparator !== true" title="{{action.title}}" ng-click="handleAction(action, item)">
               {{action.name}}
             </a>
           </li>

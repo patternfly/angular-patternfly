@@ -24,7 +24,6 @@
                   ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
                 <a ng-if="action.isSeparator !== true"
                    class="secondary-action"
-                   href="#"
                    title="{{action.title}}"
                    ng-click="handleAction(action)">
                   {{action.name}}
@@ -38,7 +37,7 @@
             <li ng-repeat="view in config.viewsConfig.viewsList"
                 ng-class="{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}"
                 title={{view.title}}>
-              <a href="#">
+              <a>
                 <i class="view-selector {{view.iconClass}}" ng-click="viewSelected(view.id)"></i>
               </a>
             </li>
