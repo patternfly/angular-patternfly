@@ -428,3 +428,11 @@
   border-color: #0076b7 !important;
   color: #fff !important;
 }
+
+.toolbar-pf-actions .toolbar-pf-view-selector a {
+  cursor: pointer;
+}
+
+.toolbar-pf-actions .dropdown-menu a {
+  cursor: pointer;
+}
