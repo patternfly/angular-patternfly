@@ -176,6 +176,10 @@ angular.module('patternfly.card').directive('pfCard', function () {
         }
       };
 
+      $scope.showHeader = function () {
+        return ($scope.headTitle || $scope.showFilterInHeader());
+      };
+
       $scope.showFilterInHeader = function () {
         return ($scope.filter && $scope.filter.filters && $scope.filter.position && $scope.filter.position === 'header');
       };

@@ -1,5 +1,6 @@
 <div ng-class="showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'">
-  <div ng-class="!showTitlesSeparator || showTitlesSeparator === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'">
+  <div ng-if="showHeader()"
+       ng-class="!showTitlesSeparator || showTitlesSeparator === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'">
     <div class="card-pf-table">
       <div class="card-pf-cell">
         <h2 class="card-pf-title" ng-class="{'card-pf-filter-header': showFilterInHeader()}">{{headTitle}}</h2>

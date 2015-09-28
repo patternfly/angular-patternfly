@@ -215,6 +215,18 @@ describe('Directive: pfCard', function() {
       expect(filterItem.html()).toContain('Last 30 Days');
     });
 
+    it("should not show the header if no title or filter specified", function() {
+
+      element = compileCard('<div pf-card>Inner content</div>', $scope);
+
+      // should NOT find any header artifacts
+      cardClass = angular.element(element).find('.card-pf-heading');
+      expect(cardClass.size()).toBe(0);
+
+      // should find filters in the header
+      cardClass = angular.element(element).find('.card-pf-heading-no-bottom');
+      expect(cardClass.size()).toBe(0);
+    });
   });
 
 });
