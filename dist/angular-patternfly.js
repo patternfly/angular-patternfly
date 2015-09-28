@@ -1007,19 +1007,15 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
       replace: true,
       templateUrl: 'charts/heatmap/heatmap-legend.html',
       link: function ($scope) {
-        var buildLegend = function () {
-          var items = [];
-          var index;
-          for (index = $scope.legend.length - 1; index >= 0; index--) {
-            items.push({
-              text: $scope.legend[index],
-              color: $scope.legendColors[index]
-            });
-          }
-          $scope.legendItems = items;
-        };
-
-        buildLegend();
+        var items = [];
+        var index;
+        for (index = $scope.legend.length - 1; index >= 0; index--) {
+          items.push({
+            text: $scope.legend[index],
+            color: $scope.legendColors[index]
+          });
+        }
+        $scope.legendItems = items;
       }
     };
   }
@@ -1135,7 +1131,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
     replace: true,
     templateUrl: 'charts/heatmap/heatmap.html',
     link: function (scope, element, attrs) {
-      var thisComponent = element[0].querySelector('.heatmap-svg');
+      var thisComponent = element[0].querySelector('.pf-heatmap-svg');
       var containerWidth, containerHeight, blockSize, numberOfRows;
       var thresholdDefaults = [0.7, 0.8, 0.9];
       var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
@@ -4936,7 +4932,7 @@ angular.module('patternfly.views').directive('pfDataToolbar',
 
 
   $templateCache.put('charts/heatmap/heatmap.html',
-    "<div class=pf-heatmap-container><h3>{{chartTitle}}</h3><div class=heatmap-container style=\"height: {{height}}px\"><svg class=heatmap-svg style=\"width:100%; height: 100%\"></svg></div><div ng-if=!loadingDone class=\"spinner spinner-lg loading\"></div><div pf-heatmap-legend legend=legendLabels legend-colors=heatmapColorPattern></div></div>"
+    "<div class=pf-heatmap-container><h3>{{chartTitle}}</h3><div class=heatmap-container style=\"height: {{height}}px\"><svg class=pf-heatmap-svg></svg></div><div ng-if=!loadingDone class=\"spinner spinner-lg loading\"></div><div pf-heatmap-legend legend=legendLabels legend-colors=heatmapColorPattern></div></div>"
   );
 
 

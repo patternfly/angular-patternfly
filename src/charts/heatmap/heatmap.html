@@ -1,7 +1,7 @@
 <div class="pf-heatmap-container">
   <h3>{{chartTitle}}</h3>
   <div class="heatmap-container" style="height: {{height}}px;">
-    <svg class="heatmap-svg" style="width:100%; height: 100%;"></svg>
+    <svg class="pf-heatmap-svg"></svg>
   </div>
   <div ng-if="!loadingDone" class="spinner spinner-lg loading"></div>
   <div pf-heatmap-legend legend="legendLabels" legend-colors="heatmapColorPattern"></div>

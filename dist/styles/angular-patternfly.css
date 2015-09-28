@@ -449,6 +449,11 @@
   z-index: 10;
 }
 
+.pf-heatmap-svg {
+  width:100%;
+  height: 100%;
+}
+
 .pf-heatmap-legend-container{
   list-style-type: none;
   padding: 0;

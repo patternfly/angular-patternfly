@@ -10,19 +10,15 @@ angular.module('patternfly.charts').directive('pfHeatmapLegend',
       replace: true,
       templateUrl: 'charts/heatmap/heatmap-legend.html',
       link: function ($scope) {
-        var buildLegend = function () {
-          var items = [];
-          var index;
-          for (index = $scope.legend.length - 1; index >= 0; index--) {
-            items.push({
-              text: $scope.legend[index],
-              color: $scope.legendColors[index]
-            });
-          }
-          $scope.legendItems = items;
-        };
-
-        buildLegend();
+        var items = [];
+        var index;
+        for (index = $scope.legend.length - 1; index >= 0; index--) {
+          items.push({
+            text: $scope.legend[index],
+            color: $scope.legendColors[index]
+          });
+        }
+        $scope.legendItems = items;
       }
     };
   }
