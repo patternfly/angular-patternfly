@@ -141,11 +141,25 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
  *   <li>.iconClass   - an icon to display to the right of the notification count
  *   <li>.count         - the number count of the notification status
  *   <li>.href          - href to navigate to if one clicks on the notification status icon or count
- *   <li>.id            - unique id of the notificaiton status, appended to the .href
+ *   </ul>
+ * </ul>
+ * When layout='mini', only one notification can be specified:<br>
+ * <ul style='list-style-type: none'>
+ * <li>...
+ * <li><strong>.notification</strong>  - an <em>object</em> of containing a single notification icon & count
+ *   <ul style='list-style-type: none'>
+ *   <li>.iconClass   - an icon to display to the right of the notification count
+ *   <li>.count         - the number count of the notification status
+ *   <li>.href          - href to navigate to if one clicks on the notification status icon or count
  *   </ul>
  * </ul>
  * @param {boolean=} show-top-border Show/hide the top border, true shows top border, false (default) hides top border
- * @param {boolean=} alt-layout Display the aggregate status card in a 'alternate tall' layout.  false (default) displays normal layout, true displays tall layout
+ * @param {string=} layout Various alternative layouts the aggregate status card may have:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>'mini' displays a mini aggregate status card.  Note: when using 'mini' layout, only one notification can be specified in the status object
+ * <li>'tall' displays a tall aggregate status card.  This equals the depreciated 'alt-layout' param.</li>
+ * </ul>
+ * @deprecated {boolean=} alt-layout Display the aggregate status card in a 'alternate tall' layout.  false (default) displays normal layout, true displays tall layout
  *
  * @description
  * Directive for easily displaying status information
@@ -154,13 +168,26 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
  <example module="patternfly.card">
 
  <file name="index.html">
-   <div ng-controller="CardDemoCtrl">
-     <h4>Aggregate Status Card - With Top Border<h4>
-     <div pf-aggregate-status-card status="status" show-top-border="true"></div>
-     <h4>Aggregate Status Card - No Top Border<h4>
-     <div pf-aggregate-status-card status="status"></div>
-     <h4>Aggregate Status Card - Alternate Layout<h4>
-     <div pf-aggregate-status-card status="aggStatus" show-top-border="true" alt-layout="true"></div>
+   <div ng-controller="CardDemoCtrl" style="display:inline-block;">
+     <div class="col-md-10">
+       <label>With Top Border</label>
+       <div pf-aggregate-status-card status="status" show-top-border="true"></div>
+       <br/>
+       <label>No Top Border</label>
+       <div pf-aggregate-status-card status="status"></div>
+       <br/>
+       <label>layout = "mini"</label>
+       <div pf-aggregate-status-card status="miniAggStatus" show-top-border="true" layout="mini"></div>
+       <div pf-aggregate-status-card status="miniAggStatus2" show-top-border="true" layout="mini"></div>
+       <br/>
+       <label>layout = "tall"</label>
+       <div pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" layout="tall"></div>
+       <br/>
+       <label>Alternate Layout</label>
+       <i>(depreciated, use layout = 'tall' instead)</i>
+       </br></br>
+       <div pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" alt-layout="true"></div>
+     </div>
    </div>
  </file>
 
@@ -184,7 +211,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
       ]
     };
 
-    $scope.aggStatus = {
+    $scope.aggStatusAlt = {
       "title":"Providers",
       "count":3,
       "notifications":[
@@ -200,6 +227,27 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
         }
       ]
      };
+
+     $scope.miniAggStatus = {
+      "iconClass":"pficon pficon-container-node",
+      "title":"Nodes",
+      "count":52,
+      "href":"#",
+      "notification": {
+          "iconClass":"pficon pficon-error-circle-o",
+          "count":3
+        }
+     };
+
+     $scope.miniAggStatus2 = {
+      "iconClass":"pficon pficon-cluster",
+      "title":"Adipiscing",
+      "count":9,
+      "href":"#",
+      "notification":{
+          "iconClass":"pficon pficon-ok"
+        }
+     };
    });
  </file>
 
@@ -213,12 +261,14 @@ angular.module( 'patternfly.card' ).directive('pfAggregateStatusCard', function 
     scope: {
       status: '=',
       showTopBorder: '@?',
-      altLayout: '@?'
+      altLayout: '@?',
+      layout: '@?'
     },
     templateUrl: 'card/aggregate-status/aggregate-status-card.html',
     link: function (scope) {
       scope.shouldShowTopBorder = (scope.showTopBorder === 'true');
-      scope.isAltLayout = (scope.altLayout === 'true');
+      scope.isAltLayout = (scope.altLayout === 'true' || scope.layout === 'tall');
+      scope.isMiniLayout = (scope.layout === 'mini');
     }
   };
 });
@@ -4675,7 +4725,7 @@ angular.module('patternfly.views').directive('pfDataToolbar',
   'use strict';
 
   $templateCache.put('card/aggregate-status/aggregate-status-card.html',
-    "<div class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': shouldShowTopBorder, 'card-pf-aggregate-status-alt': isAltLayout}\"><h2 class=card-pf-title><a href={{status.href}} ng-if=status.href><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></a> <span ng-if=!status.href><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in status.notifications\"><a href={{notification.href}} ng-if=notification.href><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div>"
+    "<div ng-if=!isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': shouldShowTopBorder, 'card-pf-aggregate-status-alt': isAltLayout}\"><h2 class=card-pf-title><a href={{status.href}} ng-if=status.href><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></a> <span ng-if=!status.href><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in status.notifications\"><a href={{notification.href}} ng-if=notification.href><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': shouldShowTopBorder}\"><h2 class=card-pf-title><span ng-if=status.iconClass class={{status.iconClass}}></span> <a ng-if=status.href href=#{{status.href}}><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</a> <span ng-if=!status.href><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</span></h2><div class=card-pf-body><p ng-if=\"status.notification.iconClass || status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=status.notification.href href={{status.notification.href}}><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></a> <span ng-if=!status.notification.href><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></span></span></p></div></div>"
   );
 
 

@@ -113,6 +113,89 @@ describe('Directive: pfAggregateStatusCard', function() {
       expect(cardClass).toBeFalsy();
     });
 
+    it("should show mini layout", function() {
+
+      $scope.status = {
+        "title":"Nodes",
+        "count":793,
+        "href":"#",
+        "iconClass": "fa fa-shield",
+        "notification": {
+          "iconClass": "pficon pficon-error-circle-o",
+          "count": 4,
+          "href": "#"
+        }
+      };
+
+      element = compileCard('<div pf-aggregate-status-card status="status" layout="mini"></div>', $scope);
+
+      // should have the mini layout class
+      cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-aggregate-status-mini');
+      expect(cardClass).toBeTruthy();
+
+      // should show the main icon
+      cardClass = angular.element(element).find('.fa-shield');
+      expect(cardClass.size()).toBe(1);
+
+      notifications = angular.element(element).find('.card-pf-aggregate-status-notification');
+
+      //notification should have an icon
+      expect(notifications.eq(0).find('span').hasClass('pficon-error-circle-o')).toBeTruthy();
+
+      //notification should have a count
+      expect(notifications.eq(0).find('span').eq(1).html()).toBe('4');
+
+    });
+
+    it("should show mini layout, and hide optional items", function() {
+
+      $scope.status = {
+        "title":"Nodes",
+        "count":793,
+        "notification":
+          {
+            "count":6
+          }
+      };
+
+      element = compileCard('<div pf-aggregate-status-card status="status" layout="mini"></div>', $scope);
+
+      // should have the mini layout class
+      cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-aggregate-status-mini');
+      expect(cardClass).toBeTruthy();
+
+      // should not show the main icon
+      cardClass = angular.element(element).find('.fa-shield');
+      expect(cardClass.size()).toBe(0);
+
+      notifications = angular.element(element).find('.card-pf-aggregate-status-notification');
+
+      //notification should not have an icon
+      expect(notifications.eq(0).find('span').hasClass('pficon-error-circle-o')).toBeFalsy();
+
+      //notification should have a count
+      expect(notifications.eq(0).find('span').eq(1).html()).toBe('6');
+
+
+      $scope.status = {
+        "title":"Nodes",
+        "count":793,
+        "notification":
+          {
+            "iconClass":"pficon pficon-error-circle-o"
+          }
+      };
+
+      element = compileCard('<div pf-aggregate-status-card status="status" layout="mini"></div>', $scope);
+
+      notifications = angular.element(element).find('.card-pf-aggregate-status-notification');
+
+      //notification should have an icon
+      expect(notifications.eq(0).find('span').hasClass('pficon-error-circle-o')).toBeTruthy();
+
+      //notification should not have a count
+      expect(notifications.eq(0).find('span').eq(1).html()).not.toBe('6');
+    });
   });
 
 });
