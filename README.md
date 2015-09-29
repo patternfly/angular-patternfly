@@ -54,6 +54,35 @@ grunt ngdocs:view
 
 After executing this tasks you'll be able to access the documentation at [http://localhost:8000/](http://localhost:8000/).
 
+## Releasing
+
+Angular PatternFly is released through Bower
+
+### Bower
+
+To release a new version version of Angular PatternFly, edit `bower.json` and `package.json` accordingly.
+
+Update the version listed in `bower.json` by editing the file and changing the line:
+
+```
+"version": "<new_version>"
+```
+
+Update the version listed in `package.json` by editing the file and changing the line:
+
+```
+"version": "<new_version>"
+```
+
+Commit the version bump:
+
+```
+git commit -m "Version bump to <new_version>"
+```
+
+Publish a new set of release notes with ```new version``` as the tag version:
+https://github.com/patternfly/angular-patternfly/releases/new
+
 ## Contributing
 
 We're always interested in contributions from the community.
