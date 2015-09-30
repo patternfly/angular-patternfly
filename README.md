@@ -64,7 +64,7 @@ Update the version listed in `bower.json` by editing the file and changing the l
 "version": "<new_version>"
 ```
 
-Update the patternfly reference version listed in `bower.json` by editing the file and changing the line. Angular patternfly has a dependency on the patternfly reference implementation so the major and minor version numbers of the two project should be the same:
+Update the patternfly reference version listed in `bower.json` by editing the file and changing the line below. Angular patternfly has a dependency on the patternfly reference implementation so the major and minor version numbers of the two project should be the same:
 ```
 "patternfly": "<new_version>"
 ```
