@@ -56,17 +56,19 @@ After executing this tasks you'll be able to access the documentation at [http:/
 
 ## Releasing
 
-Angular PatternFly is released through Bower
-
-### Bower
-
-To release a new version version of Angular PatternFly, edit `bower.json` and `package.json` accordingly.
+Angular PatternFly is released through Bower. To release a new version version of Angular PatternFly, edit `bower.json` and `package.json` accordingly.
 
 Update the version listed in `bower.json` by editing the file and changing the line:
 
 ```
 "version": "<new_version>"
 ```
+
+Update the patternfly reference version listed in `bower.json` by editing the file and changing the line. Angular patternfly has a dependency on the patternfly reference implementation so the major and minor version numbers of the two project should be the same:
+```
+"patternfly": "<new_version>"
+```
+
 
 Update the version listed in `package.json` by editing the file and changing the line:
 
