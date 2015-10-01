@@ -238,16 +238,16 @@
 
         <div id="loading" ng-show="loading">Loading...</div>
 
-        <span ng-show="breadcrumb[breadcrumb.length-1].name === 'API Documentation'">
-          <br/>
-          <h1><strong>Welcome to Angular-PatternFly!</strong><h1>
-          <h2>Angular-PatternFly contains custom AngularJS directives which adhere to the PatternFly Refererence Implementation.</h2>
-          <h2>PatternFly is a community project that promotes design commonality and improved user experience. Its offerings
-          include visual and behavioral patterns based on research and UX best practices that solve common design problems.<h2>
-          <h3>For more information, please see <a href="https://www.patternfly.org/">https://www.patternfly.org.</a></h3>
-          <h3><a href="https://github.com/patternfly/angular-patternfly/issues/">Report an issue on Angular PatternFly on Github.</a></h3>
-          <h3><a href="https://patternfly.atlassian.net/secure/RapidBoard.jspa?rapidView=4&projectKey=PTNFLY&view=planning.nodetail">View the Implementation Roadmap on Jira.</a></h3>
-        </span>
+        <div class="home" ng-show="breadcrumb[breadcrumb.length-1].name === 'API Documentation'">
+          <h1>Welcome to Angular PatternFly!<h1>
+          <img src="img/patternfly-orb.svg" alt="PatternFly logo" />
+          <h3>Angular PatternFly contains custom AngularJS directives which utilize the PatternFly Refererence Implementation.<br/>PatternFly is a community of designers and developers collaborating to build a UI framework for enterprise web applications.</h3>
+          <ul>
+            <li><a href="https://www.patternfly.org/">More About PatternFly</a></li>
+            <li><a href="https://github.com/patternfly/angular-patternfly/issues/">Report an issue on Github</a></li>
+            <li><a href="https://patternfly.atlassian.net/secure/RapidBoard.jspa?rapidView=4&projectKey=PTNFLY&view=planning.nodetail">View the Implementation Roadmap</a></li>
+          </ul>
+        </div>
 
         <div ng-hide="loading" ng-include src="currentPage.partialUrl" onload="afterPartialLoaded()" autoscroll class="content slide-reveal"></div>
 <% if (discussions) { %>

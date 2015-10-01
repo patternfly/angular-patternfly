@@ -65,6 +65,12 @@ module.exports = function (grunt) {
           src: ['*.css', '!*.min.css'],
           dest: 'dist/styles',
           expand: true
+        },
+        img: {
+          cwd: 'misc/',
+          src: 'patternfly-orb.svg',
+          dest: 'dist/docs/img',
+          expand: true
         }
       },
       cssmin: {
