@@ -1,18 +1,39 @@
-img.AngularJS-small {
-  width: 95px;
-  height: 25px;
+/* Home Page Styles */
+.home {
+  text-align: center;
 }
 
-/* this is here to avoid the display=block shuffling of ngShow */
-.breadcrumb li > * {
-  float: none;
-  margin: 0;
+.home h1 {
+  font-size: 30px;
+  font-weight: 300;
+  padding-top: 20px;
+  margin: 22px 0 0;
 }
 
-.breadcrumb {
-  padding-top: 6px;
-  padding-bottom: 0;
-  line-height: 18px
+.home img {
+  width: 320px;
+  border: 1px solid #3bb1dc;
+  border-radius: 200px;
+}
+
+.home h3 {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  line-height: 35px;
+}
+
+.home ul {
+  margin-top: 20px;
+  list-style: none;
+}
+
+.home ul li{
+  display: inline-block;
+  padding: 0 10px;
+}
+
+.home ul li + li{
+  border-left: 1px solid #bbb;
 }
 
 .navbar img {
@@ -48,9 +69,20 @@ img.AngularJS-small {
   height: 1em;
 }
 
-
 .icon-cog {
   line-height: 13px;
+}
+
+/* this is here to avoid the display=block shuffling of ngShow */
+.breadcrumb li > * {
+  float: none;
+  margin: 0;
+}
+
+.breadcrumb {
+  padding-top: 6px;
+  padding-bottom: 0;
+  line-height: 18px
 }
 
 /* =============================== */
@@ -141,7 +173,6 @@ img.AngularJS-small {
   line-height: 20px;
   padding-top: 6px;
 }
-
 
 .docs-search {
   margin: 10px 0;
@@ -333,3 +364,5 @@ ul.events > li > h3 {
 .type-hint-function {
   background-color: #003399;
 }
+
+
