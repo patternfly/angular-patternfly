@@ -389,9 +389,11 @@ describe('Directive:  pfDataToolbar', function () {
 
   it('should reverse the sort direction when the direction button is clicked', function () {
     var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
+    var sortButton = element.find('.simple-sort .btn.btn-link');
     expect(sortIcon.length).toBe(1);
+    expect(sortButton.length).toBe(1);
 
-    eventFire(sortIcon[0], 'click');
+    eventFire(sortButton[0], 'click');
     $scope.$digest();
 
     sortIcon = element.find('.simple-sort .fa-sort-alpha-desc');
@@ -427,7 +429,7 @@ describe('Directive:  pfDataToolbar', function () {
     var notified = false;
     var chosenField = '';
     var chosenDir = '';
-    var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
+    var sortButton = element.find('.simple-sort .btn.btn-link');
 
     var watchForNotify = function (sortField, isAscending) {
       notified = true;
@@ -437,9 +439,9 @@ describe('Directive:  pfDataToolbar', function () {
 
     $scope.config.sortConfig.onSortChange = watchForNotify;
 
-    expect(sortIcon.length).toBe(1);
+    expect(sortButton.length).toBe(1);
 
-    eventFire(sortIcon[0], 'click');
+    eventFire(sortButton[0], 'click');
     $scope.$digest();
 
     expect(notified).toBeTruthy();

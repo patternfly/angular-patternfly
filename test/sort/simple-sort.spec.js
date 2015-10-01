@@ -102,10 +102,12 @@ describe('Directive:  pfSimpleSort', function () {
   });
 
   it('should reverse the sort direction when the direction button is clicked', function () {
+    var sortButton = element.find('.simple-sort .btn.btn-link');
     var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
+    expect(sortButton.length).toBe(1);
     expect(sortIcon.length).toBe(1);
 
-    eventFire(sortIcon[0], 'click');
+    eventFire(sortButton[0], 'click');
     $scope.$digest();
 
     sortIcon = element.find('.simple-sort .fa-sort-alpha-desc');
@@ -141,7 +143,7 @@ describe('Directive:  pfSimpleSort', function () {
     var notified = false;
     var chosenField = '';
     var chosenDir = '';
-    var sortIcon = element.find('.simple-sort .fa-sort-alpha-asc');
+    var sortButton = element.find('.simple-sort .btn.btn-link');
 
     var watchForNotify = function (sortField, isAscending) {
       notified = true;
@@ -151,9 +153,9 @@ describe('Directive:  pfSimpleSort', function () {
 
     $scope.sortConfig.onSortChange = watchForNotify;
 
-    expect(sortIcon.length).toBe(1);
+    expect(sortButton.length).toBe(1);
 
-    eventFire(sortIcon[0], 'click');
+    eventFire(sortButton[0], 'click');
     $scope.$digest();
 
     expect(notified).toBeTruthy();
