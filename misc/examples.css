@@ -87,3 +87,38 @@ hr {
 .actions-label {
   margin-top: 5px;
 }
+
+.examples-container {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.examples-container .row {
+  margin-top: 10px;
+}
+
+.examples-title-lg {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.examples-title-sm {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.examples-container .row h4{
+  font-size: 18px;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.examples-container hr {
+  display: block;
+  height: 10px;
+  border: 0;
+  border-top: 1px solid #525252;
+  margin: 1em 0;
+  padding: 0;
+}

@@ -1,0 +1,174 @@
+<!doctype html>
+<html ng-app="AngularPatternflyExamples">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>Angular-PatternFly Examples</title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="description" content=""/>
+  <meta name="viewport" content="width=device-width"/>
+
+  <!-- PatternFly Styles -->
+  <!-- Note: No other CSS files are needed regardless of what other JS packages located in patternfly/components that you decide to pull in -->
+  <link rel="stylesheet" href="/css/patternfly.css" />
+  <link rel="stylesheet" href="/css/patternfly-additions.css" />
+  <link rel="stylesheet" href="/css/angular-patternfly.css">
+
+  <link rel="stylesheet" href="/css/ng-docs.css">
+  <link rel="stylesheet" href="/css/examples.css">
+
+</head>
+
+<body>
+<!-- Javascript Libs -->
+<script src='/grunt-scripts/jquery.js'></script>
+<script src="/grunt-scripts/bootstrap.js"></script>
+<script src="/grunt-scripts/c3.js"></script>
+<script src="/grunt-scripts/d3.js"></script>
+
+<script src="/grunt-scripts/patternfly.js"></script>
+<script src="/grunt-scripts/bootstrap-combobox.js"></script>
+<script src="/grunt-scripts/bootstrap-datepicker.js"></script>
+<script src="/grunt-scripts/bootstrap-select.js"></script>
+<script src="/grunt-scripts/bootstrap-treeview.js"></script>
+
+<!-- Angular PatternFly -->
+<script src="/grunt-scripts/angular.js"></script>
+<script src="/grunt-scripts/angular-patternfly.js"></script>
+<script src="/grunt-scripts/ui-bootstrap-tpls.js"></script>
+
+<!-- Angular PatternFly Examples-->
+<script src="examples-module.js"></script>
+<script src="charts-controller.js"></script>
+
+
+<nav class="navbar navbar-default navbar-pf">
+  <div class="navbar-header">
+    <a class="navbar-brand" href="index.html">
+      <img class="pull-left" src="/img/logo-alt.svg" style="margin-top: 0px">
+      <span style="padding: 15px 20px 15px 0">ANGULAR PATTERNFLY EXAMPLES</span>
+    </a></div>
+  <div class="collapse navbar-collapse navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-primary">
+      <li class="active"><a href="index.html">Charts</a></li>
+      <li><a href="cards.html">Cards</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div ng-controller="ExampleChartsCtrl" class="examples-container">
+
+  <div class="row">
+    <div class="col-md-6">
+      <span class="examples-title-lg">Utilization Charts</span>
+      <span class="examples-title-sm">(pf-utilization-chart)</span>
+    </div>
+    <div class="col-md-6">
+      <span class="examples-title-lg">Trend Charts</span>
+      <span class="examples-title-sm">(pf-trends-chart)</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <div pf-utilization-chart config="utilCpuConfig"
+           donut-config="utilCpuDonutConfig" sparkline-config="utilCpuSparkConfig"
+           chart-data="utilCpuData" sparkline-chart-height="custChartHeight">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div pf-utilization-chart config="utilMemConfig"
+           donut-config="utilMemDonutConfig" sparkline-config="utilMemSparkConfig"
+           chart-data="utilMemData" sparkline-chart-height="custChartHeight">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4>Large Layout</h4>
+      <div pf-trends-chart config="trendsLgConfig" chart-data="sparkData"></div>
+      <hr/>
+      <h4>Small Layout</h4>
+      <div pf-trends-chart config="trendsSmConfig" chart-data="sparkData"></div>
+      <hr/>
+      <h4>Compact Layout</h4>
+      <div pf-trends-chart config="trendsCompactConfig" chart-data="sparkData"></div>
+      <hr/>
+      <h4>Inline Layout</h4>
+      <div pf-trends-chart config="trendsInlineConfig" chart-data="sparkData"></div>
+      <hr/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <span class="examples-title-lg">Donut Charts</span>
+      <span class="examples-title-sm">(pf-donut-pct-chart)</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 text-center">
+      <h4>Error Threshold</h4>
+    </div>
+    <div class="col-md-3 text-center">
+      <h4>Warning Threshold</h4>
+    </div>
+    <div class="col-md-3 text-center">
+      <h4>Ok</h4>
+    </div>
+    <div class="col-md-3 text-center">
+      <h4>No Threshold<br>Center-Label is 'percentage'</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div pf-donut-pct-chart config="donutErrConfig" data="donutErrData"></div>
+    </div>
+    <div class="col-md-3">
+      <div pf-donut-pct-chart config="donutWarnConfig" data="donutWarnData"></div>
+    </div>
+    <div class="col-md-3">
+      <div pf-donut-pct-chart config="donutOkConfig" data="donutOkData"></div>
+    </div>
+    <div class="col-md-3">
+      <div pf-donut-pct-chart config="donutConfig" data="donutData" center-label="pctLabel"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <span class="examples-title-lg">Sparkline Charts</span>
+      <span class="examples-title-sm">(pf-sparkline-chart)</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 text-center">
+      <h4>Default Tooltip</h4>
+    </div>
+    <div class="col-md-3 text-center">
+      <h4>Usage Per Day Tooltip</h4>
+    </div>
+    <div class="col-md-3 text-center">
+      <h4>Value Per Day Tooltip</h4>
+    </div>
+    <div class="col-md-3 text-center">
+      <h4>Percentage Tooltip</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div pf-sparkline-chart config="sparkConfig" chart-data="sparkData" chart-height="custChartHeight"></div>
+    </div>
+    <div class="col-md-3">
+      <div pf-sparkline-chart config="sparkUsageConfig" chart-data="sparkData" chart-height="custChartHeight"></div>
+    </div>
+    <div class="col-md-3">
+      <div pf-sparkline-chart config="sparkValueConfig" chart-data="sparkData" chart-height="custChartHeight"></div>
+    </div>
+    <div class="col-md-3">
+      <div pf-sparkline-chart config="sparkPctConfig" chart-data="sparkData" chart-height="custChartHeight"></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
