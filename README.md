@@ -25,9 +25,6 @@ You have to install required software before you're able to use grunt:
 
         bower install
 
-Note: The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
-In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application.
-
 You should have your environment ready now.
 
 Angular-PatternFly can now be built with:
@@ -39,6 +36,39 @@ To see all the grunt tasks that are available:
 ```shell
 grunt help
 ```
+
+### Using Angular-PatternFly In Your Application
+
+Note:
+
+1. Add Angular and Angular-PatternFly as a dependencies for your project and you'll receive all the libraries you'll need:
+
+        $ bower install angular --save
+        $ bower install angular-patternfly --save
+
+2. Add the follwing CSS include to your HTML file(s):
+
+        <!-- Angular-PatternFly Styles -->
+        <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.min.css" />
+
+3. Add the following script includes to your HTML file(s), adjusting where necessary to pull in only what you need:
+
+        <!-- Angular-PatternFly  -->
+        <script src="bower_components/angular-patternfly/dist/angular-patternfly.min.js"></script>
+
+        <!-- C3, D3 - Charting Libraries. Only required if you are using the 'patternfly.charts' module-->
+        <script src="bower_components/patternfly/components/c3/c3.min.js"></script>
+        <script src="bower_components/patternfly/components/d3/d3.min.js"></script>
+
+4. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
+   In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application:
+
+        my-app.module.js:
+
+        angular.module('myApp', [
+          'patternfly',
+          'patternfly.charts'
+        ]);
 
 ## API documentation
 
