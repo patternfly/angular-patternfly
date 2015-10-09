@@ -325,6 +325,11 @@ angular.module( 'patternfly.notification' ).directive('pfNotificationList', func
 
   return {
     restrict: 'E',
+    controller: NotificationListController,
     templateUrl: 'notification/notification-list.html'
   };
+
+  function NotificationListController ($scope, $rootScope) {
+    $scope.notifications = $rootScope.notifications;
+  }
 });
