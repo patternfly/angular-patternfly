@@ -2692,10 +2692,16 @@ angular.module( 'patternfly.notification' ).directive('pfNotification', function
 angular.module( 'patternfly.notification' ).directive('pfNotificationList', function () {
   'use strict';
 
+  NotificationListController.$inject = ["$scope", "$rootScope"];
   return {
     restrict: 'E',
+    controller: NotificationListController,
     templateUrl: 'notification/notification-list.html'
   };
+
+  function NotificationListController ($scope, $rootScope) {
+    $scope.notifications = $rootScope.notifications;
+  }
 });
 ;/**
  * @ngdoc directive
