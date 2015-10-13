@@ -25,7 +25,7 @@
   ],
   "main": [
     "dist/angular-patternfly.js",
-    "dist/angular-patternfly.css"
+    "dist/styles/angular-patternfly.css"
   ],
   "repository": {
     "type": "git",
