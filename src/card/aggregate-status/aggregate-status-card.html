@@ -27,7 +27,7 @@
 <div ng-if="isMiniLayout" class="card-pf card-pf-aggregate-status card-pf-aggregate-status-mini" ng-class="{'card-pf-accented': shouldShowTopBorder}">
   <h2 class="card-pf-title">
     <span ng-if="status.iconClass" class="{{status.iconClass}}"></span>
-    <a ng-if="status.href" href="#{{status.href}}">
+    <a ng-if="status.href" href="{{status.href}}">
       <span class="card-pf-aggregate-status-count">{{status.count}}</span>
       {{status.title}}
     </a>
