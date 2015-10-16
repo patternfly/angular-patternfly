@@ -62,6 +62,12 @@ module.exports = function (grunt) {
           dest: 'dist/docs',
           expand: true
         },
+        examples: {
+          cwd: 'examples/',
+          src: ['*.html', '*.js'],
+          dest: 'dist/docs/examples',
+          expand: true
+        },
         styles: {
           cwd: 'styles/',
           src: ['*.css', '!*.min.css'],
@@ -213,7 +219,7 @@ module.exports = function (grunt) {
           tasks: ['eslint']
         },
         all: {
-          files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],
+          files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css', 'examples/**/*.html', 'examples/**/*.js'],
           tasks: ['build'],
           options: {
             livereload: true

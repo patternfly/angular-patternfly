@@ -1,0 +1,127 @@
+<!doctype html>
+<html ng-app="AngularPatternflyExamples">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>Angular-PatternFly Examples</title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="description" content=""/>
+  <meta name="viewport" content="width=device-width"/>
+
+  <!-- PatternFly Styles -->
+  <!-- Note: No other CSS files are needed regardless of what other JS packages located in patternfly/components that you decide to pull in -->
+  <link rel="stylesheet" href="/css/patternfly.css" />
+  <link rel="stylesheet" href="/css/patternfly-additions.css" />
+  <link rel="stylesheet" href="/css/angular-patternfly.css">
+
+  <link rel="stylesheet" href="/css/ng-docs.css">
+  <link rel="stylesheet" href="/css/examples.css">
+
+</head>
+
+<body>
+<!-- Javascript Libs -->
+<script src='/grunt-scripts/jquery.js'></script>
+<script src="/grunt-scripts/bootstrap.js"></script>
+<script src="/grunt-scripts/c3.js"></script>
+<script src="/grunt-scripts/d3.js"></script>
+
+<script src="/grunt-scripts/patternfly.js"></script>
+<script src="/grunt-scripts/bootstrap-combobox.js"></script>
+<script src="/grunt-scripts/bootstrap-datepicker.js"></script>
+<script src="/grunt-scripts/bootstrap-select.js"></script>
+<script src="/grunt-scripts/bootstrap-treeview.js"></script>
+
+<!-- Angular PatternFly -->
+<script src="/grunt-scripts/angular.js"></script>
+<script src="/grunt-scripts/angular-patternfly.js"></script>
+<script src="/grunt-scripts/ui-bootstrap-tpls.js"></script>
+
+<!-- Angular PatternFly Examples-->
+<script src="examples-module.js"></script>
+<script src="cards-controller.js"></script>
+
+
+<nav class="navbar navbar-default navbar-pf">
+  <div class="navbar-header">
+    <a class="navbar-brand" href="index.html">
+      <img class="pull-left" src="/img/logo-alt.svg" style="margin-top: 0px">
+      <span style="padding: 15px 20px 15px 0">ANGULAR PATTERNFLY EXAMPLES</span>
+    </a></div>
+  <div class="collapse navbar-collapse navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-primary">
+      <li><a href="index.html">Charts</a></li>
+      <li class="active"><a href="cards.html">Cards</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div ng-controller="ExampleCardsCtrl" class="examples-container">
+
+  <div class="row">
+    <div class="col-md-12">
+      <span class="examples-title-lg">Cards</span>
+      <span class="examples-title-sm">(pf-card)</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 text-center">
+      <h4>Events Card</h4>
+    </div>
+    <div class="col-md-6 text-center">
+      <h4>Multi-Trend Card</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div pf-card head-title="Events" sub-title="System Events" show-top-border="true"
+           footer="cardEventsFooterConfig" filter="cardEventsFilterConfig">
+        <ul style='list-style-type: none'>
+          <li>Info        - CPU chip installed
+          <li>Warning     - CPU chip is hot
+          <li>Error       - I should not be attracted to CPU chip
+          <li>Info        - CPU chip is dating Graphics Card
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div pf-card head-title="Performance" show-top-border="true"
+           filter="filterConfigHeader" footer="actionBarConfig">
+        <div pf-trends-chart config="configVirtual" chart-data="dataVirtual"></div>
+        <div pf-trends-chart config="configPhysical" chart-data="dataPhysical"></div>
+        <div pf-trends-chart config="configMemory" chart-data="dataMemory"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <span class="examples-title-lg">Aggregate Status Cards</span>
+      <span class="examples-title-sm">(pf-aggregate-status-card)</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 text-center">
+      <h4>Default</h4>
+    </div>
+    <div class="col-md-3 text-center">
+      <h4>Tall Layout</h4>
+    </div>
+    <div class="col-md-3 text-center">
+      <h4>Mini Layout</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div pf-aggregate-status-card status="aggStatus" show-top-border="true"></div>
+    </div>
+    <div class="col-md-3">
+      <div pf-aggregate-status-card status="aggTallStatus" show-top-border="true" alt-layout="true"></div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
