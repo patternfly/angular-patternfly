@@ -1555,50 +1555,48 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
  </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfTrendsChart',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=',
-        chartData: '=',
-        chartHeight: '=?',
-        showXAxis: '=?',
-        showYAxis: '=?'
-      },
-      replace: true,
-      templateUrl: 'charts/trends/trends-chart.html',
-      controller: ["$scope", function ($scope) {
-        var SMALL = 30, LARGE = 60;
+angular.module('patternfly.charts').directive('pfTrendsChart', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=',
+      chartData: '=',
+      chartHeight: '=?',
+      showXAxis: '=?',
+      showYAxis: '=?'
+    },
+    replace: true,
+    templateUrl: 'charts/trends/trends-chart.html',
+    controller: ["$scope", function ($scope) {
+      var SMALL = 30, LARGE = 60;
 
-        $scope.getPercentageValue = function () {
-          return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
-        };
-        $scope.getLatestValue = function () {
-          return $scope.chartData.yData[$scope.chartData.yData.length - 1];
-        };
-        $scope.getChartHeight = function () {
-          var retValue = LARGE;
-          if ($scope.chartHeight) {
-            retValue = $scope.chartHeight;
-          } else if ($scope.config.layout === 'small') {
-            retValue = SMALL;
-          }
-          return retValue;
-        };
-      }],
-      link: function (scope) {
-        scope.$watch('config', function () {
-          scope.showLargeCardLayout = (!scope.config.layout || scope.config.layout === 'large');
-          scope.showSmallCardLayout = (scope.config.layout === 'small');
-          scope.showActualValue = (!scope.config.valueType || scope.config.valueType === 'actual');
-          scope.showPercentageValue = (scope.config.valueType === 'percentage');
-        }, true);
-      }
-    };
-  }
-);
+      $scope.getPercentageValue = function () {
+        return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
+      };
+      $scope.getLatestValue = function () {
+        return $scope.chartData.yData[$scope.chartData.yData.length - 1];
+      };
+      $scope.getChartHeight = function () {
+        var retValue = LARGE;
+        if ($scope.chartHeight) {
+          retValue = $scope.chartHeight;
+        } else if ($scope.config.layout === 'small') {
+          retValue = SMALL;
+        }
+        return retValue;
+      };
+    }],
+    link: function (scope) {
+      scope.$watch('config', function () {
+        scope.showLargeCardLayout = (!scope.config.layout || scope.config.layout === 'large');
+        scope.showSmallCardLayout = (scope.config.layout === 'small');
+        scope.showActualValue = (!scope.config.valueType || scope.config.valueType === 'actual');
+        scope.showPercentageValue = (scope.config.valueType === 'percentage');
+      }, true);
+    }
+  };
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfUtilizationChart
@@ -1768,55 +1766,53 @@ angular.module('patternfly.charts').directive('pfTrendsChart',
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfUtilizationChart',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        chartData: '=',
-        config: '=',
-        centerLabel: '=?',
-        donutConfig: '=',
-        sparklineConfig: '=',
-        sparklineChartHeight: '=?',
-        showSparklineXAxis: '=?',
-        showSparklineYAxis: '=?'
-      },
-      replace: true,
-      templateUrl: 'charts/utilization/utilization-chart.html',
-      controller: ['$scope',
-        function ($scope) {
-          if ($scope.centerLabel === undefined) {
-            $scope.centerLabel = 'used';
+angular.module('patternfly.charts').directive('pfUtilizationChart', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      chartData: '=',
+      config: '=',
+      centerLabel: '=?',
+      donutConfig: '=',
+      sparklineConfig: '=',
+      sparklineChartHeight: '=?',
+      showSparklineXAxis: '=?',
+      showSparklineYAxis: '=?'
+    },
+    replace: true,
+    templateUrl: 'charts/utilization/utilization-chart.html',
+    controller: ['$scope',
+      function ($scope) {
+        if ($scope.centerLabel === undefined) {
+          $scope.centerLabel = 'used';
 
-          }
-          if ($scope.donutConfig.units === undefined) {
-            $scope.donutConfig.units = $scope.config.units;
-          }
-          if ($scope.chartData.available === undefined) {
-            $scope.chartData.available = $scope.chartData.total - $scope.chartData.used;
-          }
-          $scope.config.units = $scope.config.units || $scope.units;
         }
-      ],
-      link: function (scope, element) {
-        var setupCurrentValues = function () {
-          if (scope.centerLabel === 'available') {
-            scope.currentValue = scope.chartData.used;
-            scope.currentText = 'Used';
-          } else {
-            scope.currentValue = scope.chartData.total - scope.chartData.used;
-            scope.currentText = 'Available';
-          }
-        };
-        scope.$watch('centerLabel', function () {
-          setupCurrentValues();
-        });
+        if ($scope.donutConfig.units === undefined) {
+          $scope.donutConfig.units = $scope.config.units;
+        }
+        if ($scope.chartData.available === undefined) {
+          $scope.chartData.available = $scope.chartData.total - $scope.chartData.used;
+        }
+        $scope.config.units = $scope.config.units || $scope.units;
       }
-    };
-  }
-);
+    ],
+    link: function (scope, element) {
+      var setupCurrentValues = function () {
+        if (scope.centerLabel === 'available') {
+          scope.currentValue = scope.chartData.used;
+          scope.currentText = 'Used';
+        } else {
+          scope.currentValue = scope.chartData.total - scope.chartData.used;
+          scope.currentText = 'Available';
+        }
+      };
+      scope.$watch('centerLabel', function () {
+        setupCurrentValues();
+      });
+    }
+  };
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.filters.directive:pfSimpleFilter
@@ -1988,39 +1984,37 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
   </file>
 </example>
  */
-angular.module('patternfly.filters').directive('pfSimpleFilter',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '='
-      },
-      templateUrl: 'filters/simple-filter.html',
-      controller: ["$scope", function ($scope) {
-        $scope.filterExists = function (filter) {
-          var foundFilter = _.findWhere($scope.config.appliedFilters, {title: filter.title, value: filter.value});
-          return foundFilter !== undefined;
+angular.module('patternfly.filters').directive('pfSimpleFilter', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '='
+    },
+    templateUrl: 'filters/simple-filter.html',
+    controller: ["$scope", function ($scope) {
+      $scope.filterExists = function (filter) {
+        var foundFilter = _.findWhere($scope.config.appliedFilters, {title: filter.title, value: filter.value});
+        return foundFilter !== undefined;
+      };
+
+      $scope.addFilter = function (field, value) {
+        var newFilter = {
+          id: field.id,
+          title: field.title,
+          value: value
         };
+        if (!$scope.filterExists(newFilter)) {
+          $scope.config.appliedFilters.push(newFilter);
 
-        $scope.addFilter = function (field, value) {
-          var newFilter = {
-            id: field.id,
-            title: field.title,
-            value: value
-          };
-          if (!$scope.filterExists(newFilter)) {
-            $scope.config.appliedFilters.push(newFilter);
-
-            if ($scope.config.onFilterChange) {
-              $scope.config.onFilterChange($scope.config.appliedFilters);
-            }
+          if ($scope.config.onFilterChange) {
+            $scope.config.onFilterChange($scope.config.appliedFilters);
           }
-        };
-      }]
-    };
-  }
-);
+        }
+      };
+    }]
+  };
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.filters.directive:pfSimpleFilterFields
@@ -2043,57 +2037,55 @@ angular.module('patternfly.filters').directive('pfSimpleFilter',
  * </ul>
  *
  */
-angular.module('patternfly.filters').directive('pfSimpleFilterFields',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=',
-        addFilterFn: '='
-      },
-      templateUrl: 'filters/simple-filter-fields.html',
-      controller: ["$scope", function ($scope) {
-        $scope.setupConfig = function () {
-          if ($scope.fields === undefined) {
-            $scope.fields = [];
-          }
-          if (!$scope.currentField) {
-            $scope.currentField = $scope.config.fields[0];
-            $scope.config.currentValue = null;
-          }
+angular.module('patternfly.filters').directive('pfSimpleFilterFields', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=',
+      addFilterFn: '='
+    },
+    templateUrl: 'filters/simple-filter-fields.html',
+    controller: ["$scope", function ($scope) {
+      $scope.setupConfig = function () {
+        if ($scope.fields === undefined) {
+          $scope.fields = [];
+        }
+        if (!$scope.currentField) {
+          $scope.currentField = $scope.config.fields[0];
+          $scope.config.currentValue = null;
+        }
 
-          if ($scope.config.currentValue === undefined) {
-            $scope.config.currentValue = null;
-          }
-        };
+        if ($scope.config.currentValue === undefined) {
+          $scope.config.currentValue = null;
+        }
+      };
 
-        $scope.$watch('config', function () {
-          $scope.setupConfig();
-        }, true);
-      }],
+      $scope.$watch('config', function () {
+        $scope.setupConfig();
+      }, true);
+    }],
 
-      link: function (scope, element, attrs) {
-        scope.selectField = function (item) {
-          scope.currentField = item;
-          scope.config.currentValue = null;
-        };
+    link: function (scope, element, attrs) {
+      scope.selectField = function (item) {
+        scope.currentField = item;
+        scope.config.currentValue = null;
+      };
 
-        scope.selectValue = function (filterValue) {
-          scope.addFilterFn(scope.currentField, filterValue);
-          scope.config.currentValue = null;
-        };
+      scope.selectValue = function (filterValue) {
+        scope.addFilterFn(scope.currentField, filterValue);
+        scope.config.currentValue = null;
+      };
 
-        scope.onValueKeyPress = function (keyEvent) {
-          if (keyEvent.which === 13) {
-            scope.addFilterFn(scope.currentField, scope.config.currentValue);
-            scope.config.currentValue = undefined;
-          }
-        };
-      }
-    };
-  }
-);
+      scope.onValueKeyPress = function (keyEvent) {
+        if (keyEvent.which === 13) {
+          scope.addFilterFn(scope.currentField, scope.config.currentValue);
+          scope.config.currentValue = undefined;
+        }
+      };
+    }
+  };
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.filters.directive:pfSimpleFilterResults
@@ -2118,55 +2110,53 @@ angular.module('patternfly.filters').directive('pfSimpleFilterFields',
  * </ul>
  *
  */
-angular.module('patternfly.filters').directive('pfSimpleFilterResults',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '='
-      },
-      templateUrl: 'filters/simple-filter-results.html',
-      controller: ["$scope", function ($scope) {
-        $scope.setupConfig = function () {
-          if (!$scope.config.appliedFilters) {
-            $scope.config.appliedFilters = [];
-          }
-          if ($scope.config.resultsCount === undefined) {
-            $scope.config.resultsCount = 0;
-          }
-        };
+angular.module('patternfly.filters').directive('pfSimpleFilterResults', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '='
+    },
+    templateUrl: 'filters/simple-filter-results.html',
+    controller: ["$scope", function ($scope) {
+      $scope.setupConfig = function () {
+        if (!$scope.config.appliedFilters) {
+          $scope.config.appliedFilters = [];
+        }
+        if ($scope.config.resultsCount === undefined) {
+          $scope.config.resultsCount = 0;
+        }
+      };
 
-        $scope.$watch('config', function () {
-          $scope.setupConfig();
-        }, true);
-      }],
-      link: function (scope, element, attrs) {
-        scope.clearFilter = function (item) {
-          var newFilters = [];
-          scope.config.appliedFilters.forEach(function (filter) {
-            if (item.title !== filter.title || item.value !== filter.value) {
-              newFilters.push(filter);
-            }
-          });
-          scope.config.appliedFilters = newFilters;
-
-          if (scope.config.onFilterChange) {
-            scope.config.onFilterChange(scope.config.appliedFilters);
+      $scope.$watch('config', function () {
+        $scope.setupConfig();
+      }, true);
+    }],
+    link: function (scope, element, attrs) {
+      scope.clearFilter = function (item) {
+        var newFilters = [];
+        scope.config.appliedFilters.forEach(function (filter) {
+          if (item.title !== filter.title || item.value !== filter.value) {
+            newFilters.push(filter);
           }
-        };
+        });
+        scope.config.appliedFilters = newFilters;
 
-        scope.clearAllFilters = function () {
-          scope.config.appliedFilters = [];
+        if (scope.config.onFilterChange) {
+          scope.config.onFilterChange(scope.config.appliedFilters);
+        }
+      };
 
-          if (scope.config.onFilterChange) {
-            scope.config.onFilterChange(scope.config.appliedFilters);
-          }
-        };
-      }
-    };
-  }
-);
+      scope.clearAllFilters = function () {
+        scope.config.appliedFilters = [];
+
+        if (scope.config.onFilterChange) {
+          scope.config.onFilterChange(scope.config.appliedFilters);
+        }
+      };
+    }
+  };
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfDatepicker
@@ -3025,86 +3015,84 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
   </file>
 </example>
  */
-angular.module('patternfly.sort').directive('pfSimpleSort',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '='
-      },
-      templateUrl: 'sort/simple-sort.html',
-      controller: ["$scope", function ($scope) {
-        $scope.setupConfig = function () {
-          var updated = false;
+angular.module('patternfly.sort').directive('pfSimpleSort', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '='
+    },
+    templateUrl: 'sort/simple-sort.html',
+    controller: ["$scope", function ($scope) {
+      $scope.setupConfig = function () {
+        var updated = false;
 
-          if ($scope.config.fields === undefined) {
-            $scope.config.fields = [];
+        if ($scope.config.fields === undefined) {
+          $scope.config.fields = [];
+        }
+
+        if ($scope.config.fields.length > 0) {
+          if ($scope.config.currentField === undefined) {
+            $scope.config.currentField = $scope.config.fields[0];
+            updated = true;
           }
-
-          if ($scope.config.fields.length > 0) {
-            if ($scope.config.currentField === undefined) {
-              $scope.config.currentField = $scope.config.fields[0];
-              updated = true;
-            }
-            if ($scope.config.isAscending === undefined) {
-              $scope.config.isAscending = true;
-              updated = true;
-            }
+          if ($scope.config.isAscending === undefined) {
+            $scope.config.isAscending = true;
+            updated = true;
           }
+        }
 
-          if (updated === true && $scope.config.onSortChange) {
-            $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
-          }
-        };
+        if (updated === true && $scope.config.onSortChange) {
+          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
+        }
+      };
 
-        $scope.selectField = function (field) {
-          $scope.config.currentField = field;
+      $scope.selectField = function (field) {
+        $scope.config.currentField = field;
 
-          if ($scope.config.onSortChange) {
-            $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
-          }
-        };
+        if ($scope.config.onSortChange) {
+          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
+        }
+      };
 
-        $scope.changeDirection = function () {
-          $scope.config.isAscending = !$scope.config.isAscending;
+      $scope.changeDirection = function () {
+        $scope.config.isAscending = !$scope.config.isAscending;
 
-          if ($scope.config.onSortChange) {
-            $scope.config.onSortChange($scope.config.currentField, $scope.config.currentDirection);
-          }
-        };
+        if ($scope.config.onSortChange) {
+          $scope.config.onSortChange($scope.config.currentField, $scope.config.currentDirection);
+        }
+      };
 
-        $scope.getSortIconClass = function () {
-          var iconClass;
+      $scope.getSortIconClass = function () {
+        var iconClass;
 
-          if ($scope.config.currentField.sortType === 'numeric') {
-            if ($scope.config.isAscending) {
-              iconClass = 'fa fa-sort-numeric-asc';
-            } else {
-              iconClass = 'fa fa-sort-numeric-desc';
-            }
+        if ($scope.config.currentField.sortType === 'numeric') {
+          if ($scope.config.isAscending) {
+            iconClass = 'fa fa-sort-numeric-asc';
           } else {
-            if ($scope.config.isAscending) {
-              iconClass = 'fa fa-sort-alpha-asc';
-            } else {
-              iconClass = 'fa fa-sort-alpha-desc';
-            }
+            iconClass = 'fa fa-sort-numeric-desc';
           }
+        } else {
+          if ($scope.config.isAscending) {
+            iconClass = 'fa fa-sort-alpha-asc';
+          } else {
+            iconClass = 'fa fa-sort-alpha-desc';
+          }
+        }
 
-          return iconClass;
-        };
+        return iconClass;
+      };
 
-        $scope.setupConfig();
-      }],
+      $scope.setupConfig();
+    }],
 
-      link: function (scope, element, attrs) {
-        scope.$watch('config', function () {
-          scope.setupConfig();
-        }, true);
-      }
-    };
-  }
-);
+    link: function (scope, element, attrs) {
+      scope.$watch('config', function () {
+        scope.setupConfig();
+      }, true);
+    }
+  };
+});
 ;
 /**
  * @ngdoc directive
@@ -3724,221 +3712,219 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfDataList',
-  ["$timeout", "$window", "pfUtils", function ($timeout, $window, pfUtils) {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=?',
-        items: '=',
-        actions: '=?',
-        updateActionForItemFn: '=?'
-      },
-      transclude: true,
-      templateUrl: 'views/datalist/data-list.html',
-      controller:
-        ["$scope", "$element", function ($scope, $element) {
-          var setDropMenuLocation = function (parentDiv) {
-            var dropButton = parentDiv.querySelector('.dropdown-toggle');
-            var dropMenu =  parentDiv.querySelector('.dropdown-menu');
-            var buttonRect = dropButton.getBoundingClientRect();
-            var menuRect = dropMenu.getBoundingClientRect();
-            var top = buttonRect.top + buttonRect.height;
-            var left = buttonRect.left + buttonRect.width - menuRect.width;
-            var docHeight = $window.innerHeight;
+angular.module('patternfly.views').directive('pfDataList', ["$timeout", "$window", "pfUtils", function ($timeout, $window, pfUtils) {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=?',
+      items: '=',
+      actions: '=?',
+      updateActionForItemFn: '=?'
+    },
+    transclude: true,
+    templateUrl: 'views/datalist/data-list.html',
+    controller:
+      ["$scope", "$element", function ($scope, $element) {
+        var setDropMenuLocation = function (parentDiv) {
+          var dropButton = parentDiv.querySelector('.dropdown-toggle');
+          var dropMenu =  parentDiv.querySelector('.dropdown-menu');
+          var buttonRect = dropButton.getBoundingClientRect();
+          var menuRect = dropMenu.getBoundingClientRect();
+          var top = buttonRect.top + buttonRect.height;
+          var left = buttonRect.left + buttonRect.width - menuRect.width;
+          var docHeight = $window.innerHeight;
 
-            if (top + menuRect.height > docHeight) {
-              top = docHeight - menuRect.height;
+          if (top + menuRect.height > docHeight) {
+            top = docHeight - menuRect.height;
+          }
+
+          dropMenu.style.top = top + "px";
+          dropMenu.style.left = left + "px";
+        };
+
+        var hideOnScroll = function () {
+          $scope.prevMenuItem.showMenu = false;
+          angular.element(angular.element($element).find('.data-list-pf')[0]).unbind("scroll", hideOnScroll);
+          angular.element($window).unbind("scroll", hideOnScroll);
+          $scope.$apply();
+        };
+
+        var showActionMenu = function (item, event) {
+          item.showMenu = true;
+          $scope.prevMenuItem = item;
+
+          $timeout(function () {
+            var parentDiv = undefined;
+            var nextElement;
+
+            nextElement = event.toElement;
+            while (nextElement && !parentDiv) {
+              if (nextElement.className.indexOf('list-menu') === 0) {
+                parentDiv = nextElement;
+                setDropMenuLocation (parentDiv);
+              }
+              nextElement = nextElement.parentElement;
             }
 
-            dropMenu.style.top = top + "px";
-            dropMenu.style.left = left + "px";
-          };
+            angular.element(angular.element($element).find('.data-list-pf')[0]).bind("scroll", hideOnScroll);
+            angular.element($window).bind("scroll", hideOnScroll);
+          });
 
-          var hideOnScroll = function () {
+        };
+
+        $scope.defaultConfig = {
+          selectItems: false,
+          multiSelect: false,
+          dblClick: false,
+          selectionMatchProp: 'uuid',
+          selectedItems: [],
+          checkDisabled: false,
+          showSelectBox: true,
+          rowHeight: 36,
+          onSelect: null,
+          onSelectionChange: null,
+          onCheckBoxChange: null,
+          onClick: null,
+          onDblClick: null
+        };
+
+        $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
+        if ($scope.config.selectItems && $scope.config.showSelectBox) {
+          throw new Error('pfDataList - ' +
+          'Illegal use of pfDataList directive! ' +
+          'Cannot allow both select box and click selection in the same data list.');
+        }
+
+        $scope.handleAction = function (action, item) {
+          if (action && action.actionFn && (action.isDisabled !== true)) {
+            action.actionFn(action, item);
+          }
+        };
+
+        $scope.updateActions = function (item) {
+          $scope.actionItem = item;
+          if (typeof $scope.updateActionForItemFn === 'function') {
+            $scope.actions.forEach(function (action) {
+              $scope.updateActionForItemFn(action, item);
+            });
+          }
+        };
+
+        $scope.setupActions = function (item, event) {
+          if ($scope.prevMenuItem) {
             $scope.prevMenuItem.showMenu = false;
-            angular.element(angular.element($element).find('.data-list-pf')[0]).unbind("scroll", hideOnScroll);
-            angular.element($window).unbind("scroll", hideOnScroll);
-            $scope.$apply();
-          };
-
-          var showActionMenu = function (item, event) {
-            item.showMenu = true;
-            $scope.prevMenuItem = item;
-
-            $timeout(function () {
-              var parentDiv = undefined;
-              var nextElement;
-
-              nextElement = event.toElement;
-              while (nextElement && !parentDiv) {
-                if (nextElement.className.indexOf('list-menu') === 0) {
-                  parentDiv = nextElement;
-                  setDropMenuLocation (parentDiv);
-                }
-                nextElement = nextElement.parentElement;
-              }
-
-              angular.element(angular.element($element).find('.data-list-pf')[0]).bind("scroll", hideOnScroll);
-              angular.element($window).bind("scroll", hideOnScroll);
-            });
-
-          };
-
-          $scope.defaultConfig = {
-            selectItems: false,
-            multiSelect: false,
-            dblClick: false,
-            selectionMatchProp: 'uuid',
-            selectedItems: [],
-            checkDisabled: false,
-            showSelectBox: true,
-            rowHeight: 36,
-            onSelect: null,
-            onSelectionChange: null,
-            onCheckBoxChange: null,
-            onClick: null,
-            onDblClick: null
-          };
-
-          $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
-          if ($scope.config.selectItems && $scope.config.showSelectBox) {
-            throw new Error('pfDataList - ' +
-            'Illegal use of pfDataList directive! ' +
-            'Cannot allow both select box and click selection in the same data list.');
+            $scope.prevMenuItem = undefined;
           }
 
-          $scope.handleAction = function (action, item) {
-            if (action && action.actionFn && (action.isDisabled !== true)) {
-              action.actionFn(action, item);
-            }
-          };
-
-          $scope.updateActions = function (item) {
-            $scope.actionItem = item;
-            if (typeof $scope.updateActionForItemFn === 'function') {
-              $scope.actions.forEach(function (action) {
-                $scope.updateActionForItemFn(action, item);
-              });
-            }
-          };
-
-          $scope.setupActions = function (item, event) {
-            if ($scope.prevMenuItem) {
-              $scope.prevMenuItem.showMenu = false;
-              $scope.prevMenuItem = undefined;
-            }
-
-            // Ignore disabled items completely
-            if ($scope.checkDisabled(item)) {
-              return;
-            }
-
-            // update the actions based on the current item
-            $scope.updateActions(item);
-
-            // Show the action menu for the item
-            showActionMenu(item, event);
-          };
-        }],
-
-      link: function (scope, element, attrs) {
-        attrs.$observe('config', function () {
-          scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
-          if (!scope.config.selectItems) {
-            scope.config.selectedItems = [];
-          }
-          if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
-            scope.config.selectedItems = [scope.config.selectedItems[0]];
-          }
-        });
-
-        scope.itemClick = function (e, item) {
-          var alreadySelected;
-          var selectionChanged = false;
-          var continueEvent = true;
-
-          // Ignore disabled item clicks completely
-          if (scope.checkDisabled(item)) {
-            return continueEvent;
+          // Ignore disabled items completely
+          if ($scope.checkDisabled(item)) {
+            return;
           }
 
-          if (scope.config && scope.config.selectItems && item) {
-            if (scope.config.multiSelect && !scope.config.dblClick) {
+          // update the actions based on the current item
+          $scope.updateActions(item);
 
-              alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
-                return itemObj === item;
-              });
+          // Show the action menu for the item
+          showActionMenu(item, event);
+        };
+      }],
 
-              if (alreadySelected) {
-                // already selected so deselect
-                scope.config.selectedItems = _.without(scope.config.selectedItems, item);
-              } else {
-                // add the item to the selected items
-                scope.config.selectedItems.push(item);
-                selectionChanged = true;
-              }
-            } else {
-              if (scope.config.selectedItems[0] === item) {
-                if (!scope.config.dblClick) {
-                  scope.config.selectedItems = [];
-                  selectionChanged = true;
-                }
-                continueEvent = false;
-              } else {
-                scope.config.selectedItems = [item];
-                selectionChanged = true;
-              }
-            }
+    link: function (scope, element, attrs) {
+      attrs.$observe('config', function () {
+        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
+        if (!scope.config.selectItems) {
+          scope.config.selectedItems = [];
+        }
+        if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
+          scope.config.selectedItems = [scope.config.selectedItems[0]];
+        }
+      });
 
-            if (selectionChanged && scope.config.onSelect) {
-              scope.config.onSelect(item, e);
-            }
-            if (selectionChanged && scope.config.onSelectionChange) {
-              scope.config.onSelectionChange(scope.config.selectedItems, e);
-            }
-          }
-          if (scope.config.onClick) {
-            scope.config.onClick(item, e);
-          }
+      scope.itemClick = function (e, item) {
+        var alreadySelected;
+        var selectionChanged = false;
+        var continueEvent = true;
 
+        // Ignore disabled item clicks completely
+        if (scope.checkDisabled(item)) {
           return continueEvent;
-        };
+        }
 
-        scope.dblClick = function (e, item) {
-          if (scope.config.onDblClick) {
-            scope.config.onDblClick(item, e);
-          }
-        };
+        if (scope.config && scope.config.selectItems && item) {
+          if (scope.config.multiSelect && !scope.config.dblClick) {
 
-        scope.checkBoxChange = function (item) {
-          if (scope.config.onCheckBoxChange) {
-            scope.config.onCheckBoxChange(item);
-          }
-        };
-
-        scope.isSelected = function (item) {
-          var matchProp = scope.config.selectionMatchProp;
-          var selected = false;
-
-          if (scope.config.showSelectBox) {
-            selected = item.selected;
-          } else if (scope.config.selectItems && scope.config.selectedItems.length) {
-            selected = _.find(scope.config.selectedItems, function (itemObj) {
-              return itemObj[matchProp] === item[matchProp];
+            alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
+              return itemObj === item;
             });
-          }
-          return selected;
-        };
 
-        scope.checkDisabled = function (item) {
-          return scope.config.checkDisabled && scope.config.checkDisabled(item);
-        };
-      }
-    };
-  }]
-);
+            if (alreadySelected) {
+              // already selected so deselect
+              scope.config.selectedItems = _.without(scope.config.selectedItems, item);
+            } else {
+              // add the item to the selected items
+              scope.config.selectedItems.push(item);
+              selectionChanged = true;
+            }
+          } else {
+            if (scope.config.selectedItems[0] === item) {
+              if (!scope.config.dblClick) {
+                scope.config.selectedItems = [];
+                selectionChanged = true;
+              }
+              continueEvent = false;
+            } else {
+              scope.config.selectedItems = [item];
+              selectionChanged = true;
+            }
+          }
+
+          if (selectionChanged && scope.config.onSelect) {
+            scope.config.onSelect(item, e);
+          }
+          if (selectionChanged && scope.config.onSelectionChange) {
+            scope.config.onSelectionChange(scope.config.selectedItems, e);
+          }
+        }
+        if (scope.config.onClick) {
+          scope.config.onClick(item, e);
+        }
+
+        return continueEvent;
+      };
+
+      scope.dblClick = function (e, item) {
+        if (scope.config.onDblClick) {
+          scope.config.onDblClick(item, e);
+        }
+      };
+
+      scope.checkBoxChange = function (item) {
+        if (scope.config.onCheckBoxChange) {
+          scope.config.onCheckBoxChange(item);
+        }
+      };
+
+      scope.isSelected = function (item) {
+        var matchProp = scope.config.selectionMatchProp;
+        var selected = false;
+
+        if (scope.config.showSelectBox) {
+          selected = item.selected;
+        } else if (scope.config.selectItems && scope.config.selectedItems.length) {
+          selected = _.find(scope.config.selectedItems, function (itemObj) {
+            return itemObj[matchProp] === item[matchProp];
+          });
+        }
+        return selected;
+      };
+
+      scope.checkDisabled = function (item) {
+        return scope.config.checkDisabled && scope.config.checkDisabled(item);
+      };
+    }
+  };
+}]);
 ;/**
  * @ngdoc directive
  * @name patternfly.views.directive:pfDataTiles
@@ -4132,139 +4118,137 @@ angular.module('patternfly.views').directive('pfDataList',
  </file>
  </example>
  */
-angular.module('patternfly.views').directive('pfDataTiles',
-  ["pfUtils", function (pfUtils) {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=?',
-        items: '=',
-        eventId: '@id'
-      },
-      transclude: true,
-      templateUrl: 'views/datatiles/data-tiles.html',
-      controller: ["$scope", function ($scope) {
-        $scope.defaultConfig = {
-          selectItems: false,
-          multiSelect: false,
-          dblClick: false,
-          selectionMatchProp: 'uuid',
-          selectedItems: [],
-          checkDisabled: false,
-          showSelectBox: true,
-          onSelect: null,
-          onSelectionChange: null,
-          onCheckBoxChange: null,
-          onClick: null,
-          onDblClick: null
-        };
+angular.module('patternfly.views').directive('pfDataTiles', ["pfUtils", function (pfUtils) {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=?',
+      items: '=',
+      eventId: '@id'
+    },
+    transclude: true,
+    templateUrl: 'views/datatiles/data-tiles.html',
+    controller: ["$scope", function ($scope) {
+      $scope.defaultConfig = {
+        selectItems: false,
+        multiSelect: false,
+        dblClick: false,
+        selectionMatchProp: 'uuid',
+        selectedItems: [],
+        checkDisabled: false,
+        showSelectBox: true,
+        onSelect: null,
+        onSelectionChange: null,
+        onCheckBoxChange: null,
+        onClick: null,
+        onDblClick: null
+      };
 
-        $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
-        if ($scope.config.selectItems && $scope.config.showSelectBox) {
-          throw new Error('pfDataTiles - ' +
-          'Illegal use of pfDataTiles directive! ' +
-          'Cannot allow both select box and click selection in the same data tiles.');
-        }
-      }],
-      link: function (scope, element, attrs) {
-        attrs.$observe('config', function () {
-          scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
-          if (!scope.config.selectItems) {
-            scope.config.selectedItems = [];
-          }
-          if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
-            scope.config.selectedItems = [scope.config.selectedItems[0]];
-          }
-        });
-
-        scope.itemClick = function (e, item) {
-          var alreadySelected;
-          var selectionChanged = false;
-          var continueEvent = true;
-
-          // Ignore disabled item clicks completely
-          if (scope.checkDisabled(item)) {
-            return continueEvent;
-          }
-
-          if (scope.config && scope.config.selectItems && item) {
-            if (scope.config.multiSelect && !scope.config.dblClick) {
-
-              alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
-                return itemObj === item;
-              });
-
-              if (alreadySelected) {
-                // already selected so deselect
-                scope.config.selectedItems = _.without(scope.config.selectedItems, item);
-              } else {
-                // add the item to the selected items
-                scope.config.selectedItems.push(item);
-                selectionChanged = true;
-              }
-            } else {
-              if (scope.config.selectedItems[0] === item) {
-                if (!scope.config.dblClick) {
-                  scope.config.selectedItems = [];
-                  selectionChanged = true;
-                }
-                continueEvent = false;
-              } else {
-                scope.config.selectedItems = [item];
-                selectionChanged = true;
-              }
-            }
-
-            if (selectionChanged && scope.config.onSelect) {
-              scope.config.onSelect(item, e);
-            }
-            if (selectionChanged && scope.config.onSelectionChange) {
-              scope.config.onSelectionChange(scope.config.selectedItems, e);
-            }
-          }
-          if (scope.config.onClick) {
-            scope.config.onClick(item, e);
-          }
-
-          return continueEvent;
-        };
-
-        scope.dblClick = function (e, item) {
-          if (scope.config.onDblClick) {
-            scope.config.onDblClick(item, e);
-          }
-        };
-
-        scope.checkBoxChange = function (item) {
-          if (scope.config.onCheckBoxChange) {
-            scope.config.onCheckBoxChange(item);
-          }
-        };
-
-        scope.isSelected = function (item) {
-          var matchProp = scope.config.selectionMatchProp;
-          var selected = false;
-
-          if (scope.config.showSelectBox) {
-            selected = item.selected;
-          } else {
-            if (scope.config.selectedItems.length) {
-              return _.find(scope.config.selectedItems, function (itemObj) {
-                return itemObj[matchProp] === item[matchProp];
-              });
-            }
-          }
-          return selected;
-        };
-
-        scope.checkDisabled = function (item) {
-          return scope.config.checkDisabled && scope.config.checkDisabled(item);
-        };
+      $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
+      if ($scope.config.selectItems && $scope.config.showSelectBox) {
+        throw new Error('pfDataTiles - ' +
+        'Illegal use of pfDataTiles directive! ' +
+        'Cannot allow both select box and click selection in the same data tiles.');
       }
-    };
-  }]
-);
+    }],
+    link: function (scope, element, attrs) {
+      attrs.$observe('config', function () {
+        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
+        if (!scope.config.selectItems) {
+          scope.config.selectedItems = [];
+        }
+        if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
+          scope.config.selectedItems = [scope.config.selectedItems[0]];
+        }
+      });
+
+      scope.itemClick = function (e, item) {
+        var alreadySelected;
+        var selectionChanged = false;
+        var continueEvent = true;
+
+        // Ignore disabled item clicks completely
+        if (scope.checkDisabled(item)) {
+          return continueEvent;
+        }
+
+        if (scope.config && scope.config.selectItems && item) {
+          if (scope.config.multiSelect && !scope.config.dblClick) {
+
+            alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
+              return itemObj === item;
+            });
+
+            if (alreadySelected) {
+              // already selected so deselect
+              scope.config.selectedItems = _.without(scope.config.selectedItems, item);
+            } else {
+              // add the item to the selected items
+              scope.config.selectedItems.push(item);
+              selectionChanged = true;
+            }
+          } else {
+            if (scope.config.selectedItems[0] === item) {
+              if (!scope.config.dblClick) {
+                scope.config.selectedItems = [];
+                selectionChanged = true;
+              }
+              continueEvent = false;
+            } else {
+              scope.config.selectedItems = [item];
+              selectionChanged = true;
+            }
+          }
+
+          if (selectionChanged && scope.config.onSelect) {
+            scope.config.onSelect(item, e);
+          }
+          if (selectionChanged && scope.config.onSelectionChange) {
+            scope.config.onSelectionChange(scope.config.selectedItems, e);
+          }
+        }
+        if (scope.config.onClick) {
+          scope.config.onClick(item, e);
+        }
+
+        return continueEvent;
+      };
+
+      scope.dblClick = function (e, item) {
+        if (scope.config.onDblClick) {
+          scope.config.onDblClick(item, e);
+        }
+      };
+
+      scope.checkBoxChange = function (item) {
+        if (scope.config.onCheckBoxChange) {
+          scope.config.onCheckBoxChange(item);
+        }
+      };
+
+      scope.isSelected = function (item) {
+        var matchProp = scope.config.selectionMatchProp;
+        var selected = false;
+
+        if (scope.config.showSelectBox) {
+          selected = item.selected;
+        } else {
+          if (scope.config.selectedItems.length) {
+            return _.find(scope.config.selectedItems, function (itemObj) {
+              return itemObj[matchProp] === item[matchProp];
+            });
+          }
+        }
+        return selected;
+      };
+
+      scope.checkDisabled = function (item) {
+        return scope.config.checkDisabled && scope.config.checkDisabled(item);
+      };
+    }
+  };
+}]);
 ;/**
  * @ngdoc directive
  * @name patternfly.views.directive:pfDataToolbar
@@ -4637,74 +4621,72 @@ angular.module('patternfly.views').directive('pfDataTiles',
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfDataToolbar',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '='
-      },
-      replace: true,
-      transclude: false,
-      templateUrl: 'views/toolbar/data-toolbar.html',
-      controller: ["$scope", function ($scope) {
-        $scope.viewSelected = function (viewId) {
-          $scope.config.viewsConfig.currentView = viewId;
-          if ($scope.config.viewsConfig.onViewSelect && !$scope.checkViewDisabled(viewId)) {
-            $scope.config.viewsConfig.onViewSelect(viewId);
+angular.module('patternfly.views').directive('pfDataToolbar', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '='
+    },
+    replace: true,
+    transclude: false,
+    templateUrl: 'views/toolbar/data-toolbar.html',
+    controller: ["$scope", function ($scope) {
+      $scope.viewSelected = function (viewId) {
+        $scope.config.viewsConfig.currentView = viewId;
+        if ($scope.config.viewsConfig.onViewSelect && !$scope.checkViewDisabled(viewId)) {
+          $scope.config.viewsConfig.onViewSelect(viewId);
+        }
+      };
+
+      $scope.isViewSelected = function (viewId) {
+        return $scope.config.viewsConfig && ($scope.config.viewsConfig.currentView === viewId);
+      };
+
+      $scope.checkViewDisabled = function (view) {
+        return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
+      };
+
+      $scope.filterExists = function (filter) {
+        var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
+        return foundFilter !== undefined;
+      };
+
+      $scope.addFilter = function (field, value) {
+        var newFilter = {
+          id: field.id,
+          title: field.title,
+          value: value
+        };
+        if (!$scope.filterExists(newFilter)) {
+          $scope.config.filterConfig.appliedFilters.push(newFilter);
+
+          if ($scope.config.filterConfig.onFilterChange) {
+            $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
           }
-        };
+        }
+      };
 
-        $scope.isViewSelected = function (viewId) {
-          return $scope.config.viewsConfig && ($scope.config.viewsConfig.currentView === viewId);
-        };
+      $scope.handleAction = function (action) {
+        if (action && action.actionFn && (action.isDisabled !== true)) {
+          action.actionFn(action);
+        }
+      };
+    }],
 
-        $scope.checkViewDisabled = function (view) {
-          return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
-        };
+    link: function (scope, element, attrs) {
+      scope.$watch('config', function () {
+        if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
+          scope.config.viewsConfig.viewsList = angular.copy(scope.config.viewsConfig.views);
 
-        $scope.filterExists = function (filter) {
-          var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
-          return foundFilter !== undefined;
-        };
-
-        $scope.addFilter = function (field, value) {
-          var newFilter = {
-            id: field.id,
-            title: field.title,
-            value: value
-          };
-          if (!$scope.filterExists(newFilter)) {
-            $scope.config.filterConfig.appliedFilters.push(newFilter);
-
-            if ($scope.config.filterConfig.onFilterChange) {
-              $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
-            }
+          if (!scope.config.viewsConfig.currentView) {
+            scope.config.viewsConfig.currentView = scope.config.viewsConfig.viewsList[0];
           }
-        };
-
-        $scope.handleAction = function (action) {
-          if (action && action.actionFn && (action.isDisabled !== true)) {
-            action.actionFn(action);
-          }
-        };
-      }],
-
-      link: function (scope, element, attrs) {
-        scope.$watch('config', function () {
-          if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
-            scope.config.viewsConfig.viewsList = angular.copy(scope.config.viewsConfig.views);
-
-            if (!scope.config.viewsConfig.currentView) {
-              scope.config.viewsConfig.currentView = scope.config.viewsConfig.viewsList[0];
-            }
-          }
-        }, true);
-      }
-    };
-  }
-);
+        }
+      }, true);
+    }
+  };
+});
 ;(function () {
   'use strict';
 

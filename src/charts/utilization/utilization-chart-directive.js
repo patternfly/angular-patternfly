@@ -167,52 +167,50 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfUtilizationChart',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        chartData: '=',
-        config: '=',
-        centerLabel: '=?',
-        donutConfig: '=',
-        sparklineConfig: '=',
-        sparklineChartHeight: '=?',
-        showSparklineXAxis: '=?',
-        showSparklineYAxis: '=?'
-      },
-      replace: true,
-      templateUrl: 'charts/utilization/utilization-chart.html',
-      controller: ['$scope',
-        function ($scope) {
-          if ($scope.centerLabel === undefined) {
-            $scope.centerLabel = 'used';
+angular.module('patternfly.charts').directive('pfUtilizationChart', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      chartData: '=',
+      config: '=',
+      centerLabel: '=?',
+      donutConfig: '=',
+      sparklineConfig: '=',
+      sparklineChartHeight: '=?',
+      showSparklineXAxis: '=?',
+      showSparklineYAxis: '=?'
+    },
+    replace: true,
+    templateUrl: 'charts/utilization/utilization-chart.html',
+    controller: ['$scope',
+      function ($scope) {
+        if ($scope.centerLabel === undefined) {
+          $scope.centerLabel = 'used';
 
-          }
-          if ($scope.donutConfig.units === undefined) {
-            $scope.donutConfig.units = $scope.config.units;
-          }
-          if ($scope.chartData.available === undefined) {
-            $scope.chartData.available = $scope.chartData.total - $scope.chartData.used;
-          }
-          $scope.config.units = $scope.config.units || $scope.units;
         }
-      ],
-      link: function (scope, element) {
-        var setupCurrentValues = function () {
-          if (scope.centerLabel === 'available') {
-            scope.currentValue = scope.chartData.used;
-            scope.currentText = 'Used';
-          } else {
-            scope.currentValue = scope.chartData.total - scope.chartData.used;
-            scope.currentText = 'Available';
-          }
-        };
-        scope.$watch('centerLabel', function () {
-          setupCurrentValues();
-        });
+        if ($scope.donutConfig.units === undefined) {
+          $scope.donutConfig.units = $scope.config.units;
+        }
+        if ($scope.chartData.available === undefined) {
+          $scope.chartData.available = $scope.chartData.total - $scope.chartData.used;
+        }
+        $scope.config.units = $scope.config.units || $scope.units;
       }
-    };
-  }
-);
+    ],
+    link: function (scope, element) {
+      var setupCurrentValues = function () {
+        if (scope.centerLabel === 'available') {
+          scope.currentValue = scope.chartData.used;
+          scope.currentText = 'Used';
+        } else {
+          scope.currentValue = scope.chartData.total - scope.chartData.used;
+          scope.currentText = 'Available';
+        }
+      };
+      scope.$watch('centerLabel', function () {
+        setupCurrentValues();
+      });
+    }
+  };
+});

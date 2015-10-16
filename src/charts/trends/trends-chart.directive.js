@@ -163,47 +163,45 @@
  </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfTrendsChart',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=',
-        chartData: '=',
-        chartHeight: '=?',
-        showXAxis: '=?',
-        showYAxis: '=?'
-      },
-      replace: true,
-      templateUrl: 'charts/trends/trends-chart.html',
-      controller: function ($scope) {
-        var SMALL = 30, LARGE = 60;
+angular.module('patternfly.charts').directive('pfTrendsChart', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=',
+      chartData: '=',
+      chartHeight: '=?',
+      showXAxis: '=?',
+      showYAxis: '=?'
+    },
+    replace: true,
+    templateUrl: 'charts/trends/trends-chart.html',
+    controller: function ($scope) {
+      var SMALL = 30, LARGE = 60;
 
-        $scope.getPercentageValue = function () {
-          return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
-        };
-        $scope.getLatestValue = function () {
-          return $scope.chartData.yData[$scope.chartData.yData.length - 1];
-        };
-        $scope.getChartHeight = function () {
-          var retValue = LARGE;
-          if ($scope.chartHeight) {
-            retValue = $scope.chartHeight;
-          } else if ($scope.config.layout === 'small') {
-            retValue = SMALL;
-          }
-          return retValue;
-        };
-      },
-      link: function (scope) {
-        scope.$watch('config', function () {
-          scope.showLargeCardLayout = (!scope.config.layout || scope.config.layout === 'large');
-          scope.showSmallCardLayout = (scope.config.layout === 'small');
-          scope.showActualValue = (!scope.config.valueType || scope.config.valueType === 'actual');
-          scope.showPercentageValue = (scope.config.valueType === 'percentage');
-        }, true);
-      }
-    };
-  }
-);
+      $scope.getPercentageValue = function () {
+        return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
+      };
+      $scope.getLatestValue = function () {
+        return $scope.chartData.yData[$scope.chartData.yData.length - 1];
+      };
+      $scope.getChartHeight = function () {
+        var retValue = LARGE;
+        if ($scope.chartHeight) {
+          retValue = $scope.chartHeight;
+        } else if ($scope.config.layout === 'small') {
+          retValue = SMALL;
+        }
+        return retValue;
+      };
+    },
+    link: function (scope) {
+      scope.$watch('config', function () {
+        scope.showLargeCardLayout = (!scope.config.layout || scope.config.layout === 'large');
+        scope.showSmallCardLayout = (scope.config.layout === 'small');
+        scope.showActualValue = (!scope.config.valueType || scope.config.valueType === 'actual');
+        scope.showPercentageValue = (scope.config.valueType === 'percentage');
+      }, true);
+    }
+  };
+});

@@ -370,71 +370,69 @@
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfDataToolbar',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '='
-      },
-      replace: true,
-      transclude: false,
-      templateUrl: 'views/toolbar/data-toolbar.html',
-      controller: function ($scope) {
-        $scope.viewSelected = function (viewId) {
-          $scope.config.viewsConfig.currentView = viewId;
-          if ($scope.config.viewsConfig.onViewSelect && !$scope.checkViewDisabled(viewId)) {
-            $scope.config.viewsConfig.onViewSelect(viewId);
+angular.module('patternfly.views').directive('pfDataToolbar', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '='
+    },
+    replace: true,
+    transclude: false,
+    templateUrl: 'views/toolbar/data-toolbar.html',
+    controller: function ($scope) {
+      $scope.viewSelected = function (viewId) {
+        $scope.config.viewsConfig.currentView = viewId;
+        if ($scope.config.viewsConfig.onViewSelect && !$scope.checkViewDisabled(viewId)) {
+          $scope.config.viewsConfig.onViewSelect(viewId);
+        }
+      };
+
+      $scope.isViewSelected = function (viewId) {
+        return $scope.config.viewsConfig && ($scope.config.viewsConfig.currentView === viewId);
+      };
+
+      $scope.checkViewDisabled = function (view) {
+        return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
+      };
+
+      $scope.filterExists = function (filter) {
+        var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
+        return foundFilter !== undefined;
+      };
+
+      $scope.addFilter = function (field, value) {
+        var newFilter = {
+          id: field.id,
+          title: field.title,
+          value: value
+        };
+        if (!$scope.filterExists(newFilter)) {
+          $scope.config.filterConfig.appliedFilters.push(newFilter);
+
+          if ($scope.config.filterConfig.onFilterChange) {
+            $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
           }
-        };
+        }
+      };
 
-        $scope.isViewSelected = function (viewId) {
-          return $scope.config.viewsConfig && ($scope.config.viewsConfig.currentView === viewId);
-        };
+      $scope.handleAction = function (action) {
+        if (action && action.actionFn && (action.isDisabled !== true)) {
+          action.actionFn(action);
+        }
+      };
+    },
 
-        $scope.checkViewDisabled = function (view) {
-          return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
-        };
+    link: function (scope, element, attrs) {
+      scope.$watch('config', function () {
+        if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
+          scope.config.viewsConfig.viewsList = angular.copy(scope.config.viewsConfig.views);
 
-        $scope.filterExists = function (filter) {
-          var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
-          return foundFilter !== undefined;
-        };
-
-        $scope.addFilter = function (field, value) {
-          var newFilter = {
-            id: field.id,
-            title: field.title,
-            value: value
-          };
-          if (!$scope.filterExists(newFilter)) {
-            $scope.config.filterConfig.appliedFilters.push(newFilter);
-
-            if ($scope.config.filterConfig.onFilterChange) {
-              $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
-            }
+          if (!scope.config.viewsConfig.currentView) {
+            scope.config.viewsConfig.currentView = scope.config.viewsConfig.viewsList[0];
           }
-        };
-
-        $scope.handleAction = function (action) {
-          if (action && action.actionFn && (action.isDisabled !== true)) {
-            action.actionFn(action);
-          }
-        };
-      },
-
-      link: function (scope, element, attrs) {
-        scope.$watch('config', function () {
-          if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
-            scope.config.viewsConfig.viewsList = angular.copy(scope.config.viewsConfig.views);
-
-            if (!scope.config.viewsConfig.currentView) {
-              scope.config.viewsConfig.currentView = scope.config.viewsConfig.viewsList[0];
-            }
-          }
-        }, true);
-      }
-    };
-  }
-);
+        }
+      }, true);
+    }
+  };
+});

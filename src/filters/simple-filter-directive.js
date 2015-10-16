@@ -169,36 +169,34 @@
   </file>
 </example>
  */
-angular.module('patternfly.filters').directive('pfSimpleFilter',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '='
-      },
-      templateUrl: 'filters/simple-filter.html',
-      controller: function ($scope) {
-        $scope.filterExists = function (filter) {
-          var foundFilter = _.findWhere($scope.config.appliedFilters, {title: filter.title, value: filter.value});
-          return foundFilter !== undefined;
+angular.module('patternfly.filters').directive('pfSimpleFilter', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '='
+    },
+    templateUrl: 'filters/simple-filter.html',
+    controller: function ($scope) {
+      $scope.filterExists = function (filter) {
+        var foundFilter = _.findWhere($scope.config.appliedFilters, {title: filter.title, value: filter.value});
+        return foundFilter !== undefined;
+      };
+
+      $scope.addFilter = function (field, value) {
+        var newFilter = {
+          id: field.id,
+          title: field.title,
+          value: value
         };
+        if (!$scope.filterExists(newFilter)) {
+          $scope.config.appliedFilters.push(newFilter);
 
-        $scope.addFilter = function (field, value) {
-          var newFilter = {
-            id: field.id,
-            title: field.title,
-            value: value
-          };
-          if (!$scope.filterExists(newFilter)) {
-            $scope.config.appliedFilters.push(newFilter);
-
-            if ($scope.config.onFilterChange) {
-              $scope.config.onFilterChange($scope.config.appliedFilters);
-            }
+          if ($scope.config.onFilterChange) {
+            $scope.config.onFilterChange($scope.config.appliedFilters);
           }
-        };
-      }
-    };
-  }
-);
+        }
+      };
+    }
+  };
+});
