@@ -1001,6 +1001,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
           $scope.config.data = $scope.getDonutData($scope);
           $scope.config.color = $scope.statusDonutColor($scope);
           $scope.config.tooltip = donutTooltip(scope);
+          $scope.config.data.onclick = $scope.config.onClickFn;
         };
 
         $scope.config = pfUtils.merge(c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
