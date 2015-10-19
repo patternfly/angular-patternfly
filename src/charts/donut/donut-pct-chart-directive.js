@@ -19,11 +19,12 @@
  *
  * @param {object} config configuration properties for the donut chart:<br/>
  * <ul style='list-style-type: none'>
- * <li>.chartId       - the unique id of the donut chart
- * <li>.units         - unit label for values, ex: 'MHz','GB', etc..
- * <li>.thresholds    - warning and error percentage thresholds used to determine the Usage Percentage fill color (optional)
- * <li>.tooltipFn     - user defined function to customize the tool tip (optional)
- * <li>.centerLabelFn - user defined function to customize the center label (optional)
+ * <li>.chartId        - the unique id of the donut chart
+ * <li>.units          - unit label for values, ex: 'MHz','GB', etc..
+ * <li>.thresholds     - warning and error percentage thresholds used to determine the Usage Percentage fill color (optional)
+ * <li>.tooltipFn(d)   - user defined function to customize the tool tip (optional)
+ * <li>.centerLabelFn  - user defined function to customize the center label (optional)
+ * <li>.onClickFn(d,i) - user defined function to handle when donut arc is clicked upon.
  * </ul>
  *
  * @param {object} data the Total and Used values for the donut chart.  Available is calculated as Total - Used.<br/>
@@ -43,94 +44,113 @@
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
-     <div ng-controller="ChartCtrl" style="display:inline-block;">
-
-       <div class="col-md-4">
-         </br> <div pf-donut-pct-chart config="config" data="data"></div>
-       </div>
-
-       <div class="col-md-8">
-         Total = {{data.total}}, Used = {{data.used}}, Available = {{data.available}}<br/>
-         Percent Used = {{(data.used / data.total) * 100;}} %</br>
-         Thresholds:</br>
-         <div class="col-md-2">
-           Error:</br>
-           Warning:</br>
-           Ok:
-         </div>
-         <div class="col-md-10">
-           {{config.thresholds.error}}% Used (red)</br>
-           {{config.thresholds.warning}}% Used (orange)</br>
-           Not reached a threshold (blue)
-         </div>
-
-         <form role="form" style="width:200px">
-           <div class="form-group">
-             <label>Show</label>
-             </br>
-             <label class="radio-inline">
-               <input type="radio" ng-model="newUsed" value="950">Error</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="newUsed" value="650">Warning</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="newUsed" value="350">Ok</input>
-             </label>
+     <div ng-controller="ChartCtrl">
+       <div class="container-fluid">
+         <div class="row">
+           <div class="col-md-3 text-center">
+             <label>Error Threshold</label>
+             <div pf-donut-pct-chart config="configErr" data="dataErr"></div>
            </div>
-         </form>
-       </div>
+           <div class="col-md-3 text-center"">
+             <label>Warning Threshold</label>
+             <div pf-donut-pct-chart config="configWarn" data="dataWarn"></div>
+           </div>
+           <div class="col-md-3 text-center"">
+             <label>Ok</label>
+             <div pf-donut-pct-chart config="configOk" data="dataOk"></div>
+           </div>
+           <div class="col-md-3 text-center"">
+             <label>No Threshold</label>
+             <div pf-donut-pct-chart config="configNoThresh" data="dataNoThresh"></div>
+           </div>
+         </div>
 
-       <div class="col-md-12">
-         <hr>
-       </div>
+         <div class="row">
+           <div class="col-md-12">
+             <hr>
+           </div>
+         </div>
 
-       <div class="col-md-3">
-         <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="usedLabel"></div>
-         center-label =<br> 'used'
-       </div>
-       <div class="col-md-3">
-         <div pf-donut-pct-chart config="availConfig" data="availData" center-label="availLabel"></div>
-         center-label =<br> 'available'
-       </div>
-       <div class="col-md-3">
-         <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="pctLabel"></div>
-         center-label =<br> 'percent'
-       </div>
-       <div class="col-md-3">
-         <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></div>
-         center-label =<br> ' none'
-       </div>
+         <div class="row">
+           <div class="col-md-3 text-center">
+             <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="usedLabel"></div>
+             <label>center-label = 'used'</label>
+           </div>
+           <div class="col-md-3 text-center">
+             <div pf-donut-pct-chart config="availConfig" data="availData" center-label="availLabel"></div>
+             <label>center-label = 'available'</label>
+           </div>
+           <div class="col-md-3 text-center">
+             <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="pctLabel"></div>
+             <label>center-label = 'percent'</label>
+           </div>
+           <div class="col-md-3 text-center">
+             <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></div>
+             <label>center-label = ' none'</label>
+           </div>
+         </div>
 
-       <div class="col-md-12">
-         <hr>
-       </div>
+         <div class="row">
+           <div class="col-md-12">
+             <hr>
+           </div>
+         </div>
 
-       <div class="col-md-12">
-         Custom Tooltip and Center Label
-         <div pf-donut-pct-chart config="custConfig" data="custData"></div>
+         <div class="row">
+           <div class="col-md-12 text-center">
+             <label>Custom Tooltip, Legend, Click handling, and Center Label</label><br>
+             <label><strong>Click on Donut Arc!</strong></label>
+             <div pf-donut-pct-chart config="custConfig" data="custData"></div>
+           </div>
+         </div>
        </div>
      </div>
    </file>
 
    <file name="script.js">
      angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
-       $scope.config = {
-         'chartId': 'chartA',
+       $scope.configErr = {
+         'chartId': 'chartErr',
          'units': 'GB',
          'thresholds':{'warning':'60','error':'90'}
        };
 
-       $scope.data = {
+       $scope.dataErr = {
          'used': '950',
          'total': '1000'
        };
 
-       $scope.newUsed = $scope.data.used;
+       $scope.configWarn = {
+         'chartId': 'chartWarn',
+         'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
+       };
 
-       $scope.$watch('newUsed', function (val) {
-         $scope.data.used = val;
-       });
+       $scope.dataWarn = {
+         'used': '650',
+         'total': '1000'
+       };
+
+       $scope.configOk = {
+         'chartId': 'chartOk',
+         'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
+       };
+
+       $scope.dataOk = {
+         'used': '550',
+         'total': '1000'
+       };
+
+       $scope.configNoThresh = {
+         'chartId': 'chartNoThresh',
+         'units': 'GB',
+       };
+
+       $scope.dataNoThresh = {
+         'used': '750',
+         'total': '1000'
+       };
 
        $scope.usedConfig = {
          'chartId': 'usedChart',
@@ -174,6 +194,7 @@
        $scope.noneConfig = {
          'chartId': 'noneChart',
          'units': 'GB',
+         'thresholds':{'warning':'60','error':'90'}
        };
 
        $scope.noneData = {
@@ -196,6 +217,9 @@
          'centerLabelFn': function () {
            return '<tspan dy="0" x="0" class="donut-title-big-pf">' + $scope.custData.available + '</tspan>' +
                     '<tspan dy="20" x="0" class="donut-title-small-pf">Free</tspan>';
+           },
+         'onClickFn': function (d, i) {
+           alert("You Clicked On The Donut!");
            }
          };
 
@@ -329,6 +353,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
           $scope.config.data = $scope.getDonutData($scope);
           $scope.config.color = $scope.statusDonutColor($scope);
           $scope.config.tooltip = donutTooltip(scope);
+          $scope.config.data.onclick = $scope.config.onClickFn;
         };
 
         $scope.config = pfUtils.merge(c3ChartDefaults.getDefaultDonutConfig(), $scope.config);

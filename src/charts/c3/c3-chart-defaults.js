@@ -8,12 +8,12 @@
         label: {
           show: false
         },
-        width: 12
+        width: 11
       };
     },
     getDefaultDonutSize: function () {
       return {
-        height: 185
+        height: 171 // produces a diameter of 150 and a centered chart
       };
     },
     getDefaultDonutColor: function () {

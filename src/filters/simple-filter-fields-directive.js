@@ -20,54 +20,52 @@
  * </ul>
  *
  */
-angular.module('patternfly.filters').directive('pfSimpleFilterFields',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=',
-        addFilterFn: '='
-      },
-      templateUrl: 'filters/simple-filter-fields.html',
-      controller: function ($scope) {
-        $scope.setupConfig = function () {
-          if ($scope.fields === undefined) {
-            $scope.fields = [];
-          }
-          if (!$scope.currentField) {
-            $scope.currentField = $scope.config.fields[0];
-            $scope.config.currentValue = null;
-          }
+angular.module('patternfly.filters').directive('pfSimpleFilterFields', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=',
+      addFilterFn: '='
+    },
+    templateUrl: 'filters/simple-filter-fields.html',
+    controller: function ($scope) {
+      $scope.setupConfig = function () {
+        if ($scope.fields === undefined) {
+          $scope.fields = [];
+        }
+        if (!$scope.currentField) {
+          $scope.currentField = $scope.config.fields[0];
+          $scope.config.currentValue = null;
+        }
 
-          if ($scope.config.currentValue === undefined) {
-            $scope.config.currentValue = null;
-          }
-        };
+        if ($scope.config.currentValue === undefined) {
+          $scope.config.currentValue = null;
+        }
+      };
 
-        $scope.$watch('config', function () {
-          $scope.setupConfig();
-        }, true);
-      },
+      $scope.$watch('config', function () {
+        $scope.setupConfig();
+      }, true);
+    },
 
-      link: function (scope, element, attrs) {
-        scope.selectField = function (item) {
-          scope.currentField = item;
-          scope.config.currentValue = null;
-        };
+    link: function (scope, element, attrs) {
+      scope.selectField = function (item) {
+        scope.currentField = item;
+        scope.config.currentValue = null;
+      };
 
-        scope.selectValue = function (filterValue) {
-          scope.addFilterFn(scope.currentField, filterValue);
-          scope.config.currentValue = null;
-        };
+      scope.selectValue = function (filterValue) {
+        scope.addFilterFn(scope.currentField, filterValue);
+        scope.config.currentValue = null;
+      };
 
-        scope.onValueKeyPress = function (keyEvent) {
-          if (keyEvent.which === 13) {
-            scope.addFilterFn(scope.currentField, scope.config.currentValue);
-            scope.config.currentValue = undefined;
-          }
-        };
-      }
-    };
-  }
-);
+      scope.onValueKeyPress = function (keyEvent) {
+        if (keyEvent.which === 13) {
+          scope.addFilterFn(scope.currentField, scope.config.currentValue);
+          scope.config.currentValue = undefined;
+        }
+      };
+    }
+  };
+});

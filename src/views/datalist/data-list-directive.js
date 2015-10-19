@@ -259,218 +259,216 @@
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfDataList',
-  function ($timeout, $window, pfUtils) {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=?',
-        items: '=',
-        actions: '=?',
-        updateActionForItemFn: '=?'
-      },
-      transclude: true,
-      templateUrl: 'views/datalist/data-list.html',
-      controller:
-        function ($scope, $element) {
-          var setDropMenuLocation = function (parentDiv) {
-            var dropButton = parentDiv.querySelector('.dropdown-toggle');
-            var dropMenu =  parentDiv.querySelector('.dropdown-menu');
-            var buttonRect = dropButton.getBoundingClientRect();
-            var menuRect = dropMenu.getBoundingClientRect();
-            var top = buttonRect.top + buttonRect.height;
-            var left = buttonRect.left + buttonRect.width - menuRect.width;
-            var docHeight = $window.innerHeight;
+angular.module('patternfly.views').directive('pfDataList', function ($timeout, $window, pfUtils) {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=?',
+      items: '=',
+      actions: '=?',
+      updateActionForItemFn: '=?'
+    },
+    transclude: true,
+    templateUrl: 'views/datalist/data-list.html',
+    controller:
+      function ($scope, $element) {
+        var setDropMenuLocation = function (parentDiv) {
+          var dropButton = parentDiv.querySelector('.dropdown-toggle');
+          var dropMenu =  parentDiv.querySelector('.dropdown-menu');
+          var buttonRect = dropButton.getBoundingClientRect();
+          var menuRect = dropMenu.getBoundingClientRect();
+          var top = buttonRect.top + buttonRect.height;
+          var left = buttonRect.left + buttonRect.width - menuRect.width;
+          var docHeight = $window.innerHeight;
 
-            if (top + menuRect.height > docHeight) {
-              top = docHeight - menuRect.height;
+          if (top + menuRect.height > docHeight) {
+            top = docHeight - menuRect.height;
+          }
+
+          dropMenu.style.top = top + "px";
+          dropMenu.style.left = left + "px";
+        };
+
+        var hideOnScroll = function () {
+          $scope.prevMenuItem.showMenu = false;
+          angular.element(angular.element($element).find('.data-list-pf')[0]).unbind("scroll", hideOnScroll);
+          angular.element($window).unbind("scroll", hideOnScroll);
+          $scope.$apply();
+        };
+
+        var showActionMenu = function (item, event) {
+          item.showMenu = true;
+          $scope.prevMenuItem = item;
+
+          $timeout(function () {
+            var parentDiv = undefined;
+            var nextElement;
+
+            nextElement = event.toElement;
+            while (nextElement && !parentDiv) {
+              if (nextElement.className.indexOf('list-menu') === 0) {
+                parentDiv = nextElement;
+                setDropMenuLocation (parentDiv);
+              }
+              nextElement = nextElement.parentElement;
             }
 
-            dropMenu.style.top = top + "px";
-            dropMenu.style.left = left + "px";
-          };
+            angular.element(angular.element($element).find('.data-list-pf')[0]).bind("scroll", hideOnScroll);
+            angular.element($window).bind("scroll", hideOnScroll);
+          });
 
-          var hideOnScroll = function () {
+        };
+
+        $scope.defaultConfig = {
+          selectItems: false,
+          multiSelect: false,
+          dblClick: false,
+          selectionMatchProp: 'uuid',
+          selectedItems: [],
+          checkDisabled: false,
+          showSelectBox: true,
+          rowHeight: 36,
+          onSelect: null,
+          onSelectionChange: null,
+          onCheckBoxChange: null,
+          onClick: null,
+          onDblClick: null
+        };
+
+        $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
+        if ($scope.config.selectItems && $scope.config.showSelectBox) {
+          throw new Error('pfDataList - ' +
+          'Illegal use of pfDataList directive! ' +
+          'Cannot allow both select box and click selection in the same data list.');
+        }
+
+        $scope.handleAction = function (action, item) {
+          if (action && action.actionFn && (action.isDisabled !== true)) {
+            action.actionFn(action, item);
+          }
+        };
+
+        $scope.updateActions = function (item) {
+          $scope.actionItem = item;
+          if (typeof $scope.updateActionForItemFn === 'function') {
+            $scope.actions.forEach(function (action) {
+              $scope.updateActionForItemFn(action, item);
+            });
+          }
+        };
+
+        $scope.setupActions = function (item, event) {
+          if ($scope.prevMenuItem) {
             $scope.prevMenuItem.showMenu = false;
-            angular.element(angular.element($element).find('.data-list-pf')[0]).unbind("scroll", hideOnScroll);
-            angular.element($window).unbind("scroll", hideOnScroll);
-            $scope.$apply();
-          };
-
-          var showActionMenu = function (item, event) {
-            item.showMenu = true;
-            $scope.prevMenuItem = item;
-
-            $timeout(function () {
-              var parentDiv = undefined;
-              var nextElement;
-
-              nextElement = event.toElement;
-              while (nextElement && !parentDiv) {
-                if (nextElement.className.indexOf('list-menu') === 0) {
-                  parentDiv = nextElement;
-                  setDropMenuLocation (parentDiv);
-                }
-                nextElement = nextElement.parentElement;
-              }
-
-              angular.element(angular.element($element).find('.data-list-pf')[0]).bind("scroll", hideOnScroll);
-              angular.element($window).bind("scroll", hideOnScroll);
-            });
-
-          };
-
-          $scope.defaultConfig = {
-            selectItems: false,
-            multiSelect: false,
-            dblClick: false,
-            selectionMatchProp: 'uuid',
-            selectedItems: [],
-            checkDisabled: false,
-            showSelectBox: true,
-            rowHeight: 36,
-            onSelect: null,
-            onSelectionChange: null,
-            onCheckBoxChange: null,
-            onClick: null,
-            onDblClick: null
-          };
-
-          $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
-          if ($scope.config.selectItems && $scope.config.showSelectBox) {
-            throw new Error('pfDataList - ' +
-            'Illegal use of pfDataList directive! ' +
-            'Cannot allow both select box and click selection in the same data list.');
+            $scope.prevMenuItem = undefined;
           }
 
-          $scope.handleAction = function (action, item) {
-            if (action && action.actionFn && (action.isDisabled !== true)) {
-              action.actionFn(action, item);
-            }
-          };
-
-          $scope.updateActions = function (item) {
-            $scope.actionItem = item;
-            if (typeof $scope.updateActionForItemFn === 'function') {
-              $scope.actions.forEach(function (action) {
-                $scope.updateActionForItemFn(action, item);
-              });
-            }
-          };
-
-          $scope.setupActions = function (item, event) {
-            if ($scope.prevMenuItem) {
-              $scope.prevMenuItem.showMenu = false;
-              $scope.prevMenuItem = undefined;
-            }
-
-            // Ignore disabled items completely
-            if ($scope.checkDisabled(item)) {
-              return;
-            }
-
-            // update the actions based on the current item
-            $scope.updateActions(item);
-
-            // Show the action menu for the item
-            showActionMenu(item, event);
-          };
-        },
-
-      link: function (scope, element, attrs) {
-        attrs.$observe('config', function () {
-          scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
-          if (!scope.config.selectItems) {
-            scope.config.selectedItems = [];
-          }
-          if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
-            scope.config.selectedItems = [scope.config.selectedItems[0]];
-          }
-        });
-
-        scope.itemClick = function (e, item) {
-          var alreadySelected;
-          var selectionChanged = false;
-          var continueEvent = true;
-
-          // Ignore disabled item clicks completely
-          if (scope.checkDisabled(item)) {
-            return continueEvent;
+          // Ignore disabled items completely
+          if ($scope.checkDisabled(item)) {
+            return;
           }
 
-          if (scope.config && scope.config.selectItems && item) {
-            if (scope.config.multiSelect && !scope.config.dblClick) {
+          // update the actions based on the current item
+          $scope.updateActions(item);
 
-              alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
-                return itemObj === item;
-              });
+          // Show the action menu for the item
+          showActionMenu(item, event);
+        };
+      },
 
-              if (alreadySelected) {
-                // already selected so deselect
-                scope.config.selectedItems = _.without(scope.config.selectedItems, item);
-              } else {
-                // add the item to the selected items
-                scope.config.selectedItems.push(item);
-                selectionChanged = true;
-              }
-            } else {
-              if (scope.config.selectedItems[0] === item) {
-                if (!scope.config.dblClick) {
-                  scope.config.selectedItems = [];
-                  selectionChanged = true;
-                }
-                continueEvent = false;
-              } else {
-                scope.config.selectedItems = [item];
-                selectionChanged = true;
-              }
-            }
+    link: function (scope, element, attrs) {
+      attrs.$observe('config', function () {
+        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
+        if (!scope.config.selectItems) {
+          scope.config.selectedItems = [];
+        }
+        if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
+          scope.config.selectedItems = [scope.config.selectedItems[0]];
+        }
+      });
 
-            if (selectionChanged && scope.config.onSelect) {
-              scope.config.onSelect(item, e);
-            }
-            if (selectionChanged && scope.config.onSelectionChange) {
-              scope.config.onSelectionChange(scope.config.selectedItems, e);
-            }
-          }
-          if (scope.config.onClick) {
-            scope.config.onClick(item, e);
-          }
+      scope.itemClick = function (e, item) {
+        var alreadySelected;
+        var selectionChanged = false;
+        var continueEvent = true;
 
+        // Ignore disabled item clicks completely
+        if (scope.checkDisabled(item)) {
           return continueEvent;
-        };
+        }
 
-        scope.dblClick = function (e, item) {
-          if (scope.config.onDblClick) {
-            scope.config.onDblClick(item, e);
-          }
-        };
+        if (scope.config && scope.config.selectItems && item) {
+          if (scope.config.multiSelect && !scope.config.dblClick) {
 
-        scope.checkBoxChange = function (item) {
-          if (scope.config.onCheckBoxChange) {
-            scope.config.onCheckBoxChange(item);
-          }
-        };
-
-        scope.isSelected = function (item) {
-          var matchProp = scope.config.selectionMatchProp;
-          var selected = false;
-
-          if (scope.config.showSelectBox) {
-            selected = item.selected;
-          } else if (scope.config.selectItems && scope.config.selectedItems.length) {
-            selected = _.find(scope.config.selectedItems, function (itemObj) {
-              return itemObj[matchProp] === item[matchProp];
+            alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
+              return itemObj === item;
             });
-          }
-          return selected;
-        };
 
-        scope.checkDisabled = function (item) {
-          return scope.config.checkDisabled && scope.config.checkDisabled(item);
-        };
-      }
-    };
-  }
-);
+            if (alreadySelected) {
+              // already selected so deselect
+              scope.config.selectedItems = _.without(scope.config.selectedItems, item);
+            } else {
+              // add the item to the selected items
+              scope.config.selectedItems.push(item);
+              selectionChanged = true;
+            }
+          } else {
+            if (scope.config.selectedItems[0] === item) {
+              if (!scope.config.dblClick) {
+                scope.config.selectedItems = [];
+                selectionChanged = true;
+              }
+              continueEvent = false;
+            } else {
+              scope.config.selectedItems = [item];
+              selectionChanged = true;
+            }
+          }
+
+          if (selectionChanged && scope.config.onSelect) {
+            scope.config.onSelect(item, e);
+          }
+          if (selectionChanged && scope.config.onSelectionChange) {
+            scope.config.onSelectionChange(scope.config.selectedItems, e);
+          }
+        }
+        if (scope.config.onClick) {
+          scope.config.onClick(item, e);
+        }
+
+        return continueEvent;
+      };
+
+      scope.dblClick = function (e, item) {
+        if (scope.config.onDblClick) {
+          scope.config.onDblClick(item, e);
+        }
+      };
+
+      scope.checkBoxChange = function (item) {
+        if (scope.config.onCheckBoxChange) {
+          scope.config.onCheckBoxChange(item);
+        }
+      };
+
+      scope.isSelected = function (item) {
+        var matchProp = scope.config.selectionMatchProp;
+        var selected = false;
+
+        if (scope.config.showSelectBox) {
+          selected = item.selected;
+        } else if (scope.config.selectItems && scope.config.selectedItems.length) {
+          selected = _.find(scope.config.selectedItems, function (itemObj) {
+            return itemObj[matchProp] === item[matchProp];
+          });
+        }
+        return selected;
+      };
+
+      scope.checkDisabled = function (item) {
+        return scope.config.checkDisabled && scope.config.checkDisabled(item);
+      };
+    }
+  };
+});

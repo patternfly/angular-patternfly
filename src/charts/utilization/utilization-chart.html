@@ -13,8 +13,12 @@
             </div>
         </div>
     </div>
-    <div pf-donut-pct-chart config="donutConfig" data="chartData" center-label="centerLabel"></div>
-    <div pf-sparkline-chart config="sparklineConfig" chart-data="chartData" chart-height="sparklineChartHeight" show-x-axis="showSparklineXAxis" show-y-axis="showSparklineYAxis"></div>
+    <div class="donut-chart-pf">
+      <div pf-donut-pct-chart config="donutConfig" data="chartData" center-label="centerLabel"></div>
+    </div>
+    <div class="sparkline-chart">
+      <div pf-sparkline-chart config="sparklineConfig" chart-data="chartData" chart-height="sparklineChartHeight" show-x-axis="showSparklineXAxis" show-y-axis="showSparklineYAxis"></div>
+    </div>
     <span class="pull-left legend-text">{{legendLeftText}}</span>
     <span class="pull-right legend-text">{{legendRightText}}</span>
 </div>

@@ -22,52 +22,50 @@
  * </ul>
  *
  */
-angular.module('patternfly.filters').directive('pfSimpleFilterResults',
-  function () {
-    'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        config: '='
-      },
-      templateUrl: 'filters/simple-filter-results.html',
-      controller: function ($scope) {
-        $scope.setupConfig = function () {
-          if (!$scope.config.appliedFilters) {
-            $scope.config.appliedFilters = [];
-          }
-          if ($scope.config.resultsCount === undefined) {
-            $scope.config.resultsCount = 0;
-          }
-        };
+angular.module('patternfly.filters').directive('pfSimpleFilterResults', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '='
+    },
+    templateUrl: 'filters/simple-filter-results.html',
+    controller: function ($scope) {
+      $scope.setupConfig = function () {
+        if (!$scope.config.appliedFilters) {
+          $scope.config.appliedFilters = [];
+        }
+        if ($scope.config.resultsCount === undefined) {
+          $scope.config.resultsCount = 0;
+        }
+      };
 
-        $scope.$watch('config', function () {
-          $scope.setupConfig();
-        }, true);
-      },
-      link: function (scope, element, attrs) {
-        scope.clearFilter = function (item) {
-          var newFilters = [];
-          scope.config.appliedFilters.forEach(function (filter) {
-            if (item.title !== filter.title || item.value !== filter.value) {
-              newFilters.push(filter);
-            }
-          });
-          scope.config.appliedFilters = newFilters;
-
-          if (scope.config.onFilterChange) {
-            scope.config.onFilterChange(scope.config.appliedFilters);
+      $scope.$watch('config', function () {
+        $scope.setupConfig();
+      }, true);
+    },
+    link: function (scope, element, attrs) {
+      scope.clearFilter = function (item) {
+        var newFilters = [];
+        scope.config.appliedFilters.forEach(function (filter) {
+          if (item.title !== filter.title || item.value !== filter.value) {
+            newFilters.push(filter);
           }
-        };
+        });
+        scope.config.appliedFilters = newFilters;
 
-        scope.clearAllFilters = function () {
-          scope.config.appliedFilters = [];
+        if (scope.config.onFilterChange) {
+          scope.config.onFilterChange(scope.config.appliedFilters);
+        }
+      };
 
-          if (scope.config.onFilterChange) {
-            scope.config.onFilterChange(scope.config.appliedFilters);
-          }
-        };
-      }
-    };
-  }
-);
+      scope.clearAllFilters = function () {
+        scope.config.appliedFilters = [];
+
+        if (scope.config.onFilterChange) {
+          scope.config.onFilterChange(scope.config.appliedFilters);
+        }
+      };
+    }
+  };
+});
