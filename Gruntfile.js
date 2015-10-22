@@ -43,6 +43,7 @@ module.exports = function (grunt) {
       connect: {
         docs: {
           options: {
+            hostname: '0.0.0.0',
             base: 'dist/docs',
             livereload: true,
             open: true
@@ -216,7 +217,7 @@ module.exports = function (grunt) {
           files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],
           tasks: ['build'],
           options: {
-            livereload: true
+            livereload: 35722
           }
         }
       }
