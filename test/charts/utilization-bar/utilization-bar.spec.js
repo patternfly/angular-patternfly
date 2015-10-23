@@ -1,14 +1,15 @@
 describe('Directive: pfUtilizationBarChart', function() {
-  var $scope, $compile, element, utilizationBar, title, subTitle;
+  var $scope, $compile, $sanitize, element, utilizationBar, title, subTitle;
 
   beforeEach(module(
     'patternfly.charts',
     'charts/utilization-bar/utilization-bar-chart.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$sanitize_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
+    $sanitize = _$sanitize_;
   }));
 
   beforeEach(function() {
@@ -40,20 +41,20 @@ describe('Directive: pfUtilizationBarChart', function() {
     title = angular.element(element).find('.progress-description').html();
     expect(title).toBe("CPU Usage");
 
-    subTitle = angular.element(element).find('.progress-bar span').html();
+    subTitle = angular.element(element).find('.progress-bar span').text();
     expect(subTitle).toBe("8 of 16 GB Used");
 
     //test 'percent' used-label-format
-    element = compileChart("<div pf-utilization-bar-chart chart-data=data used-label-format='percent' chart-title=title units=units></div>", $scope);
-    subTitle = angular.element(element).find('.progress-bar span').html();
+    element = compileChart("<div pf-utilization-bar-chart chart-data=data footer-label-format='percent' chart-title=title units=units></div>", $scope);
+    subTitle = angular.element(element).find('.progress-bar span').text();
     expect(subTitle).toBe("50% Used");
   });
 
-  it("should set the layout to be 'inline'", function() {
+  it("should set the layout to be 'inline', and use custom widths", function() {
     $scope.layoutInline = {
       'type': 'inline',
       'titleLabelWidth': '120px',
-      'usedLabelWidth': '60px'
+      'footerLabelWidth': '60px'
     };
 
     element = compileChart("<div pf-utilization-bar-chart chart-data=data layout=layoutInline chart-title=title units=units></div>", $scope);
@@ -76,6 +77,15 @@ describe('Directive: pfUtilizationBarChart', function() {
 
     utilizationBar = angular.element(element).find('.progress-bar-danger');
     expect(utilizationBar.size()).toBe(1);
+  });
+
+  it("should use custom footer labels", function() {
+    $scope.custfooter = '<strong>500 TB</strong> Total';
+
+    element = compileChart("<div pf-utilization-bar-chart chart-data=data threshold-error='85' threshold-warning='45' chart-title=title chart-footer=custfooter units=units></div>", $scope);
+
+    subTitle = angular.element(element).find('.progress-bar span').html();
+    expect(subTitle).toBe("<strong>500 TB</strong> Total");
   });
 
 });

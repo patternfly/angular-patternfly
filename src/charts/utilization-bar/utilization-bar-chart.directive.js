@@ -18,14 +18,17 @@
  * </ul>
  *
  * @param {object=} chart-title The title displayed on the left-hand side of the chart
+ * @param {object=} chart-footer The label displayed on the right-hand side of the chart.  If chart-footer is not
+ * specified, the automatic footer-label-format will be used.
  * @param {object=} layout Various alternative layouts the utilization bar chart may have:<br/>
  * <ul style='list-style-type: none'>
  * <li>.type - The type of layout to use.  Valid values are 'regular' (default) displays the standard chart layout,
  * and 'inline' displays a smaller, inline layout.</li>
  * <li>.titleLabelWidth - Width of the left-hand title label when using 'inline' layout. Example values are "120px", "20%", "10em", etc..</li>
- * <li>.usedLabelWidth - Width of the right-hand used label when using 'inline' layout. Example values are "120px", "20%", "10em", etc..</li>
+ * <li>.footerLabelWidth - Width of the right-hand used label when using 'inline' layout. Example values are "120px", "20%", "10em", etc..</li>
  * </ul>
- * @param {string=} used-label-format The format of the used label on the right side of the bar chart. Values may be:<br/>
+ * @param {string=} footer-label-format The auto-format of the label on the right side of the bar chart when chart-footer
+ * has not been specified. Values may be:<br/>
  * <ul style='list-style-type: none'>
  * <li>'actual' - (default) displays the standard label of '(n) of (m) (units) Used'.
  * <li>'percent' - displays a percentage label of '(n)% Used'.</li>
@@ -50,19 +53,19 @@
        <hr>
        <label><strong>layout='inline'</strong></label>
        <div pf-card head-title="Utilization Bar Chart">
-         <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
+         <div pf-utilization-bar-chart chart-data=data2 chart-title=title2short layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
          <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></div>
          <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
          <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
        </div>
 
        <hr>
-       <label><strong>layout='inline', used-label-format='percent', custom widths</strong></label>
+       <label><strong>layout='inline', footer-label-format='percent', and custom chart-footer labels</strong></label>
        <div pf-card head-title="Utilization Bar Chart">
-         <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInlineWidths used-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInlineWidths used-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 layout=layoutInlineWidths used-label-format='percent' units=units4 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInlineWidths used-label-format='percent' units=units5 threshold-error="85" threshold-warning="60"></div>
+         <div pf-utilization-bar-chart chart-data=data2 chart-title=title2short layout=layoutInline footer-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></div>
+         <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></div>
+         <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
+         <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
        </div>
      </div>
    </file>
@@ -80,8 +83,9 @@
       'total': '24'
     };
 
-    $scope.title2 = 'Memory Utilization';
-    $scope.units2 = 'GB';
+    $scope.title2      = 'Memory Utilization';
+    $scope.title2short = 'Memory';
+    $scope.units2      = 'GB';
 
     $scope.data2 = {
       'used': '25',
@@ -114,11 +118,9 @@
       'type': 'inline'
     };
 
-    $scope.layoutInlineWidths = {
-      'type': 'inline',
-      'titleLabelWidth': '120px',
-      'usedLabelWidth': '60px'
-    };
+    $scope.footer1 = '<strong>500 TB</strong> Total';
+    $scope.footer2 = '<strong>450 of 500</strong> Total';
+
    });
    </file>
  </example>
@@ -131,10 +133,11 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', function 
     scope: {
       chartData: '=',
       chartTitle: '=',
+      chartFooter: '=',
       units: '=',
       thresholdError: '=?',
       thresholdWarning: '=?',
-      usedLabelFormat: '@?',
+      footerLabelFormat: '@?',
       layout: '=?'
     },
     templateUrl: 'charts/utilization-bar/utilization-bar-chart.html',

@@ -14,6 +14,7 @@ module.exports = function(config) {
       'lib/patternfly/components/d3/d3.js',
       'lib/patternfly/components/c3/c3.js',
       'lib/angular/angular.js',
+      'lib/angular-sanitize/angular-sanitize.js',
       'lib/angular-mocks/angular-mocks.js',
       'lib/angular-bootstrap/ui-bootstrap-tpls.js',
       'misc/angular-bootstrap-prettify.js',
