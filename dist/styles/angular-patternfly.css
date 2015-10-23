@@ -31,15 +31,6 @@
   padding: 0 20px 0;
 }
 
-.card-pf-table {
-  display: table;
-  width: 100%;
-}
-
-.card-pf-cell {
-  display: table-cell;
-}
-
 .utilization-chart-pf .donut-chart-pf {
   width: 100%;
   float: left;

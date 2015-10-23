@@ -183,6 +183,13 @@ angular.module('patternfly.card').directive('pfCard', function () {
       $scope.showFilterInHeader = function () {
         return ($scope.filter && $scope.filter.filters && $scope.filter.position && $scope.filter.position === 'header');
       };
+
+      $scope.showFilterInFooter = function () {
+        return ($scope.filter && $scope.filter.filters && (!$scope.filter.position || $scope.filter.position === 'footer'));
+      };
+    },
+    link: function (scope) {
+      scope.shouldShowTitlesSeparator = (!scope.showTitlesSeparator || scope.showTitlesSeparator === 'true');
     }
   };
 });
