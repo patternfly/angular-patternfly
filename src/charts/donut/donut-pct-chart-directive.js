@@ -23,7 +23,7 @@
  * <li>.units         - unit label for values, ex: 'MHz','GB', etc..
  * <li>.thresholds    - warning and error percentage thresholds used to determine the Usage Percentage fill color (optional)
  * <li>.tooltipFn     - user defined function to customize the tool tip (optional)
- * <li>.centerLabelFn - user defined function to customize the center label (optional)
+ * <li>.centerLabelFn - user defined function to customize the text of the center label (optional)
  * </ul>
  *
  * @param {object} data the Total and Used values for the donut chart.  Available is calculated as Total - Used.<br/>
@@ -194,8 +194,7 @@
                   '</span>';
            },
          'centerLabelFn': function () {
-           return '<tspan dy="0" x="0" class="donut-title-big-pf">' + $scope.custData.available + '</tspan>' +
-                    '<tspan dy="20" x="0" class="donut-title-small-pf">Free</tspan>';
+           return $scope.custData.available + " GB";
            }
          };
 
@@ -340,23 +339,20 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
         $timeout(function () {
           var donutChartTitle, centerLabelText;
 
-          donutChartTitle = element[0].querySelector('text.c3-chart-arcs-title');
+          donutChartTitle = d3.select(element[0]).select('text.c3-chart-arcs-title');
           if (!donutChartTitle) {
             return;
           }
 
           centerLabelText = scope.getCenterLabelText();
 
+          // Remove any existing title.
+          donutChartTitle.selectAll('*').remove();
           if (centerLabelText.bigText && !centerLabelText.smText) {
-            donutChartTitle.innerHTML = centerLabelText.bigText;
+            donutChartTitle.text(centerLabelText.bigText);
           } else {
-            donutChartTitle.innerHTML =
-              '<tspan dy="0" x="0" class="donut-title-big-pf">' +
-              centerLabelText.bigText +
-              '</tspan>' +
-              '<tspan dy="20" x="0" class="donut-title-small-pf">' +
-              centerLabelText.smText +
-              '</tspan>';
+            donutChartTitle.insert('tspan').text(centerLabelText.bigText).classed('donut-title-big-pf', true).attr('dy', 0).attr('x', 0);
+            donutChartTitle.insert('tspan').text(centerLabelText.smText).classed('donut-title-small-pf', true).attr('dy', 20).attr('x', 0);
           }
         }, 300);
       };
