@@ -5,8 +5,9 @@
       <div class="progress-bar" role="progressbar" ng-class="{'animate': animate,
            'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}"
            ng-style="{width:chartData.percentageUsed + '%'}" tooltip="{{chartData.percentageUsed}}% Used">
-        <span ng-if="!usedLabelFormat || usedLabelFormat === 'actual'">{{chartData.used}} of {{chartData.total}} {{units}} Used</span>
-        <span ng-if="usedLabelFormat === 'percent'">{{chartData.percentageUsed}}% Used</span>
+        <span ng-if="chartFooter" ng-bind-html="chartFooter"></span>
+        <span ng-if="!chartFooter && (!footerLabelFormat || footerLabelFormat === 'actual')"><strong>{{chartData.used}} of {{chartData.total}} {{units}}</strong> Used</span>
+        <span ng-if="!chartFooter && footerLabelFormat === 'percent'"><strong>{{chartData.percentageUsed}}%</strong> Used</span>
       </div>
       <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"
            ng-style="{width:(100 - chartData.percentageUsed) + '%'}" tooltip="{{100 - chartData.percentageUsed}}% Available">
@@ -15,14 +16,15 @@
   </span>
   <span ng-if="layout && layout.type === 'inline'">
     <div class="progress-container progress-description-left progress-label-right"
-         ng-style="{'padding-left':layout.titleLabelWidth, 'padding-right':layout.usedLabelWidth}">
+         ng-style="{'padding-left':layout.titleLabelWidth, 'padding-right':layout.footerLabelWidth}">
       <div ng-if="chartTitle" class="progress-description"  ng-style="{'max-width':layout.titleLabelWidth}">{{chartTitle}}</div>
       <div class="progress">
         <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
              ng-class="{'animate': animate, 'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}"
              ng-style="{width:chartData.percentageUsed + '%'}" tooltip="{{chartData.percentageUsed}}% Used">
-          <span ng-if="!usedLabelFormat || usedLabelFormat === 'actual'" ng-style="{'max-width':layout.usedLabelWidth}">{{chartData.used}} of {{chartData.total}} {{units}} Used</span>
-          <span ng-if="usedLabelFormat === 'percent'" ng-style="{'max-width':layout.usedLabelWidth}">{{chartData.percentageUsed}}% Used</span>
+          <span ng-if="chartFooter" ng-bind-html="chartFooter"></span>
+          <span ng-if="(!chartFooter) && (!footerLabelFormat || footerLabelFormat === 'actual')" ng-style="{'max-width':layout.footerLabelWidth}"><strong>{{chartData.used}} {{units}}</strong> Used</span>
+          <span ng-if="(!chartFooter) && footerLabelFormat === 'percent'" ng-style="{'max-width':layout.footerLabelWidth}"><strong>{{chartData.percentageUsed}}%</strong> Used</span>
         </div>
         <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
              ng-style="{width:(100 - chartData.percentageUsed) + '%'}" tooltip="{{100 - chartData.percentageUsed}}% Available">
