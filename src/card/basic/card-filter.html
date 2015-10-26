@@ -2,7 +2,7 @@
   {{currentFilter.label}}
   <span class="caret"></span>
 </button>
-<ul class="dropdown-menu">
+<ul class="dropdown-menu dropdown-menu-right" role="menu">
   <li ng-repeat="item in filter.filters" ng-class="{'selected': item === currentFilter}">
     <a role="menuitem" tabindex="-1" ng-click="filterCallBackFn(item)">
       {{item.label}}

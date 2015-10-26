@@ -457,7 +457,14 @@ angular.module('patternfly.card').directive('pfCard', function () {
       $scope.showFilterInHeader = function () {
         return ($scope.filter && $scope.filter.filters && $scope.filter.position && $scope.filter.position === 'header');
       };
-    }]
+
+      $scope.showFilterInFooter = function () {
+        return ($scope.filter && $scope.filter.filters && (!$scope.filter.position || $scope.filter.position === 'footer'));
+      };
+    }],
+    link: function (scope) {
+      scope.shouldShowTitlesSeparator = (!scope.showTitlesSeparator || scope.showTitlesSeparator === 'true');
+    }
   };
 });
 ;(function () {
@@ -4903,12 +4910,12 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
 
 
   $templateCache.put('card/basic/card-filter.html',
-    "<button type=button class=\"btn btn-default dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false>{{currentFilter.label}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in filter.filters\" ng-class=\"{'selected': item === currentFilter}\"><a role=menuitem tabindex=-1 ng-click=filterCallBackFn(item)>{{item.label}}</a></li></ul>"
+    "<button type=button class=\"btn btn-default dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false>{{currentFilter.label}} <span class=caret></span></button><ul class=\"dropdown-menu dropdown-menu-right\" role=menu><li ng-repeat=\"item in filter.filters\" ng-class=\"{'selected': item === currentFilter}\"><a role=menuitem tabindex=-1 ng-click=filterCallBackFn(item)>{{item.label}}</a></li></ul>"
   );
 
 
   $templateCache.put('card/basic/card.html',
-    "<div ng-class=\"showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div ng-if=showHeader() ng-class=\"!showTitlesSeparator || showTitlesSeparator === 'true' ? 'card-pf-heading' : 'card-pf-heading-no-bottom'\"><div class=card-pf-table><div class=card-pf-cell><h2 class=card-pf-title ng-class=\"{'card-pf-filter-header': showFilterInHeader()}\">{{headTitle}}</h2></div><div class=\"card-pf-cell text-right\" ng-if=showFilterInHeader()><div class=\"dropdown btn-group\"><div ng-include=\"'card/basic/card-filter.html'\"></div></div></div></div></div><span ng-if=subTitle class=card-pf-subtitle>{{subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div><div class=card-pf-footer ng-if=footer><div class=card-pf-table><div class=card-pf-cell><a href={{footer.href}} ng-if=footer.href><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></a> <a ng-if=\"footer.callBackFn && !footer.href\" ng-click=footerCallBackFn()><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></a> <span ng-if=\"!footer.href && !footer.callBackFn\"><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></span></div><div class=\"card-pf-cell text-right\" ng-if=\"filter && filter.filters && (!filter.position || filter.position === 'footer')\"><div class=\"dropdown btn-group\"><div ng-include=\"'card/basic/card-filter.html'\"></div></div></div></div></div></div>"
+    "<div ng-class=\"showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div ng-if=showHeader() ng-class=\"shouldShowTitlesSeparator ? 'card-pf-heading' : 'card-pf-heading-no-bottom'\"><div ng-if=showFilterInHeader() class=\"dropdown card-pf-time-frame-filter\"><div ng-include=\"'card/basic/card-filter.html'\"></div></div><h2 class=card-pf-title>{{headTitle}}</h2></div><span ng-if=subTitle class=card-pf-subtitle>{{subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div><div ng-if=footer class=card-pf-footer><div ng-if=showFilterInFooter() class=\"dropdown card-pf-time-frame-filter\"><div ng-include=\"'card/basic/card-filter.html'\"></div></div><p><a ng-if=footer.href href={{footer.href}} ng-class=\"{'card-pf-link-with-icon':footer.iconClass,'card-pf-link':!footer.iconClass}\"><span ng-if=footer.iconClass class=\"{{footer.iconClass}} card-pf-footer-text\"></span> <span ng-if=footer.text class=card-pf-footer-text>{{footer.text}}</span></a> <a ng-if=\"footer.callBackFn && !footer.href\" ng-click=footerCallBackFn() ng-class=\"{'card-pf-link-with-icon':footer.iconClass,'card-pf-link':!footer.iconClass}\"><span class=\"{{footer.iconClass}} card-pf-footer-text\" ng-if=footer.iconClass></span> <span class=card-pf-footer-text ng-if=footer.text>{{footer.text}}</span></a> <span ng-if=\"!footer.href && !footer.callBackFn\"><span ng-if=footer.iconClass class=\"{{footer.iconClass}} card-pf-footer-text\" ng-class=\"{'card-pf-link-with-icon':footer.iconClass,'card-pf-link':!footer.iconClass}\"></span> <span ng-if=footer.text class=card-pf-footer-text>{{footer.text}}</span></span></p></div></div>"
   );
 
 }]);
