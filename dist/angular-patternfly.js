@@ -1634,8 +1634,10 @@ angular.module('patternfly.charts').directive('pfTrendsChart', function () {
  * <li>'percent' - displays a percentage label of '(n)% Used'.</li>
  * </ul>
  * @param {object=} units to be displayed on the chart. Examples: "GB", "MHz", "I/Ops", etc...
- * @param {string=} threshold-error Percent used to determine the usage error threshold fill color (red). Valid values are 1-100.
- * @param {string=} threshold-warning Percent used to determine the usage error threshold fill color (orange) Valid values are 1-100.
+ * @param {string=} threshold-error The percentage used, when reached, denotes an error.  Valid values are 1-100. When the error threshold
+ * has been reached, the used donut arc will be red.
+ * @param {string=} threshold-warning The percentage usage, when reached, denotes a warning.  Valid values are 1-100. When the warning threshold
+ * has been reached, the used donut arc will be orange.
  *
  * @example
  <example module="patternfly.example">
