@@ -367,7 +367,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (c3Cha
         setupDonutChartTitle();
       }, true);
 
-      scope.$watch('centerLabel', function () {
+      scope.$watchGroup(['centerLabel', 'chartData.used', 'chartData.available', 'chartData.total'], function () {
         setupDonutChartTitle();
       });
     }
