@@ -209,7 +209,7 @@ angular.module('patternfly.charts').directive('pfUtilizationChart',
             scope.currentText = 'Available';
           }
         };
-        scope.$watch('centerLabel', function () {
+        scope.$watchGroup(['centerLabel', 'chartData.used', 'chartData.available', 'chartData.total'], function () {
           setupCurrentValues();
         });
       }
