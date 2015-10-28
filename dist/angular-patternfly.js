@@ -410,8 +410,6 @@ angular.module('patternfly.card').directive('pfCard', function () {
     }]
   };
 });
-
-
 ;(function () {
   'use strict';
 
