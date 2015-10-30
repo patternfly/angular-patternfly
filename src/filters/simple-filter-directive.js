@@ -13,7 +13,7 @@
  * <li>.id          - (String) Optional unique Id for the filter field, useful for comparisons
  * <li>.title       - (String) The title to display for the filter field
  * <li>.placeholder - (String) Text to display when no filter value has been entered
- * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a select box)
+ * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a single select box)
  * <li>.filterValues - (Array) List of valid select values used when filterType is 'select'
  * </ul>
  * <li>.appliedFilters - (Array) List of the currently applied filters
@@ -183,13 +183,23 @@ angular.module('patternfly.filters').directive('pfSimpleFilter', function () {
         return foundFilter !== undefined;
       };
 
+      $scope.enforceSingleSelect = function (filter) {
+        _.remove($scope.config.appliedFilters, {title: filter.title});
+      };
+
       $scope.addFilter = function (field, value) {
         var newFilter = {
           id: field.id,
           title: field.title,
+          type: field.filterType,
           value: value
         };
         if (!$scope.filterExists(newFilter)) {
+
+          if (newFilter.type === 'select') {
+            $scope.enforceSingleSelect(newFilter);
+          }
+
           $scope.config.appliedFilters.push(newFilter);
 
           if ($scope.config.onFilterChange) {

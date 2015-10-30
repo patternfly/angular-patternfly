@@ -2,6 +2,7 @@ describe('Directive:  pfSimpleFilter', function () {
   var $scope;
   var $compile;
   var element;
+  var isoScope;
 
   // load the controller's module
   beforeEach(function () {
@@ -15,9 +16,11 @@ describe('Directive:  pfSimpleFilter', function () {
 
   var compileHTML = function (markup, scope) {
     element = angular.element(markup);
-    $compile(element)(scope);
+    var el = $compile(element)(scope);
 
     scope.$digest();
+
+    isoScope = el.isolateScope();
   };
 
   beforeEach(function () {
@@ -102,6 +105,51 @@ describe('Directive:  pfSimpleFilter', function () {
 
     var items = pfSelects.find('li');
     expect(items.length).toBe($scope.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
+  });
+
+  it ('should enforce single selection for select dropdowns, accumative for others', function() {
+    $scope.filterConfig.appliedFilters = [
+      {
+        id: 'birthMonth',
+        title: 'Birth Month',
+        type: 'select',
+        value: 'February'
+      }
+    ];
+
+    var newFilter = {
+      id: 'birthMonth',
+      title: 'Birth Month',
+      filterType: 'select'
+    };
+
+    isoScope.addFilter(newFilter, "April");
+
+    expect($scope.filterConfig.appliedFilters.length).toBe(1);
+    expect($scope.filterConfig.appliedFilters[0].value).toBe("April");
+
+    //Accumative for other types
+
+    $scope.filterConfig.appliedFilters = [
+      {
+        id: 'address',
+        title: 'Address',
+        type: 'text',
+        value: 'New York'
+      }
+    ];
+
+    newFilter = {
+      id: 'address',
+      title: 'Address',
+      filterType: 'text'
+    };
+
+    isoScope.addFilter(newFilter, 'Paris');
+
+    expect($scope.filterConfig.appliedFilters.length).toBe(2);
+    expect($scope.filterConfig.appliedFilters[0].value).toBe("New York");
+    expect($scope.filterConfig.appliedFilters[1].value).toBe("Paris");
   });
 
   it ('should clear a filter when the close button is clicked', function () {
