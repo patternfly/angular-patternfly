@@ -3240,7 +3240,7 @@ angular.module('patternfly.sort').directive('pfSimpleSort', function () {
         $scope.config.isAscending = !$scope.config.isAscending;
 
         if ($scope.config.onSortChange) {
-          $scope.config.onSortChange($scope.config.currentField, $scope.config.currentDirection);
+          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
         }
       };
 
