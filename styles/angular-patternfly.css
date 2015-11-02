@@ -215,12 +215,13 @@
   width: 260px;
 }
 
-.tiles-view-pf .tile-check-box {
+.tiles-view-pf .tile .tile-check-box {
   left: 10px;
   position: absolute;
   top: 8px;
   width: 20px;
   z-index: 3;
+  visibility: hidden;
 }
 
 .tiles-view-pf .tile-content {
@@ -256,6 +257,10 @@
 .tiles-view-pf .tile.active:hover .pficon,
 .tiles-view-pf .tile.active:focus .pficon {
   color: #ffffff;
+}
+.tiles-view-pf .tile:hover .tile-check-box,
+.tiles-view-pf .tile.active .tile-check-box {
+  visibility: visible;
 }
 
 .tiles-view-pf .tile.disabled, .tile.disabled:hover, .tile.disabled:focus {
