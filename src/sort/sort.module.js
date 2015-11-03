@@ -5,4 +5,4 @@
  *   Sort module for patternfly.
  *
  */
-angular.module('patternfly.sort', []);
+angular.module('patternfly.sort', ['ui.bootstrap']);

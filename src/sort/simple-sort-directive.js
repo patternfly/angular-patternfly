@@ -154,6 +154,7 @@ angular.module('patternfly.sort').directive('pfSimpleSort', function () {
     },
     templateUrl: 'sort/simple-sort.html',
     controller: function ($scope) {
+
       $scope.setupConfig = function () {
         var updated = false;
 
