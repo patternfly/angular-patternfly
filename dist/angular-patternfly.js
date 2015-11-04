@@ -22,7 +22,7 @@ angular.module('patternfly.charts', ['patternfly.utils', 'ui.bootstrap', 'ngSani
  *   Filters module for patternfly.
  *
  */
-angular.module('patternfly.filters', ['patternfly.select']);
+angular.module('patternfly.filters', ['patternfly.select', 'ui.bootstrap']);
 ;/**
  * @name  patternfly.form
  *
@@ -56,7 +56,7 @@ angular.module('patternfly', [
  *   Sort module for patternfly.
  *
  */
-angular.module('patternfly.sort', []);
+angular.module('patternfly.sort', ['ui.bootstrap']);
 ;
 angular.module( 'patternfly.utils', [] );
 ;/**
@@ -3205,6 +3205,7 @@ angular.module('patternfly.sort').directive('pfSimpleSort', function () {
     },
     templateUrl: 'sort/simple-sort.html',
     controller: ["$scope", function ($scope) {
+
       $scope.setupConfig = function () {
         var updated = false;
 
@@ -4960,7 +4961,7 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
   'use strict';
 
   $templateCache.put('filters/simple-filter-fields.html',
-    "<div class=\"simple-filter filter-fields\"><form><div class=\"form-group toolbar-pf-filter\"><div class=input-group><div dropdown class=input-group-btn><button dropdown-toggle type=button class=\"btn btn-default dropdown-toggle filter-fields\" data-toggle=dropdown aria-haspopup=true aria-expanded=false>{{currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=onValueKeyPress($event) ng-if=\"currentField.filterType !== 'select'\"><select pf-select class=\"form-control filter-select\" id=currentValue ng-model=config.currentValue ng-options=\"filterValue for filterValue in currentField.filterValues\" ng-if=\"currentField.filterType === 'select'\" ng-change=selectValue(config.currentValue)><option value=\"\">{{currentField.placeholder}}</option></select></div></div></form></div>"
+    "<div class=\"simple-filter filter-fields\"><form><div class=\"form-group toolbar-pf-filter\"><div class=input-group><div dropdown class=input-group-btn><button dropdown-toggle type=button class=\"btn btn-default dropdown-toggle filter-fields\" data-toggle=dropdown aria-haspopup=true aria-expanded=false tooltip=\"Filter by\" tooltip-placement=bottom>{{currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=onValueKeyPress($event) ng-if=\"currentField.filterType !== 'select'\"><select pf-select class=\"form-control filter-select\" id=currentValue ng-model=config.currentValue ng-options=\"filterValue for filterValue in currentField.filterValues\" ng-if=\"currentField.filterType === 'select'\" ng-change=selectValue(config.currentValue)><option value=\"\">{{currentField.placeholder}}</option></select></div></div></form></div>"
   );
 
 
@@ -5009,7 +5010,7 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
   'use strict';
 
   $templateCache.put('sort/simple-sort.html',
-    "<div class=simple-sort><form><div class=form-group><div class=\"dropdown btn-group\"><button type=button class=\"btn btn-default dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false>{{config.currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\" ng-class=\"{'selected': item === config.currentField}\"><a class=sort-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><button class=\"btn btn-link\" type=button ng-click=changeDirection()><span class=sort-direction ng-class=getSortIconClass()></span></button></div></form></div>"
+    "<div class=simple-sort><form><div class=form-group><div class=\"dropdown btn-group\"><button type=button class=\"btn btn-default dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false tooltip=\"Sort by\" tooltip-placement=bottom>{{config.currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\" ng-class=\"{'selected': item === config.currentField}\"><a class=sort-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><button class=\"btn btn-link\" type=button ng-click=changeDirection()><span class=sort-direction ng-class=getSortIconClass()></span></button></div></form></div>"
   );
 
 }]);
