@@ -1,5 +1,5 @@
 describe('Directive: pfHeatmapLegend', function() {
-  var $scope, $compile, element, legendItem, legendText, legendColor;
+  var $scope, $compile, element, legendItem, legendText;
 
   beforeEach(module(
     'patternfly.charts',
@@ -29,11 +29,9 @@ describe('Directive: pfHeatmapLegend', function() {
     expect(angular.element(element).find('li').size()).toBe(4);
 
     legendItem = angular.element(element).find('li')[0];
-    legendColor = legendItem.querySelector('.pf-legend-color-box');
     legendText = legendItem.querySelector('.pf-legend-text');
 
     expect(legendText.innerHTML).toBe("&gt; 90%");
-    expect(legendColor.getAttribute('style')).toBe("background: #CE0000");
   });
 
 });

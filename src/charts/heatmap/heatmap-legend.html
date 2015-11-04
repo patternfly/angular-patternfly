@@ -1,6 +1,6 @@
 <ul class="pf-heatmap-legend-container">
     <li ng-repeat="item in legendItems" class="pf-heatmap-legend-items">
-        <span class="pf-legend-color-box" style="background: {{item.color}}"></span>
+        <span class="pf-legend-color-box" ng-style="{background: item.color}"></span>
         <span class="pf-legend-text">{{item.text}}</span>
     </li>
 </ul>

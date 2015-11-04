@@ -113,7 +113,6 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
       heatmapColorPattern: '=?',
       clickAction: '=?'
     },
-    replace: true,
     templateUrl: 'charts/heatmap/heatmap.html',
     link: function (scope, element, attrs) {
       var thisComponent = element[0].querySelector('.pf-heatmap-svg');

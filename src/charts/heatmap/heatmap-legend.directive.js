@@ -7,7 +7,6 @@ angular.module('patternfly.charts').directive('pfHeatmapLegend',
         legend: '=',
         legendColors: '='
       },
-      replace: true,
       templateUrl: 'charts/heatmap/heatmap-legend.html',
       link: function ($scope) {
         var items = [];

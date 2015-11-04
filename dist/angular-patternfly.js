@@ -1084,7 +1084,6 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
         legend: '=',
         legendColors: '='
       },
-      replace: true,
       templateUrl: 'charts/heatmap/heatmap-legend.html',
       link: function ($scope) {
         var items = [];
@@ -1215,7 +1214,6 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
       heatmapColorPattern: '=?',
       clickAction: '=?'
     },
-    replace: true,
     templateUrl: 'charts/heatmap/heatmap.html',
     link: function (scope, element, attrs) {
       var thisComponent = element[0].querySelector('.pf-heatmap-svg');
@@ -5185,7 +5183,7 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
 
 
   $templateCache.put('charts/heatmap/heatmap-legend.html',
-    "<ul class=pf-heatmap-legend-container><li ng-repeat=\"item in legendItems\" class=pf-heatmap-legend-items><span class=pf-legend-color-box style=\"background: {{item.color}}\"></span> <span class=pf-legend-text>{{item.text}}</span></li></ul>"
+    "<ul class=pf-heatmap-legend-container><li ng-repeat=\"item in legendItems\" class=pf-heatmap-legend-items><span class=pf-legend-color-box ng-style=\"{background: item.color}\"></span> <span class=pf-legend-text>{{item.text}}</span></li></ul>"
   );
 
 
