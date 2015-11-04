@@ -112,19 +112,19 @@
       function ($scope) {
         $scope.eventText = '';
         var handleSelect = function (item, e) {
-          $scope.eventText = item.name + ' selected\n' + $scope.eventText;
+          $scope.eventText = item.name + ' selected\r\n' + $scope.eventText;
         };
         var handleSelectionChange = function (selectedItems, e) {
-          $scope.eventText = selectedItems.length + ' items selected\n' + $scope.eventText;
+          $scope.eventText = selectedItems.length + ' items selected\r\n' + $scope.eventText;
         };
         var handleClick = function (item, e) {
-          $scope.eventText = item.name + ' clicked\n' + $scope.eventText;
+          $scope.eventText = item.name + ' clicked\r\n' + $scope.eventText;
         };
         var handleDblClick = function (item, e) {
-          $scope.eventText = item.name + ' double clicked\n' + $scope.eventText;
+          $scope.eventText = item.name + ' double clicked\r\n' + $scope.eventText;
         };
         var handleCheckBoxChange = function (item, selected, e) {
-          $scope.eventText = item.name + ' checked: ' + item.selected + '\n' + $scope.eventText;
+          $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;
         };
 
         var checkDisabledItem = function(item) {
@@ -215,7 +215,7 @@
         ];
 
         var performAction = function (action, item) {
-          $scope.eventText = item.name + " : " + action.name + "\n" + $scope.eventText;
+          $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
         };
 
         $scope.actions = [
@@ -305,7 +305,7 @@ angular.module('patternfly.views').directive('pfDataList', function ($timeout, $
             var parentDiv = undefined;
             var nextElement;
 
-            nextElement = event.toElement;
+            nextElement = event.target;
             while (nextElement && !parentDiv) {
               if (nextElement.className.indexOf('list-menu') === 0) {
                 parentDiv = nextElement;
