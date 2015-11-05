@@ -34,21 +34,38 @@
 
  <file name="index.html">
    <div ng-controller="ChartCtrl">
-     <div pf-card head-title="Card Title" sub-title="Card Subtitle" filter="filterConfigHeader" style="width: 50%">
-       [Card Contents] <button>Click Me</button> Timeframe filter in header
+     <label class="label-title">Timeframe filter in header</label>
+     <div pf-card head-title="Card Title" sub-title="Card Subtitle" show-top-border="true" filter="filterConfigHeader" style="width: 50%">
+       Card Contents
      </div>
 
+     <label class="label-title">Footer with Link & Timeframe filter</label>
      <div pf-card head-title="Card Title" sub-title="Card Subtitle" show-top-border="true"
           footer="footerConfig" filter="filterConfig" style="width: 50%">
-       [Card Contents] <button>Click Me</button> Footer with Link & Timeframe filter
+       Card Contents
      </div>
 
+     <label class="label-title">Card With Single Trend Chart</label>
+     <div pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
+       <div pf-trends-chart config="configSingle" chart-data="dataSingle"></div>
+     </div>
+
+     <label class="label-title">Card With Multiple Trends</label>
      <div pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
           show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
        <div pf-trends-chart config="configVirtual" chart-data="dataVirtual"></div>
        <div pf-trends-chart config="configPhysical" chart-data="dataPhysical"></div>
        <div pf-trends-chart config="configMemory" chart-data="dataMemory"></div>
      </div>
+
+     <label class="label-title">Card With Multiple Utilization Bars</label>
+     <div pf-card head-title="System Resources" show-top-border="true" style="width: 65%">
+       <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
+       <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></div>
+       <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
+       <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
+     </div>
+
    </div>
  </file>
  <file name="script.js">
@@ -87,6 +104,21 @@
        for (var d = 20 - 1; d >= 0; d--) {
          dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
        }
+
+       $scope.configSingle = {
+         'chartId'      : 'example2TrendsChart',
+         'title'        : 'Storage Capacity',
+         'layout'       : 'compact',
+         'valueType'    : 'actual',
+         'units'        : 'TB',
+         'tooltipType'  : 'percentage'
+       };
+
+       $scope.dataSingle = {
+         'total': '250',
+         'xData': dates,
+         'yData': ['used', '90', '20', '30', '20', '20', '10', '14', '20', '25', '68', '44', '56', '78', '56', '67', '88', '76', '65', '87', '76']
+       };
 
        $scope.configVirtual = {
          'chartId'      : 'virtualTrendsChart',
@@ -137,6 +169,40 @@
             alert("Footer Callback Fn Called");
           }
        }
+
+       $scope.title2      = 'Memory';
+       $scope.units2      = 'GB';
+
+       $scope.data2 = {
+         'used': '25',
+         'total': '100'
+       };
+
+       $scope.title3 = 'CPU Usage';
+       $scope.units3 = 'MHz';
+
+       $scope.data3 = {
+         'used': '420',
+         'total': '500',
+       };
+
+       $scope.title4 = 'Disk Usage';
+       $scope.units4 = 'TB';
+       $scope.data4 = {
+         'used': '350',
+         'total': '500',
+       };
+
+       $scope.title5 = 'Disk I/O';
+       $scope.units5 = 'I/Ops';
+       $scope.data5 = {
+         'used': '450',
+         'total': '500',
+       };
+
+       $scope.layoutInline = {
+         'type': 'inline'
+       };
      });
  </file>
  </example>

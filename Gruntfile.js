@@ -45,7 +45,7 @@ module.exports = function (grunt) {
           options: {
             hostname: '0.0.0.0',
             base: 'dist/docs',
-            livereload: true,
+            livereload: 35722,
             open: true
           }
         }
