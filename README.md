@@ -82,7 +82,10 @@ If you're interested in reading the docs right away, you can use special target,
 grunt ngdocs:view
 ```
 
-After executing this tasks you'll be able to access the documentation at [http://localhost:8000/](http://localhost:8000/).
+After executing this tasks you'll be able to access the documentation at [http://localhost:8000/](http://localhost:8000/). If a different port is desired, it may be specified on as an option:
+```shell
+grunt ngdocs:view --port:8002
+```
 
 ## Releasing
 
