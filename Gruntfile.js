@@ -44,6 +44,7 @@ module.exports = function (grunt) {
         docs: {
           options: {
             hostname: '0.0.0.0',
+            port: grunt.option("port") || 8000,
             base: 'dist/docs',
             livereload: true,
             open: true
