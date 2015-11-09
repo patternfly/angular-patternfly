@@ -43,32 +43,20 @@
  <example module="patternfly.example">
    <file name="index.html">
      <div ng-controller="ChartCtrl">
+
+       <label class="label-title">Default Layout, no Thresholds</label>
        <div pf-utilization-bar-chart chart-data=data1 chart-title=title1 units=units1></div>
-       <hr>
-       <div pf-card head-title="Utilization Bar Chart">
-         <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 units=units2 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 units=units3 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 units=units4 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 units=units5 threshold-error="85" threshold-warning="60"></div>
-       </div>
-
-       <hr>
-       <label><strong>layout='inline'</strong></label>
-       <div pf-card head-title="Utilization Bar Chart">
-         <div pf-utilization-bar-chart chart-data=data2 chart-title=title2short layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
-       </div>
-
-       <hr>
-       <label><strong>layout='inline', footer-label-format='percent', and custom chart-footer labels</strong></label>
-       <div pf-card head-title="Utilization Bar Chart">
-         <div pf-utilization-bar-chart chart-data=data2 chart-title=title2short layout=layoutInline footer-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
-         <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
-       </div>
+       <br>
+       <label class="label-title">Inline Layouts with Error, Warning, and Ok Thresholds</label>
+       <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
+       <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></div>
+       <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
+       <br>
+       <label class="label-title">layout='inline', footer-label-format='percent', and custom chart-footer labels</label>
+       <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline footer-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></div>
+       <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></div>
+       <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
+       <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
      </div>
    </file>
 
@@ -85,8 +73,7 @@
       'total': '24'
     };
 
-    $scope.title2      = 'Memory Utilization';
-    $scope.title2short = 'Memory';
+    $scope.title2      = 'Memory';
     $scope.units2      = 'GB';
 
     $scope.data2 = {

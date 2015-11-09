@@ -82,13 +82,6 @@
          <button ng-click="addDataPoint()">Add Data Point</button>
        </div>
      </div>
-     <hr class="col-md-12">
-     <div class="col-md-12">
-       <div pf-card head-title="Cluster Utilization" show-top-border="true"
-            footer="footerConfig" filter="filterConfig">
-         <div pf-trends-chart config="config2" chart-data="data"></div>
-       </div>
-     </div>
     </div>
  </file>
  <file name="script.js">
@@ -102,15 +95,6 @@
          'valueType'    : 'actual',
          'timeFrame'    : 'Last 15 Minutes',
          'units'        : 'MHz',
-         'tooltipType'  : 'percentage'
-       };
-
-       $scope.config2 = {
-         'chartId'      : 'example2TrendsChart',
-         'title'        : 'Storage Capacity',
-         'layout'       : 'compact',
-         'valueType'    : 'actual',
-         'units'        : 'TB',
          'tooltipType'  : 'percentage'
        };
 
