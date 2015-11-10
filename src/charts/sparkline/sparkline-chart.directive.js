@@ -299,7 +299,9 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (c3Ch
         scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
       }, true);
       scope.$watch('chartHeight', function () {
-        scope.config.size.height = scope.chartHeight;
+        if (scope.chartHeight) {
+          scope.config.size.height = scope.chartHeight;
+        }
       });
       scope.$watch('showXAxis', function () {
         scope.config.axis.x.show = scope.showXAxis === true;
