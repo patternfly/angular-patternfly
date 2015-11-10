@@ -80,4 +80,17 @@ describe('Directive: pfHeatmap', function() {
     expect(color.trim()).toBe('fill: #ce0000;');
   });
 
+  it("should show a legend by default", function() {
+    element = compileChart('<div pf-heatmap chart-title="title" data="data"></div>',$scope);
+    var legend = element.find('.pf-heatmap-legend-container');
+    expect(legend.length).toBe(1);
+  });
+
+  it("should not show a legend when set not to", function() {
+    $scope.showLegend = false;
+    element = compileChart('<div pf-heatmap chart-title="title" data="data" show-legend="showLegend"></div>',$scope);
+    var legend = element.find('.pf-heatmap-legend-container');
+    expect(legend.length).toBe(0);
+  });
+
 });

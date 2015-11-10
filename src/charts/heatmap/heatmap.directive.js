@@ -14,15 +14,33 @@
  *
  * @param {string=} height height of the chart (no units) - default: "200"
  * @param {string=} chartTitle title of the chart
+ * @param {boolean=} showLegend flag to show the legend, defaults to true
  * @param {array=} legendLabels the labels for the legend - defaults: ['< 70%', '70-80%' ,'80-90%', '> 90%']
  * @param {array=} thresholds the threshold values for the heapmap - defaults: [0.7, 0.8, 0.9]
  * @param {array=} heatmapColorPattern the colors that correspond to the various threshold values (lowest to hightest value ex: <70& to >90%) - defaults: ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000']
  * @param {function=} clickAction function(block) function to call when a block is clicked on
  * @example
  <example module="patternfly.charts">
+   <file name="index.html">
+     <div ng-controller="ChartCtrl" class="row">
+       <div class="col-md-5">
+         <div pf-heatmap id="id" chart-title="title" data="data" show-legend="showLegends"></div>
+       </div>
+       <div class="col-md-5">
+         <div pf-heatmap id="id" chart-title="titleAlt" data="data" show-legend="showLegends" legend-labels="legendLabels" heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds" click-action="clickAction"></div>
+       </div>
+       <div class="col-md-12">
+         <form role="form">
+           <div class="form-group">
+             <label class="radio-inline">
+               <input type="checkbox" ng-model="showLegends">Show Legends</input>
+             </label>
+           </div>
+         </form>
+       </div>
+   </file>
    <file name="script.js">
      angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope) {
-       $scope.title = 'Utilization - Using Defaults';
        $scope.data = [
        {'id': 9,'value': 0.96,'tooltip': 'Node 8 : My OpenShift Provider<br\>96% : 96 Used of 100 Total<br\>4 Available'},
        {'id': 44, 'value': 0.94, 'tooltip': 'Node 19 : My Kubernetes Provider<br\>94% : 94 Used of 100 Total<br\>6 Available'},
@@ -77,26 +95,19 @@
        {'id': 51, 'value': 0.22, 'tooltip': 'Node 26 : My Kubernetes Provider<br\>22% : 22 Used of 100 Total<br\>78 Available'},
        {'id': 14, 'value': 0.2, 'tooltip': 'Node 14 : My OpenShift Provider<br\>20% : 20 Used of 100 Total<br\>80 Available'}];
 
+       $scope.title = 'Utilization - Using Defaults';
        $scope.titleAlt = 'Utilization - Overriding Defaults';
+
        $scope.legendLabels = ['< 60%','70%', '70-80%' ,'80-90%', '> 90%'];
        $scope.thresholds = [0.6, 0.7, 0.8, 0.9];
        $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#f00'];
 
+       $scope.showLegends = true;
        var clickAction = function (block) {
           console.log(block);
        };
        $scope.clickAction = clickAction;
      });
-   </file>
-   <file name="index.html">
-     <div ng-controller="ChartCtrl" class="row">
-       <div class="col-md-4">
-         <div pf-heatmap id="id" chart-title="title" data="data"></div>
-       </div>
-       <div class="col-md-4">
-         <div pf-heatmap id="id" chart-title="titleAlt" data="data" legend-labels="legendLabels" heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds" click-action="clickAction"></div>
-       </div>
-     </div>
    </file>
  </example>
  */
@@ -108,19 +119,36 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
       data: '=',
       height: '=',
       chartTitle: '=?',
+      showLegend: '=?',
       legendLabels: '=?',
       thresholds: '=?',
       heatmapColorPattern: '=?',
       clickAction: '=?'
     },
     templateUrl: 'charts/heatmap/heatmap.html',
-    link: function (scope, element, attrs) {
-      var thisComponent = element[0].querySelector('.pf-heatmap-svg');
-      var containerWidth, containerHeight, blockSize, numberOfRows;
+    controller: function ($scope) {
       var thresholdDefaults = [0.7, 0.8, 0.9];
       var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
       var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
       var heightDefault = 200;
+
+      //Allow overriding of defaults
+      if (!$scope.thresholds) {
+        $scope.thresholds = thresholdDefaults;
+      }
+      if (!$scope.heatmapColorPattern) {
+        $scope.heatmapColorPattern = heatmapColorPatternDefaults;
+      }
+      if (!$scope.legendLabels) {
+        $scope.legendLabels = legendLabelDefaults;
+      }
+      $scope.height = $scope.height || heightDefault;
+      $scope.showLegend = $scope.showLegend || ($scope.showLegend === undefined);
+      $scope.loadingDone = false;
+    },
+    link: function (scope, element, attrs) {
+      var thisComponent = element[0].querySelector('.pf-heatmap-svg');
+      var containerWidth, containerHeight, blockSize, numberOfRows;
 
       var setSizes = function () {
         var parentContainer = element[0].querySelector('.heatmap-container');
@@ -156,7 +184,6 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
         var data = scope.data;
         var blockPadding = 1;
         var color = d3.scale.threshold().domain(scope.thresholds).range(scope.heatmapColorPattern);
-        var component = thisComponent;
         var blocks;
         var highlightBlock = function (block, active) {
           block.style('fill-opacity', active ? 1 : 0.4);
@@ -200,15 +227,6 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
           blocks.call(highlightBlock, true);
         });
       };
-
-      //Allow overriding of defaults
-      scope.thresholds = angular.extend([], thresholdDefaults, scope.thresholds);
-      scope.heatmapColorPattern = angular.extend([], heatmapColorPatternDefaults, scope.heatmapColorPattern);
-      scope.legendLabels = angular.extend([], legendLabelDefaults, scope.legendLabels);
-      scope.height = scope.height || heightDefault;
-
-      //Shows loading indicator
-      scope.loadingDone = false;
 
       scope.$watch('data', function (newVal, oldVal) {
         if (typeof(newVal) !== 'undefined') {

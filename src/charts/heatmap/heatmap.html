@@ -4,5 +4,5 @@
     <svg class="pf-heatmap-svg"></svg>
   </div>
   <div ng-if="!loadingDone" class="spinner spinner-lg loading"></div>
-  <div pf-heatmap-legend legend="legendLabels" legend-colors="heatmapColorPattern"></div>
+  <div ng-if="showLegend" pf-heatmap-legend legend="legendLabels" legend-colors="heatmapColorPattern"></div>
 </div>
