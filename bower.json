@@ -21,7 +21,9 @@
     "misc",
     "src",
     "README.md",
-    "bower.json"
+    "bower.json",
+    ".bower.json",
+    "grunt-ngdocs-index.tmpl"
   ],
   "main": [
     "dist/angular-patternfly.js",
