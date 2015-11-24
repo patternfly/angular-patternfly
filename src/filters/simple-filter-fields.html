@@ -3,7 +3,7 @@
     <div class="form-group toolbar-pf-filter">
       <div class="input-group">
         <div dropdown class="input-group-btn">
-          <button dropdown-toggle type="button" class="btn btn-default dropdown-toggle filter-fields" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tooltip="Filter by" tooltip-placement="bottom">
+          <button dropdown-toggle type="button" class="btn btn-default dropdown-toggle filter-fields" aria-haspopup="true" aria-expanded="false" tooltip="Filter by" tooltip-placement="bottom">
             {{currentField.title}}
             <span class="caret"></span>
           </button>
@@ -15,17 +15,19 @@
             </li>
           </ul>
         </div>
-        <input class="form-control" type="{{currentField.filterType}}" ng-model="config.currentValue"
-               placeholder="{{currentField.placeholder}}"
-               ng-keypress="onValueKeyPress($event)"
-               ng-if="currentField.filterType !== 'select'"/>
-        <select pf-select class="form-control filter-select" id="currentValue"
-                ng-model="config.currentValue"
-                ng-options="filterValue for filterValue in currentField.filterValues"
-                ng-if="currentField.filterType === 'select'"
-                ng-change="selectValue(config.currentValue)">
+        <div ng-if="currentField.filterType !== 'select'">
+          <input class="form-control" type="{{currentField.filterType}}" ng-model="config.currentValue"
+                 placeholder="{{currentField.placeholder}}"
+                 ng-keypress="onValueKeyPress($event)"/>
+        </div>
+        <div ng-if="currentField.filterType === 'select'">
+          <select pf-select class="form-control filter-select" id="currentValue"
+                  ng-model="config.currentValue"
+                  ng-options="filterValue for filterValue in currentField.filterValues"
+                  ng-change="selectValue(config.currentValue)">
           <option value="">{{currentField.placeholder}}</option>
-        </select>
+          </select>
+        </div>
       </div>
     </div>
   </form>
