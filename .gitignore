@@ -14,7 +14,12 @@ pids
 logs
 results
 test-results.xml
-dist/docs
+dist/docs/components
+dist/docs/font*
+dist/docs/grunt-styles
+dist/docs/img
+dist/docs/index.html
+
 
 node_modules
 lib
