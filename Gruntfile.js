@@ -125,6 +125,7 @@ module.exports = function (grunt) {
             'lib/patternfly/components/bootstrap-treeview/src/js/bootstrap-treeview.js',
             'lib/patternfly/components/c3/c3.js',
             'lib/patternfly/components/d3/d3.js',
+            'lib/patternfly/dist/js/patternfly.js',
             'lib/angular/angular.js',
             'lib/angular-sanitize/angular-sanitize.js',
             'lib/angular-animate/angular-animate.js',

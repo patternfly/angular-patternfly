@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/c3/c3-chart.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/e9e279f/src/charts/c3/c3-chart.directive.js#L82" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfC3Chart</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/c3/c3-chart.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/2140745/src/charts/c3/c3-chart.directive.js#L65" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfC3Chart</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
@@ -45,34 +45,17 @@ In order to use patternfly charts you must add &#39;patternfly.charts&#39; as a 
     $scope.total = 1000;
     $scope.available =  $scope.total - $scope.used;
 
-    $scope.chartConfig = {
+    $scope.chartConfig = $().c3ChartDefaults().getDefaultDonutConfig('MHz Used');
+    $scope.chartConfig.data = {
       type: "donut",
-      donut: {
-        title: "MHz Used",
-        label: {show: false},
-        width: 10
-       },
-       size: {
-         height: 130
-       },
-       legend: {
-         show: false
-         },
-       color: {
-         pattern: ["#0088CE","#D1D1D1"]
-       },
-       tooltip: {},
-       data: {
-         type: "donut",
-         columns: [
-           ["Used", $scope.used],
-           ["Available", $scope.total - $scope.used]
-         ],
-         groups: [
-           ["used", "available"]
-         ],
-         order: null
-       }
+      columns: [
+        ["Used", $scope.used],
+        ["Available", $scope.total - $scope.used]
+      ],
+      groups: [
+        ["used", "available"]
+      ],
+      order: null
     };
 
     $scope.updateAvailable = function (val) {

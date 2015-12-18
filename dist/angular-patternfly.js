@@ -536,104 +536,23 @@ angular.module('patternfly.card').directive('pfCard', function () {
 ;(function () {
   'use strict';
 
+  var patternflyDefaults = $().c3ChartDefaults();
+
   angular.module('patternfly.charts').constant('c3ChartDefaults', {
-    getDefaultDonut: function (title) {
-      return {
-        title: title,
-        label: {
-          show: false
-        },
-        width: 11
-      };
-    },
-    getDefaultDonutSize: function () {
-      return {
-        height: 171 // produces a diameter of 150 and a centered chart
-      };
-    },
-    getDefaultDonutColor: function () {
-      return {
-        pattern: ['#0088CE', '#D1D1D1']
-      };
-    },
-    getDefaultDonutTooltip: function () {
-      return {
-        show: false
-      };
-    },
-    getDefaultDonutLegend: function () {
-      return {
-        show: false
-      };
-    },
-    getDefaultDonutConfig: function (title) {
-      return {
-        donut: this.getDefaultDonut(title),
-        size: this.getDefaultDonutSize(),
-        legend: this.getDefaultDonutLegend(),
-        color: this.getDefaultDonutColor(),
-        tooltip: this.getDefaultDonutTooltip()
-      };
-    },
-    getDefaultSparklineArea: function () {
-      return {
-        zerobased: true
-      };
-    },
-    getDefaultSparklineSize: function () {
-      return {
-        height: 60
-      };
-    },
-    getDefaultSparklineAxis: function () {
-      return {
-        x: {
-          show: false
-        },
-        y: {
-          show: false
-        }
-      };
-    },
-    getDefaultSparklineColor: function () {
-      return {
-        pattern: ['#0088ce', '#00659c', '#3f9c35', '#ec7a08', '#cc0000']
-      };
-    },
-    getDefaultSparklineLegend: function () {
-      return {
-        show: false
-      };
-    },
-    getDefaultSparklinePoint: function () {
-      return {
-        r: 1,
-        focus: {
-          expand: {
-            r: 4
-          }
-        }
-      };
-    },
-    getDefaultSparklineTooltip: function () {
-      return {
-        // because a sparkline should only contain a single data column, the tooltip will only work for a single data column
-        contents: function (d) {
-          return '<span class="c3-tooltip-sparkline">' + d[0].value + ' ' + d[0].name + '</span>';
-        }
-      };
-    },
-    getDefaultSparklineConfig: function () {
-      return {
-        area: this.getDefaultSparklineArea(),
-        size: this.getDefaultSparklineSize(),
-        axis: this.getDefaultSparklineAxis(),
-        color: this.getDefaultSparklineColor(),
-        legend: this.getDefaultSparklineLegend(),
-        point: this.getDefaultSparklinePoint(),
-        tooltip: this.getDefaultSparklineTooltip()
-      };
-    }
+    getDefaultColors: patternflyDefaults.getDefaultColors,
+    getDefaultDonut: patternflyDefaults.getDefaultDonut,
+    getDefaultDonutSize: patternflyDefaults.getDefaultDonutSize,
+    getDefaultDonutColor: patternflyDefaults.getDefaultDonutColors,
+    getDefaultDonutLegend: patternflyDefaults.getDefaultDonutLegend,
+    getDefaultDonutConfig: patternflyDefaults.getDefaultDonutConfig,
+    getDefaultSparklineArea: patternflyDefaults.getDefaultSparklineArea,
+    getDefaultSparklineSize: patternflyDefaults.getDefaultSparklineSize,
+    getDefaultSparklineAxis: patternflyDefaults.getDefaultSparklineAxis,
+    getDefaultSparklineColor: patternflyDefaults.getDefaultColors,
+    getDefaultSparklineLegend: patternflyDefaults.getDefaultSparklineLegend,
+    getDefaultSparklinePoint: patternflyDefaults.getDefaultSparklinePoint,
+    getDefaultSparklineTooltip: patternflyDefaults.getDefaultSparklineTooltip,
+    getDefaultSparklineConfig: patternflyDefaults.getDefaultSparklineConfig
   });
 })();
 ;/**
@@ -674,34 +593,17 @@ angular.module('patternfly.card').directive('pfCard', function () {
        $scope.total = 1000;
        $scope.available =  $scope.total - $scope.used;
 
-       $scope.chartConfig = {
+       $scope.chartConfig = $().c3ChartDefaults().getDefaultDonutConfig('MHz Used');
+       $scope.chartConfig.data = {
          type: "donut",
-         donut: {
-           title: "MHz Used",
-           label: {show: false},
-           width: 10
-          },
-          size: {
-            height: 130
-          },
-          legend: {
-            show: false
-            },
-          color: {
-            pattern: ["#0088CE","#D1D1D1"]
-          },
-          tooltip: {},
-          data: {
-            type: "donut",
-            columns: [
-              ["Used", $scope.used],
-              ["Available", $scope.total - $scope.used]
-            ],
-            groups: [
-              ["used", "available"]
-            ],
-            order: null
-          }
+         columns: [
+           ["Used", $scope.used],
+           ["Available", $scope.total - $scope.used]
+         ],
+         groups: [
+           ["used", "available"]
+         ],
+         order: null
        };
 
        $scope.updateAvailable = function (val) {
@@ -973,7 +875,7 @@ angular.module('patternfly.card').directive('pfCard', function () {
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaults", "pfUtils", "$timeout", function (c3ChartDefaults, pfUtils, $timeout) {
+angular.module('patternfly.charts').directive('pfDonutPctChart', ["pfUtils", "$timeout", function (pfUtils, $timeout) {
   'use strict';
 
   return {
@@ -1098,7 +1000,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["c3ChartDefaul
           $scope.config.data.onclick = $scope.config.onClickFn;
         };
 
-        $scope.config = pfUtils.merge(c3ChartDefaults.getDefaultDonutConfig(), $scope.config);
+        $scope.config = pfUtils.merge($().c3ChartDefaults().getDefaultDonutConfig(), $scope.config);
         $scope.updateAll($scope);
       }
     ],
@@ -1549,7 +1451,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefaults", "pfUtils", function (c3ChartDefaults, pfUtils) {
+angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", function (pfUtils) {
   'use strict';
   return {
     restrict: 'A',
@@ -1631,7 +1533,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
                     '</tr>';
                   break;
                 default:
-                  tipRows = c3ChartDefaults.getDefaultSparklineTooltip().contents(d);
+                  tipRows = $().c3ChartDefaults().getDefaultSparklineTooltip().contents(d);
                 }
               }
               return $scope.getTooltipTableHTML(tipRows);
@@ -1677,7 +1579,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["c3ChartDefau
           $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
         }
 
-        $scope.defaultConfig = c3ChartDefaults.getDefaultSparklineConfig();
+        $scope.defaultConfig = $().c3ChartDefaults().getDefaultSparklineConfig();
         $scope.defaultConfig.axis = {
           x: {
             show: $scope.showXAxis === true,
@@ -5287,7 +5189,7 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
   'use strict';
 
   $templateCache.put('filters/simple-filter-fields.html',
-    "<div class=\"simple-filter filter-fields\"><form><div class=\"form-group toolbar-pf-filter\"><div class=input-group><div dropdown class=input-group-btn><button dropdown-toggle type=button class=\"btn btn-default dropdown-toggle filter-fields\" aria-haspopup=true aria-expanded=false tooltip=\"Filter by\" tooltip-placement=bottom>{{currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"currentField.filterType !== 'select'\"><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=\"onValueKeyPress($event)\"></div><div ng-if=\"currentField.filterType === 'select'\"><select pf-select class=\"form-control filter-select\" id=currentValue ng-model=config.currentValue ng-options=\"filterValue for filterValue in currentField.filterValues\" ng-change=selectValue(config.currentValue)><option value=\"\">{{currentField.placeholder}}</option></select></div></div></div></form></div>"
+    "<div class=\"simple-filter filter-fields\"><form><div class=\"form-group toolbar-pf-filter\"><div class=input-group><div dropdown class=input-group-btn><button dropdown-toggle type=button class=\"btn btn-default dropdown-toggle filter-fields\" aria-haspopup=true aria-expanded=false tooltip=\"Filter by\" tooltip-placement=top>{{currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"currentField.filterType !== 'select'\"><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=\"onValueKeyPress($event)\"></div><div ng-if=\"currentField.filterType === 'select'\"><select pf-select class=\"form-control filter-select\" id=currentValue ng-model=config.currentValue ng-options=\"filterValue for filterValue in currentField.filterValues\" ng-change=selectValue(config.currentValue)><option value=\"\">{{currentField.placeholder}}</option></select></div></div></div></form></div>"
   );
 
 
