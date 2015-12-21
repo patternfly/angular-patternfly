@@ -93,3 +93,8 @@ hr {
   font-weight: 600;
   padding-bottom: 10px;
 }
+
+.example-heatmap-container {
+  border: solid 1px #d1d1d1;
+  margin: 0 10px;
+}

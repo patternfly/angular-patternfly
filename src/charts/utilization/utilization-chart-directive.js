@@ -24,6 +24,7 @@
  * <li>.total  - number representing the total amount
  * <li>.xData  - Array, X values for the data points, first element must be the name of the data
  * <li>.yData  - Array, Y Values for the data points, first element must be the name of the data
+ * <li>.dataAvailable - Flag if there is data available - default: true
  * </ul>
  *
  * @param {string=} donutCenterLabel specifies the contents of the donut's center label.<br/>
@@ -117,6 +118,16 @@
              <button ng-click="addDataPoint()">Add Data Point</button>
            </div>
          </div>
+         <div class="row">
+           <div class="col-md-6">
+             <form role="form"">
+               <div class="form-group">
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="data.dataAvailable" ng-change="updateDataAvailable()">Data Available</input>
+                 </label>
+               </div>
+             </form>
+         </div>
        </div>
      </div>
    </file>
@@ -143,6 +154,7 @@
     }
 
      $scope.data = {
+         dataAvailable: true,
          used: 76,
          total: 100,
          xData: dates,

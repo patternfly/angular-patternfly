@@ -12,6 +12,7 @@
  * <li>.tooltip       - message to be displayed on hover
  * </ul>
  *
+ * @param {boolean=} chartDataAvailable flag if the chart data is available - default: true
  * @param {string=} height height of the chart (no units) - default: "200"
  * @param {string=} chartTitle title of the chart
  * @param {boolean=} showLegend flag to show the legend, defaults to true
@@ -23,21 +24,35 @@
  <example module="patternfly.charts">
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row">
-       <div class="col-md-5">
-         <div pf-heatmap id="id" chart-title="title" data="data" show-legend="showLegends"></div>
+       <div class="col-md-5 example-heatmap-container">
+         <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
+              show-legend="showLegends"></div>
        </div>
-       <div class="col-md-5">
-         <div pf-heatmap id="id" chart-title="titleAlt" data="data" show-legend="showLegends" legend-labels="legendLabels" heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds" click-action="clickAction"></div>
+       <div class="col-md-5 example-heatmap-container">
+         <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
+              show-legend="showLegends" legend-labels="legendLabels"
+              heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
+              click-action="clickAction"></div>
        </div>
        <div class="col-md-12">
          <form role="form">
            <div class="form-group">
-             <label class="radio-inline">
+             <label class="checkbox-inline">
+               <input type="checkbox" ng-model="dataAvailable">Data Available</input>
+             </label>
+           </div>
+         </form>
+       </div>
+       <div class="col-md-12">
+         <form role="form">
+           <div class="form-group">
+             <label class="checkbox-inline">
                <input type="checkbox" ng-model="showLegends">Show Legends</input>
              </label>
            </div>
          </form>
        </div>
+     </div>
    </file>
    <file name="script.js">
      angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope) {
@@ -95,9 +110,9 @@
        {'id': 51, 'value': 0.22, 'tooltip': 'Node 26 : My Kubernetes Provider<br\>22% : 22 Used of 100 Total<br\>78 Available'},
        {'id': 14, 'value': 0.2, 'tooltip': 'Node 14 : My OpenShift Provider<br\>20% : 20 Used of 100 Total<br\>80 Available'}];
 
+       $scope.dataAvailable = true;
        $scope.title = 'Utilization - Using Defaults';
        $scope.titleAlt = 'Utilization - Overriding Defaults';
-
        $scope.legendLabels = ['< 60%','70%', '70-80%' ,'80-90%', '> 90%'];
        $scope.thresholds = [0.6, 0.7, 0.8, 0.9];
        $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#f00'];
@@ -117,6 +132,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
     restrict: 'A',
     scope: {
       data: '=',
+      chartDataAvailable: '=?',
       height: '=',
       chartTitle: '=?',
       showLegend: '=?',
@@ -149,6 +165,13 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
     link: function (scope, element, attrs) {
       var thisComponent = element[0].querySelector('.pf-heatmap-svg');
       var containerWidth, containerHeight, blockSize, numberOfRows;
+
+      var setStyles = function () {
+        scope.containerStyles = {
+          height: scope.height + 'px',
+          display: scope.chartDataAvailable === false ? 'none' : 'block'
+        };
+      };
 
       var setSizes = function () {
         var parentContainer = element[0].querySelector('.heatmap-container');
@@ -231,9 +254,13 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
       scope.$watch('data', function (newVal, oldVal) {
         if (typeof(newVal) !== 'undefined') {
           scope.loadingDone = true;
+          setStyles();
           setSizes();
           redraw();
         }
+      });
+      scope.$watch('chartDataAvailable', function () {
+        setStyles();
       });
     }
   };
