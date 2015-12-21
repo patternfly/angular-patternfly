@@ -36,34 +36,17 @@
        $scope.total = 1000;
        $scope.available =  $scope.total - $scope.used;
 
-       $scope.chartConfig = {
+       $scope.chartConfig = $().c3ChartDefaults().getDefaultDonutConfig('MHz Used');
+       $scope.chartConfig.data = {
          type: "donut",
-         donut: {
-           title: "MHz Used",
-           label: {show: false},
-           width: 10
-          },
-          size: {
-            height: 130
-          },
-          legend: {
-            show: false
-            },
-          color: {
-            pattern: ["#0088CE","#D1D1D1"]
-          },
-          tooltip: {},
-          data: {
-            type: "donut",
-            columns: [
-              ["Used", $scope.used],
-              ["Available", $scope.total - $scope.used]
-            ],
-            groups: [
-              ["used", "available"]
-            ],
-            order: null
-          }
+         columns: [
+           ["Used", $scope.used],
+           ["Available", $scope.total - $scope.used]
+         ],
+         groups: [
+           ["used", "available"]
+         ],
+         order: null
        };
 
        $scope.updateAvailable = function (val) {
