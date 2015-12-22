@@ -149,6 +149,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.form.directive:pfRemainingCharsCount",
+      "shortName": "pfRemainingCharsCount",
+      "type": "directive",
+      "moduleName": "patternfly.form",
+      "shortDescription": "Directive for showing a characters remaining count and triggering warning and error",
+      "keywords": "$on $scope additional additionally allow angular api applied area behavior block block-input-at-max-limit btn btn-default button character characters characters-remaining charremainingcntfld_1 charremainingcntfld_2 charremainingcntfld_3 chars-max-limit chars-remaining-pf chars-warn-remaining chars-warn-remaining-pf charsmaxlimitexceeded class col-md-4 color container controller count count-fld css default democtrl directive disable dispatched dispatching display emptly entered equal error event example falls false field form form-control form-group function greater html initial input input_3 js limit max maximum message messagearea messagearea1text messagearea2text messagearea_1 messagearea_2 messageinput3text model module negative ng-controller ng-disabled ng-model number overcharsmaxlimit padding-left passed passing paste patternfly pf-remaining-chars-count placeholder postbtn_1 postbtn_2 pull-left pull-right reached red remaining removed representing required resize right-click row rows scope script setting showing string style submit text textarea tfid threshold thresholds trigger triggered triggering true turns type undercharsmaxlimit variable warn warning width"
+    },
+    {
+      "section": "api",
       "id": "patternfly.notification.directive:pfNotification",
       "shortName": "pfNotification",
       "type": "directive",
