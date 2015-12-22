@@ -4,6 +4,7 @@ describe('Directive: pfHeatmap', function() {
 
   beforeEach(module(
     'patternfly.charts',
+    'charts/empty-chart.html',
     'charts/heatmap/heatmap.html',
     'charts/heatmap/heatmap-legend.html'
   ));
@@ -93,4 +94,18 @@ describe('Directive: pfHeatmap', function() {
     expect(legend.length).toBe(0);
   });
 
+  it("should show empty chart when the chartDataAvailable flag is set to false", function() {
+    $scope.chartDataAvailable = true;
+    element = compileChart('<div pf-heatmap chart-title="title" data="data" chart-data-available="chartDataAvailable" show-legend="showLegend"></div>',$scope);
+
+    var emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(0);
+
+    $scope.chartDataAvailable = false;
+
+    $scope.$digest();
+
+    emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(1);
+  });
 });

@@ -3,6 +3,7 @@ describe('Directive: pfUtilizationChart', function() {
 
   beforeEach(module(
     'patternfly.charts',
+    'charts/empty-chart.html',
     'charts/utilization/utilization-chart.html',
     'charts/donut/donut-pct-chart.html',
     'charts/sparkline/sparkline-chart.html'
@@ -92,4 +93,17 @@ describe('Directive: pfUtilizationChart', function() {
     expect(isolateScope.currentValue).toBe(76);
   });
 
+  it("should show empty chart when the dataAvailable flag is set to false", function() {
+    element = compileChart('<div pf-utilization-chart config="config" chart-data="data" donut-config="donutConfig" sparkline-config="sparklineConfig"></div>',$scope);
+
+    var emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(0);
+
+    $scope.data.dataAvailable = false;
+
+    $scope.$digest();
+
+    emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(1);
+  });
 });

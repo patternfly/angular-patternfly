@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/utilization/utilization-chart-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/2140745/src/charts/utilization/utilization-chart-directive.js#L170" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfUtilizationChart</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/utilization/utilization-chart-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/253fb67/src/charts/utilization/utilization-chart-directive.js#L182" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfUtilizationChart</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
@@ -34,6 +34,7 @@ See <a href="http://c3js.org/reference.html">http://c3js.org/reference.html</a> 
 <li>.total  - number representing the total amount
 <li>.xData  - Array, X values for the data points, first element must be the name of the data
 <li>.yData  - Array, Y Values for the data points, first element must be the name of the data
+<li>.dataAvailable - Flag if there is data available - default: true
 </ul></div></td></tr><tr><td>donutCenterLabel <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pfutilizationchart-page"><p>specifies the contents of the donut&#39;s center label.<br/>
 <strong>Values:</strong></p>
 <ul style='list-style-type: none'>
@@ -127,6 +128,16 @@ See <a href="http://c3js.org/reference.html">http://c3js.org/reference.html</a> 
           <button ng-click="addDataPoint()">Add Data Point</button>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-6">
+          <form role="form"">
+            <div class="form-group">
+              <label class="checkbox-inline">
+                <input type="checkbox" ng-model="data.dataAvailable" ng-change="updateDataAvailable()">Data Available</input>
+              </label>
+            </div>
+          </form>
+      </div>
     </div>
   </div>
 </script>
@@ -155,6 +166,7 @@ angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope 
  }
 
   $scope.data = {
+      dataAvailable: true,
       used: 76,
       total: 100,
       xData: dates,

@@ -3,6 +3,7 @@ describe('Directive: pfTrendsChart', function() {
 
   beforeEach(module(
     'patternfly.charts',
+    'charts/empty-chart.html',
     'charts/trends/trends-chart.html',
     'card/basic/card.html',
     'charts/sparkline/sparkline-chart.html'
@@ -110,5 +111,17 @@ describe('Directive: pfTrendsChart', function() {
 
     trendCard = element.find('.trend-label-flat-pf');
     expect(trendCard.html()).toBe('76 of 100 MHz');
+  });
+
+  it("should show empty chart when the dataAvailable is set to false", function() {
+    var emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(0);
+
+    $scope.data.dataAvailable = false;
+
+    $scope.$digest();
+
+    emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(1);
   });
 });

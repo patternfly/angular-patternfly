@@ -31,6 +31,19 @@
   padding: 0 20px 0;
 }
 
+.empty-chart-content {
+  text-align: center;
+}
+
+.empty-chart-content .pficon {
+  font-size: 24px;
+}
+.empty-chart-content span {
+  vertical-align: middle;
+  width: 100%;
+}
+
+
 .utilization-chart-pf .donut-chart-pf {
   width: 100%;
   float: left;
@@ -55,7 +68,6 @@
 }
 
 .utilization-chart-pf .available-text {
-  color: #333;
   font-size: 12px;
   font-weight: 400;
   line-height: 14px;
@@ -82,6 +94,10 @@
   font-size: 12px;
   font-weight: 400;
   margin-left: 0;
+}
+
+.utilization-chart-pf.data-unavailable-pf .current-values {
+  color: transparent;
 }
 
 .data-list-pf {
@@ -367,6 +383,14 @@
   font-weight: 400;
   color: #333;
   margin-left: 10px;
+}
+
+.data-unavailable-pf [class*="trend-title-"],[class*="trend-label-"] {
+  color: transparent;
+}
+
+.data-unavailable-pf .trend-footer-pf {
+  color: transparent;
 }
 
 .simple-filter a {
