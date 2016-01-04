@@ -156,14 +156,18 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUt
          * Convert the config data to C3 Data
          */
         $scope.getSparklineData = function (chartData) {
-          return {
-            x: chartData.xData[0],
-            columns: [
-              chartData.xData,
-              chartData.yData
-            ],
+          var sparklineData  = {
             type: 'area'
           };
+
+          if (chartData.dataAvailable !== false) {
+            sparklineData.x = chartData.xData[0];
+            sparklineData.columns = [
+              chartData.xData,
+              chartData.yData
+            ];
+          }
+          return sparklineData;
         };
 
         $scope.getTooltipTableHTML = function (tipRows) {
@@ -180,14 +184,16 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUt
           return {
             contents: function (d) {
               var tipRows;
-              var percentUsed;
+              var percentUsed = 0;
 
               if ($scope.config.tooltipFn) {
                 tipRows = $scope.config.tooltipFn(d);
               } else {
                 switch ($scope.config.tooltipType) {
                 case 'usagePerDay':
-                  percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
+                  if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
+                    percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
+                  }
                   tipRows =
                     '<tr>' +
                     '  <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +

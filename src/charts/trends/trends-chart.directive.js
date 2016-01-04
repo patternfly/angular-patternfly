@@ -178,10 +178,19 @@ angular.module('patternfly.charts').directive('pfTrendsChart', function () {
       var SMALL = 30, LARGE = 60;
 
       $scope.getPercentageValue = function () {
-        return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
+        var pctValue = 0;
+
+        if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
+          pctValue = Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
+        }
+        return pctValue;
       };
       $scope.getLatestValue = function () {
-        return $scope.chartData.yData[$scope.chartData.yData.length - 1];
+        var latestValue = 0;
+        if ($scope.chartData.yData && $scope.chartData.yData.length > 0) {
+          latestValue = $scope.chartData.yData[$scope.chartData.yData.length - 1];
+        }
+        return latestValue;
       };
       $scope.getChartHeight = function () {
         var retValue = LARGE;
