@@ -1300,7 +1300,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
       var determineBlockSize = function () {
         var x = containerWidth;
         var y = containerHeight;
-        var n = scope.data.length;
+        var n = scope.data ? scope.data.length : 0;
         var px = Math.ceil(Math.sqrt(n * x / y));
         var py = Math.ceil(Math.sqrt(n * y / x));
         var sx, sy;
@@ -1371,11 +1371,16 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
         if (typeof(newVal) !== 'undefined') {
           scope.loadingDone = true;
           setStyles();
-          setSizes();
-          redraw();
+          if (scope.chartDataAvailable !== false) {
+            setSizes();
+            redraw();
+          }
         }
       });
       scope.$watch('chartDataAvailable', function () {
+        if (scope.chartDataAvailable === false) {
+          scope.loadingDone = true;
+        }
         setStyles();
       });
     }
@@ -1539,14 +1544,18 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
          * Convert the config data to C3 Data
          */
         $scope.getSparklineData = function (chartData) {
-          return {
-            x: chartData.xData[0],
-            columns: [
-              chartData.xData,
-              chartData.yData
-            ],
+          var sparklineData  = {
             type: 'area'
           };
+
+          if (chartData.dataAvailable !== false) {
+            sparklineData.x = chartData.xData[0];
+            sparklineData.columns = [
+              chartData.xData,
+              chartData.yData
+            ];
+          }
+          return sparklineData;
         };
 
         $scope.getTooltipTableHTML = function (tipRows) {
@@ -1563,14 +1572,16 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
           return {
             contents: function (d) {
               var tipRows;
-              var percentUsed;
+              var percentUsed = 0;
 
               if ($scope.config.tooltipFn) {
                 tipRows = $scope.config.tooltipFn(d);
               } else {
                 switch ($scope.config.tooltipType) {
                 case 'usagePerDay':
-                  percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
+                  if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
+                    percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
+                  }
                   tipRows =
                     '<tr>' +
                     '  <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +
@@ -1879,10 +1890,19 @@ angular.module('patternfly.charts').directive('pfTrendsChart', function () {
       var SMALL = 30, LARGE = 60;
 
       $scope.getPercentageValue = function () {
-        return Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
+        var pctValue = 0;
+
+        if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
+          pctValue = Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
+        }
+        return pctValue;
       };
       $scope.getLatestValue = function () {
-        return $scope.chartData.yData[$scope.chartData.yData.length - 1];
+        var latestValue = 0;
+        if ($scope.chartData.yData && $scope.chartData.yData.length > 0) {
+          latestValue = $scope.chartData.yData[$scope.chartData.yData.length - 1];
+        }
+        return latestValue;
       };
       $scope.getChartHeight = function () {
         var retValue = LARGE;

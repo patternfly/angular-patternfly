@@ -269,7 +269,6 @@ NG_DOCS={
     "ui-bootstrap-tpls.js",
     "angular-bootstrap-prettify.js",
     "lodash.min.js",
-    "angular-patternfly.js",
-    "patternfly.js"
+    "angular-patternfly.js"
   ]
 };

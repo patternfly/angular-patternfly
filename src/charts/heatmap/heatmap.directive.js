@@ -184,7 +184,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
       var determineBlockSize = function () {
         var x = containerWidth;
         var y = containerHeight;
-        var n = scope.data.length;
+        var n = scope.data ? scope.data.length : 0;
         var px = Math.ceil(Math.sqrt(n * x / y));
         var py = Math.ceil(Math.sqrt(n * y / x));
         var sx, sy;
@@ -255,11 +255,16 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
         if (typeof(newVal) !== 'undefined') {
           scope.loadingDone = true;
           setStyles();
-          setSizes();
-          redraw();
+          if (scope.chartDataAvailable !== false) {
+            setSizes();
+            redraw();
+          }
         }
       });
       scope.$watch('chartDataAvailable', function () {
+        if (scope.chartDataAvailable === false) {
+          scope.loadingDone = true;
+        }
         setStyles();
       });
     }
