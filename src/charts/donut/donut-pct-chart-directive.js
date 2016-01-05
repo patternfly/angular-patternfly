@@ -349,7 +349,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUti
 
         $scope.updateAll = function (scope) {
           $scope.updateAvailable();
-          $scope.config.data = $scope.getDonutData($scope);
+          $scope.config.data = pfUtils.merge($scope.getDonutData($scope), $scope.config.data);
           $scope.config.color = $scope.statusDonutColor($scope);
           $scope.config.tooltip = donutTooltip(scope);
           $scope.config.data.onclick = $scope.config.onClickFn;
