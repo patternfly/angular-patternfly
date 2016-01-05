@@ -994,7 +994,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["pfUtils", "$t
 
         $scope.updateAll = function (scope) {
           $scope.updateAvailable();
-          $scope.config.data = $scope.getDonutData($scope);
+          $scope.config.data = pfUtils.merge($scope.getDonutData($scope), $scope.config.data);
           $scope.config.color = $scope.statusDonutColor($scope);
           $scope.config.tooltip = donutTooltip(scope);
           $scope.config.data.onclick = $scope.config.onClickFn;
@@ -1490,20 +1490,20 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
      angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
 
        $scope.config = {
-         'chartId': 'exampleSparkline',
-         'tooltipType': 'default'
+         chartId: 'exampleSparkline',
+         tooltipType: 'default'
        };
 
-      var today = new Date();
-      var dates = ['dates'];
-      for (var d = 20 - 1; d >= 0; d--) {
-          dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
-      }
+       var today = new Date();
+       var dates = ['dates'];
+       for (var d = 20 - 1; d >= 0; d--) {
+         dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
+       }
 
        $scope.data = {
-           'total': '100',
-           'xData': dates,
-           'yData': ['used', '10', '20', '30', '20', '30', '10', '14', '20', '25', '68', '54', '56', '78', '56', '67', '88', '76', '65', '87', '76']
+         total: 100,
+         xData: dates,
+         yData: ['used', 10, 20, 30, 20, 30, 10, 14, 20, 25, 68, 54, 56, 78, 56, 67, 88, 76, 65, 87, 76]
        };
 
        $scope.custShowXAxis = false;
@@ -1548,13 +1548,14 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
             type: 'area'
           };
 
-          if (chartData.dataAvailable !== false) {
+          if (chartData && chartData.dataAvailable !== false && chartData.xData && chartData.yData) {
             sparklineData.x = chartData.xData[0];
             sparklineData.columns = [
               chartData.xData,
               chartData.yData
             ];
           }
+
           return sparklineData;
         };
 
@@ -1684,12 +1685,13 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
         $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
 
         // Convert the given data to C3 chart format
-        $scope.config.data = $scope.getSparklineData($scope.chartData);
+        $scope.config.data = pfUtils.merge($scope.getSparklineData($scope.chartData), $scope.config.data);
       }
     ],
 
     link: function (scope) {
       scope.$watch('config', function () {
+        scope.config.data = pfUtils.merge(scope.config.data, scope.getSparklineData(scope.chartData));
         scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
       }, true);
       scope.$watch('chartHeight', function () {
@@ -1704,7 +1706,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
         scope.config.axis.y.show = scope.showYAxis === true;
       });
       scope.$watch('chartData', function () {
-        scope.config.data = scope.getSparklineData(scope.chartData);
+        scope.config.data = pfUtils.merge(scope.config.data, scope.getSparklineData(scope.chartData));
       }, true);
     }
   };

@@ -141,4 +141,25 @@ describe('Directive: pfSparklineChart', function() {
     expect(functionCalled).toBe(true);
   });
 
+  it("should allow using C3 chart data formats", function() {
+    $scope.config = {
+      chartId: 'testSparklineChart',
+      totalUnits: 'MHz',
+      data: {
+        xFormat: '%Y-%m-%d %H:%M:%S',
+        x: 'dates',
+        columns: [$scope.data.xData, $scope.data.yData]
+      }
+    };
+    $scope.data = {
+      total: 100
+    };
+
+    element = compileChart('<div pf-sparkline-chart config="config" chart-data="data"></div>', $scope);
+
+    expect(isolateScope.config.data.x).toBe("dates");
+    expect(isolateScope.config.data.columns.length).toBe(2);
+    expect(isolateScope.config.data.columns[0][0]).toBe("dates");
+    expect(isolateScope.config.data.columns[1][0]).toBe("used");
+  });
 });
