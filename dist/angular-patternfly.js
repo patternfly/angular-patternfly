@@ -1133,40 +1133,46 @@ angular.module('patternfly.charts').directive('pfEmptyChart', function () {
  * @param {string=} chartTitle title of the chart
  * @param {boolean=} showLegend flag to show the legend, defaults to true
  * @param {array=} legendLabels the labels for the legend - defaults: ['< 70%', '70-80%' ,'80-90%', '> 90%']
+ * @param {number=} maxBlockSize the maximum size for blocks in the heatmap. Default: 50, Range: 5 - 50
+ * @param {number=} blockPadding the padding in pixels between blocks (default: 2)
  * @param {array=} thresholds the threshold values for the heapmap - defaults: [0.7, 0.8, 0.9]
  * @param {array=} heatmapColorPattern the colors that correspond to the various threshold values (lowest to hightest value ex: <70& to >90%) - defaults: ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000']
  * @param {function=} clickAction function(block) function to call when a block is clicked on
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
-     <div ng-controller="ChartCtrl" class="row">
-       <div class="col-md-5 example-heatmap-container">
-         <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
-              show-legend="showLegends"></div>
+     <div ng-controller="ChartCtrl">
+       <div class="row">
+         <div class="col-md-5 example-heatmap-container">
+           <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
+                show-legend="showLegends"></div>
+         </div>
+         <div class="col-md-5 example-heatmap-container">
+           <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
+                show-legend="showLegends" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
+                heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
+                click-action="clickAction"></div>
+         </div>
        </div>
-       <div class="col-md-5 example-heatmap-container">
-         <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
-              show-legend="showLegends" legend-labels="legendLabels"
-              heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
-              click-action="clickAction"></div>
-       </div>
-       <div class="col-md-12">
-         <form role="form">
-           <div class="form-group">
-             <label class="checkbox-inline">
-               <input type="checkbox" ng-model="dataAvailable">Data Available</input>
-             </label>
-           </div>
-         </form>
-       </div>
-       <div class="col-md-12">
-         <form role="form">
-           <div class="form-group">
-             <label class="checkbox-inline">
-               <input type="checkbox" ng-model="showLegends">Show Legends</input>
-             </label>
-           </div>
-         </form>
+       <div class="row">
+         <div class="col-md-3">
+           <form role="form">
+             <div class="form-group">
+               <label class="checkbox-inline">
+                 <input type="checkbox" ng-model="dataAvailable">Data Available</input>
+               </label>
+             </div>
+           </form>
+         </div>
+         <div class="col-md-3">
+           <form role="form">
+             <div class="form-group">
+               <label class="checkbox-inline">
+                 <input type="checkbox" ng-model="showLegends">Show Legends</input>
+               </label>
+             </div>
+           </form>
+         </div>
        </div>
      </div>
    </file>
@@ -1253,6 +1259,8 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
       chartTitle: '=?',
       showLegend: '=?',
       legendLabels: '=?',
+      maxBlockSize: '@',
+      blockPadding: '@',
       thresholds: '=?',
       heatmapColorPattern: '=?',
       clickAction: '=?'
@@ -1265,12 +1273,31 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
       var heightDefault = 200;
 
       //Allow overriding of defaults
+      if ($scope.maxBlockSize === undefined || isNaN($scope.maxBlockSize)) {
+        $scope.maxSize = 64;
+      } else {
+        $scope.maxSize = parseInt($scope.maxBlockSize);
+        if ($scope.maxSize < 5) {
+          $scope.maxSize = 5;
+        } else if ($scope.maxSize > 50) {
+          $scope.maxSize = 50;
+        }
+      }
+
+      if ($scope.blockPadding === undefined || isNaN($scope.blockPadding)) {
+        $scope.padding = 2;
+      } else {
+        $scope.padding = parseInt($scope.blockPadding);
+      }
+
       if (!$scope.thresholds) {
         $scope.thresholds = thresholdDefaults;
       }
+
       if (!$scope.heatmapColorPattern) {
         $scope.heatmapColorPattern = heatmapColorPatternDefaults;
       }
+
       if (!$scope.legendLabels) {
         $scope.legendLabels = legendLabelDefaults;
       }
@@ -1294,7 +1321,20 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
         containerWidth = parentContainer.clientWidth;
         containerHeight = parentContainer.clientHeight;
         blockSize = determineBlockSize();
-        numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+
+        if ((blockSize - scope.padding) > scope.maxSize) {
+          blockSize = scope.padding + scope.maxSize;
+
+          // Attempt to square off the area, check if square fits
+          numberOfRows = Math.ceil(Math.sqrt(scope.data.length));
+          if (blockSize * numberOfRows > containerWidth ||
+              blockSize * numberOfRows > containerHeight) {
+            numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+          }
+
+        } else {
+          numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+        }
       };
 
       var determineBlockSize = function () {
@@ -1321,9 +1361,9 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
 
       var redraw = function () {
         var data = scope.data;
-        var blockPadding = 1;
         var color = d3.scale.threshold().domain(scope.thresholds).range(scope.heatmapColorPattern);
         var blocks;
+        var fillSize = blockSize - scope.padding;
         var highlightBlock = function (block, active) {
           block.style('fill-opacity', active ? 1 : 0.4);
         };
@@ -1332,10 +1372,10 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
 
         blocks = svg.selectAll('rect').data(data).enter().append('rect');
         blocks.attr('x', function (d, i) {
-          return (Math.floor(i / numberOfRows) * blockSize) + blockPadding;
+          return Math.floor(i / numberOfRows) * blockSize;
         }).attr('y', function (d, i) {
-          return (i % numberOfRows * blockSize) + blockPadding;
-        }).attr('width', blockSize - (2 * blockPadding)).attr('height', blockSize - (2 * blockPadding)).style('fill', function (d) {
+          return i % numberOfRows * blockSize;
+        }).attr('width', fillSize).attr('height', fillSize).style('fill', function (d) {
           return color(d.value);
         }).attr('tooltip-html-unsafe', function (d, i) { //tooltip-html is throwing an exception
           return d.tooltip;
