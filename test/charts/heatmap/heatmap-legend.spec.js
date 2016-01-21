@@ -25,7 +25,7 @@ describe('Directive: pfHeatmapLegend', function() {
     expect(angular.element(element).find('li').size()).toBe(4);
 
     legendItem = angular.element(element).find('li')[0];
-    legendText = legendItem.querySelector('.pf-legend-text');
+    legendText = legendItem.querySelector('.legend-pf-text');
 
     expect(legendText.innerHTML).toBe("&gt; 90%");
   });
@@ -38,7 +38,7 @@ describe('Directive: pfHeatmapLegend', function() {
     expect(angular.element(element).find('li').size()).toBe(2);
 
     legendItem = angular.element(element).find('li')[0];
-    legendText = legendItem.querySelector('.pf-legend-text');
+    legendText = legendItem.querySelector('.legend-pf-text');
 
     expect(legendText.innerHTML).toBe("&gt; 70%");
   });

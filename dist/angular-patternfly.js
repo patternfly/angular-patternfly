@@ -31,6 +31,14 @@ angular.module('patternfly.filters', ['patternfly.select', 'ui.bootstrap']);
  */
 angular.module('patternfly.form', []);
 ;/**
+ * @name  patternfly notification
+ *
+ * @description
+ *   Notification module for patternfly.
+ *
+ */
+angular.module('patternfly.notification', []);
+;/**
  * @name  patternfly
  *
  * @description
@@ -57,6 +65,18 @@ angular.module('patternfly', [
  *
  */
 angular.module('patternfly.sort', ['ui.bootstrap']);
+;/**
+ * @name  patternfly toolbars
+ *
+ * @description
+ *   Filters module for patternfly.
+ *
+ */
+angular.module('patternfly.toolbars', [
+  'patternfly.utils',
+  'patternfly.filters',
+  'patternfly.sort',
+  'patternfly.views']);
 ;
 angular.module( 'patternfly.utils', [] );
 ;/**
@@ -1306,7 +1326,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
       $scope.loadingDone = false;
     }],
     link: function (scope, element, attrs) {
-      var thisComponent = element[0].querySelector('.pf-heatmap-svg');
+      var thisComponent = element[0].querySelector('.heatmap-pf-svg');
       var containerWidth, containerHeight, blockSize, numberOfRows;
 
       var setStyles = function () {
@@ -2125,16 +2145,17 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
 }]);
 ;/**
  * @ngdoc directive
- * @name patternfly.charts.directive:pfUtilizationChart
+ * @name patternfly.charts.directive:pfUtilizationTrendChart
  *
  * @description
- *   Directive for rendering a utilization chart. The utilization chart combines overall data with a pfDonutPctChart and
- *   a pfSparklineChart. Add the options for the pfDonutChart via the donutConfig parameter. Add the options for the
- *   pfSparklineChart via the sparklineConfig parameter.
+ *   Directive for rendering a utilization trend chart. The utilization trend chart combines overall
+ *   data with a pfDonutPctChart and a pfSparklineChart. Add the options for the pfDonutChart via
+ *   the donutConfig parameter. Add the options for the pfSparklineChart via the sparklineConfig
+ *   parameter.
  *   <br><br>
  *   See http://c3js.org/reference.html for a full list of C3 chart options.
  *
- * @param {object} config configuration settings for the utilization chart:<br/>
+ * @param {object} config configuration settings for the utilization trend chart:<br/>
  * <ul style='list-style-type: none'>
  * <li>.title        - title of the Utilization chart
  * <li>.units        - unit label for values, ex: 'MHz','GB', etc..
@@ -2169,7 +2190,7 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
-         <div pf-utilization-chart config="config"
+         <div pf-utilization-trend-chart config="config"
               chart-data="data" center-label="centerLabel"
               donut-config="donutConfig" sparkline-config="sparklineConfig"
               sparkline-chart-height="custChartHeight"
@@ -2304,7 +2325,7 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfUtilizationChart', function () {
+angular.module('patternfly.charts').directive('pfUtilizationTrendChart', function () {
   'use strict';
   return {
     restrict: 'A',
@@ -2319,7 +2340,7 @@ angular.module('patternfly.charts').directive('pfUtilizationChart', function () 
       showSparklineYAxis: '=?'
     },
     replace: true,
-    templateUrl: 'charts/utilization/utilization-chart.html',
+    templateUrl: 'charts/utilization-trend/utilization-trend-chart.html',
     controller: ['$scope',
       function ($scope) {
         if ($scope.centerLabel === undefined) {
@@ -2353,10 +2374,10 @@ angular.module('patternfly.charts').directive('pfUtilizationChart', function () 
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.filters.directive:pfSimpleFilter
+ * @name patternfly.filters.directive:pfFilter
  *
  * @description
- *   Directive for a simple filter bar
+ *   Directive for a filter bar
  *   <br><br>
  *
  * @param {object} config configuration settings for the filters:<br/>
@@ -2379,7 +2400,7 @@ angular.module('patternfly.charts').directive('pfUtilizationChart', function () 
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-simple-filter id="exampleSimpleFilter" config="filterConfig"></div>
+        <div pf-filter id="exampleFilter" config="filterConfig"></div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -2522,14 +2543,14 @@ angular.module('patternfly.charts').directive('pfUtilizationChart', function () 
   </file>
 </example>
  */
-angular.module('patternfly.filters').directive('pfSimpleFilter', function () {
+angular.module('patternfly.filters').directive('pfFilter', function () {
   'use strict';
   return {
     restrict: 'A',
     scope: {
       config: '='
     },
-    templateUrl: 'filters/simple-filter.html',
+    templateUrl: 'filters/filter.html',
     controller: ["$scope", function ($scope) {
       $scope.filterExists = function (filter) {
         var foundFilter = _.findWhere($scope.config.appliedFilters, {title: filter.title, value: filter.value});
@@ -2565,10 +2586,10 @@ angular.module('patternfly.filters').directive('pfSimpleFilter', function () {
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.filters.directive:pfSimpleFilterFields
+ * @name patternfly.filters.directive:pfFilterFields
  *
  * @description
- *   Directive for the simple filter bar's filter entry components
+ *   Directive for the filter bar's filter entry components
  *   <br><br>
  *
  * @param {object} config configuration settings for the filters:<br/>
@@ -2585,7 +2606,7 @@ angular.module('patternfly.filters').directive('pfSimpleFilter', function () {
  * </ul>
  *
  */
-angular.module('patternfly.filters').directive('pfSimpleFilterFields', function () {
+angular.module('patternfly.filters').directive('pfFilterFields', function () {
   'use strict';
   return {
     restrict: 'A',
@@ -2593,7 +2614,7 @@ angular.module('patternfly.filters').directive('pfSimpleFilterFields', function 
       config: '=',
       addFilterFn: '='
     },
-    templateUrl: 'filters/simple-filter-fields.html',
+    templateUrl: 'filters/filter-fields.html',
     controller: ["$scope", function ($scope) {
       $scope.setupConfig = function () {
         if ($scope.fields === undefined) {
@@ -2636,10 +2657,10 @@ angular.module('patternfly.filters').directive('pfSimpleFilterFields', function 
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.filters.directive:pfSimpleFilterResults
+ * @name patternfly.filters.directive:pfFilterResults
  *
  * @description
- *   Directive for the simple filter results components
+ *   Directive for the filter results components
  *   <br><br>
  *
  * @param {object} config configuration settings for the filter results:<br/>
@@ -2658,14 +2679,14 @@ angular.module('patternfly.filters').directive('pfSimpleFilterFields', function 
  * </ul>
  *
  */
-angular.module('patternfly.filters').directive('pfSimpleFilterResults', function () {
+angular.module('patternfly.filters').directive('pfFilterResults', function () {
   'use strict';
   return {
     restrict: 'A',
     scope: {
       config: '='
     },
-    templateUrl: 'filters/simple-filter-results.html',
+    templateUrl: 'filters/filter-results.html',
     controller: ["$scope", function ($scope) {
       $scope.setupConfig = function () {
         if (!$scope.config.appliedFilters) {
@@ -3159,6 +3180,89 @@ angular.module('patternfly.form').directive('pfRemainingCharsCount', ["$timeout"
   };
 }]);
 ;/**
+ * @ngdoc directive
+ * @name patternfly.notification.directive:pfInlineNotification
+ * @restrict E
+ * @scope
+ *
+ * @param {expression=} pfNotificationType The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'.
+ * @param {expression=} pfNotificationMessage The main text message of the notification.
+ * @param {expression=} pfNotificationHeader The header text of the notification.
+ * @param {expression=} pfNotificationPersistent The notification won't disappear after delay timeout, but has to be closed manually with the close button.
+ *
+ * @description
+ * The main visual element of the notification message.
+ *
+ * @example
+ <example module="patternfly.notification">
+
+   <file name="index.html">
+     <div ng-controller="NotificationDemoCtrl">
+
+       <pf-inline-notification pf-notification-type="type"
+                        pf-notification-header="header"
+                        pf-notification-message="message"
+                        pf-notification-persistent="isPersistent">
+       </pf-inline-notification>
+
+       <form class="form-horizontal">
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="header">Header:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="header" id="header"/>
+           </div>
+         </div>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="message">Message:</label>
+           <div class="col-sm-10">
+            <input type="text" class="form-control" ng-model="message" id="message"/>
+           </div>
+         </div>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Type:</label>
+           <div class="col-sm-10">
+            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+           </div>
+         </div>
+         <div class="form-group">
+           <label class="col-sm-2 control-label" for="type">Persistent:</label>
+           <div class="col-sm-10">
+            <input type="checkbox" ng-model="isPersistent"></input>
+           </div>
+         </div>
+       </form>
+     </div>
+   </file>
+
+   <file name="script.js">
+     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
+       $scope.types = ['success','info','danger', 'warning'];
+       $scope.type = $scope.types[0];
+       $scope.isPersistent = false;
+
+       $scope.header = 'Default Header.';
+       $scope.message = 'Default Message.';
+     });
+   </file>
+
+ </example>
+ */
+angular.module( 'patternfly.notification' ).directive('pfInlineNotification', function () {
+  'use strict';
+
+  return {
+    scope: {
+      'pfNotificationType': '=',
+      'pfNotificationMessage': '=',
+      'pfNotificationHeader': '=',
+      'pfNotificationPersistent': '=',
+      'pfNotificationIndex': '='
+    },
+    restrict: 'E',
+    templateUrl: 'notification/inline-notification.html'
+  };
+});
+;/**
  * @ngdoc service
  * @name patternfly.notification.Notification
  * @requires $rootScope
@@ -3239,7 +3343,7 @@ angular.module('patternfly.form').directive('pfRemainingCharsCount', ["$timeout"
 
  </example>
  */
-angular.module('patternfly.notification', []).provider('Notifications', function () {
+angular.module('patternfly.notification').provider('Notifications', function () {
   'use strict';
 
   // time (in ms) the notifications are shown
@@ -3339,89 +3443,6 @@ angular.module('patternfly.notification', []).provider('Notifications', function
 
 /**
  * @ngdoc directive
- * @name patternfly.notification.directive:pfNotification
- * @restrict E
- * @scope
- *
- * @param {expression=} pfNotificationType The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'.
- * @param {expression=} pfNotificationMessage The main text message of the notification.
- * @param {expression=} pfNotificationHeader The header text of the notification.
- * @param {expression=} pfNotificationPersistent The notification won't disappear after delay timeout, but has to be closed manually with the close button.
- *
- * @description
- * The main visual element of the notification message.
- *
- * @example
- <example module="patternfly.notification">
-
-   <file name="index.html">
-     <div ng-controller="NotificationDemoCtrl">
-
-       <pf-notification pf-notification-type="type"
-                        pf-notification-header="header"
-                        pf-notification-message="message"
-                        pf-notification-persistent="isPersistent">
-       </pf-notification>
-
-       <form class="form-horizontal">
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="header">Header:</label>
-           <div class="col-sm-10">
-            <input type="text" class="form-control" ng-model="header" id="header"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="message">Message:</label>
-           <div class="col-sm-10">
-            <input type="text" class="form-control" ng-model="message" id="message"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="type">Type:</label>
-           <div class="col-sm-10">
-            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="type">Persistent:</label>
-           <div class="col-sm-10">
-            <input type="checkbox" ng-model="isPersistent"></input>
-           </div>
-         </div>
-       </form>
-     </div>
-   </file>
-
-   <file name="script.js">
-     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
-       $scope.types = ['success','info','danger', 'warning'];
-       $scope.type = $scope.types[0];
-       $scope.isPersistent = false;
-
-       $scope.header = 'Default Header.';
-       $scope.message = 'Default Message.';
-     });
-   </file>
-
- </example>
- */
-angular.module( 'patternfly.notification' ).directive('pfNotification', function () {
-  'use strict';
-
-  return {
-    scope: {
-      'pfNotificationType': '=',
-      'pfNotificationMessage': '=',
-      'pfNotificationHeader': '=',
-      'pfNotificationPersistent': '=',
-      'pfNotificationIndex': '='
-    },
-    restrict: 'E',
-    templateUrl: 'notification/notification.html'
-  };
-});
-/**
- * @ngdoc directive
  * @name patternfly.notification.directive:pfNotificationList
  * @restrict E
  *
@@ -3459,7 +3480,7 @@ angular.module( 'patternfly.notification' ).directive('pfNotification', function
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
+     angular.module('patternfly.notification').controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
        $scope.message = 'Default Message.';
 
        var typeMap = { 'Info': Notifications.info,
@@ -3480,7 +3501,7 @@ angular.module( 'patternfly.notification' ).directive('pfNotification', function
 
  </example>
  */
-angular.module( 'patternfly.notification' ).directive('pfNotificationList', function () {
+angular.module('patternfly.notification').directive('pfNotificationList', function () {
   'use strict';
 
   NotificationListController.$inject = ["$scope", "$rootScope"];
@@ -3597,10 +3618,10 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
 }]);
 ;/**
  * @ngdoc directive
- * @name patternfly.sort.directive:pfSimpleSort
+ * @name patternfly.sort.directive:pfSort
  *
  * @description
- *   Directive for a simple sort component
+ *   Directive for a  sort component
  *   <br><br>
  *
  * @param {object} config configuration settings for the sort:<br/>
@@ -3621,7 +3642,7 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-simple-sort id="exampleSimpleSort" config="sortConfig"></div>
+        <div pf-sort id="exampleSort" config="sortConfig"></div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -3742,14 +3763,14 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
   </file>
 </example>
  */
-angular.module('patternfly.sort').directive('pfSimpleSort', function () {
+angular.module('patternfly.sort').directive('pfSort', function () {
   'use strict';
   return {
     restrict: 'A',
     scope: {
       config: '='
     },
-    templateUrl: 'sort/simple-sort.html',
+    templateUrl: 'sort/sort.html',
     controller: ["$scope", function ($scope) {
 
       $scope.setupConfig = function () {
@@ -3817,6 +3838,444 @@ angular.module('patternfly.sort').directive('pfSimpleSort', function () {
     link: function (scope, element, attrs) {
       scope.$watch('config', function () {
         scope.setupConfig();
+      }, true);
+    }
+  };
+});
+;/**
+ * @ngdoc directive
+ * @name patternfly.toolbars.directive:pfToolbar
+ *
+ * @description
+ *   Directive for standard toolbar. Includes filtering and view selection capabilities
+ *   <br><br>
+ *
+ * @param {object} config configuration settings for the toolbar:<br/>
+ *   <ul style='list-style-type: none'>
+ *     <li>.filterConfig  - (Object) Optional filter config. If undefined, no filtering capabilities are shown.
+ *                          See pfSimpleFilter for filter config options.
+ *     <li>.sortConfig  - (Object) Optional sort config. If undefined, no sort capabilities are shown.
+ *                          See pfSort for sort config options.
+ *     <li>.viewsConfig  - (Object) Optional configuration settings for view type selection
+ *       <ul style='list-style-type: none'>
+ *         <li>.views       - (Array) List of available views for selection. See pfViewUtils for standard available views
+ *           <ul style='list-style-type: none'>
+ *             <li>.id - (String) Unique id for the view, used for comparisons
+ *             <li>.title - (String) Optional title, uses as a tooltip for the view selector
+ *             <li>.iconClass - (String) Icon class to use for the view selector
+ *           </ul>
+ *         <li>.onViewSelect - ( function(view) ) Function to call when a view is selected
+ *         <li>.currentView - the id of the currently selected view
+ *       </ul>
+ *     <li>.actionsConfig  - (Object) Optional configuration settings for toolbar actions
+ *       <ul style='list-style-type: none'>
+ *         <li>.primaryActions  - (Array) List of primary actions to display on the toolbar
+ *           <ul style='list-style-type: none'>
+ *             <li>.name - (String) The name of the action, displayed on the button
+ *             <li>.title - (String) Optional title, used for the tooltip
+ *             <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *             <li>.isDisabled - (Boolean) set to true to disable the action
+ *           </ul>
+ *         <li>.moreActions  - (Array) List of secondary actions to display on the toolbar action pulldown menu
+ *           <ul style='list-style-type: none'>
+ *             <li>.name - (String) The name of the action, displayed on the button
+ *             <li>.title - (String) Optional title, used for the tooltip
+ *             <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *             <li>.isDisabled - (Boolean) set to true to disable the action
+ *             <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
+ *           </ul>
+ *       </ul>
+ *   </ul>
+ *
+ * @example
+<example module="patternfly.toolbars" deps="patternfly.filters, patternfly.sort">
+  <file name="index.html">
+    <div ng-controller="ViewCtrl" class="row example-container">
+      <div class="col-md-12">
+        <div pf-toolbar id="exampleToolbar" config="toolbarConfig"></div>
+      </div>
+      <hr class="col-md-12">
+      <div class="col-md-12">
+        <label class="events-label">Valid Items: </label>
+      </div>
+      <div class="col-md-12 list-view-container" ng-if="viewType == 'listView'">
+        <div pf-list-view config="listConfig" items="items">
+          <div class="row">
+            <div class="col-md-3">
+              <span>{{item.name}}</span>
+            </div>
+            <div class="col-md-1">
+              <span>{{item.age}}</span>
+            </div>
+            <div class="col-md-6">
+              <span>{{item.address}}</span>
+            </div>
+            <div class="col-md-2">
+              <span>{{item.birthMonth}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 card-view-container" ng-if="viewType == 'cardView'">
+        <div pf-card-view config="vm.listConfig" items="items">
+          <div class="col-md-12">
+            <span>{{item.name}}</span>
+          </div>
+          <div class="col-md-12">
+            <span>Age: {{item.age}}</span>
+          </div>
+          <div class="col-md-12">
+            <span>{{item.address}}</span>
+          </div>
+          <div class="col-md-12">
+            <span>{{item.birthMonth}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <label class="events-label">Current Filters: </label>
+      </div>
+      <div class="col-md-12">
+        <textarea rows="5" class="col-md-12">{{filtersText}}</textarea>
+      </div>
+      <div class="col-md-12">
+        <label class="actions-label">Actions: </label>
+      </div>
+      <div class="col-md-12">
+        <textarea rows="3" class="col-md-12">{{actionsText}}</textarea>
+      </div>
+    </div>
+  </file>
+
+  <file name="script.js">
+  angular.module('patternfly.toolbars').controller('ViewCtrl', ['$scope', 'pfViewUtils',
+    function ($scope, pfViewUtils) {
+      $scope.filtersText = '';
+
+      $scope.allItems = [
+        {
+          name: "Fred Flintstone",
+          age: 57,
+          address: "20 Dinosaur Way, Bedrock, Washingstone",
+          birthMonth: 'February'
+        },
+        {
+          name: "John Smith",
+          age: 23,
+          address: "415 East Main Street, Norfolk, Virginia",
+          birthMonth: 'October'
+        },
+        {
+          name: "Frank Livingston",
+          age: 71,
+          address: "234 Elm Street, Pittsburgh, Pennsylvania",
+          birthMonth: 'March'
+        },
+        {
+          name: "Judy Green",
+          age: 21,
+          address: "2 Apple Boulevard, Cincinatti, Ohio",
+          birthMonth: 'December'
+        },
+        {
+          name: "Pat Thomas",
+          age: 19,
+          address: "50 Second Street, New York, New York",
+          birthMonth: 'February'
+        }
+      ];
+      $scope.items = $scope.allItems;
+
+      var matchesFilter = function (item, filter) {
+        var match = true;
+
+        if (filter.id === 'name') {
+          match = item.name.match(filter.value) !== null;
+        } else if (filter.id === 'age') {
+          match = item.age === parseInt(filter.value);
+        } else if (filter.id === 'address') {
+          match = item.address.match(filter.value) !== null;
+        } else if (filter.id === 'birthMonth') {
+          match = item.birthMonth === filter.value;
+        }
+        return match;
+      };
+
+      var matchesFilters = function (item, filters) {
+        var matches = true;
+
+        filters.forEach(function(filter) {
+          if (!matchesFilter(item, filter)) {
+            matches = false;
+            return false;
+          }
+        });
+        return matches;
+      };
+
+      var applyFilters = function (filters) {
+        $scope.items = [];
+        if (filters && filters.length > 0) {
+          $scope.allItems.forEach(function (item) {
+            if (matchesFilters(item, filters)) {
+              $scope.items.push(item);
+            }
+          });
+        } else {
+          $scope.items = $scope.allItems;
+        }
+      };
+
+      var filterChange = function (filters) {
+      $scope.filtersText = "";
+        filters.forEach(function (filter) {
+          $scope.filtersText += filter.title + " : " + filter.value + "\n";
+        });
+        applyFilters(filters);
+        $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+      };
+
+      $scope.filterConfig = {
+        fields: [
+          {
+            id: 'name',
+            title:  'Name',
+            placeholder: 'Filter by Name...',
+            filterType: 'text'
+          },
+          {
+            id: 'age',
+            title:  'Age',
+            placeholder: 'Filter by Age...',
+            filterType: 'text'
+          },
+          {
+            id: 'address',
+            title:  'Address',
+            placeholder: 'Filter by Address...',
+            filterType: 'text'
+          },
+          {
+            id: 'birthMonth',
+            title:  'Birth Month',
+            placeholder: 'Filter by Birth Month...',
+            filterType: 'select',
+            filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+          }
+        ],
+        resultsCount: $scope.items.length,
+        appliedFilters: [],
+        onFilterChange: filterChange
+      };
+
+      var viewSelected = function(viewId) {
+        $scope.viewType = viewId
+      };
+
+      $scope.viewsConfig = {
+        views: [pfViewUtils.getListView(), pfViewUtils.getCardView()],
+        onViewSelect: viewSelected
+      };
+      $scope.viewsConfig.currentView = $scope.viewsConfig.views[0].id;
+      $scope.viewType = $scope.viewsConfig.currentView;
+
+      var monthVals = {
+        'January': 1,
+        'February': 2,
+        'March': 3,
+        'April': 4,
+        'May': 5,
+        'June': 6,
+        'July': 7,
+        'August': 8,
+        'September': 9,
+        'October': 10,
+        'November': 11,
+        'December': 12
+      };
+      var compareFn = function(item1, item2) {
+        var compValue = 0;
+        if ($scope.sortConfig.currentField.id === 'name') {
+          compValue = item1.name.localeCompare(item2.name);
+        } else if ($scope.sortConfig.currentField.id === 'age') {
+            compValue = item1.age - item2.age;
+        } else if ($scope.sortConfig.currentField.id === 'address') {
+          compValue = item1.address.localeCompare(item2.address);
+        } else if ($scope.sortConfig.currentField.id === 'birthMonth') {
+          compValue = monthVals[item1.birthMonth] - monthVals[item2.birthMonth];
+        }
+
+        if (!$scope.sortConfig.isAscending) {
+          compValue = compValue * -1;
+        }
+
+        return compValue;
+      };
+
+      var sortChange = function (sortId, isAscending) {
+        $scope.items.sort(compareFn);
+      };
+
+      $scope.sortConfig = {
+        fields: [
+          {
+            id: 'name',
+            title:  'Name',
+            sortType: 'alpha'
+          },
+          {
+            id: 'age',
+            title:  'Age',
+            sortType: 'numeric'
+          },
+          {
+            id: 'address',
+            title:  'Address',
+            sortType: 'alpha'
+          },
+          {
+            id: 'birthMonth',
+            title:  'Birth Month',
+            sortType: 'alpha'
+          }
+        ],
+        onSortChange: sortChange
+      };
+
+      $scope.actionsText = "";
+      var performAction = function (action) {
+        $scope.actionsText = action.name + "\n" + $scope.actionsText;
+      };
+
+      $scope.actionsConfig = {
+        primaryActions: [
+          {
+            name: 'Action 1',
+            title: 'Do the first thing',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 2',
+            title: 'Do something else',
+            actionFn: performAction
+          }
+        ],
+        moreActions: [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ]
+      };
+
+      $scope.toolbarConfig = {
+        viewsConfig: $scope.viewsConfig,
+        filterConfig: $scope.filterConfig,
+        sortConfig: $scope.sortConfig,
+        actionsConfig: $scope.actionsConfig
+      };
+
+      $scope.listConfig = {
+        selectionMatchProp: 'name',
+        checkDisabled: false
+      };
+    }
+  ]);
+  </file>
+</example>
+ */
+angular.module('patternfly.toolbars').directive('pfToolbar', function () {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '='
+    },
+    replace: true,
+    transclude: false,
+    templateUrl: 'toolbars/toolbar.html',
+    controller: ["$scope", function ($scope) {
+      $scope.viewSelected = function (viewId) {
+        $scope.config.viewsConfig.currentView = viewId;
+        if ($scope.config.viewsConfig.onViewSelect && !$scope.checkViewDisabled(viewId)) {
+          $scope.config.viewsConfig.onViewSelect(viewId);
+        }
+      };
+
+      $scope.isViewSelected = function (viewId) {
+        return $scope.config.viewsConfig && ($scope.config.viewsConfig.currentView === viewId);
+      };
+
+      $scope.checkViewDisabled = function (view) {
+        return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
+      };
+
+      $scope.filterExists = function (filter) {
+        var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
+        return foundFilter !== undefined;
+      };
+
+      $scope.addFilter = function (field, value) {
+        var newFilter = {
+          id: field.id,
+          title: field.title,
+          value: value
+        };
+        if (!$scope.filterExists(newFilter)) {
+          $scope.config.filterConfig.appliedFilters.push(newFilter);
+
+          if ($scope.config.filterConfig.onFilterChange) {
+            $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
+          }
+        }
+      };
+
+      $scope.handleAction = function (action) {
+        if (action && action.actionFn && (action.isDisabled !== true)) {
+          action.actionFn(action);
+        }
+      };
+    }],
+
+    link: function (scope, element, attrs) {
+      scope.$watch('config', function () {
+        if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
+          scope.config.viewsConfig.viewsList = angular.copy(scope.config.viewsConfig.views);
+
+          if (!scope.config.viewsConfig.currentView) {
+            scope.config.viewsConfig.currentView = scope.config.viewsConfig.viewsList[0];
+          }
+        }
       }, true);
     }
   };
@@ -4181,14 +4640,338 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
 }]);
 ;/**
  * @ngdoc directive
- * @name patternfly.views.directive:pfDataList
+ * @name patternfly.views.directive:pfCardView
  *
  * @description
- *   Directive for rendering a data list.
+ *   Directive for rendering cards in a view
  *   <br><br>
  *
- * @param {array} items Array of items to display in the list
- * @param {object} config Configuration settings for the data list:
+ * @param {object} config configuration settings for the cards:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
+ * <li>.selectItems            - (boolean) Allow card selection, default is false
+ * <li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
+ * <li>.multiSelect            - (boolean) Allow multiple card selections, selectItems must also be set, not applicable when dblClick is true. Default is false
+ * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
+ * <li>.selectedItems          - (array) Current set of selected items
+ * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
+ * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+ * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
+ * <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
+ * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
+ * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
+ * </ul>
+ *
+ * @param {Array} items the data to be shown in the cards<br/>
+ *
+ * @example
+ <example module="patternfly.views" deps="patternfly.utils">
+ <file name="index.html">
+   <style>
+     hr {
+      display: block;
+      height: 10px;
+      border: 0;
+      border-top: 1px solid #525252;
+      margin: 1em 0;
+      padding: 0;
+     }
+   </style>
+   <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
+     <div class="col-md-12">
+       <div pf-card-view id="exampleCardView" config="config" items="items">
+         <div class="col-md-12">
+           <span>{{item.name}}</span>
+         </div>
+         <div class="col-md-12">
+           <span>{{item.address}}</span>
+         </div>
+         <div class="col-md-12">
+           <span>{{item.city}}, {{item.state}}</span>
+         </div>
+       </div>
+     </div>
+     <hr class="col-md-12">
+     <div class="col-md-12">
+       <form role="form">
+         <div class="form-group">
+           <label>Selection</label>
+           </br>
+           <label class="radio-inline">
+             <input type="radio" ng-model="selectType" value="checkbox" ng-change="updateSelectionType()">Checkbox</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="selectType" value="card" ng-change="updateSelectionType()">Card</input>
+           </label>
+           <label class="radio-inline">
+             <input type="radio" ng-model="selectType" value="none" ng-change="updateSelectionType()">None</input>
+           </label>
+         </div>
+       </form>
+     </div>
+     <div class="col-md-12">
+       <form role="form">
+         <div class="form-group">
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.dblClick" ng-disabled="!config.selectItems">Double Click</input>
+           </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.multiSelect" ng-disabled="config.dblClick || !config.selectItems">Multi Select</input>
+           </label>
+         </div>
+       </form>
+     </div>
+     <div class="col-md-12">
+       <form role="form">
+         <div class="form-group">
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="showDisabled">Show Disabled Cards</input>
+           </label>
+         </div>
+       </form>
+     </div>
+     <div class="col-md-12">
+       <label class="events-label">Events: </label>
+     </div>
+     <div class="col-md-12">
+       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+     </div>
+   </div>
+ </file>
+
+ <file name="script.js">
+ angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
+ function ($scope) {
+        $scope.eventText = '';
+        var handleSelect = function (item, e) {
+          $scope.eventText = item.name + ' selected\n' + $scope.eventText;
+        };
+        var handleSelectionChange = function (selectedItems, e) {
+          $scope.eventText = selectedItems.length + ' items selected\n' + $scope.eventText;
+        };
+        var handleClick = function (item, e) {
+          $scope.eventText = item.name + ' clicked\n' + $scope.eventText;
+        };
+        var handleDblClick = function (item, e) {
+          $scope.eventText = item.name + ' double clicked\n' + $scope.eventText;
+        };
+        var handleCheckBoxChange = function (item, selected, e) {
+          $scope.eventText = item.name + ' checked: ' + item.selected + '\n' + $scope.eventText;
+        };
+
+        var checkDisabledItem = function(item) {
+          return $scope.showDisabled && (item.name === "John Smith");
+        };
+
+        $scope.selectType = 'checkbox';
+        $scope.updateSelectionType = function() {
+          if ($scope.selectType === 'checkbox') {
+            $scope.config.selectItems = false;
+            $scope.config.showSelectBox = true;
+          } else if ($scope.selectType === 'card') {
+            $scope.config.selectItems = true;
+            $scope.config.showSelectBox = false;
+          } else {
+            $scope.config.selectItems = false
+            $scope.config.showSelectBox = false;
+          }
+        };
+
+        $scope.showDisabled = false;
+
+        $scope.config = {
+         selectItems: false,
+         multiSelect: false,
+         dblClick: false,
+         selectionMatchProp: 'name',
+         selectedItems: [],
+         checkDisabled: checkDisabledItem,
+         showSelectBox: true,
+         onSelect: handleSelect,
+         onSelectionChange: handleSelectionChange,
+         onCheckBoxChange: handleCheckBoxChange,
+         onClick: handleClick,
+         onDblClick: handleDblClick
+        };
+
+        $scope.items = [
+          {
+            name: "Fred Flintstone",
+            address: "20 Dinosaur Way",
+            city: "Bedrock",
+            state: "Washingstone"
+          },
+          {
+            name: "John Smith",
+            address: "415 East Main Street",
+            city: "Norfolk",
+            state: "Virginia"
+          },
+          {
+            name: "Frank Livingston",
+            address: "234 Elm Street",
+            city: "Pittsburgh",
+            state: "Pennsylvania"
+          },
+          {
+            name: "Judy Green",
+            address: "2 Apple Boulevard",
+            city: "Cincinatti",
+            state: "Ohio"
+          },
+          {
+            name: "Pat Thomas",
+            address: "50 Second Street",
+            city: "New York",
+            state: "New York"
+          },
+        ]
+      }
+ ]);
+ </file>
+ </example>
+ */
+angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function (pfUtils) {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      config: '=?',
+      items: '=',
+      eventId: '@id'
+    },
+    transclude: true,
+    templateUrl: 'views/cardview/card-view.html',
+    controller: ["$scope", function ($scope) {
+      $scope.defaultConfig = {
+        selectItems: false,
+        multiSelect: false,
+        dblClick: false,
+        selectionMatchProp: 'uuid',
+        selectedItems: [],
+        checkDisabled: false,
+        showSelectBox: true,
+        onSelect: null,
+        onSelectionChange: null,
+        onCheckBoxChange: null,
+        onClick: null,
+        onDblClick: null
+      };
+
+      $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
+      if ($scope.config.selectItems && $scope.config.showSelectBox) {
+        throw new Error('pfCardView - ' +
+        'Illegal use of pfCardView directive! ' +
+        'Cannot allow both select box and click selection in the same card view.');
+      }
+    }],
+    link: function (scope, element, attrs) {
+      attrs.$observe('config', function () {
+        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
+        if (!scope.config.selectItems) {
+          scope.config.selectedItems = [];
+        }
+        if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
+          scope.config.selectedItems = [scope.config.selectedItems[0]];
+        }
+      });
+
+      scope.itemClick = function (e, item) {
+        var alreadySelected;
+        var selectionChanged = false;
+        var continueEvent = true;
+
+        // Ignore disabled item clicks completely
+        if (scope.checkDisabled(item)) {
+          return continueEvent;
+        }
+
+        if (scope.config && scope.config.selectItems && item) {
+          if (scope.config.multiSelect && !scope.config.dblClick) {
+
+            alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
+              return itemObj === item;
+            });
+
+            if (alreadySelected) {
+              // already selected so deselect
+              scope.config.selectedItems = _.without(scope.config.selectedItems, item);
+            } else {
+              // add the item to the selected items
+              scope.config.selectedItems.push(item);
+              selectionChanged = true;
+            }
+          } else {
+            if (scope.config.selectedItems[0] === item) {
+              if (!scope.config.dblClick) {
+                scope.config.selectedItems = [];
+                selectionChanged = true;
+              }
+              continueEvent = false;
+            } else {
+              scope.config.selectedItems = [item];
+              selectionChanged = true;
+            }
+          }
+
+          if (selectionChanged && scope.config.onSelect) {
+            scope.config.onSelect(item, e);
+          }
+          if (selectionChanged && scope.config.onSelectionChange) {
+            scope.config.onSelectionChange(scope.config.selectedItems, e);
+          }
+        }
+        if (scope.config.onClick) {
+          scope.config.onClick(item, e);
+        }
+
+        return continueEvent;
+      };
+
+      scope.dblClick = function (e, item) {
+        if (scope.config.onDblClick) {
+          scope.config.onDblClick(item, e);
+        }
+      };
+
+      scope.checkBoxChange = function (item) {
+        if (scope.config.onCheckBoxChange) {
+          scope.config.onCheckBoxChange(item);
+        }
+      };
+
+      scope.isSelected = function (item) {
+        var matchProp = scope.config.selectionMatchProp;
+        var selected = false;
+
+        if (scope.config.showSelectBox) {
+          selected = item.selected;
+        } else {
+          if (scope.config.selectedItems.length) {
+            return _.find(scope.config.selectedItems, function (itemObj) {
+              return itemObj[matchProp] === item[matchProp];
+            });
+          }
+        }
+        return selected;
+      };
+
+      scope.checkDisabled = function (item) {
+        return scope.config.checkDisabled && scope.config.checkDisabled(item);
+      };
+    }
+  };
+}]);
+;/**
+ * @ngdoc directive
+ * @name patternfly.views.directive:pfListView
+ *
+ * @description
+ *   Directive for rendering a list view.
+ *   <br><br>
+ *
+ * @param {array} items Array of items to display in the list view
+ * @param {object} config Configuration settings for the list view:
  * <ul style='list-style-type: none'>
  * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
  * <li>.selectItems            - (boolean) Allow row selection, default is false
@@ -4219,7 +5002,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12 list-view-container">
-        <div pf-data-list class="example-data-list" id="exampleDataList" config="config" items="items" actions="actions">
+        <div pf-list-view class="example-list-view" id="exampleListView" config="config" items="items" actions="actions">
           <div class="row">
               <div class="col-md-3">
                 <span>{{item.name}}</span>
@@ -4440,7 +5223,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfDataList', ["$timeout", "$window", "pfUtils", function ($timeout, $window, pfUtils) {
+angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window", "pfUtils", function ($timeout, $window, pfUtils) {
   'use strict';
   return {
     restrict: 'A',
@@ -4451,7 +5234,7 @@ angular.module('patternfly.views').directive('pfDataList', ["$timeout", "$window
       updateActionForItemFn: '=?'
     },
     transclude: true,
-    templateUrl: 'views/datalist/data-list.html',
+    templateUrl: 'views/listview/list-view.html',
     controller:
       ["$scope", "$element", function ($scope, $element) {
         var setDropMenuLocation = function (parentDiv) {
@@ -4473,7 +5256,7 @@ angular.module('patternfly.views').directive('pfDataList', ["$timeout", "$window
 
         var hideOnScroll = function () {
           $scope.prevMenuItem.showMenu = false;
-          angular.element(angular.element($element).find('.data-list-pf')[0]).unbind("scroll", hideOnScroll);
+          angular.element(angular.element($element).find('.list-view-pf')[0]).unbind("scroll", hideOnScroll);
           angular.element($window).unbind("scroll", hideOnScroll);
           $scope.$apply();
         };
@@ -4495,7 +5278,7 @@ angular.module('patternfly.views').directive('pfDataList', ["$timeout", "$window
               nextElement = nextElement.parentElement;
             }
 
-            angular.element(angular.element($element).find('.data-list-pf')[0]).bind("scroll", hideOnScroll);
+            angular.element(angular.element($element).find('.list-view-pf')[0]).bind("scroll", hideOnScroll);
             angular.element($window).bind("scroll", hideOnScroll);
           });
 
@@ -4519,9 +5302,9 @@ angular.module('patternfly.views').directive('pfDataList', ["$timeout", "$window
 
         $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
         if ($scope.config.selectItems && $scope.config.showSelectBox) {
-          throw new Error('pfDataList - ' +
-          'Illegal use of pfDataList directive! ' +
-          'Cannot allow both select box and click selection in the same data list.');
+          throw new Error('pfListView - ' +
+          'Illegal use of pListView directive! ' +
+          'Cannot allow both select box and click selection in the same list view.');
         }
 
         $scope.handleAction = function (action, item) {
@@ -4653,768 +5436,6 @@ angular.module('patternfly.views').directive('pfDataList', ["$timeout", "$window
     }
   };
 }]);
-;/**
- * @ngdoc directive
- * @name patternfly.views.directive:pfDataTiles
- *
- * @description
- *   Directive for rendering data tiles
- *   <br><br>
- *
- * @param {object} config configuration settings for the data tiles:<br/>
- * <ul style='list-style-type: none'>
- * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
- * <li>.selectItems            - (boolean) Allow tile selection, default is false
- * <li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
- * <li>.multiSelect            - (boolean) Allow multiple tile selections, selectItems must also be set, not applicable when dblClick is true. Default is false
- * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
- * <li>.selectedItems          - (array) Current set of selected items
- * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
- * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
- * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
- * <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
- * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
- * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
- * </ul>
- *
- * @param {Array} items the data to be shown in the data tiles<br/>
- *
- * @example
- <example module="patternfly.views" deps="patternfly.utils">
- <file name="index.html">
-   <style>
-     hr {
-      display: block;
-      height: 10px;
-      border: 0;
-      border-top: 1px solid #525252;
-      margin: 1em 0;
-      padding: 0;
-     }
-   </style>
-   <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
-     <div class="col-md-12">
-       <div pf-data-tiles id="exampleDataTiles" config="config" items="items">
-         <div class="col-md-12">
-           <span>{{item.name}}</span>
-         </div>
-         <div class="col-md-12">
-           <span>{{item.address}}</span>
-         </div>
-         <div class="col-md-12">
-           <span>{{item.city}}, {{item.state}}</span>
-         </div>
-       </div>
-     </div>
-     <hr class="col-md-12">
-     <div class="col-md-12">
-       <form role="form">
-         <div class="form-group">
-           <label>Selection</label>
-           </br>
-           <label class="radio-inline">
-             <input type="radio" ng-model="selectType" value="checkbox" ng-change="updateSelectionType()">Checkbox</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="selectType" value="tile" ng-change="updateSelectionType()">Tile</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="selectType" value="none" ng-change="updateSelectionType()">None</input>
-           </label>
-         </div>
-       </form>
-     </div>
-     <div class="col-md-12">
-       <form role="form">
-         <div class="form-group">
-           <label class="checkbox-inline">
-             <input type="checkbox" ng-model="config.dblClick" ng-disabled="!config.selectItems">Double Click</input>
-           </label>
-           <label class="checkbox-inline">
-             <input type="checkbox" ng-model="config.multiSelect" ng-disabled="config.dblClick || !config.selectItems">Multi Select</input>
-           </label>
-         </div>
-       </form>
-     </div>
-     <div class="col-md-12">
-       <form role="form">
-         <div class="form-group">
-           <label class="checkbox-inline">
-             <input type="checkbox" ng-model="showDisabled">Show Disabled Tiles</input>
-           </label>
-         </div>
-       </form>
-     </div>
-     <div class="col-md-12">
-       <label class="events-label">Events: </label>
-     </div>
-     <div class="col-md-12">
-       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
-     </div>
-   </div>
- </file>
-
- <file name="script.js">
- angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
- function ($scope) {
-        $scope.eventText = '';
-        var handleSelect = function (item, e) {
-          $scope.eventText = item.name + ' selected\n' + $scope.eventText;
-        };
-        var handleSelectionChange = function (selectedItems, e) {
-          $scope.eventText = selectedItems.length + ' items selected\n' + $scope.eventText;
-        };
-        var handleClick = function (item, e) {
-          $scope.eventText = item.name + ' clicked\n' + $scope.eventText;
-        };
-        var handleDblClick = function (item, e) {
-          $scope.eventText = item.name + ' double clicked\n' + $scope.eventText;
-        };
-        var handleCheckBoxChange = function (item, selected, e) {
-          $scope.eventText = item.name + ' checked: ' + item.selected + '\n' + $scope.eventText;
-        };
-
-        var checkDisabledItem = function(item) {
-          return $scope.showDisabled && (item.name === "John Smith");
-        };
-
-        $scope.selectType = 'checkbox';
-        $scope.updateSelectionType = function() {
-          if ($scope.selectType === 'checkbox') {
-            $scope.config.selectItems = false;
-            $scope.config.showSelectBox = true;
-          } else if ($scope.selectType === 'tile') {
-            $scope.config.selectItems = true;
-            $scope.config.showSelectBox = false;
-          } else {
-            $scope.config.selectItems = false
-            $scope.config.showSelectBox = false;
-          }
-        };
-
-        $scope.showDisabled = false;
-
-        $scope.config = {
-         selectItems: false,
-         multiSelect: false,
-         dblClick: false,
-         selectionMatchProp: 'name',
-         selectedItems: [],
-         checkDisabled: checkDisabledItem,
-         showSelectBox: true,
-         onSelect: handleSelect,
-         onSelectionChange: handleSelectionChange,
-         onCheckBoxChange: handleCheckBoxChange,
-         onClick: handleClick,
-         onDblClick: handleDblClick
-        };
-
-        $scope.items = [
-          {
-            name: "Fred Flintstone",
-            address: "20 Dinosaur Way",
-            city: "Bedrock",
-            state: "Washingstone"
-          },
-          {
-            name: "John Smith",
-            address: "415 East Main Street",
-            city: "Norfolk",
-            state: "Virginia"
-          },
-          {
-            name: "Frank Livingston",
-            address: "234 Elm Street",
-            city: "Pittsburgh",
-            state: "Pennsylvania"
-          },
-          {
-            name: "Judy Green",
-            address: "2 Apple Boulevard",
-            city: "Cincinatti",
-            state: "Ohio"
-          },
-          {
-            name: "Pat Thomas",
-            address: "50 Second Street",
-            city: "New York",
-            state: "New York"
-          },
-        ]
-      }
- ]);
- </file>
- </example>
- */
-angular.module('patternfly.views').directive('pfDataTiles', ["pfUtils", function (pfUtils) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=?',
-      items: '=',
-      eventId: '@id'
-    },
-    transclude: true,
-    templateUrl: 'views/datatiles/data-tiles.html',
-    controller: ["$scope", function ($scope) {
-      $scope.defaultConfig = {
-        selectItems: false,
-        multiSelect: false,
-        dblClick: false,
-        selectionMatchProp: 'uuid',
-        selectedItems: [],
-        checkDisabled: false,
-        showSelectBox: true,
-        onSelect: null,
-        onSelectionChange: null,
-        onCheckBoxChange: null,
-        onClick: null,
-        onDblClick: null
-      };
-
-      $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
-      if ($scope.config.selectItems && $scope.config.showSelectBox) {
-        throw new Error('pfDataTiles - ' +
-        'Illegal use of pfDataTiles directive! ' +
-        'Cannot allow both select box and click selection in the same data tiles.');
-      }
-    }],
-    link: function (scope, element, attrs) {
-      attrs.$observe('config', function () {
-        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
-        if (!scope.config.selectItems) {
-          scope.config.selectedItems = [];
-        }
-        if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
-          scope.config.selectedItems = [scope.config.selectedItems[0]];
-        }
-      });
-
-      scope.itemClick = function (e, item) {
-        var alreadySelected;
-        var selectionChanged = false;
-        var continueEvent = true;
-
-        // Ignore disabled item clicks completely
-        if (scope.checkDisabled(item)) {
-          return continueEvent;
-        }
-
-        if (scope.config && scope.config.selectItems && item) {
-          if (scope.config.multiSelect && !scope.config.dblClick) {
-
-            alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
-              return itemObj === item;
-            });
-
-            if (alreadySelected) {
-              // already selected so deselect
-              scope.config.selectedItems = _.without(scope.config.selectedItems, item);
-            } else {
-              // add the item to the selected items
-              scope.config.selectedItems.push(item);
-              selectionChanged = true;
-            }
-          } else {
-            if (scope.config.selectedItems[0] === item) {
-              if (!scope.config.dblClick) {
-                scope.config.selectedItems = [];
-                selectionChanged = true;
-              }
-              continueEvent = false;
-            } else {
-              scope.config.selectedItems = [item];
-              selectionChanged = true;
-            }
-          }
-
-          if (selectionChanged && scope.config.onSelect) {
-            scope.config.onSelect(item, e);
-          }
-          if (selectionChanged && scope.config.onSelectionChange) {
-            scope.config.onSelectionChange(scope.config.selectedItems, e);
-          }
-        }
-        if (scope.config.onClick) {
-          scope.config.onClick(item, e);
-        }
-
-        return continueEvent;
-      };
-
-      scope.dblClick = function (e, item) {
-        if (scope.config.onDblClick) {
-          scope.config.onDblClick(item, e);
-        }
-      };
-
-      scope.checkBoxChange = function (item) {
-        if (scope.config.onCheckBoxChange) {
-          scope.config.onCheckBoxChange(item);
-        }
-      };
-
-      scope.isSelected = function (item) {
-        var matchProp = scope.config.selectionMatchProp;
-        var selected = false;
-
-        if (scope.config.showSelectBox) {
-          selected = item.selected;
-        } else {
-          if (scope.config.selectedItems.length) {
-            return _.find(scope.config.selectedItems, function (itemObj) {
-              return itemObj[matchProp] === item[matchProp];
-            });
-          }
-        }
-        return selected;
-      };
-
-      scope.checkDisabled = function (item) {
-        return scope.config.checkDisabled && scope.config.checkDisabled(item);
-      };
-    }
-  };
-}]);
-;/**
- * @ngdoc directive
- * @name patternfly.views.directive:pfDataToolbar
- *
- * @description
- *   Directive for standard data toolbar. Includes filtering and view selection capabilities
- *   <br><br>
- *
- * @param {object} config configuration settings for the toolbar:<br/>
- *   <ul style='list-style-type: none'>
- *     <li>.filterConfig  - (Object) Optional filter config. If undefined, no filtering capabilities are shown.
- *                          See pfSimpleFilter for filter config options.
- *     <li>.sortConfig  - (Object) Optional sort config. If undefined, no sort capabilities are shown.
- *                          See pfSimpleSort for sort config options.
- *     <li>.viewsConfig  - (Object) Optional configuration settings for view type selection
- *       <ul style='list-style-type: none'>
- *         <li>.views       - (Array) List of available views for selection. See pfViewUtils for standard available views
- *           <ul style='list-style-type: none'>
- *             <li>.id - (String) Unique id for the view, used for comparisons
- *             <li>.title - (String) Optional title, uses as a tooltip for the view selector
- *             <li>.iconClass - (String) Icon class to use for the view selector
- *           </ul>
- *         <li>.onViewSelect - ( function(view) ) Function to call when a view is selected
- *         <li>.currentView - the id of the currently selected view
- *       </ul>
- *     <li>.actionsConfig  - (Object) Optional configuration settings for toolbar actions
- *       <ul style='list-style-type: none'>
- *         <li>.primaryActions  - (Array) List of primary actions to display on the toolbar
- *           <ul style='list-style-type: none'>
- *             <li>.name - (String) The name of the action, displayed on the button
- *             <li>.title - (String) Optional title, used for the tooltip
- *             <li>.actionFn - (function(action)) Function to invoke when the action selected
- *             <li>.isDisabled - (Boolean) set to true to disable the action
- *           </ul>
- *         <li>.moreActions  - (Array) List of secondary actions to display on the toolbar action pulldown menu
- *           <ul style='list-style-type: none'>
- *             <li>.name - (String) The name of the action, displayed on the button
- *             <li>.title - (String) Optional title, used for the tooltip
- *             <li>.actionFn - (function(action)) Function to invoke when the action selected
- *             <li>.isDisabled - (Boolean) set to true to disable the action
- *             <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
- *           </ul>
- *       </ul>
- *   </ul>
- *
- * @example
-<example module="patternfly.views" deps="patternfly.filters, patternfly.sort">
-  <file name="index.html">
-    <div ng-controller="ViewCtrl" class="row example-container">
-      <div class="col-md-12">
-        <div pf-data-toolbar id="exampleDataToolbar" config="toolbarConfig"></div>
-      </div>
-      <hr class="col-md-12">
-      <div class="col-md-12">
-        <label class="events-label">Valid Items: </label>
-      </div>
-      <div class="col-md-12 list-view-container" ng-if="viewType == 'listView'">
-        <div pf-data-list config="listConfig" items="items">
-          <div class="row">
-            <div class="col-md-3">
-              <span>{{item.name}}</span>
-            </div>
-            <div class="col-md-1">
-              <span>{{item.age}}</span>
-            </div>
-            <div class="col-md-6">
-              <span>{{item.address}}</span>
-            </div>
-            <div class="col-md-2">
-              <span>{{item.birthMonth}}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12 tiles-view-container" ng-if="viewType == 'tilesView'">
-        <div pf-data-tiles config="vm.listConfig" items="items">
-          <div class="col-md-12">
-            <span>{{item.name}}</span>
-          </div>
-          <div class="col-md-12">
-            <span>Age: {{item.age}}</span>
-          </div>
-          <div class="col-md-12">
-            <span>{{item.address}}</span>
-          </div>
-          <div class="col-md-12">
-            <span>{{item.birthMonth}}</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <label class="events-label">Current Filters: </label>
-      </div>
-      <div class="col-md-12">
-        <textarea rows="5" class="col-md-12">{{filtersText}}</textarea>
-      </div>
-      <div class="col-md-12">
-        <label class="actions-label">Actions: </label>
-      </div>
-      <div class="col-md-12">
-        <textarea rows="3" class="col-md-12">{{actionsText}}</textarea>
-      </div>
-    </div>
-  </file>
-
-  <file name="script.js">
-  angular.module('patternfly.views').controller('ViewCtrl', ['$scope', 'pfViewUtils',
-    function ($scope, pfViewUtils) {
-      $scope.filtersText = '';
-
-      $scope.allItems = [
-        {
-          name: "Fred Flintstone",
-          age: 57,
-          address: "20 Dinosaur Way, Bedrock, Washingstone",
-          birthMonth: 'February'
-        },
-        {
-          name: "John Smith",
-          age: 23,
-          address: "415 East Main Street, Norfolk, Virginia",
-          birthMonth: 'October'
-        },
-        {
-          name: "Frank Livingston",
-          age: 71,
-          address: "234 Elm Street, Pittsburgh, Pennsylvania",
-          birthMonth: 'March'
-        },
-        {
-          name: "Judy Green",
-          age: 21,
-          address: "2 Apple Boulevard, Cincinatti, Ohio",
-          birthMonth: 'December'
-        },
-        {
-          name: "Pat Thomas",
-          age: 19,
-          address: "50 Second Street, New York, New York",
-          birthMonth: 'February'
-        }
-      ];
-      $scope.items = $scope.allItems;
-
-      var matchesFilter = function (item, filter) {
-        var match = true;
-
-        if (filter.id === 'name') {
-          match = item.name.match(filter.value) !== null;
-        } else if (filter.id === 'age') {
-          match = item.age === filter.value;
-        } else if (filter.id === 'address') {
-          match = item.address.match(filter.value) !== null;
-        } else if (filter.id === 'birthMonth') {
-          match = item.birthMonth === filter.value;
-        }
-        return match;
-      };
-
-      var matchesFilters = function (item, filters) {
-        var matches = true;
-
-        filters.forEach(function(filter) {
-          if (!matchesFilter(item, filter)) {
-            matches = false;
-            return false;
-          }
-        });
-        return matches;
-      };
-
-      var applyFilters = function (filters) {
-        $scope.items = [];
-        if (filters && filters.length > 0) {
-          $scope.allItems.forEach(function (item) {
-            if (matchesFilters(item, filters)) {
-              $scope.items.push(item);
-            }
-          });
-        } else {
-          $scope.items = $scope.allItems;
-        }
-      };
-
-      var filterChange = function (filters) {
-      $scope.filtersText = "";
-        filters.forEach(function (filter) {
-          $scope.filtersText += filter.title + " : " + filter.value + "\n";
-        });
-        applyFilters(filters);
-        $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
-      };
-
-      $scope.filterConfig = {
-        fields: [
-          {
-            id: 'name',
-            title:  'Name',
-            placeholder: 'Filter by Name...',
-            filterType: 'text'
-          },
-          {
-            id: 'age',
-            title:  'Age',
-            placeholder: 'Filter by Age...',
-            filterType: 'text'
-          },
-          {
-            id: 'address',
-            title:  'Address',
-            placeholder: 'Filter by Address...',
-            filterType: 'text'
-          },
-          {
-            id: 'birthMonth',
-            title:  'Birth Month',
-            placeholder: 'Filter by Birth Month...',
-            filterType: 'select',
-            filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-          }
-        ],
-        resultsCount: $scope.items.length,
-        appliedFilters: [],
-        onFilterChange: filterChange
-      };
-
-      var viewSelected = function(viewId) {
-        $scope.viewType = viewId
-      };
-
-      $scope.viewsConfig = {
-        views: [pfViewUtils.getListView(), pfViewUtils.getTilesView()],
-        onViewSelect: viewSelected
-      };
-      $scope.viewsConfig.currentView = $scope.viewsConfig.views[0].id;
-      $scope.viewType = $scope.viewsConfig.currentView;
-
-      var monthVals = {
-        'January': 1,
-        'February': 2,
-        'March': 3,
-        'April': 4,
-        'May': 5,
-        'June': 6,
-        'July': 7,
-        'August': 8,
-        'September': 9,
-        'October': 10,
-        'November': 11,
-        'December': 12
-      };
-      var compareFn = function(item1, item2) {
-        var compValue = 0;
-        if ($scope.sortConfig.currentField.id === 'name') {
-          compValue = item1.name.localeCompare(item2.name);
-        } else if ($scope.sortConfig.currentField.id === 'age') {
-            compValue = item1.age - item2.age;
-        } else if ($scope.sortConfig.currentField.id === 'address') {
-          compValue = item1.address.localeCompare(item2.address);
-        } else if ($scope.sortConfig.currentField.id === 'birthMonth') {
-          compValue = monthVals[item1.birthMonth] - monthVals[item2.birthMonth];
-        }
-
-        if (!$scope.sortConfig.isAscending) {
-          compValue = compValue * -1;
-        }
-
-        return compValue;
-      };
-
-      var sortChange = function (sortId, isAscending) {
-        $scope.items.sort(compareFn);
-      };
-
-      $scope.sortConfig = {
-        fields: [
-          {
-            id: 'name',
-            title:  'Name',
-            sortType: 'alpha'
-          },
-          {
-            id: 'age',
-            title:  'Age',
-            sortType: 'numeric'
-          },
-          {
-            id: 'address',
-            title:  'Address',
-            sortType: 'alpha'
-          },
-          {
-            id: 'birthMonth',
-            title:  'Birth Month',
-            sortType: 'alpha'
-          }
-        ],
-        onSortChange: sortChange
-      };
-
-      $scope.actionsText = "";
-      var performAction = function (action) {
-        $scope.actionsText = action.name + "\n" + $scope.actionsText;
-      };
-
-      $scope.actionsConfig = {
-        primaryActions: [
-          {
-            name: 'Action 1',
-            title: 'Do the first thing',
-            actionFn: performAction
-          },
-          {
-            name: 'Action 2',
-            title: 'Do something else',
-            actionFn: performAction
-          }
-        ],
-        moreActions: [
-          {
-            name: 'Action',
-            title: 'Perform an action',
-            actionFn: performAction
-          },
-          {
-            name: 'Another Action',
-            title: 'Do something else',
-            actionFn: performAction
-          },
-          {
-            name: 'Disabled Action',
-            title: 'Unavailable action',
-            actionFn: performAction,
-            isDisabled: true
-          },
-          {
-            name: 'Something Else',
-            title: '',
-            actionFn: performAction
-          },
-          {
-            isSeparator: true
-          },
-          {
-            name: 'Grouped Action 1',
-            title: 'Do something',
-            actionFn: performAction
-          },
-          {
-            name: 'Grouped Action 2',
-            title: 'Do something similar',
-            actionFn: performAction
-          }
-        ]
-      };
-
-      $scope.toolbarConfig = {
-        viewsConfig: $scope.viewsConfig,
-        filterConfig: $scope.filterConfig,
-        sortConfig: $scope.sortConfig,
-        actionsConfig: $scope.actionsConfig
-      };
-
-      $scope.listConfig = {
-        selectionMatchProp: 'name',
-        checkDisabled: false
-      };
-    }
-  ]);
-  </file>
-</example>
- */
-angular.module('patternfly.views').directive('pfDataToolbar', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '='
-    },
-    replace: true,
-    transclude: false,
-    templateUrl: 'views/toolbar/data-toolbar.html',
-    controller: ["$scope", function ($scope) {
-      $scope.viewSelected = function (viewId) {
-        $scope.config.viewsConfig.currentView = viewId;
-        if ($scope.config.viewsConfig.onViewSelect && !$scope.checkViewDisabled(viewId)) {
-          $scope.config.viewsConfig.onViewSelect(viewId);
-        }
-      };
-
-      $scope.isViewSelected = function (viewId) {
-        return $scope.config.viewsConfig && ($scope.config.viewsConfig.currentView === viewId);
-      };
-
-      $scope.checkViewDisabled = function (view) {
-        return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
-      };
-
-      $scope.filterExists = function (filter) {
-        var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
-        return foundFilter !== undefined;
-      };
-
-      $scope.addFilter = function (field, value) {
-        var newFilter = {
-          id: field.id,
-          title: field.title,
-          value: value
-        };
-        if (!$scope.filterExists(newFilter)) {
-          $scope.config.filterConfig.appliedFilters.push(newFilter);
-
-          if ($scope.config.filterConfig.onFilterChange) {
-            $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
-          }
-        }
-      };
-
-      $scope.handleAction = function (action) {
-        if (action && action.actionFn && (action.isDisabled !== true)) {
-          action.actionFn(action);
-        }
-      };
-    }],
-
-    link: function (scope, element, attrs) {
-      scope.$watch('config', function () {
-        if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
-          scope.config.viewsConfig.viewsList = angular.copy(scope.config.viewsConfig.views);
-
-          if (!scope.config.viewsConfig.currentView) {
-            scope.config.viewsConfig.currentView = scope.config.viewsConfig.viewsList[0];
-          }
-        }
-      }, true);
-    }
-  };
-});
 ;(function () {
   'use strict';
 
@@ -5426,10 +5447,10 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
         iconClass: 'fa fa-dashboard'
       };
     },
-    getTilesView: function (title) {
+    getCardView: function (title) {
       return {
-        id: 'tilesView',
-        title: title || 'Tiles View',
+        id: 'cardView',
+        title: title || 'Card View',
         iconClass: 'fa fa-th'
       };
     },
@@ -5488,12 +5509,12 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
 
 
   $templateCache.put('charts/heatmap/heatmap-legend.html',
-    "<ul class=pf-heatmap-legend-container><li ng-repeat=\"item in legendItems\" class=pf-heatmap-legend-items><span class=pf-legend-color-box ng-style=\"{background: item.color}\"></span> <span class=pf-legend-text>{{item.text}}</span></li></ul>"
+    "<ul class=heatmap-pf-legend-container><li ng-repeat=\"item in legendItems\" class=heatmap-pf-legend-items><span class=legend-pf-color-box ng-style=\"{background: item.color}\"></span> <span class=legend-pf-text>{{item.text}}</span></li></ul>"
   );
 
 
   $templateCache.put('charts/heatmap/heatmap.html',
-    "<div class=pf-heatmap-container><h3>{{chartTitle}}</h3><div class=heatmap-container ng-style=containerStyles><svg class=pf-heatmap-svg></svg></div><div pf-empty-chart ng-if=\"chartDataAvailable === false\" chart-height=height></div><div ng-if=!loadingDone class=\"spinner spinner-lg loading\"></div><div ng-if=showLegend pf-heatmap-legend legend=legendLabels legend-colors=heatmapColorPattern></div></div>"
+    "<div class=heatmap-pf-container><h3>{{chartTitle}}</h3><div class=heatmap-container ng-style=containerStyles><svg class=heatmap-pf-svg></svg></div><div pf-empty-chart ng-if=\"chartDataAvailable === false\" chart-height=height></div><div ng-if=!loadingDone class=\"spinner spinner-lg loading\"></div><div ng-if=showLegend pf-heatmap-legend legend=legendLabels legend-colors=heatmapColorPattern></div></div>"
   );
 
 
@@ -5508,31 +5529,31 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
 
 
   $templateCache.put('charts/utilization-bar/utilization-bar-chart.html',
-    "<div class=pf-utilization-bar-chart><span ng-if=\"!layout || layout.type === 'regular'\"><div ng-if=chartTitle class=progress-description>{{chartTitle}}</div><div class=\"progress progress-label-top-right\"><div class=progress-bar role=progressbar ng-class=\"{'animate': animate,\n" +
+    "<div class=utilization-bar-chart-pf><span ng-if=\"!layout || layout.type === 'regular'\"><div ng-if=chartTitle class=progress-description>{{chartTitle}}</div><div class=\"progress progress-label-top-right\"><div class=progress-bar role=progressbar ng-class=\"{'animate': animate,\n" +
     "           'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}\" ng-style=\"{width:chartData.percentageUsed + '%'}\" tooltip=\"{{chartData.percentageUsed}}% Used\"><span ng-if=chartFooter ng-bind-html=chartFooter></span> <span ng-if=\"!chartFooter && (!footerLabelFormat || footerLabelFormat === 'actual')\"><strong>{{chartData.used}} of {{chartData.total}} {{units}}</strong> Used</span> <span ng-if=\"!chartFooter && footerLabelFormat === 'percent'\"><strong>{{chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" role=progressbar aria-valuenow=5 aria-valuemin=0 aria-valuemax=100 ng-style=\"{width:(100 - chartData.percentageUsed) + '%'}\" tooltip=\"{{100 - chartData.percentageUsed}}% Available\"></div></div></span> <span ng-if=\"layout && layout.type === 'inline'\"><div class=\"progress-container progress-description-left progress-label-right\" ng-style=\"{'padding-left':layout.titleLabelWidth, 'padding-right':layout.footerLabelWidth}\"><div ng-if=chartTitle class=progress-description ng-style=\"{'max-width':layout.titleLabelWidth}\">{{chartTitle}}</div><div class=progress><div class=progress-bar role=progressbar aria-valuenow=25 aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate, 'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}\" ng-style=\"{width:chartData.percentageUsed + '%'}\" tooltip=\"{{chartData.percentageUsed}}% Used\"><span ng-if=chartFooter ng-bind-html=chartFooter></span> <span ng-if=\"(!chartFooter) && (!footerLabelFormat || footerLabelFormat === 'actual')\" ng-style=\"{'max-width':layout.footerLabelWidth}\"><strong>{{chartData.used}} {{units}}</strong> Used</span> <span ng-if=\"(!chartFooter) && footerLabelFormat === 'percent'\" ng-style=\"{'max-width':layout.footerLabelWidth}\"><strong>{{chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" role=progressbar aria-valuenow=75 aria-valuemin=0 aria-valuemax=100 ng-style=\"{width:(100 - chartData.percentageUsed) + '%'}\" tooltip=\"{{100 - chartData.percentageUsed}}% Available\"></div></div></div></span></div>"
   );
 
 
-  $templateCache.put('charts/utilization/utilization-chart.html',
-    "<div class=utilization-chart-pf ng-class=\"{'data-unavailable-pf': chartData.dataAvailable === false}\"><h3>{{config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\">{{currentValue}}</h1><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div class=donut-chart-pf><div pf-donut-pct-chart ng-if=\"chartData.dataAvailable !== false\" config=donutConfig data=chartData center-label=centerLabel></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=231></div></div><div ng-if=\"chartData.dataAvailable !== false\" class=sparkline-chart><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
+  $templateCache.put('charts/utilization-trend/utilization-trend-chart.html',
+    "<div class=utilization-trend-chart-pf ng-class=\"{'data-unavailable-pf': chartData.dataAvailable === false}\"><h3>{{config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\">{{currentValue}}</h1><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div class=donut-chart-pf><div pf-donut-pct-chart ng-if=\"chartData.dataAvailable !== false\" config=donutConfig data=chartData center-label=centerLabel></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=231></div></div><div ng-if=\"chartData.dataAvailable !== false\" class=sparkline-chart><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
   );
 
 }]);
 ;angular.module('patternfly.filters').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('filters/simple-filter-fields.html',
-    "<div class=\"simple-filter filter-fields\"><form><div class=\"form-group toolbar-pf-filter\"><div class=input-group><div dropdown class=input-group-btn><button dropdown-toggle type=button class=\"btn btn-default dropdown-toggle filter-fields\" aria-haspopup=true aria-expanded=false tooltip=\"Filter by\" tooltip-placement=top>{{currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"currentField.filterType !== 'select'\"><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=\"onValueKeyPress($event)\"></div><div ng-if=\"currentField.filterType === 'select'\"><select pf-select class=\"form-control filter-select\" id=currentValue ng-model=config.currentValue ng-options=\"filterValue for filterValue in currentField.filterValues\" ng-change=selectValue(config.currentValue)><option value=\"\">{{currentField.placeholder}}</option></select></div></div></div></form></div>"
+  $templateCache.put('filters/filter-fields.html',
+    "<div class=\"filter-pf filter-fields\"><form><div class=\"form-group toolbar-pf-filter\"><div class=input-group><div dropdown class=input-group-btn><button dropdown-toggle type=button class=\"btn btn-default dropdown-toggle filter-fields\" aria-haspopup=true aria-expanded=false tooltip=\"Filter by\" tooltip-placement=top>{{currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"currentField.filterType !== 'select'\"><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=\"onValueKeyPress($event)\"></div><div ng-if=\"currentField.filterType === 'select'\"><select pf-select class=\"form-control filter-select\" id=currentValue ng-model=config.currentValue ng-options=\"filterValue for filterValue in currentField.filterValues\" ng-change=selectValue(config.currentValue)><option value=\"\">{{currentField.placeholder}}</option></select></div></div></div></form></div>"
   );
 
 
-  $templateCache.put('filters/simple-filter-results.html',
-    "<div class=simple-filter><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{config.resultsCount}} Results</h5><p ng-if=\"config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a><span class=\"pficon pficon-close\" ng-click=clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=clearAllFilters() ng-if=\"config.appliedFilters.length > 0\">Clear All Filters</a></p></div><!-- /col --></div><!-- /row --></div>"
+  $templateCache.put('filters/filter-results.html',
+    "<div class=filter-pf><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{config.resultsCount}} Results</h5><p ng-if=\"config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a><span class=\"pficon pficon-close\" ng-click=clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=clearAllFilters() ng-if=\"config.appliedFilters.length > 0\">Clear All Filters</a></p></div><!-- /col --></div><!-- /row --></div>"
   );
 
 
-  $templateCache.put('filters/simple-filter.html',
-    "<div class=simple-filter><div pf-simple-filter-fields config=config add-filter-fn=addFilter></div><div pf-simple-filter-results config=config></div></div>"
+  $templateCache.put('filters/filter.html',
+    "<div class=filter-pf><div pf-filter-fields config=config add-filter-fn=addFilter></div><div pf-filter-results config=config></div></div>"
   );
 
 }]);
@@ -5557,8 +5578,13 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
 ;angular.module('patternfly.notification').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('notification/inline-notification.html',
+    "<div class=\"alert alert-{{pfNotificationType}}\" ng-class=\"{'alert-dismissable': pfNotificationPersistent === true}\"><button ng-show=pfNotificationPersistent ng-click=$parent.notifications.remove($index) type=button class=close data-dismiss=alert aria-hidden=true><span class=\"pficon pficon-close\"></span></button> <span class=\"pficon pficon-ok\" ng-show=\"pfNotificationType === 'success'\"></span> <span class=\"pficon pficon-info\" ng-show=\"pfNotificationType === 'info'\"></span> <span class=\"pficon pficon-error-circle-o\" ng-show=\"pfNotificationType === 'danger'\"></span> <span class=\"pficon pficon-warning-triangle-o\" ng-show=\"pfNotificationType === 'warning'\"></span> <strong>{{pfNotificationHeader}}</strong> {{pfNotificationMessage}}</div>"
+  );
+
+
   $templateCache.put('notification/notification-list.html',
-    "<div data-ng-show=\"notifications.data.length > 0\"><div ng-repeat=\"notification in notifications.data\"><pf-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-notification></div></div>"
+    "<div data-ng-show=\"notifications.data.length > 0\"><div ng-repeat=\"notification in notifications.data\"><pf-inline-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-inline-notification></div></div>"
   );
 
 
@@ -5570,28 +5596,31 @@ angular.module('patternfly.views').directive('pfDataToolbar', function () {
 ;angular.module('patternfly.sort').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('sort/simple-sort.html',
-    "<div class=simple-sort><form><div class=form-group><div class=\"dropdown btn-group\"><button type=button class=\"btn btn-default dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false tooltip=\"Sort by\" tooltip-placement=bottom>{{config.currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\" ng-class=\"{'selected': item === config.currentField}\"><a class=sort-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><button class=\"btn btn-link\" type=button ng-click=changeDirection()><span class=sort-direction ng-class=getSortIconClass()></span></button></div></form></div>"
+  $templateCache.put('sort/sort.html',
+    "<div class=sort-pf><form><div class=form-group><div class=\"dropdown btn-group\"><button type=button class=\"btn btn-default dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false tooltip=\"Sort by\" tooltip-placement=bottom>{{config.currentField.title}} <span class=caret></span></button><ul class=dropdown-menu><li ng-repeat=\"item in config.fields\" ng-class=\"{'selected': item === config.currentField}\"><a class=sort-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><button class=\"btn btn-link\" type=button ng-click=changeDirection()><span class=sort-direction ng-class=getSortIconClass()></span></button></div></form></div>"
+  );
+
+}]);
+;angular.module('patternfly.toolbars').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('toolbars/toolbar.html',
+    "<div class=container-fluid><div class=\"row toolbar-pf\"><div class=col-sm-12><form class=toolbar-pf-actions><div pf-filter-fields id={{filterDomId}}_fields config=config.filterConfig ng-if=config.filterConfig add-filter-fn=addFilter></div><div pf-sort id={{sortDomId}} config=config.sortConfig ng-if=config.sortConfig></div><div class=\"form-group toolbar-actions\" ng-if=\"config.actionsConfig &&\n" +
+    "                   ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||\n" +
+    "                    (config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0))\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in config.actionsConfig.primaryActions\" title={{action.title}} ng-click=handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div class=\"dropdown btn-group\" ng-if=\"config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0\"><button type=button class=\"btn btn-link dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false><span class=\"fa fa-ellipsis-v\"></span></button><ul class=dropdown-menu><li ng-repeat=\"action in config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=\"toolbar-pf-view-selector pull-right\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><ul class=list-inline><li ng-repeat=\"view in config.viewsConfig.viewsList\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}}><a><i class=\"view-selector {{view.iconClass}}\" ng-click=viewSelected(view.id)></i></a></li></ul></div></form><div pf-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->"
   );
 
 }]);
 ;angular.module('patternfly.views').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('views/datalist/data-list.html',
-    "<div class=data-list-pf><div class=list-group-item ng-repeat=\"item in items track by $index\" ng-class=\"{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item)}\"><div class=list-row><div pf-transclude=parent class=list-content ng-class=\"{'with-check-box': config.showSelectBox, 'with-menu':actions && actions.length > 0}\" ng-click=\"itemClick($event, item)\" ng-dblclick=\"dblClick($event, item)\"></div><div class=list-check-box ng-if=config.showSelectBox style=\"padding-top: {{(config.rowHeight - 32) / 2}}px\"><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change=\"checkBoxChange(item)\"></div><div class=\"list-menu dropdown btn-group {{$index}}\" ng-if=\"actions && actions.length > 0\" ng-class=\"{'disabled': checkDisabled(item)}\"><button type=button class=\"btn btn-link dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false ng-click=\"setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul class=dropdown-menu ng-if=item.showMenu><li ng-repeat=\"action in actions\" ng-if=\"action.isVisible !== false\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (action.isSeparator === true), 'disabled': (action.isDisabled === true)}\"><a ng-if=\"action.isSeparator !== true\" title={{action.title}} ng-click=\"handleAction(action, item)\">{{action.name}}</a></li></ul></div></div></div></div>"
+  $templateCache.put('views/cardview/card-view.html',
+    "<div class=card-view-pf><div class=card ng-repeat=\"item in items\" ng-class=\"{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item)}\"><div class=card-content ng-click=\"itemClick($event, item)\" ng-dblclick=\"dblClick($event, item)\"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change=\"checkBoxChange(item)\"></div></div></div>"
   );
 
 
-  $templateCache.put('views/datatiles/data-tiles.html',
-    "<div class=tiles-view-pf><div class=tile ng-repeat=\"item in items\" ng-class=\"{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item)}\"><div class=tile-content ng-click=\"itemClick($event, item)\" ng-dblclick=\"dblClick($event, item)\"><div pf-transclude=parent></div></div><div class=tile-check-box ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change=\"checkBoxChange(item)\"></div></div></div>"
-  );
-
-
-  $templateCache.put('views/toolbar/data-toolbar.html',
-    "<div class=container-fluid><div class=\"row toolbar-pf\"><div class=col-sm-12><form class=toolbar-pf-actions><div pf-simple-filter-fields id={{filterDomId}}_fields config=config.filterConfig ng-if=config.filterConfig add-filter-fn=addFilter></div><div pf-simple-sort id={{sortDomId}} config=config.sortConfig ng-if=config.sortConfig></div><div class=\"form-group toolbar-actions\" ng-if=\"config.actionsConfig &&\n" +
-    "                   ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||\n" +
-    "                    (config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0))\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in config.actionsConfig.primaryActions\" title={{action.title}} ng-click=handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div class=\"dropdown btn-group\" ng-if=\"config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0\"><button type=button class=\"btn btn-link dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false><span class=\"fa fa-ellipsis-v\"></span></button><ul class=dropdown-menu><li ng-repeat=\"action in config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=\"toolbar-pf-view-selector pull-right\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><ul class=list-inline><li ng-repeat=\"view in config.viewsConfig.viewsList\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}}><a><i class=\"view-selector {{view.iconClass}}\" ng-click=viewSelected(view.id)></i></a></li></ul></div></form><div pf-simple-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->"
+  $templateCache.put('views/listview/list-view.html',
+    "<div class=list-view-pf><div class=list-group-item ng-repeat=\"item in items track by $index\" ng-class=\"{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item)}\"><div class=list-row><div pf-transclude=parent class=list-content ng-class=\"{'with-check-box': config.showSelectBox, 'with-menu':actions && actions.length > 0}\" ng-click=\"itemClick($event, item)\" ng-dblclick=\"dblClick($event, item)\"></div><div class=list-check-box ng-if=config.showSelectBox style=\"padding-top: {{(config.rowHeight - 32) / 2}}px\"><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change=\"checkBoxChange(item)\"></div><div class=\"list-menu dropdown btn-group {{$index}}\" ng-if=\"actions && actions.length > 0\" ng-class=\"{'disabled': checkDisabled(item)}\"><button type=button class=\"btn btn-link dropdown-toggle\" data-toggle=dropdown aria-haspopup=true aria-expanded=false ng-click=\"setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul class=dropdown-menu ng-if=item.showMenu><li ng-repeat=\"action in actions\" ng-if=\"action.isVisible !== false\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (action.isSeparator === true), 'disabled': (action.isDisabled === true)}\"><a ng-if=\"action.isSeparator !== true\" title={{action.title}} ng-click=\"handleAction(action, item)\">{{action.name}}</a></li></ul></div></div></div></div>"
   );
 
 }]);
