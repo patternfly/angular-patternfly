@@ -125,5 +125,5 @@ We're always interested in contributions from the community.
 Please ensure that your PR provides the following:
 
 * Detailed description of the proposed changes
-* Follows the style rules for [javascript](.jshintrc) and [html](.htmlhintrc).
+* Follows the style rules for [javascript](.eslint.yaml) and [html](.htmlhintrc).
 * Rebased onto the latest master commit
