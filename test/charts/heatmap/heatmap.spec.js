@@ -42,13 +42,13 @@ describe('Directive: pfHeatmap', function() {
   it("should generate 7 blocks", function() {
     element = compileChart('<div pf-heatmap chart-title="title" data="data"></div>',$scope);
 
-    expect(angular.element(element).find('.pf-heatmap-svg').find('rect').size()).toBe(7);
+    expect(angular.element(element).find('.heatmap-pf-svg').find('rect').size()).toBe(7);
   });
 
   it("should set color and tooltip of the block based on defaults", function() {
     element = compileChart('<div pf-heatmap chart-title="title" data="data"></div>',$scope);
 
-    block = angular.element(element).find('.pf-heatmap-svg').children().first();
+    block = angular.element(element).find('.heatmap-pf-svg').children().first();
     tooltip = block.attr('tooltip-html-unsafe');
 
     expect(tooltip).toBe('Node 8 : My OpenShift Provider<br>96% : 96 Used of 100 Total<br>4 Available');
@@ -64,7 +64,7 @@ describe('Directive: pfHeatmap', function() {
 
     element = compileChart('<div pf-heatmap chart-title="title" data="data" legend-labels="legendLabels" heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"></div>',$scope);
 
-    block = angular.element(element).find('.pf-heatmap-svg').children().first();
+    block = angular.element(element).find('.heatmap-pf-svg').children().first();
 
     color = block.attr('style');
     expect(color.trim()).toBe('fill: #ff0000;');
@@ -76,21 +76,21 @@ describe('Directive: pfHeatmap', function() {
     $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#ff0000'];
 
     element = compileChart('<div pf-heatmap chart-title="title" data="data" legend-labels="legendLabels" heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"></div>',$scope);
-    block = angular.element(element).find('.pf-heatmap-svg').children().first();
+    block = angular.element(element).find('.heatmap-pf-svg').children().first();
     color = block.attr('style');
     expect(color.trim()).toBe('fill: #ce0000;');
   });
 
   it("should show a legend by default", function() {
     element = compileChart('<div pf-heatmap chart-title="title" data="data"></div>',$scope);
-    var legend = element.find('.pf-heatmap-legend-container');
+    var legend = element.find('.heatmap-pf-legend-container');
     expect(legend.length).toBe(1);
   });
 
   it("should not show a legend when set not to", function() {
     $scope.showLegend = false;
     element = compileChart('<div pf-heatmap chart-title="title" data="data" show-legend="showLegend"></div>',$scope);
-    var legend = element.find('.pf-heatmap-legend-container');
+    var legend = element.find('.heatmap-pf-legend-container');
     expect(legend.length).toBe(0);
   });
 

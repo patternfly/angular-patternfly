@@ -9,10 +9,10 @@
         iconClass: 'fa fa-dashboard'
       };
     },
-    getTilesView: function (title) {
+    getCardView: function (title) {
       return {
-        id: 'tilesView',
-        title: title || 'Tiles View',
+        id: 'cardView',
+        title: title || 'Card View',
         iconClass: 'fa fa-th'
       };
     },

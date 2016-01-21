@@ -184,6 +184,11 @@ module.exports = function (grunt) {
           src: ['sort/**/*.html'],
           dest: 'templates/sort.js'
         },
+        'patternfly.toolbars': {
+          cwd: 'src/',
+          src: ['toolbars/**/*.html'],
+          dest: 'templates/toolbars.js'
+        },
         'patternfly.views': {
           cwd: 'src/',
           src: ['views/**/*.html'],

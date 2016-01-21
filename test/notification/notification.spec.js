@@ -4,7 +4,7 @@ describe('pf-notification', function () {
 
   beforeEach(module(
     'patternfly.notification',
-    'notification/notification.html',
+    'notification/inline-notification.html',
     'notification/notification-list.html'
   ));
 
@@ -74,15 +74,16 @@ describe('pf-notification', function () {
       $scope.header = "head1";
       $scope.message = "defaultMes";
 
-      var notifyElement = compile('<pf-notification pf-notification-type="type" pf-notification-header="header" pf-notification-message="message"></pf-notification>', $scope);
+      var notifyElement = compile('<pf-inline-notification pf-notification-type="type" pf-notification-header="header" pf-notification-message="message"></pf-inline-notification>', $scope);
 
       var alertElement = angular.element(notifyElement.children().get(0));
+      var closeButton = angular.element(alertElement.find('span.pficon-close'));
       var iconOk = angular.element(alertElement.find('span.pficon-ok'));
       var iconInfo = angular.element(alertElement.find('span.pficon-info'));
       var iconError = angular.element(alertElement.find('span.pficon-error-circle-o'));
       var iconWarning = angular.element(alertElement.find('span.pficon-warning-triangle-o'));
 
-      expect(alertElement.text()).toContain('×Close');
+      expect(closeButton).toBeDefined();
       expect(alertElement.text()).toContain('head1 defaultMes');
       expect(alertElement).toHaveClass('alert');
       expect(alertElement).toHaveClass('alert-success');
@@ -128,25 +129,28 @@ describe('pf-notification', function () {
       $scope.header = "head1";
       $scope.message = "defaultMes";
 
-      var notifyElement = compile('<pf-notification pf-notification-type="type" pf-notification-header="header" pf-notification-message="message"></pf-notification>', $scope);
+      var notifyElement = compile('<pf-inline-notification pf-notification-type="type" pf-notification-header="header" pf-notification-message="message"></pf-inline-notification>', $scope);
 
       var alertElement = angular.element(notifyElement.children().get(0));
+      var closeButton = angular.element(alertElement.find('span.pficon-close'));
 
-      expect(alertElement.text()).toContain('×Close');
+      expect(closeButton).toBeDefined();
       expect(alertElement.text()).toContain('head1 defaultMes');
 
       $scope.$apply(function(){
         $scope.header = "head2";
       });
 
-      expect(alertElement.text()).toContain('×Close');
+      closeButton = angular.element(alertElement.find('span.pficon-close'));
+      expect(closeButton).toBeDefined();
       expect(alertElement.text()).toContain('head2 defaultMes');
 
       $scope.$apply(function(){
         $scope.message = "defaultMes2";
       });
 
-      expect(alertElement.text()).toContain('×Close');
+      closeButton = angular.element(alertElement.find('span.pficon-close'));
+      expect(closeButton).toBeDefined();
       expect(alertElement.text()).toContain('head2 defaultMes2');
 
     });

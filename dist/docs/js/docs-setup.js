@@ -86,39 +86,39 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "patternfly.charts.directive:pfUtilizationChart",
-      "shortName": "pfUtilizationChart",
+      "id": "patternfly.charts.directive:pfUtilizationTrendChart",
+      "shortName": "pfUtilizationTrendChart",
       "type": "directive",
       "moduleName": "patternfly.charts",
-      "shortDescription": "Directive for rendering a utilization chart. The utilization chart combines overall data with a pfDonutPctChart and",
-      "keywords": "$scope add adddatapoint amount angular api array axis c3 center center-label centerlabel chart chart-data charta chartctrl chartdata chartid charts checkbox checkbox-inline class col-md-12 col-md-3 col-md-6 combines config configuration contents controller custchartheight custshowxaxis custshowyaxis d-- data dataavailable dates day default directive display displays donut donut-config donutcenterlabel donutconfig element error examplesparkline false flag form form-group full function gb gettime height html http js label length list list-style-type math memory mhz module newdata newdate ng-change ng-click ng-controller ng-model number options org override parameter patternfly pct percent percentage pf-utilization-chart pfdonutchart pfdonutpctchart pfsparklinechart point points push radio radio-inline random rendering representing role round row script settings show-sparkline-x-axis show-sparkline-y-axis showing showsparklinexaxis showsparklineyaxis sparkline sparkline-chart-height sparkline-config sparklinechartheight sparklineconfig specifics specifies style thresholds title today tooltip tooltiptype total true type unit units updatedataavailable usage usageperday utilization valueperday values var warning width xdata ydata"
+      "shortDescription": "Directive for rendering a utilization trend chart. The utilization trend chart combines overall",
+      "keywords": "$scope add adddatapoint amount angular api array axis c3 center center-label centerlabel chart chart-data charta chartctrl chartdata chartid charts checkbox checkbox-inline class col-md-12 col-md-3 col-md-6 combines config configuration contents controller custchartheight custshowxaxis custshowyaxis d-- data dataavailable dates day default directive display displays donut donut-config donutcenterlabel donutconfig element error examplesparkline false flag form form-group full function gb gettime height html http js label length list list-style-type math memory mhz module newdata newdate ng-change ng-click ng-controller ng-model number options org override parameter patternfly pct percent percentage pf-utilization-trend-chart pfdonutchart pfdonutpctchart pfsparklinechart point points push radio radio-inline random rendering representing role round row script settings show-sparkline-x-axis show-sparkline-y-axis showing showsparklinexaxis showsparklineyaxis sparkline sparkline-chart-height sparkline-config sparklinechartheight sparklineconfig specifics specifies style thresholds title today tooltip tooltiptype total trend true type unit units updatedataavailable usage usageperday utilization valueperday values var warning width xdata ydata"
     },
     {
       "section": "api",
-      "id": "patternfly.filters.directive:pfSimpleFilter",
-      "shortName": "pfSimpleFilter",
+      "id": "patternfly.filters.directive:pfFilter",
+      "shortName": "pfFilter",
       "type": "directive",
       "moduleName": "patternfly.filters",
-      "shortDescription": "Directive for a simple filter bar",
-      "keywords": "$scope address allitems angular api apple applied appliedfilters applyfilters april august bar bedrock birth birthmonth boulevard box call cfme-row-column changes cincinatti class col-md-12 col-md-2 col-md-3 col-md-7 comparisons config configuration controller current currently december deps dinosaur directive display east elm entered events-label example-container examplesimplefilter false february field fields filter filterable filterchange filterconfig filters filterstext filtertype filtervalues flintstone foreach frank fred function green html input item items january john js judy july june length list list-style-type livingston main march match matches matchesfilter matchesfilters module month ng-controller ng-repeat norfolk november null number october ohio onfilterchange optional pat patternfly pennsylvania pf-simple-filter pittsburgh placeholder push resultscount return returned row rows script second select september settings simple single smith street style text thomas title true type unique valid values var viewctrl virginia washingstone york"
+      "shortDescription": "Directive for a filter bar",
+      "keywords": "$scope address allitems angular api apple applied appliedfilters applyfilters april august bar bedrock birth birthmonth boulevard box call cfme-row-column changes cincinatti class col-md-12 col-md-2 col-md-3 col-md-7 comparisons config configuration controller current currently december deps dinosaur directive display east elm entered events-label example-container examplefilter false february field fields filter filterable filterchange filterconfig filters filterstext filtertype filtervalues flintstone foreach frank fred function green html input item items january john js judy july june length list list-style-type livingston main march match matches matchesfilter matchesfilters module month ng-controller ng-repeat norfolk november null number october ohio onfilterchange optional pat patternfly pennsylvania pf-filter pittsburgh placeholder push resultscount return returned row rows script second select september settings single smith street style text thomas title true type unique valid values var viewctrl virginia washingstone york"
     },
     {
       "section": "api",
-      "id": "patternfly.filters.directive:pfSimpleFilterFields",
-      "shortName": "pfSimpleFilterFields",
+      "id": "patternfly.filters.directive:pfFilterFields",
+      "shortName": "pfFilterFields",
       "type": "directive",
       "moduleName": "patternfly.filters",
-      "shortDescription": "Directive for the simple filter bar&#39;s filter entry components",
-      "keywords": "api applied appliedfilters bar box comparisons components config configuration currently directive display entered entry field fields filter filterable filters filtertype filtervalues html input list list-style-type optional patternfly placeholder select settings simple style text title type unique valid values"
+      "shortDescription": "Directive for the filter bar&#39;s filter entry components",
+      "keywords": "api applied appliedfilters bar box comparisons components config configuration currently directive display entered entry field fields filter filterable filters filtertype filtervalues html input list list-style-type optional patternfly placeholder select settings style text title type unique valid values"
     },
     {
       "section": "api",
-      "id": "patternfly.filters.directive:pfSimpleFilterResults",
-      "shortName": "pfSimpleFilterResults",
+      "id": "patternfly.filters.directive:pfFilterResults",
+      "shortName": "pfFilterResults",
       "type": "directive",
       "moduleName": "patternfly.filters",
-      "shortDescription": "Directive for the simple filter results components",
-      "keywords": "api applied appliedfilters box call changes comparisons components config configuration current currently directive display entered field fields filter filterable filters filtertype filtervalues function html input list list-style-type number onfilterchange optional patternfly placeholder resultscount returned select settings simple style text title type unique valid values"
+      "shortDescription": "Directive for the filter results components",
+      "keywords": "api applied appliedfilters box call changes comparisons components config configuration current currently directive display entered field fields filter filterable filters filtertype filtervalues function html input list list-style-type number onfilterchange optional patternfly placeholder resultscount returned select settings style text title type unique valid values"
     },
     {
       "section": "api",
@@ -158,8 +158,8 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "patternfly.notification.directive:pfNotification",
-      "shortName": "pfNotification",
+      "id": "patternfly.notification.directive:pfInlineNotification",
+      "shortName": "pfInlineNotification",
       "type": "directive",
       "moduleName": "patternfly.notification",
       "shortDescription": "The main visual element of the notification message.",
@@ -194,12 +194,21 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "patternfly.sort.directive:pfSimpleSort",
-      "shortName": "pfSimpleSort",
+      "id": "patternfly.sort.directive:pfSort",
+      "shortName": "pfSort",
       "type": "directive",
       "moduleName": "patternfly.sort",
-      "shortDescription": "Directive for a simple sort component",
-      "keywords": "$scope alpha alright angular api ascending beautiful call cfme-row-column change cheap class col-md-12 col-md-3 comparefn component compvalue config configuration controller count current currentfield descending description direction directive display events-label example-container examplesimplesort excellent false fantastic field fields forever function good horrible html isascending item item1 item2 items js lasts list list-style-type localecompare module ng-controller ng-repeat nice numeric onsortchange params patternfly pf-simple-sort return row script settings simple sort sortable sortchange sortconfig sortdirection sortid sorttype stuff style title true type unique var viewctrl"
+      "shortDescription": "Directive for a  sort component",
+      "keywords": "$scope alpha alright angular api ascending beautiful call cfme-row-column change cheap class col-md-12 col-md-3 comparefn component compvalue config configuration controller count current currentfield descending description direction directive display events-label example-container examplesort excellent false fantastic field fields forever function good horrible html isascending item item1 item2 items js lasts list list-style-type localecompare module ng-controller ng-repeat nice numeric onsortchange params patternfly pf-sort return row script settings sort sortable sortchange sortconfig sortdirection sortid sorttype stuff style title true type unique var viewctrl"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.toolbars.directive:pfToolbar",
+      "shortName": "pfToolbar",
+      "type": "directive",
+      "moduleName": "patternfly.toolbars",
+      "shortDescription": "Directive for standard toolbar. Includes filtering and view selection capabilities",
+      "keywords": "$scope action actionfn actions actions-label actionsconfig actionstext address age allitems alpha angular api apple appliedfilters applyfilters april august bedrock birth birthmonth boulevard button call capabilities checkdisabled cincinatti class col-md-12 comparefn comparisons compvalue config configuration controller currentfield currently currentview december deps dinosaur directive disable disabled display displayed east elm events-label example-container exampletoolbar false february fields filter filterchange filterconfig filtering filters filterstext filtertype filtervalues flintstone foreach frank fred function getcardview getlistview green grouped html icon iconclass includes invoke isascending isdisabled isseparator item item1 item2 items january john js judy july june length list list-group-item-heading list-group-item-text list-style-type list-view-container list-view-pf-additional-info list-view-pf-additional-info-item list-view-pf-description listconfig listview livingston localecompare main march match matches matchesfilter matchesfilters menu module month monthvals moreactions ng-controller ng-if norfolk november null numeric october ohio onfilterchange onsortchange onviewselect optional options parseint pat patternfly pennsylvania perform performaction pf-list-view pf-toolbar pfsimplefilter pfsort pfviewutils pittsburgh placehodler placeholder primary primaryactions pulldown push resultscount return row rows script second secondary select selected selection selectionmatchprop selector separator september set settings smith sort sortchange sortconfig sorttype standard street style text thing thomas title toolbar toolbarconfig toolbars tooltip true type unavailable undefined unique var view viewctrl viewid views viewsconfig viewselected viewtype virginia washingstone york"
     },
     {
       "section": "api",
@@ -221,30 +230,21 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "patternfly.views.directive:pfDataList",
-      "shortName": "pfDataList",
+      "id": "patternfly.views.directive:pfCardView",
+      "shortName": "pfCardView",
       "type": "directive",
       "moduleName": "patternfly.views",
-      "shortDescription": "Directive for rendering a data list.",
-      "keywords": "$scope action action-buttons actionbuttons actionfn actions address allow angular api applicable array based beam bedrock boston bourbon boxes button buttons california call called change changes checkbox checkbox-inline checkdisabled checkdisableditem checked city class click clicked clicking col-md-12 colorado config configuration controller cross current data dblclick default denver deps description determine determining dinosaur directive disable disabled display displayed dlbclick double dropdown east edwards elm enable-button-for-item-fn enablebuttonforitemfn enabled event eventtext example-container example-data-list exampledatalist false flintstone font-weight form form-group frank fred function grouped handle handlecheckboxchange handleclick handledblclick handleselect handleselectionchange hide holly hollywood html invoke isdisabled isseparator isvisible item items jim john js jump length linda list list-group-item-heading list-group-item-text list-style-type list-view-container list-view-pf-additional-info list-view-pf-additional-info-item list-view-pf-description livingston longer main marie massachusetts matching mcgovern menu menu-actions menuactions module multiple multiselect nashville ng-change ng-controller ng-disabled ng-model nichols norfolk notify oak oncheckboxchange onclick ondblclick onselect onselectionchange optional parameter pat patternfly pennsylvania perform performaction pf-data-list pittsburgh placeholder property radio radio-inline remains renamed rendering required return role row rowheight rows script second select selected selecteditems selection selectionmatchprop selections selectitems selecttype separator set settings showdisabled showselectbox smith street style tennessee thomas title tooltip true type unavailable update update-menu-action-for-item-fn updatemenuactionforitemfn updateselectiontype utils uuid var viewctrl views virginia washingstone york"
+      "shortDescription": "Directive for rendering cards in a view",
+      "keywords": "$scope address allow angular api apple applicable bedrock block border border-top boulevard boxes call called card cards change changes checkbox checkbox-inline checkdisabled checkdisableditem checked cincinatti city class click clicked clicking col-md-12 config configuration controller current data dblclick default deps determine determining dinosaur directive disabled display dlbclick double east elm event events-label eventtext examplecardview false flintstone form form-group frank fred function green handle handlecheckboxchange handleclick handledblclick handleselect handleselectionchange height hr html item items john js judy length list-style-type livingston main margin matching module multiple multiselect ng-change ng-controller ng-disabled ng-model norfolk notify ohio oncheckboxchange onclick ondblclick onselect onselectionchange padding pat patternfly pennsylvania pf-card-view pittsburgh property radio radio-inline remains rendering return role row rows script second select selected selecteditems selection selectionmatchprop selections selectitems selecttype set settings showdisabled showselectbox smith solid street style thomas true type updateselectiontype utils uuid var view viewctrl views virginia washingstone width york"
     },
     {
       "section": "api",
-      "id": "patternfly.views.directive:pfDataTiles",
-      "shortName": "pfDataTiles",
+      "id": "patternfly.views.directive:pfListView",
+      "shortName": "pfListView",
       "type": "directive",
       "moduleName": "patternfly.views",
-      "shortDescription": "Directive for rendering data tiles",
-      "keywords": "$scope address allow angular api apple applicable bedrock block border border-top boulevard boxes call called change changes checkbox checkbox-inline checkdisabled checkdisableditem checked cincinatti city class click clicked clicking col-md-12 config configuration controller current data dblclick default deps determine determining dinosaur directive disabled display dlbclick double east elm event events-label eventtext exampledatatiles false flintstone form form-group frank fred function green handle handlecheckboxchange handleclick handledblclick handleselect handleselectionchange height hr html item items john js judy length list-style-type livingston main margin matching module multiple multiselect ng-change ng-controller ng-disabled ng-model norfolk notify ohio oncheckboxchange onclick ondblclick onselect onselectionchange padding pat patternfly pennsylvania pf-data-tiles pittsburgh property radio radio-inline remains rendering return role row rows script second select selected selecteditems selection selectionmatchprop selections selectitems selecttype set settings showdisabled showselectbox smith solid street style thomas tile tiles true type updateselectiontype utils uuid var viewctrl views virginia washingstone width york"
-    },
-    {
-      "section": "api",
-      "id": "patternfly.views.directive:pfDataToolbar",
-      "shortName": "pfDataToolbar",
-      "type": "directive",
-      "moduleName": "patternfly.views",
-      "shortDescription": "Directive for standard data toolbar. Includes filtering and view selection capabilities",
-      "keywords": "$scope action actionfn actions actions-label actionsconfig actionstext address age allitems alpha angular api apple appliedfilters applyfilters april august bedrock birth birthmonth boulevard button call capabilities checkdisabled cincinatti class col-md-1 col-md-12 col-md-2 col-md-3 col-md-6 comparefn comparisons compvalue config configuration controller currentfield currently currentview data december deps dinosaur directive disable disabled display displayed east elm events-label example-container exampledatatoolbar false february fields filter filterchange filterconfig filtering filters filterstext filtertype filtervalues flintstone foreach frank fred function getlistview gettilesview green grouped html icon iconclass includes invoke isascending isdisabled isseparator item item1 item2 items january john js judy july june length list list-style-type list-view-container listconfig listview livingston localecompare main march match matches matchesfilter matchesfilters menu module month monthvals moreactions ng-controller ng-if norfolk november null numeric october ohio onfilterchange onsortchange onviewselect optional options pat patternfly pennsylvania perform performaction pf-data-list pf-data-tiles pf-data-toolbar pfsimplefilter pfsimplesort pfviewutils pittsburgh placehodler placeholder primary primaryactions pulldown push resultscount return row rows script second secondary select selected selection selectionmatchprop selector separator september set settings smith sort sortchange sortconfig sorttype standard street style text thing thomas tiles-view-container tilesview title toolbar toolbarconfig tooltip true type unavailable undefined unique var view viewctrl viewid views viewsconfig viewselected viewtype virginia vm washingstone york"
+      "shortDescription": "Directive for rendering a list view.",
+      "keywords": "$scope action action-buttons actionbuttons actionfn actions address allow angular api applicable array based beam bedrock boston bourbon boxes button buttons california call called change changes checkbox checkbox-inline checkdisabled checkdisableditem checked city class click clicked clicking col-md-12 colorado config configuration controller cross current dblclick default denver deps determine determining dinosaur directive disable disabled display displayed dlbclick double dropdown east edwards elm enable-button-for-item-fn enablebuttonforitemfn enabled event eventtext example-container example-list-view examplelistview false flintstone font-weight form form-group frank fred function grouped handle handlecheckboxchange handleclick handledblclick handleselect handleselectionchange hide holly hollywood html invoke isdisabled isseparator isvisible item items jim john js jump length linda list list-group-item-heading list-group-item-text list-style-type list-view-container list-view-pf-additional-info list-view-pf-additional-info-item list-view-pf-description livingston main marie massachusetts matching mcgovern menu menu-actions menuactions module multiple multiselect nashville ng-change ng-controller ng-disabled ng-model nichols norfolk notify oak oncheckboxchange onclick ondblclick onselect onselectionchange optional pat patternfly pennsylvania perform performaction pf-list-view pittsburgh placeholder property radio radio-inline remains rendering return role row rows script second select selected selecteditems selection selectionmatchprop selections selectitems selecttype separator set settings showdisabled showselectbox smith street style tennessee thomas title tooltip true type unavailable update update-menu-action-for-item-fn updatemenuactionforitemfn updateselectiontype utils uuid var view viewctrl views virginia washingstone york"
     }
   ],
   "apis": {
