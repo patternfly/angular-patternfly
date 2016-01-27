@@ -13,7 +13,7 @@
  * </ul>
  *
  * @param {boolean=} chartDataAvailable flag if the chart data is available - default: true
- * @param {string=} height height of the chart (no units) - default: "200"
+ * @param {number=} height height of the chart (no units) - default: 200
  * @param {string=} chartTitle title of the chart
  * @param {boolean=} showLegend flag to show the legend, defaults to true
  * @param {array=} legendLabels the labels for the legend - defaults: ['< 70%', '70-80%' ,'80-90%', '> 90%']
@@ -139,7 +139,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
     scope: {
       data: '=',
       chartDataAvailable: '=?',
-      height: '=',
+      height: '=?',
       chartTitle: '=?',
       showLegend: '=?',
       legendLabels: '=?',
