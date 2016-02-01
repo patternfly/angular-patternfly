@@ -16,42 +16,58 @@
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
  * <li>.selectedItems          - (array) Current set of selected items
  * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
- * <li>.rowHeight              - (int) ONLY used to determine check box placement. Default is 36
+ * <li>.rowHeight              - (Deprecated) This parameter is no longer required/used.
  * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
  * <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
  * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
  * </ul>
- * @param {array} actions List of actions for dropdown menu in each row
+ * @param {array} actionButtons List of action buttons in each row
  *   <ul style='list-style-type: none'>
  *     <li>.name - (String) The name of the action, displayed on the button
  *     <li>.title - (String) Optional title, used for the tooltip
  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
- *     <li>.isVisible - (Boolean) set to true to disable the action
+ *   </ul>
+ * @param {function (action, item))} enableButtonForItemFn function(action, item) Used to enabled/disable an action button based on the current item
+ * @param {array} menuActions List of actions for dropdown menu in each row
+ *   <ul style='list-style-type: none'>
+ *     <li>.name - (String) The name of the action, displayed on the button
+ *     <li>.title - (String) Optional title, used for the tooltip
+ *     <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *     <li>.isVisible - (Boolean) set to false to hide the action
  *     <li>.isDisabled - (Boolean) set to true to disable the action
  *     <li>.isSeparator - (Boolean) set to true if this is a placeholder for a separator rather than an action
  *   </ul>
- * @param {function (action, item))} updateActionForItemFn function(action, item) Used to update an action based on the current item
+ * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
+ * @param {Deprecated} <i>actions</i> renamed to menuActions, see description for menuActions above
+ * @param {Deprecated} <i>updateActionForItemFn</i> renamed to updateMenuActionForItemFn, see description for updateMenuActionForItemFn above
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12 list-view-container">
-        <div pf-data-list class="example-data-list" id="exampleDataList" config="config" items="items" actions="actions">
-          <div class="row">
-              <div class="col-md-3">
-                <span>{{item.name}}</span>
-              </div>
-              <div class="col-md-3">
-                <span>{{item.address}}</span>
-              </div>
-              <div class="col-md-3">
-                <span>{{item.city}}</span>
-              </div>
-              <div class="col-md-3">
-                <span>{{item.state}}</span>
-              </div>
+        <div pf-data-list class="example-data-list" id="exampleDataList"
+                          config="config" items="items"
+                          action-buttons="actionButtons"
+                          enable-button-for-item-fn="enableButtonForItemFn"
+                          menu-actions="menuActions"
+                          update-menu-action-for-item-fn="updateMenuActionForItemFn">
+          <div class="list-view-pf-description">
+            <div class="list-group-item-heading">
+              {{item.name}}
+            </div>
+            <div class="list-group-item-text">
+              {{item.address}}
+            </div>
+          </div>
+          <div class="list-view-pf-additional-info">
+            <div class="list-view-pf-additional-info-item">
+              {{item.city}}
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              {{item.state}}
+            </div>
           </div>
         </div>
       </div>
@@ -95,10 +111,6 @@
         </form>
       </div>
       <div class="col-md-12">
-        <label style="font-weight:normal;vertical-align:center;">Row Height: </label>
-        <input style="height:25px; width:60px;" type="number" ng-model="config.rowHeight"></input>
-      </div>
-      <div class="col-md-12">
         <label style="font-weight:normal;vertical-align:center;">Events: </label>
       </div>
       <div class="col-md-12">
@@ -131,6 +143,16 @@
           return $scope.showDisabled && (item.name === "John Smith");
         };
 
+        $scope.enableButtonForItemFn = function(action, item) {
+          return (action.name !=='Action 2') || (item.name !== "Frank Livingston");
+        };
+
+        $scope.updateMenuActionForItemFn = function(action, item) {
+          if (action.name === 'Another Action') {
+            action.isVisible = (item.name !== "John Smith");
+          }
+        };
+
         $scope.selectType = 'checkbox';
         $scope.updateSelectionType = function() {
           if ($scope.selectType === 'checkbox') {
@@ -155,12 +177,11 @@
          selectedItems: [],
          checkDisabled: checkDisabledItem,
          showSelectBox: true,
-         rowHeight: 36,
          onSelect: handleSelect,
          onSelectionChange: handleSelectionChange,
          onCheckBoxChange: handleCheckBoxChange,
          onClick: handleClick,
-          onDblClick: handleDblClick
+         onDblClick: handleDblClick
         };
 
         $scope.items = [
@@ -218,7 +239,19 @@
           $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
         };
 
-        $scope.actions = [
+        $scope.actionButtons = [
+          {
+            name: 'Action 1',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 2',
+            title: 'Do something else',
+            actionFn: performAction
+          }
+        ];
+        $scope.menuActions = [
           {
             name: 'Action',
             title: 'Perform an action',
@@ -266,6 +299,10 @@ angular.module('patternfly.views').directive('pfDataList', function ($timeout, $
     scope: {
       config: '=?',
       items: '=',
+      actionButtons: '=?',
+      enableButtonForItemFn: '=?',
+      menuActions: '=?',
+      updateMenuActionForItemFn: '=?',
       actions: '=?',
       updateActionForItemFn: '=?'
     },
@@ -276,49 +313,27 @@ angular.module('patternfly.views').directive('pfDataList', function ($timeout, $
         var setDropMenuLocation = function (parentDiv) {
           var dropButton = parentDiv.querySelector('.dropdown-toggle');
           var dropMenu =  parentDiv.querySelector('.dropdown-menu');
+          var parentRect = $element[0].getBoundingClientRect();
           var buttonRect = dropButton.getBoundingClientRect();
           var menuRect = dropMenu.getBoundingClientRect();
-          var top = buttonRect.top + buttonRect.height;
-          var left = buttonRect.left + buttonRect.width - menuRect.width;
-          var docHeight = $window.innerHeight;
+          var menuTop = buttonRect.top - menuRect.height;
+          var menuBottom = buttonRect.top + buttonRect.height + menuRect.height;
 
-          if (top + menuRect.height > docHeight) {
-            top = docHeight - menuRect.height;
+          if ((menuBottom <= parentRect.top + parentRect.height) || (menuTop < parentRect.top)) {
+            $scope.dropdownClass = 'dropdown';
+          } else {
+            $scope.dropdownClass = 'dropup';
           }
-
-          dropMenu.style.top = top + "px";
-          dropMenu.style.left = left + "px";
         };
 
-        var hideOnScroll = function () {
-          $scope.prevMenuItem.showMenu = false;
-          angular.element(angular.element($element).find('.data-list-pf')[0]).unbind("scroll", hideOnScroll);
-          angular.element($window).unbind("scroll", hideOnScroll);
-          $scope.$apply();
-        };
-
-        var showActionMenu = function (item, event) {
-          item.showMenu = true;
-          $scope.prevMenuItem = item;
-
-          $timeout(function () {
-            var parentDiv = undefined;
-            var nextElement;
-
-            nextElement = event.target;
-            while (nextElement && !parentDiv) {
-              if (nextElement.className.indexOf('list-menu') === 0) {
-                parentDiv = nextElement;
-                setDropMenuLocation (parentDiv);
-              }
-              nextElement = nextElement.parentElement;
-            }
-
-            angular.element(angular.element($element).find('.data-list-pf')[0]).bind("scroll", hideOnScroll);
-            angular.element($window).bind("scroll", hideOnScroll);
-          });
-
-        };
+        if ($scope.actions && !$scope.menuActions) {
+          $scope.menuActions = $scope.actions;
+          $scope.setMenuActionsOnChange = true;
+        }
+        if ($scope.updateActionForItemFn && !$scope.updateMenuActionForItemFn) {
+          $scope.updateMenuActionForItemFn = $scope.updateActionForItemFn;
+          $scope.setUpdateMenuActionsFnOnChange = true;
+        }
 
         $scope.defaultConfig = {
           selectItems: false,
@@ -328,7 +343,6 @@ angular.module('patternfly.views').directive('pfDataList', function ($timeout, $
           selectedItems: [],
           checkDisabled: false,
           showSelectBox: true,
-          rowHeight: 36,
           onSelect: null,
           onSelectionChange: null,
           onCheckBoxChange: null,
@@ -342,28 +356,37 @@ angular.module('patternfly.views').directive('pfDataList', function ($timeout, $
           'Illegal use of pfDataList directive! ' +
           'Cannot allow both select box and click selection in the same data list.');
         }
+        $scope.dropdownClass = 'dropdown';
 
-        $scope.handleAction = function (action, item) {
-          if (action && action.actionFn && (action.isDisabled !== true)) {
+        $scope.handleButtonAction = function (action, item) {
+          if (!$scope.checkDisabled(item) && action && action.actionFn && $scope.enableButtonForItem(action, item)) {
             action.actionFn(action, item);
           }
         };
 
+        $scope.handleMenuAction = function (action, item) {
+          if (!$scope.checkDisabled(item) && action && action.actionFn && (action.isDisabled !== true)) {
+            action.actionFn(action, item);
+          }
+        };
+
+        $scope.enableButtonForItem = function (action, item) {
+          var enable = true;
+          if (typeof $scope.enableButtonForItemFn === 'function') {
+            return $scope.enableButtonForItemFn(action, item);
+          }
+          return enable;
+        };
+
         $scope.updateActions = function (item) {
-          $scope.actionItem = item;
-          if (typeof $scope.updateActionForItemFn === 'function') {
-            $scope.actions.forEach(function (action) {
-              $scope.updateActionForItemFn(action, item);
+          if (typeof $scope.updateMenuActionForItemFn === 'function') {
+            $scope.menuActions.forEach(function (action) {
+              $scope.updateMenuActionForItemFn(action, item);
             });
           }
         };
 
         $scope.setupActions = function (item, event) {
-          if ($scope.prevMenuItem) {
-            $scope.prevMenuItem.showMenu = false;
-            $scope.prevMenuItem = undefined;
-          }
-
           // Ignore disabled items completely
           if ($scope.checkDisabled(item)) {
             return;
@@ -372,8 +395,21 @@ angular.module('patternfly.views').directive('pfDataList', function ($timeout, $
           // update the actions based on the current item
           $scope.updateActions(item);
 
-          // Show the action menu for the item
-          showActionMenu(item, event);
+          $timeout(function () {
+            var parentDiv = undefined;
+            var nextElement;
+
+            nextElement = event.target;
+            while (nextElement && !parentDiv) {
+              if (nextElement.className.indexOf('dropdown-kebab-pf') !== -1) {
+                parentDiv = nextElement;
+                if (nextElement.className.indexOf('open') !== -1) {
+                  setDropMenuLocation (parentDiv);
+                }
+              }
+              nextElement = nextElement.parentElement;
+            }
+          });
         };
       },
 
@@ -387,6 +423,18 @@ angular.module('patternfly.views').directive('pfDataList', function ($timeout, $
           scope.config.selectedItems = [scope.config.selectedItems[0]];
         }
       });
+
+      if (scope.setMenuActionsOnChange ) {
+        scope.$watch('actions', function () {
+          scope.menuActions = scope.actions;
+        });
+      }
+
+      if (scope.setUpdateMenuActionsFnOnChange ) {
+        scope.$watch('updateActionForItemFn', function () {
+          scope.updateMenuActionForItemFn = scope.updateActionForItemFn;
+        });
+      }
 
       scope.itemClick = function (e, item) {
         var alreadySelected;
@@ -441,6 +489,11 @@ angular.module('patternfly.views').directive('pfDataList', function ($timeout, $
       };
 
       scope.dblClick = function (e, item) {
+        // Ignore disabled item clicks completely
+        if (scope.checkDisabled(item)) {
+          return continueEvent;
+        }
+
         if (scope.config.onDblClick) {
           scope.config.onDblClick(item, e);
         }
