@@ -8,11 +8,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'lib/patternfly/components/jquery/dist/jquery.js',
-      'lib/patternfly/components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
-      'lib/patternfly/components/bootstrap-select/js/bootstrap-select.js',
-      'lib/patternfly/components/d3/d3.js',
-      'lib/patternfly/components/c3/c3.js',
+      'lib/jquery/dist/jquery.js',
+      'lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+      'lib/bootstrap-select/js/bootstrap-select.js',
+      'lib/d3/d3.js',
+      'lib/c3/c3.js',
       'lib/patternfly/dist/js/patternfly.js',
       'lib/angular/angular.js',
       'lib/angular-sanitize/angular-sanitize.js',
