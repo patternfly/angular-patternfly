@@ -201,7 +201,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUt
                     '</tr>' +
                     '<tr>' +
                     '  <td class="name">' + percentUsed + '%:' + '</td>' +
-                    '  <td class="value text-nowrap">' + d[0].value + ' ' + $scope.config.units + ' ' + d[0].name + '</td>' +
+                    '  <td class="value text-nowrap">' + d[0].value + ' ' +  ($scope.config.units ? $scope.config.units + ' ' : '') + d[0].name + '</td>' +
                     '</tr>';
                   break;
                 case 'valuePerDay':
@@ -293,32 +293,32 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUt
         }
         $scope.defaultConfig.units = '';
 
-        // Override defaults with callers specifications
-        $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
-
         // Convert the given data to C3 chart format
-        $scope.config.data = pfUtils.merge($scope.getSparklineData($scope.chartData), $scope.config.data);
+        $scope.config.data = pfUtils.merge($scope.config.data, $scope.getSparklineData($scope.chartData));
+
+        // Override defaults with callers specifications
+        $scope.chartConfig = pfUtils.merge($scope.config, $scope.defaultConfig);
       }
     ],
 
     link: function (scope) {
       scope.$watch('config', function () {
         scope.config.data = pfUtils.merge(scope.config.data, scope.getSparklineData(scope.chartData));
-        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
+        scope.chartConfig = pfUtils.merge(scope.config, scope.defaultConfig);
       }, true);
       scope.$watch('chartHeight', function () {
         if (scope.chartHeight) {
-          scope.config.size.height = scope.chartHeight;
+          scope.chartConfig.size.height = scope.chartHeight;
         }
       });
       scope.$watch('showXAxis', function () {
-        scope.config.axis.x.show = scope.showXAxis === true;
+        scope.chartConfig.axis.x.show = scope.showXAxis === true;
       });
       scope.$watch('showYAxis', function () {
-        scope.config.axis.y.show = scope.showYAxis === true;
+        scope.chartConfig.axis.y.show = scope.showYAxis === true;
       });
       scope.$watch('chartData', function () {
-        scope.config.data = pfUtils.merge(scope.config.data, scope.getSparklineData(scope.chartData));
+        scope.chartConfig.data = pfUtils.merge(scope.chartConfig.data, scope.getSparklineData(scope.chartData));
       }, true);
     }
   };

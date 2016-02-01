@@ -190,7 +190,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile) {
       $scope.loadingDone = false;
     },
     link: function (scope, element, attrs) {
-      var thisComponent = element[0].querySelector('.pf-heatmap-svg');
+      var thisComponent = element[0].querySelector('.heatmap-pf-svg');
       var containerWidth, containerHeight, blockSize, numberOfRows;
 
       var setStyles = function () {

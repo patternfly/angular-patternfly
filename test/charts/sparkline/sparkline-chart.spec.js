@@ -43,16 +43,16 @@ describe('Directive: pfSparklineChart', function() {
     element = compileChart('<div pf-sparkline-chart config="config" chart-data="data"></div>',$scope);
 
     expect(isolateScope.sparklineChartId).toBe("testSparklineChartsparklineChart");
-    expect(isolateScope.config.axis.x.show).toBe(false);
-    expect(isolateScope.config.axis.y.show).toBe(false);
+    expect(isolateScope.chartConfig.axis.x.show).toBe(false);
+    expect(isolateScope.chartConfig.axis.y.show).toBe(false);
   });
 
   it("should allow attribute specifications to show x and y axis", function() {
     element = compileChart('<div pf-sparkline-chart config="config" chart-data="data" show-x-axis="true" show-y-axis="true"></div>', $scope);
 
     expect(isolateScope.sparklineChartId).toBe("testSparklineChartsparklineChart");
-    expect(isolateScope.config.axis.x.show).toBe(true);
-    expect(isolateScope.config.axis.y.show).toBe(true);
+    expect(isolateScope.chartConfig.axis.x.show).toBe(true);
+    expect(isolateScope.chartConfig.axis.y.show).toBe(true);
   });
 
   it("should update when the show x and y axis attributes change", function() {
@@ -60,23 +60,23 @@ describe('Directive: pfSparklineChart', function() {
     $scope.showY = false;
     element = compileChart('<div pf-sparkline-chart config="config" chart-data="data" show-x-axis="showX" show-y-axis="showY"></div>', $scope);
 
-    expect(isolateScope.config.axis.x.show).toBe(false);
-    expect(isolateScope.config.axis.y.show).toBe(false);
+    expect(isolateScope.chartConfig.axis.x.show).toBe(false);
+    expect(isolateScope.chartConfig.axis.y.show).toBe(false);
 
     $scope.showX = true;
     $scope.showY = true;
 
     $scope.$digest();
 
-    expect(isolateScope.config.axis.x.show).toBe(true);
-    expect(isolateScope.config.axis.y.show).toBe(true);
+    expect(isolateScope.chartConfig.axis.x.show).toBe(true);
+    expect(isolateScope.chartConfig.axis.y.show).toBe(true);
   });
 
   it("should allow attribute specification of chart height", function() {
     element = compileChart('<div pf-sparkline-chart config="config" chart-data="data" chart-height="120"></div>', $scope);
 
     expect(isolateScope.sparklineChartId).toBe("testSparklineChartsparklineChart");
-    expect(isolateScope.config.size.height).toBe(120);
+    expect(isolateScope.chartConfig.size.height).toBe(120);
   });
 
   it("should update when the chart height attribute changes", function() {
@@ -84,11 +84,11 @@ describe('Directive: pfSparklineChart', function() {
     element = compileChart('<div pf-sparkline-chart config="config" chart-data="data" chart-height="chartHeight"></div>', $scope);
 
     expect(isolateScope.sparklineChartId).toBe("testSparklineChartsparklineChart");
-    expect(isolateScope.config.size.height).toBe(120);
+    expect(isolateScope.chartConfig.size.height).toBe(120);
 
     $scope.chartHeight = 100;
     $scope.$digest();
-    expect(isolateScope.config.size.height).toBe(100);
+    expect(isolateScope.chartConfig.size.height).toBe(100);
   });
 
   it("should setup C3 chart data correctly", function() {
@@ -114,8 +114,8 @@ describe('Directive: pfSparklineChart', function() {
 
     $scope.$digest();
 
-    expect(isolateScope.config.data.columns[0][1].toString()).toBe(now.toString());
-    expect(isolateScope.config.data.columns[1][1]).toBe('1000');
+    expect(isolateScope.chartConfig.data.columns[0][1].toString()).toBe(now.toString());
+    expect(isolateScope.chartConfig.data.columns[1][1]).toBe('1000');
   });
 
   it("should allow tooltip type specification", function() {
