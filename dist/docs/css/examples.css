@@ -45,11 +45,12 @@ hr {
 .example-data-list {
   height: 100%;
   width: 100%;
+  overflow-y: auto;
 }
 
 .list-view-container {
   border: 1px solid #000000;
-  height: 260px;
+  height: 460px;
   min-height: 25px;
   margin: 10px;
   padding: 0;
