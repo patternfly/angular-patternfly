@@ -365,4 +365,8 @@ ul.events > li > h3 {
   background-color: #003399;
 }
 
+.type-hint-deprecated {
+  background-color: #cc0000;
+}
+
 
