@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/datalist/data-list-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/aa38a28/src/views/datalist/data-list-directive.js#L262" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfDataList</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/datalist/data-list-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/839f978/src/views/datalist/data-list-directive.js#L295" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfDataList</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -11,8 +11,12 @@
 <div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pf-data-list
      items="{array}"
      config="{object}"
-     actions="{array}"
-     update-action-for-item-fn="{function (action, item))}"&gt;
+     action-buttons="{array}"
+     enable-button-for-item-fn="{function (action, item))}"
+     menu-actions="{array}"
+     update-menu-action-for-item-fn="{function (action, item))}"
+     &lt;i&gt;actions&lt;/i&gt;="{Deprecated}"
+     &lt;i&gt;update-action-for-item-fn&lt;/i&gt;="{Deprecated}"&gt;
    ...
 &lt;/ANY&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>Array of items to display in the list</p>
@@ -25,21 +29,29 @@
 <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
 <li>.selectedItems          - (array) Current set of selected items
 <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
-<li>.rowHeight              - (int) ONLY used to determine check box placement. Default is 36
+<li>.rowHeight              - (Deprecated) This parameter is no longer required/used.
 <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
 <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
 <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
 <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
 <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
-</ul></div></td></tr><tr><td>actions</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>List of actions for dropdown menu in each row</p>
+</ul></div></td></tr><tr><td>actionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>List of action buttons in each row</p>
 <ul style='list-style-type: none'>
   <li>.name - (String) The name of the action, displayed on the button
   <li>.title - (String) Optional title, used for the tooltip
   <li>.actionFn - (function(action)) Function to invoke when the action selected
-  <li>.isVisible - (Boolean) set to true to disable the action
+</ul></div></td></tr><tr><td>enableButtonForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>function(action, item) Used to enabled/disable an action button based on the current item</p>
+</div></td></tr><tr><td>menuActions</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>List of actions for dropdown menu in each row</p>
+<ul style='list-style-type: none'>
+  <li>.name - (String) The name of the action, displayed on the button
+  <li>.title - (String) Optional title, used for the tooltip
+  <li>.actionFn - (function(action)) Function to invoke when the action selected
+  <li>.isVisible - (Boolean) set to false to hide the action
   <li>.isDisabled - (Boolean) set to true to disable the action
   <li>.isSeparator - (Boolean) set to true if this is a placeholder for a separator rather than an action
-</ul></div></td></tr><tr><td>updateActionForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>function(action, item) Used to update an action based on the current item</p>
+</ul></div></td></tr><tr><td>updateMenuActionForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>function(action, item) Used to update a menu action based on the current item</p>
+</div></td></tr><tr><td><i>actions</i></td><td><a href="" class="label type-hint type-hint-deprecated">Deprecated</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>renamed to menuActions, see description for menuActions above</p>
+</div></td></tr><tr><td><i>updateActionForItemFn</i></td><td><a href="" class="label type-hint type-hint-deprecated">Deprecated</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><p>renamed to updateMenuActionForItemFn, see description for updateMenuActionForItemFn above</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-views-directive-page patternfly-views-directive-pfdatalist-page"><h4 id="example_source">Source</h4>
@@ -49,20 +61,27 @@
 <script type="text/ng-template" id="index.html-41">
   <div ng-controller="ViewCtrl" class="row example-container">
     <div class="col-md-12 list-view-container">
-      <div pf-data-list class="example-data-list" id="exampleDataList" config="config" items="items" actions="actions">
-        <div class="row">
-            <div class="col-md-3">
-              <span>{{item.name}}</span>
-            </div>
-            <div class="col-md-3">
-              <span>{{item.address}}</span>
-            </div>
-            <div class="col-md-3">
-              <span>{{item.city}}</span>
-            </div>
-            <div class="col-md-3">
-              <span>{{item.state}}</span>
-            </div>
+      <div pf-data-list class="example-data-list" id="exampleDataList"
+                        config="config" items="items"
+                        action-buttons="actionButtons"
+                        enable-button-for-item-fn="enableButtonForItemFn"
+                        menu-actions="menuActions"
+                        update-menu-action-for-item-fn="updateMenuActionForItemFn">
+        <div class="list-view-pf-description">
+          <div class="list-group-item-heading">
+            {{item.name}}
+          </div>
+          <div class="list-group-item-text">
+            {{item.address}}
+          </div>
+        </div>
+        <div class="list-view-pf-additional-info">
+          <div class="list-view-pf-additional-info-item">
+            {{item.city}}
+          </div>
+          <div class="list-view-pf-additional-info-item">
+            {{item.state}}
+          </div>
         </div>
       </div>
     </div>
@@ -106,10 +125,6 @@
       </form>
     </div>
     <div class="col-md-12">
-      <label style="font-weight:normal;vertical-align:center;">Row Height: </label>
-      <input style="height:25px; width:60px;" type="number" ng-model="config.rowHeight"></input>
-    </div>
-    <div class="col-md-12">
       <label style="font-weight:normal;vertical-align:center;">Events: </label>
     </div>
     <div class="col-md-12">
@@ -144,6 +159,16 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
         return $scope.showDisabled && (item.name === "John Smith");
       };
 
+      $scope.enableButtonForItemFn = function(action, item) {
+        return (action.name !=='Action 2') || (item.name !== "Frank Livingston");
+      };
+
+      $scope.updateMenuActionForItemFn = function(action, item) {
+        if (action.name === 'Another Action') {
+          action.isVisible = (item.name !== "John Smith");
+        }
+      };
+
       $scope.selectType = 'checkbox';
       $scope.updateSelectionType = function() {
         if ($scope.selectType === 'checkbox') {
@@ -168,12 +193,11 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
        selectedItems: [],
        checkDisabled: checkDisabledItem,
        showSelectBox: true,
-       rowHeight: 36,
        onSelect: handleSelect,
        onSelectionChange: handleSelectionChange,
        onCheckBoxChange: handleCheckBoxChange,
        onClick: handleClick,
-        onDblClick: handleDblClick
+       onDblClick: handleDblClick
       };
 
       $scope.items = [
@@ -231,7 +255,19 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
         $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
       };
 
-      $scope.actions = [
+      $scope.actionButtons = [
+        {
+          name: 'Action 1',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Action 2',
+          title: 'Do something else',
+          actionFn: performAction
+        }
+      ];
+      $scope.menuActions = [
         {
           name: 'Action',
           title: 'Perform an action',
