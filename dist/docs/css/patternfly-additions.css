@@ -2771,9 +2771,6 @@ table.datatable th:active {
 .pficon-info:before {
   content: "\e604";
 }
-.pficon-kubernetes:before {
-  content: "\e627";
-}
 .pficon-memory:before {
   content: "\e908";
 }
@@ -2783,9 +2780,6 @@ table.datatable th:active {
 .pficon-ok:before {
   color: #3f9c35;
   content: "\e602";
-}
-.pficon-openshift:before {
-  content: "\e626";
 }
 .pficon-print:before {
   content: "\e612";
@@ -3159,7 +3153,7 @@ table.datatable th:active {
   -ms-flex: 1;
   flex: 1;
   vertical-align: top;
-  width: 10000px;
+  width: 100%;
 }
 @media (min-width: 992px) {
   .list-view-pf-body {
@@ -3168,9 +3162,6 @@ table.datatable th:active {
     display: flex;
     flex-direction: row;
   }
-}
-@supports (display: flex) {
-  width: auto!important;
 }
 .list-view-pf-checkbox {
   border-right: 1px solid #d1d1d1;
