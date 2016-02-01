@@ -276,7 +276,7 @@
   margin-left: 10px;
 }
 
-.data-unavailable-pf [class*="trend-title-"],[class*="trend-label-"] {
+.data-unavailable-pf [class*="trend-title-"], .data-unavailable-pf [class*="trend-label-"] {
   color: transparent;
 }
 
