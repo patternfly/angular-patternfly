@@ -57,6 +57,9 @@
        <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></div>
        <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
        <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
+       <br>
+       <label class="label-title">layout='multidata', multi-data with multi-color support for single utilization bar chart</label>
+       <div pf-utilization-bar-chart chart-data=data6 chart-title=title6 layout=layoutMultidata></div>
      </div>
    </file>
 
@@ -107,6 +110,18 @@
       'type': 'inline'
     };
 
+    $scope.title6 = 'Utilization by storage type';
+    $scope.data6 = {
+      'total': '100',
+      'subdata' : [ { "used" : 45 , "color" : "#00659c" , "subtitle" : "Object" },
+                    { "used" : 15 , "color" : "#0088ce" , "subtitle" : "Block" },
+                    { "used" :  5 , "color" : "#7dc3e8" , "subtitle" : "OpenStack" }]
+    };
+
+    $scope.layoutMultidata = {
+      'type': 'multidata'
+    };
+
     $scope.footer1 = '<strong>500 TB</strong> Total';
     $scope.footer2 = '<strong>450 of 500</strong> Total';
 
@@ -131,18 +146,26 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', function 
     },
     templateUrl: 'charts/utilization-bar/utilization-bar-chart.html',
     link: function (scope) {
+      var index;
       scope.$watch('chartData', function (newVal, oldVal) {
         if (typeof(newVal) !== 'undefined') {
-          //Calculate the percentage used
-          scope.chartData.percentageUsed = Math.round(100 * (scope.chartData.used / scope.chartData.total));
-
-          if (scope.thresholdError || scope.thresholdWarning) {
-            scope.isError = (scope.chartData.percentageUsed > scope.thresholdError);
-            scope.isWarn  = (scope.chartData.percentageUsed > scope.thresholdWarning &&
-                             scope.chartData.percentageUsed < scope.thresholdError);
-            scope.isOk    = (scope.chartData.percentageUsed < scope.thresholdWarning);
+          if (scope.layout && scope.layout.type === 'multidata') {
+            //Calculate the percentage used for multidata
+            scope.totalPercentageUsed = 0;
+            for (index = 0; index < scope.chartData.subdata.length; index++) {
+              scope.chartData.subdata[index].percentageUsed = Math.round(100 * (scope.chartData.subdata[index].used / scope.chartData.total));
+              scope.totalPercentageUsed = scope.totalPercentageUsed + scope.chartData.subdata[index].percentageUsed;
+            }
+          }else {
+            //Calculate the percentage used
+            scope.chartData.percentageUsed = Math.round(100 * (scope.chartData.used / scope.chartData.total));
+            if (scope.thresholdError || scope.thresholdWarning) {
+              scope.isError = (scope.chartData.percentageUsed > scope.thresholdError);
+              scope.isWarn  = (scope.chartData.percentageUsed > scope.thresholdWarning &&
+                               scope.chartData.percentageUsed < scope.thresholdError);
+              scope.isOk    = (scope.chartData.percentageUsed < scope.thresholdWarning);
+            }
           }
-
           //Animate in the chart load.
           scope.animate = true;
           $timeout(function () {
