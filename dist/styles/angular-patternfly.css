@@ -344,6 +344,27 @@
   width: 0% !important;
 }
 
+/* Utilization bar chart - multidata */
+.utilization-bar-chart-pf .progress-bar-subinfo {
+  color: black;
+  float: left;
+  font-size: 11px;
+  height: 100%;
+  line-height: 20px;
+  text-align: -moz-left;
+  transition: width 0.6s ease 0s;
+  width: 0;
+  position: relative;
+  margin-top: -19px;
+}
+
+.utilization-bar-chart-pf .multidata-progress-description {
+  overflow: unset !important;
+  white-space: normal !important;
+  margin-bottom: 0px !important;
+  text-align: -moz-left !important;
+}
+
 /* Heap map */
 .heatmap-pf-container {
   position: relative;
