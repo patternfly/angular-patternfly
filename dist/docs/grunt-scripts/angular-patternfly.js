@@ -2045,6 +2045,9 @@ angular.module('patternfly.charts').directive('pfTrendsChart', function () {
        <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></div>
        <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
        <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
+       <br>
+       <label class="label-title">layout='multidata', multi-data with multi-color support for single utilization bar chart</label>
+       <div pf-utilization-bar-chart chart-data=data6 chart-title=title6 layout=layoutMultidata></div>
      </div>
    </file>
 
@@ -2095,6 +2098,18 @@ angular.module('patternfly.charts').directive('pfTrendsChart', function () {
       'type': 'inline'
     };
 
+    $scope.title6 = 'Utilization by storage type';
+    $scope.data6 = {
+      'total': '100',
+      'subdata' : [ { "used" : 45 , "color" : "#00558a" , "subtitle" : "Object" },
+                    { "used" : 15 , "color" : "#0071a6" , "subtitle" : "Block" },
+                    { "used" :  5 , "color" : "#00a8e1" , "subtitle" : "OpenStack" }]
+    };
+
+    $scope.layoutMultidata = {
+      'type': 'multidata'
+    };
+
     $scope.footer1 = '<strong>500 TB</strong> Total';
     $scope.footer2 = '<strong>450 of 500</strong> Total';
 
@@ -2119,18 +2134,26 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
     },
     templateUrl: 'charts/utilization-bar/utilization-bar-chart.html',
     link: function (scope) {
+      var index;
       scope.$watch('chartData', function (newVal, oldVal) {
         if (typeof(newVal) !== 'undefined') {
-          //Calculate the percentage used
-          scope.chartData.percentageUsed = Math.round(100 * (scope.chartData.used / scope.chartData.total));
-
-          if (scope.thresholdError || scope.thresholdWarning) {
-            scope.isError = (scope.chartData.percentageUsed > scope.thresholdError);
-            scope.isWarn  = (scope.chartData.percentageUsed > scope.thresholdWarning &&
-                             scope.chartData.percentageUsed < scope.thresholdError);
-            scope.isOk    = (scope.chartData.percentageUsed < scope.thresholdWarning);
+          if (scope.layout && scope.layout.type === 'multidata') {
+            //Calculate the percentage used for multidata
+            scope.totalPercentageUsed = 0;
+            for (index = 0; index < scope.chartData.subdata.length; index++) {
+              scope.chartData.subdata[index].percentageUsed = Math.round(100 * (scope.chartData.subdata[index].used / scope.chartData.total));
+              scope.totalPercentageUsed = scope.totalPercentageUsed + scope.chartData.subdata[index].percentageUsed;
+            }
+          }else {
+            //Calculate the percentage used
+            scope.chartData.percentageUsed = Math.round(100 * (scope.chartData.used / scope.chartData.total));
+            if (scope.thresholdError || scope.thresholdWarning) {
+              scope.isError = (scope.chartData.percentageUsed > scope.thresholdError);
+              scope.isWarn  = (scope.chartData.percentageUsed > scope.thresholdWarning &&
+                               scope.chartData.percentageUsed < scope.thresholdError);
+              scope.isOk    = (scope.chartData.percentageUsed < scope.thresholdWarning);
+            }
           }
-
           //Animate in the chart load.
           scope.animate = true;
           $timeout(function () {
@@ -5546,7 +5569,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
   $templateCache.put('charts/utilization-bar/utilization-bar-chart.html',
     "<div class=utilization-bar-chart-pf><span ng-if=\"!layout || layout.type === 'regular'\"><div ng-if=chartTitle class=progress-description>{{chartTitle}}</div><div class=\"progress progress-label-top-right\"><div class=progress-bar role=progressbar ng-class=\"{'animate': animate,\n" +
-    "           'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}\" ng-style=\"{width:chartData.percentageUsed + '%'}\" tooltip=\"{{chartData.percentageUsed}}% Used\"><span ng-if=chartFooter ng-bind-html=chartFooter></span> <span ng-if=\"!chartFooter && (!footerLabelFormat || footerLabelFormat === 'actual')\"><strong>{{chartData.used}} of {{chartData.total}} {{units}}</strong> Used</span> <span ng-if=\"!chartFooter && footerLabelFormat === 'percent'\"><strong>{{chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" role=progressbar aria-valuenow=5 aria-valuemin=0 aria-valuemax=100 ng-style=\"{width:(100 - chartData.percentageUsed) + '%'}\" tooltip=\"{{100 - chartData.percentageUsed}}% Available\"></div></div></span> <span ng-if=\"layout && layout.type === 'inline'\"><div class=\"progress-container progress-description-left progress-label-right\" ng-style=\"{'padding-left':layout.titleLabelWidth, 'padding-right':layout.footerLabelWidth}\"><div ng-if=chartTitle class=progress-description ng-style=\"{'max-width':layout.titleLabelWidth}\">{{chartTitle}}</div><div class=progress><div class=progress-bar role=progressbar aria-valuenow=25 aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate, 'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}\" ng-style=\"{width:chartData.percentageUsed + '%'}\" tooltip=\"{{chartData.percentageUsed}}% Used\"><span ng-if=chartFooter ng-bind-html=chartFooter></span> <span ng-if=\"(!chartFooter) && (!footerLabelFormat || footerLabelFormat === 'actual')\" ng-style=\"{'max-width':layout.footerLabelWidth}\"><strong>{{chartData.used}} {{units}}</strong> Used</span> <span ng-if=\"(!chartFooter) && footerLabelFormat === 'percent'\" ng-style=\"{'max-width':layout.footerLabelWidth}\"><strong>{{chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" role=progressbar aria-valuenow=75 aria-valuemin=0 aria-valuemax=100 ng-style=\"{width:(100 - chartData.percentageUsed) + '%'}\" tooltip=\"{{100 - chartData.percentageUsed}}% Available\"></div></div></div></span></div>"
+    "           'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}\" ng-style=\"{width:chartData.percentageUsed + '%'}\" tooltip=\"{{chartData.percentageUsed}}% Used\"><span ng-if=chartFooter ng-bind-html=chartFooter></span> <span ng-if=\"!chartFooter && (!footerLabelFormat || footerLabelFormat === 'actual')\"><strong>{{chartData.used}} of {{chartData.total}} {{units}}</strong> Used</span> <span ng-if=\"!chartFooter && footerLabelFormat === 'percent'\"><strong>{{chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" role=progressbar aria-valuenow=5 aria-valuemin=0 aria-valuemax=100 ng-style=\"{width:(100 - chartData.percentageUsed) + '%'}\" tooltip=\"{{100 - chartData.percentageUsed}}% Available\"></div></div></span> <span ng-if=\"layout && layout.type === 'inline'\"><div class=\"progress-container progress-description-left progress-label-right\" ng-style=\"{'padding-left':layout.titleLabelWidth, 'padding-right':layout.footerLabelWidth}\"><div ng-if=chartTitle class=progress-description ng-style=\"{'max-width':layout.titleLabelWidth}\">{{chartTitle}}</div><div class=progress><div class=progress-bar role=progressbar aria-valuenow=25 aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate, 'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}\" ng-style=\"{width:chartData.percentageUsed + '%'}\" tooltip=\"{{chartData.percentageUsed}}% Used\"><span ng-if=chartFooter ng-bind-html=chartFooter></span> <span ng-if=\"(!chartFooter) && (!footerLabelFormat || footerLabelFormat === 'actual')\" ng-style=\"{'max-width':layout.footerLabelWidth}\"><strong>{{chartData.used}} {{units}}</strong> Used</span> <span ng-if=\"(!chartFooter) && footerLabelFormat === 'percent'\" ng-style=\"{'max-width':layout.footerLabelWidth}\"><strong>{{chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" role=progressbar aria-valuenow=75 aria-valuemin=0 aria-valuemax=100 ng-style=\"{width:(100 - chartData.percentageUsed) + '%'}\" tooltip=\"{{100 - chartData.percentageUsed}}% Available\"></div></div></div></span> <span ng-if=\"layout && layout.type === 'multidata'\"><div ng-if=chartTitle class=\"progress-description multidata-progress-description\">{{chartTitle}}</div><div class=progress><div ng-repeat=\"data in chartData.subdata\" class=progress-bar role=progressbar aria-valuenow=25 aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate}\" ng-style=\"{'width':data.used + '%','background-color':data.color}\" tooltip=\"{{data.used}}% Used\"><small><strong>{{data.percentageUsed}}%</strong></small></div><div class=\"progress-bar progress-bar-remaining\" role=progressbar aria-valuenow=75 aria-valuemin=0 aria-valuemax=100 ng-style=\"{width:(100 - totalPercentageUsed) + '%'}\" tooltip=\"{{100 - totalPercentageUsed}}% Available\"></div></div><div ng-repeat=\"data in chartData.subdata\" class=progress-bar-subinfo ng-class=\"{'animate': animate}\" ng-style=\"{'width':data.used + '%'}\"><span>{{data.subtitle}}</span></div></span></div>"
   );
 
 
