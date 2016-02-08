@@ -32,5 +32,18 @@
       </div>
     </div>
   </span>
+  <span ng-if="layout && layout.type === 'multidata'">
+    <div ng-if="chartTitle" class="progress-description multidata-progress-description">{{chartTitle}}</div>
+    <div class="progress">
+      <div ng-repeat="data in chartData.subdata" class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" ng-class="{'animate': animate}" ng-style="{'width':data.used + '%','background-color':data.color}" tooltip="{{data.used}}% Used">
+        <small><strong>{{data.percentageUsed}}%</strong></small>
+      </div>
+      <div class="progress-bar progress-bar-remaining" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" ng-style="{width:(100 - totalPercentageUsed) + '%'}" tooltip="{{100 - totalPercentageUsed}}% Available">
+      </div>
+    </div>
+    <div ng-repeat="data in chartData.subdata" class="progress-bar-subinfo" ng-class="{'animate': animate}"
+    ng-style="{'width':data.used + '%'}">
+      <span>{{data.subtitle}}</span>
+    </div>
+  </span>
 </div>
-
