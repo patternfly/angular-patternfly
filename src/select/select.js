@@ -75,27 +75,31 @@ angular.module('patternfly.select', []).directive('pfSelect', function ($timeout
     link: function (scope, element, attrs, ngModel) {
       var optionCollectionList, optionCollection, $render = ngModel.$render;
 
+      var selectpickerRefresh = function (argument) {
+        scope.$applyAsync(function () {
+          element.selectpicker('refresh');
+        });
+      };
+
       element.selectpicker(scope.selectPickerOptions);
 
       ngModel.$render = function () {
         $render.apply(this, arguments);
-        $timeout(function () {
-          element.selectpicker('refresh');
-        }, 0, false);
+        selectpickerRefresh();
       };
 
       if (attrs.ngOptions) {
         optionCollectionList = attrs.ngOptions.split('in ');
         optionCollection = optionCollectionList[optionCollectionList.length - 1];
 
-        scope.$watchCollection(optionCollection, function () {
-          element.selectpicker('refresh');
-        });
+        scope.$parent.$watchCollection(optionCollection, selectpickerRefresh);
       }
 
-      attrs.$observe('disabled', function () {
-        element.selectpicker('refresh');
-      });
+      if (attrs.ngModel) {
+        scope.$parent.$watch(attrs.ngModel, selectpickerRefresh);
+      }
+
+      attrs.$observe('disabled', selectpickerRefresh);
     }
   };
 });
