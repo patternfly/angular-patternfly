@@ -437,4 +437,50 @@ describe('Directive:  pfDataList', function () {
 
     expect(menuButtons.length).toBe(0);
   });
+
+  it ('should only show the actions component when either button or menu actions are supplied', function () {
+    var actionArea = element.find('.list-view-pf-actions');
+
+    expect(actionArea.length).toBe(5);
+
+    // Just menu actions
+    var htmlTmp = '<div pf-list-view items="systemModel" ' +
+      '  config="listConfig" ' +
+      '  menu-actions="menuActions" ' +
+      '  update-menu-action-for-item-fn="updateActionForItemFn">' +
+      '<div class="nameLabel1">{{item.name}}</div>' +
+      '</div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    actionArea = element.find('.list-view-pf-actions');
+
+    expect(actionArea.length).toBe(5);
+
+    // Just button actions
+    htmlTmp = '<div pf-list-view items="systemModel" ' +
+      '  config="listConfig" ' +
+      '  action-buttons="actionButtons" ' +
+      '  enable-button-for-item-fn="enableButtonForItemFn" ' +
+      '<div class="nameLabel1">{{item.name}}</div>' +
+      '</div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    actionArea = element.find('.list-view-pf-actions');
+
+    expect(actionArea.length).toBe(5);
+
+    // Neither button nor menu actions
+    htmlTmp = '<div pf-list-view items="systemModel" ' +
+      '  config="listConfig" ' +
+      '<div class="nameLabel1">{{item.name}}</div>' +
+      '</div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    actionArea = element.find('.list-view-pf-actions');
+
+    expect(actionArea.length).toBe(0);
+  });
 })
