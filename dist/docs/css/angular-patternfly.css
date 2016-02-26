@@ -393,3 +393,7 @@
   line-height: 11px;
   padding-right: 5px;
 }
+
+.toolbar-pf-actions.no-filter-results {
+  margin-bottom: 10px;
+}
