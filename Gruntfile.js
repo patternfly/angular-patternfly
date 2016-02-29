@@ -263,6 +263,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['karma']);
     grunt.registerTask('check', ['lint', 'test']);
     grunt.registerTask('help', ['availabletasks']);
+    grunt.registerTask('server', ['ngdocs:view']);
 
   }
 

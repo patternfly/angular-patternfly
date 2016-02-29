@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row toolbar-pf">
     <div class="col-sm-12">
-      <form class="toolbar-pf-actions">
+      <form class="toolbar-pf-actions" ng-class="{'no-filter-results': !config.filterConfig}">
         <div pf-filter-fields id="{{filterDomId}}_fields" config="config.filterConfig" ng-if="config.filterConfig" add-filter-fn="addFilter"></div>
         <div pf-sort id="{{sortDomId}}" config="config.sortConfig" ng-if="config.sortConfig"></div>
         <div class="form-group toolbar-actions"
