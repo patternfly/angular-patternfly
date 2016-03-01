@@ -149,7 +149,7 @@
 .card-view-pf .card.active,
 .card-view-pf .card.active:hover,
 .card-view-pf .card.active:focus {
-  border: solid 3px #39a5dc;
+  border: solid 3px #00a8e1;
 }
 
 .card-view-pf .card:hover,
@@ -349,7 +349,7 @@
   position: relative;
 }
 
-.-heatmap--pf-container-pf .loading {
+.heatmap-pf-container-pf .loading {
   position: absolute;
   top: 100px;
   right: 50%;
