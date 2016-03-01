@@ -3893,7 +3893,7 @@ angular.module('patternfly.sort').directive('pfSort', function () {
  *   </ul>
  *
  * @example
-<example module="patternfly.toolbars" deps="patternfly.filters, patternfly.sort">
+<example module="patternfly.toolbars" deps="patternfly.filters, patternfly.sort, patternfly.views">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
@@ -3920,6 +3920,19 @@ angular.module('patternfly.sort').directive('pfSort', function () {
             <div class="list-view-pf-additional-info-item">
               {{item.birthMonth}}
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 card-view-container" ng-if="viewType == 'cardView'">
+        <div pf-card-view config="vm.listConfig" items="items">
+          <div class="col-md-12">
+            <span>{{item.name}}</span>
+          </div>
+          <div class="col-md-12">
+            <span>{{item.address}}</span>
+          </div>
+          <div class="col-md-12">
+            <span>{{item.birthMonth}}</span>
           </div>
         </div>
       </div>
