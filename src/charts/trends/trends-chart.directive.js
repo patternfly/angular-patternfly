@@ -36,72 +36,36 @@
  <file name="index.html">
    <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <div pf-trends-chart config="config" chart-data="data"
-            show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+       <label class="label-title">Large Layout</label>
+       <div pf-trends-chart config="largeConfig" chart-data="data"></div>
      </div>
-     <hr class="col-md-12">
      <div class="col-md-12">
-       <div class="row">
-         <div class="col-md-4">
-           <form role="form"">
-             <div class="form-group">
-               <label>Show</label></br>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowXAxis">X Axis</input>
-               </label>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowYAxis">Y Axis</input>
-               </label>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-           <form role="form" >
-             <div class="form-group">
-               <label>Layout</label></br>
-               <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
-                 <option value="large" ng-selected="true" selected>Large</option>
-                 <option value="small">Small</option>
-                 <option value="compact">Compact</option>
-                 <option value="inline">Inline</option>
-               </select>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-           <form role="form" ng-hide="layout == 'inline'">
-             <div class="form-group">
-               <label>Title Value Type</label></br>
-               <select pf-select class="pf-select-sm" ng-model="valueType" id="valueType">
-                 <option value="actual" ng-selected="true" selected>Actual</option>
-                 <option value="percentage">Percentage</option>
-               </select>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-2">
-           <button ng-click="addDataPoint()">Add Data Point</button>
-         </div>
-       </div>
-       <div class="row">
-         <div class="col-md-6">
-           <form role="form"">
-             <div class="form-group">
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="data.dataAvailable">Data Available</input>
-               </label>
-             </div>
-           </form>
-         </div>
-       </div>
+       <br/>
+       <label class="label-title">Small Layout</label>
+       <div pf-trends-chart config="smallConfig" chart-data="data"></div>
+     </div>
+     <div class="col-md-12">
+       <br/>
+       <label class="label-title">Compact Layout</label>
+       <div pf-trends-chart config="compactConfig" chart-data="data"></div>
+     </div>
+     <div class="col-md-12">
+       <br/>
+       <label class="label-title">Inline Layout</label>
+       <div pf-trends-chart config="inlineConfig" chart-data="data" show-x-axis="true" show-y-axis="true"></div>
+     </div>
+     <div class="col-md-12">
+       <br/>
+       <label class="label-title">No Data Available</label>
+       <div pf-trends-chart config="inlineConfig" chart-data="noData"></div>
      </div>
    </div>
  </file>
  <file name="script.js">
  angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
 
-       $scope.config = {
-         chartId      : 'exampleTrendsChart',
+       $scope.largeConfig = {
+         chartId      : 'exampleTrendsChartLarge',
          title        : 'Network Utilization Trends',
          layout       : 'large',
          trendLabel   : 'Virtual Disk I/O',
@@ -111,22 +75,38 @@
          tooltipType  : 'percentage'
        };
 
-       $scope.footerConfig = {
-         iconClass : 'fa fa-plus-circle',
-         text      : 'Add New Cluster',
-         callBackFn: function () {
-            alert("Footer Callback Fn Called");
-          }
-       }
+       $scope.smallConfig = {
+         chartId      : 'exampleTrendsChartSmall',
+         title        : 'Network Utilization Trends',
+         layout       : 'small',
+         trendLabel   : 'Virtual Disk I/O',
+         valueType    : 'percentage',
+         timeFrame    : 'Last 15 Minutes',
+         units        : 'MHz',
+         tooltipType  : 'percentage'
+       };
 
-       $scope.filterConfig = {
-         filters : [{label:'Last 30 Days', value:'30'},
-                      {label:'Last 15 Days', value:'15'},
-                      {label:'Today', value:'today'}],
-         callBackFn: function (f) {
-            alert("Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
-          }
-       }
+       $scope.compactConfig = {
+         chartId      : 'exampleTrendsChartCompact',
+         title        : 'Network Utilization Trends',
+         layout       : 'compact',
+         trendLabel   : 'Virtual Disk I/O',
+         valueType    : 'percentage',
+         timeFrame    : 'Last 15 Minutes',
+         units        : 'MHz',
+         tooltipType  : 'percentage'
+       };
+
+       $scope.inlineConfig = {
+         chartId      : 'exampleTrendsChartInline',
+         title        : 'Network Utilization Trends',
+         layout       : 'inline',
+         trendLabel   : 'Virtual Disk I/O',
+         valueType    : 'percentage',
+         timeFrame    : 'Last 15 Minutes',
+         units        : 'MHz',
+         tooltipType  : 'percentage'
+       };
 
       var today = new Date();
       var dates = ['dates'];
@@ -140,23 +120,9 @@
            xData: dates,
            yData: ['used', 10, 20, 30, 20, 30, 10, 14, 20, 25, 68, 54, 56, 78, 56, 67, 88, 76, 65, 87, 76]
        };
-
-       $scope.custShowXAxis = false;
-       $scope.custShowYAxis = false;
-
-       $scope.addDataPoint = function () {
-         $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
-         $scope.data.yData.push(Math.round(Math.random() * 100));
+       $scope.noData = {
+          dataAvailable: false,
        };
-
-       $scope.$watch('valueType', function (newValue) {
-         $scope.config.valueType = newValue;
-       });
-
-       $scope.$watch('layout', function (newValue) {
-         $scope.config.layout = newValue;
-       });
-
      });
  </file>
  </example>

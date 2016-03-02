@@ -1492,56 +1492,23 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
-         <div pf-sparkline-chart config="config" chart-data="data" chart-height="custChartHeight" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+         <label class="label-title">Default Tooltip</label>
+         <div pf-sparkline-chart config="defaultConfig" chart-data="data" chart-height="60"></div>
        </div>
-       <hr class="col-md-12">
        <div class="col-md-12">
-         <form role="form">
-           <div class="form-group">
-             <label>Tooltip Type</label>
-             </br>
-             <label class="radio-inline">
-               <input type="radio" ng-model="config.tooltipType" value="default">Default</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="config.tooltipType" value="usagePerDay">Usage Per Day</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="config.tooltipType" value="valuePerDay">Value Per Day</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="config.tooltipType" value="percentage">Percentage</input>
-             </label>
-           </div>
-         </form>
-         <div class="row">
-           <div class="col-md-6">
-             <form role="form"">
-               <div class="form-group">
-                 <label>Show</label>
-                 </br>
-                 <label class="checkbox-inline">
-                   <input type="checkbox" ng-model="custShowXAxis">X Axis</input>
-                 </label>
-                 <label class="checkbox-inline">
-                   <input type="checkbox" ng-model="custShowYAxis">Y Axis</input>
-                 </label>
-               </div>
-             </form>
-           </div>
-           <div class="col-md-3">
-             <form role="form" >
-               <div class="form-group">
-                 <label>Chart Height</label>
-                 </br>
-                 <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
-               </div>
-             </form>
-           </div>
-           <div class="col-md-3">
-                 <button ng-click="addDataPoint()">Add Data Point</button>
-           </div>
-         </div>
+         <br/>
+         <label class="label-title">Usage Per Day Tooltip</label>
+         <div pf-sparkline-chart config="usagePerDayConfig" chart-data="data" chart-height="60"></div>
+       </div>
+       <div class="col-md-12">
+         <br/>
+         <label class="label-title">Value Per Day Tooltip</label>
+         <div pf-sparkline-chart config="valuePerDayConfig" chart-data="data" chart-height="60"></div>
+       </div>
+       <div class="col-md-12">
+         <br/>
+         <label class="label-title">Percentage Tooltip</label>
+         <div pf-sparkline-chart config="percentageConfig" chart-data="data" chart-height="60" show-x-axis="true" show-y-axis="true"></div>
        </div>
      </div>
    </file>
@@ -1549,9 +1516,24 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
    <file name="script.js">
      angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
 
-       $scope.config = {
-         chartId: 'exampleSparkline',
+       $scope.defaultConfig = {
+         chartId: 'exampleSparkline1',
          tooltipType: 'default'
+       };
+
+       $scope.usagePerDayConfig = {
+         chartId: 'exampleSparkline2',
+         tooltipType: 'usagePerDay'
+       };
+
+       $scope.valuePerDayConfig = {
+         chartId: 'exampleSparkline3',
+         tooltipType: 'valuePerDay'
+       };
+
+       $scope.percentageConfig = {
+         chartId: 'exampleSparkline4',
+         tooltipType: 'percentage'
        };
 
        var today = new Date();
@@ -1564,15 +1546,6 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
          total: 100,
          xData: dates,
          yData: ['used', 10, 20, 30, 20, 30, 10, 14, 20, 25, 68, 54, 56, 78, 56, 67, 88, 76, 65, 87, 76]
-       };
-
-       $scope.custShowXAxis = false;
-       $scope.custShowYAxis = false;
-       $scope.custChartHeight = 60;
-
-       $scope.addDataPoint = function () {
-         $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
-         $scope.data.yData.push(Math.round(Math.random() * 100));
        };
      });
    </file>
@@ -1810,72 +1783,36 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
  <file name="index.html">
    <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <div pf-trends-chart config="config" chart-data="data"
-            show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+       <label class="label-title">Large Layout</label>
+       <div pf-trends-chart config="largeConfig" chart-data="data"></div>
      </div>
-     <hr class="col-md-12">
      <div class="col-md-12">
-       <div class="row">
-         <div class="col-md-4">
-           <form role="form"">
-             <div class="form-group">
-               <label>Show</label></br>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowXAxis">X Axis</input>
-               </label>
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="custShowYAxis">Y Axis</input>
-               </label>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-           <form role="form" >
-             <div class="form-group">
-               <label>Layout</label></br>
-               <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
-                 <option value="large" ng-selected="true" selected>Large</option>
-                 <option value="small">Small</option>
-                 <option value="compact">Compact</option>
-                 <option value="inline">Inline</option>
-               </select>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-           <form role="form" ng-hide="layout == 'inline'">
-             <div class="form-group">
-               <label>Title Value Type</label></br>
-               <select pf-select class="pf-select-sm" ng-model="valueType" id="valueType">
-                 <option value="actual" ng-selected="true" selected>Actual</option>
-                 <option value="percentage">Percentage</option>
-               </select>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-2">
-           <button ng-click="addDataPoint()">Add Data Point</button>
-         </div>
-       </div>
-       <div class="row">
-         <div class="col-md-6">
-           <form role="form"">
-             <div class="form-group">
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="data.dataAvailable">Data Available</input>
-               </label>
-             </div>
-           </form>
-         </div>
-       </div>
+       <br/>
+       <label class="label-title">Small Layout</label>
+       <div pf-trends-chart config="smallConfig" chart-data="data"></div>
+     </div>
+     <div class="col-md-12">
+       <br/>
+       <label class="label-title">Compact Layout</label>
+       <div pf-trends-chart config="compactConfig" chart-data="data"></div>
+     </div>
+     <div class="col-md-12">
+       <br/>
+       <label class="label-title">Inline Layout</label>
+       <div pf-trends-chart config="inlineConfig" chart-data="data" show-x-axis="true" show-y-axis="true"></div>
+     </div>
+     <div class="col-md-12">
+       <br/>
+       <label class="label-title">No Data Available</label>
+       <div pf-trends-chart config="inlineConfig" chart-data="noData"></div>
      </div>
    </div>
  </file>
  <file name="script.js">
  angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
 
-       $scope.config = {
-         chartId      : 'exampleTrendsChart',
+       $scope.largeConfig = {
+         chartId      : 'exampleTrendsChartLarge',
          title        : 'Network Utilization Trends',
          layout       : 'large',
          trendLabel   : 'Virtual Disk I/O',
@@ -1885,22 +1822,38 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
          tooltipType  : 'percentage'
        };
 
-       $scope.footerConfig = {
-         iconClass : 'fa fa-plus-circle',
-         text      : 'Add New Cluster',
-         callBackFn: function () {
-            alert("Footer Callback Fn Called");
-          }
-       }
+       $scope.smallConfig = {
+         chartId      : 'exampleTrendsChartSmall',
+         title        : 'Network Utilization Trends',
+         layout       : 'small',
+         trendLabel   : 'Virtual Disk I/O',
+         valueType    : 'percentage',
+         timeFrame    : 'Last 15 Minutes',
+         units        : 'MHz',
+         tooltipType  : 'percentage'
+       };
 
-       $scope.filterConfig = {
-         filters : [{label:'Last 30 Days', value:'30'},
-                      {label:'Last 15 Days', value:'15'},
-                      {label:'Today', value:'today'}],
-         callBackFn: function (f) {
-            alert("Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
-          }
-       }
+       $scope.compactConfig = {
+         chartId      : 'exampleTrendsChartCompact',
+         title        : 'Network Utilization Trends',
+         layout       : 'compact',
+         trendLabel   : 'Virtual Disk I/O',
+         valueType    : 'percentage',
+         timeFrame    : 'Last 15 Minutes',
+         units        : 'MHz',
+         tooltipType  : 'percentage'
+       };
+
+       $scope.inlineConfig = {
+         chartId      : 'exampleTrendsChartInline',
+         title        : 'Network Utilization Trends',
+         layout       : 'inline',
+         trendLabel   : 'Virtual Disk I/O',
+         valueType    : 'percentage',
+         timeFrame    : 'Last 15 Minutes',
+         units        : 'MHz',
+         tooltipType  : 'percentage'
+       };
 
       var today = new Date();
       var dates = ['dates'];
@@ -1914,23 +1867,9 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
            xData: dates,
            yData: ['used', 10, 20, 30, 20, 30, 10, 14, 20, 25, 68, 54, 56, 78, 56, 67, 88, 76, 65, 87, 76]
        };
-
-       $scope.custShowXAxis = false;
-       $scope.custShowYAxis = false;
-
-       $scope.addDataPoint = function () {
-         $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
-         $scope.data.yData.push(Math.round(Math.random() * 100));
+       $scope.noData = {
+          dataAvailable: false,
        };
-
-       $scope.$watch('valueType', function (newValue) {
-         $scope.config.valueType = newValue;
-       });
-
-       $scope.$watch('layout', function (newValue) {
-         $scope.config.layout = newValue;
-       });
-
      });
  </file>
  </example>
@@ -2190,89 +2129,49 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
+         <label class="label-title">Used Donut Center Label</label>
          <div pf-utilization-trend-chart config="config"
-              chart-data="data" center-label="centerLabel"
-              donut-config="donutConfig" sparkline-config="sparklineConfig"
-              sparkline-chart-height="custChartHeight"
-              show-sparkline-x-axis="custShowXAxis"
-              show-sparkline-y-axis="custShowYAxis">
+              chart-data="data" center-label="usedCenterLabel"
+              donut-config="usedDonutConfig" sparkline-config="usedSparklineConfig"
+              sparkline-chart-height="60">
          </div>
        </div>
-       <hr class="col-md-12">
        <div class="col-md-12">
-         <form role="form">
-           <div class="form-group">
-           <label>Donut Center Label Type</label>
-           </br>
-           <label class="radio-inline">
-             <input type="radio" ng-model="centerLabel" value="used">Used</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="centerLabel" value="available">Available</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="centerLabel" value="percent">Percent</input>
-           </label>
-           <label class="radio-inline">
-             <input type="radio" ng-model="centerLabel" value="none">None</input>
-           </label>
-           </div>
-         </form>
-         <form role="form">
-           <div class="form-group">
-             <label>Sparkline Tooltip Type</label>
-               </br>
-             <label class="radio-inline">
-               <input type="radio" ng-model="sparklineConfig.tooltipType" value="default">Default</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="sparklineConfig.tooltipType" value="usagePerDay">Usage Per Day</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="sparklineConfig.tooltipType" value="valuePerDay">Value Per Day</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="sparklineConfig.tooltipType" value="percentage">Percentage</input>
-             </label>
-           </div>
-         </form>
-         <div class="row">
-           <div class="col-md-6">
-             <form role="form"">
-               <div class="form-group">
-                 <label>Show</label>
-                 </br>
-                 <label class="checkbox-inline">
-                   <input type="checkbox" ng-model="custShowXAxis">Sparkline X Axis</input>
-                 </label>
-                 <label class="checkbox-inline">
-                   <input type="checkbox" ng-model="custShowYAxis">Sparkline Y Axis</input>
-                 </label>
-               </div>
-             </form>
-           </div>
-           <div class="col-md-3">
-           <form role="form" >
-             <div class="form-group">
-               <label>Chart Height</label>
-               </br>
-               <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
-             </div>
-           </form>
-           </div>
-           <div class="col-md-3">
-             <button ng-click="addDataPoint()">Add Data Point</button>
-           </div>
+         <br/>
+         <label class="label-title">Available Donut Center Label</label>
+         <div pf-utilization-trend-chart config="config"
+              chart-data="data" center-label="availableCenterLabel"
+              donut-config="availableDonutConfig" sparkline-config="availableSparklineConfig"
+              sparkline-chart-height="60">
          </div>
-         <div class="row">
-           <div class="col-md-6">
-             <form role="form"">
-               <div class="form-group">
-                 <label class="checkbox-inline">
-                   <input type="checkbox" ng-model="data.dataAvailable" ng-change="updateDataAvailable()">Data Available</input>
-                 </label>
-               </div>
-             </form>
+       </div>
+       <div class="col-md-12">
+         <br/>
+         <label class="label-title">Percent Donut Center Label</label>
+         <div pf-utilization-trend-chart config="config"
+              chart-data="data" center-label="percentCenterLabel"
+              donut-config="percentDonutConfig" sparkline-config="percentSparklineConfig"
+              sparkline-chart-height="60">
+         </div>
+       </div>
+       <div class="col-md-12">
+         <br/>
+         <label class="label-title">No Donut Center Label</label>
+         <div pf-utilization-trend-chart config="config"
+              chart-data="data" center-label="noneCenterLabel"
+              donut-config="noneDonutConfig" sparkline-config="noneSparklineConfig"
+              sparkline-chart-height="60"
+              show-sparkline-x-axis="true"
+              show-sparkline-y-axis="true">
+         </div>
+       </div>
+       <div class="col-md-12">
+         <br/>
+         <label class="label-title">No Data Available</label>
+         <div pf-utilization-trend-chart config="config"
+              chart-data="noData" center-label="noneCenterLabel"
+              donut-config="noneDonutConfig" sparkline-config="noneSparklineConfig"
+              sparkline-chart-height="60">
          </div>
        </div>
      </div>
@@ -2284,12 +2183,41 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
        title: 'Memory',
        units: 'GB'
      };
-     $scope.donutConfig = {
-       chartId: 'chartA',
+
+     $scope.usedDonutConfig = {
+       chartId: 'usedChart',
        thresholds: {'warning':'60','error':'90'}
      };
-     $scope.sparklineConfig = {
-       'chartId': 'exampleSparkline',
+     $scope.availableDonutConfig = {
+       chartId: 'availableChart',
+       thresholds: {'warning':'60','error':'90'}
+     };
+     $scope.percentDonutConfig = {
+       chartId: 'percentChart',
+       thresholds: {'warning':'60','error':'90'}
+     };
+     $scope.noneDonutConfig = {
+       chartId: 'noneChart',
+       thresholds: {'warning':'60','error':'90'}
+     };
+
+     $scope.usedSparklineConfig = {
+       'chartId': 'usedExampleSparkline',
+       'tooltipType': 'default',
+       'units': 'GB'
+     };
+     $scope.availableSparklineConfig = {
+       'chartId': 'availableExampleSparkline',
+       'tooltipType': 'default',
+       'units': 'GB'
+     };
+     $scope.percentSparklineConfig = {
+       'chartId': 'percentExampleSparkline',
+       'tooltipType': 'default',
+       'units': 'GB'
+     };
+     $scope.noneSparklineConfig = {
+       'chartId': 'noneExampleSparkline',
        'tooltipType': 'default',
        'units': 'GB'
      };
@@ -2300,6 +2228,11 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
         dates.push(new Date(today.getTime() - (d * 24 * 60 * 60 * 1000)));
     }
 
+     $scope.usedCenterLabel = 'used';
+     $scope.availableCenterLabel = 'available';
+     $scope.percentCenterLabel = 'percent';
+     $scope.noneCenterLabel = 'none';
+
      $scope.data = {
          dataAvailable: true,
          used: 76,
@@ -2307,20 +2240,8 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
          xData: dates,
          yData: ['used', '10', '20', '30', '20', '30', '10', '14', '20', '25', '68', '54', '56', '78', '56', '67', '88', '76', '65', '87', '76']
      };
-
-     $scope.centerLabel = 'used';
-
-     $scope.custShowXAxis = false;
-     $scope.custShowYAxis = false;
-     $scope.custChartHeight = 60;
-
-     $scope.addDataPoint = function () {
-       var newData = Math.round(Math.random() * 100);
-       var newDate = new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000));
-
-       $scope.data.used = newData;
-       $scope.data.xData.push(newDate);
-       $scope.data.yData.push(newData);
+     $scope.noData = {
+        dataAvailable: false,
      };
    });
    </file>
