@@ -2412,6 +2412,7 @@ fieldset[disabled] .combobox-container .input-group-addon.active {
   background: transparent;
   font-size: 12px;
   padding: 5px 10px 0;
+  border-bottom: solid 2px #030303;
 }
 .c3-tooltip tr {
   border: 0;
@@ -2442,6 +2443,12 @@ fieldset[disabled] .combobox-container .input-group-addon.active {
 .donut-title-small-pf {
   font-size: 12px;
   font-weight: 400;
+}
+.line-chart-pf .c3-zoom-rect {
+  opacity: 1.0 !important;
+  fill: #fafafa;
+  stroke: #d1d1d1;
+  stroke-width: 1px;
 }
 .close {
   text-shadow: none;
@@ -2513,7 +2520,7 @@ fieldset[disabled] .combobox-container .input-group-addon.active {
   position: absolute;
 }
 .dataTables_header .dataTables_filter input {
-  border: 1px solid #bbb;
+  border: 1px solid #bbbbbb;
   height: 24px;
 }
 @media (max-width: 767px) {
@@ -3024,6 +3031,10 @@ table.datatable th:active {
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.collapsed-nav.hidden-icons-pf {
   margin-left: 0;
 }
+.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.collapsed-secondary-nav-pf,
+.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.secondary-visible-pf.collapsed-secondary-nav-pf {
+  margin-left: 250px;
+}
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.secondary-visible-pf {
   margin-left: 200px;
 }
@@ -3047,6 +3058,18 @@ table.datatable th:active {
     margin-left: 426px;
   }
   .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.secondary-visible-pf.hidden-nav {
+    margin-left: 0;
+  }
+  .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.secondary-visible-pf.collapsed-secondary-nav-pf {
+    margin-left: 250px;
+  }
+  .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.secondary-visible-pf.collapsed-nav {
+    margin-left: 325px;
+  }
+  .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.secondary-visible-pf.collapsed-nav.collapsed-secondary-nav-pf {
+    margin-left: 250px;
+  }
+  .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-secondary.secondary-visible-pf.collapsed-nav.hidden-icons-pf {
     margin-left: 0;
   }
 }
@@ -4907,6 +4930,9 @@ table.datatable th:active {
 .nav-pf-vertical.collapsed {
   width: 75px;
 }
+.nav-pf-vertical.collapsed.collapsed-secondary-nav-pf {
+  width: 250px;
+}
 .nav-pf-vertical.collapsed > .list-group > .list-group-item > a {
   margin-right: 0;
   width: 75px;
@@ -4930,8 +4956,17 @@ table.datatable th:active {
 .nav-pf-vertical.collapsed > .list-group > .list-group-item.persistent-secondary:hover > a:after {
   right: 11px;
 }
+@media (min-width: 1200px) {
+  .nav-pf-vertical.collapsed > .list-group > .list-group-item.persistent-secondary.active > a,
+  .nav-pf-vertical.collapsed > .list-group > .list-group-item.persistent-secondary > a {
+    width: 76px;
+  }
+}
 .nav-pf-vertical.hidden-icons-pf {
   width: 176px;
+}
+.nav-pf-vertical.hidden-icons-pf.collapsed-secondary-nav-pf {
+  width: 250px;
 }
 .nav-pf-vertical.hidden-icons-pf > .list-group > .list-group-item > a {
   width: 176px;
@@ -4953,17 +4988,29 @@ table.datatable th:active {
 .nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav .nav-pf-persistent-secondary {
   left: 176px;
 }
+.nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav .nav-pf-persistent-secondary.collapsed-secondary-nav-pf {
+  left: 0;
+}
 .nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav.collapsed {
   display: none;
 }
 .nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav.hover-secondary-nav-pf {
   width: 426px;
 }
+.nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav.hover-secondary-nav-pf.collapsed-secondary-nav-pf {
+  width: 250px;
+}
 .nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav.hover-secondary-nav-pf.show-mobile-nav {
   width: 176px;
 }
+.nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav.collapsed-secondary-nav-pf {
+  width: 250px;
+}
 .nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav.secondary-visible-pf {
   width: 426px;
+}
+.nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.collapsed-secondary-nav-pf {
+  width: 250px;
 }
 .nav-pf-vertical.hidden-icons-pf.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.show-mobile-nav {
   width: 250px;
@@ -4978,8 +5025,14 @@ table.datatable th:active {
 .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.collapsed.hover-secondary-nav-pf {
   width: 325px;
 }
+.nav-pf-vertical.nav-pf-vertical-with-secondary-nav.collapsed.hover-secondary-nav-pf.collapsed-secondary-nav-pf {
+  width: 250px;
+}
 .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.hover-secondary-nav-pf {
   width: 450px;
+}
+.nav-pf-vertical.nav-pf-vertical-with-secondary-nav.hover-secondary-nav-pf.collapsed-secondary-nav-pf {
+  width: 250px;
 }
 .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.hover-secondary-nav-pf.show-mobile-nav {
   width: 200px;
@@ -4993,16 +5046,30 @@ table.datatable th:active {
 .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.show-mobile-nav {
   width: 250px;
 }
+.nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.collapsed-secondary-nav-pf {
+  width: 250px;
+}
 @media (min-width: 1200px) {
   .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf {
     width: 450px;
   }
+  .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.collapsed-secondary-nav-pf {
+    width: 250px;
+  }
   .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.collapsed {
     width: 75px;
   }
-  .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.collapsed.hover-secondary-nav-pf {
+  .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.collapsed.hover-secondary-nav-pf,
+  .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.collapsed.secondary-visible-pf {
     width: 325px;
   }
+  .nav-pf-vertical.nav-pf-vertical-with-secondary-nav.secondary-visible-pf.collapsed.collapsed-secondary-nav-pf {
+    width: 250px;
+  }
+}
+.nav-pf-vertical.nav-pf-vertical-with-secondary-nav.collapsed-secondary-nav-pf > .list-group > .list-group-item.persistent-secondary.active > a,
+.nav-pf-vertical.nav-pf-vertical-with-secondary-nav.collapsed-secondary-nav-pf > .list-group > .list-group-item.persistent-secondary:hover > a {
+  z-index: 1030;
 }
 .layout-pf-fixed-with-footer .nav-pf-vertical {
   bottom: 37px;
@@ -5099,6 +5166,10 @@ table.datatable th:active {
 .nav-pf-vertical > .list-group > .list-group-item.persistent-secondary:hover > a:after {
   right: 21px;
 }
+.collapsed-secondary-nav-pf .nav-pf-vertical > .list-group > .list-group-item.persistent-secondary.active > a,
+.collapsed-secondary-nav-pf .nav-pf-vertical > .list-group > .list-group-item.persistent-secondary:hover > a {
+  z-index: 1030;
+}
 .nav-pf-vertical .list-group-item-separator {
   border-top-width: 2px;
   border-top-color: #000000;
@@ -5126,10 +5197,32 @@ table.datatable th:active {
 .secondary-visible-pf.collapsed .persistent-secondary.mobile-nav-item-pf .nav-pf-persistent-secondary {
   display: none;
 }
+@media (min-width: 1200px) {
+  .secondary-visible-pf.collapsed .persistent-secondary.active .nav-pf-persistent-secondary,
+  .secondary-visible-pf.collapsed .persistent-secondary.mobile-nav-item-pf .nav-pf-persistent-secondary {
+    display: block;
+    left: 75px;
+  }
+  .collapsed-secondary-nav-pf .secondary-visible-pf.collapsed .persistent-secondary.active .nav-pf-persistent-secondary,
+  .collapsed-secondary-nav-pf .secondary-visible-pf.collapsed .persistent-secondary.mobile-nav-item-pf .nav-pf-persistent-secondary {
+    left: 0;
+  }
+}
+@media (min-width: 1200px) {
+  .secondary-visible-pf.collapsed.collapsed-secondary-nav-pf .persistent-secondary.active .nav-pf-persistent-secondary,
+  .secondary-visible-pf.collapsed.collapsed-secondary-nav-pf .persistent-secondary.mobile-nav-item-pf .nav-pf-persistent-secondary {
+    left: 0;
+  }
+}
 .show-mobile-nav .persistent-secondary.active .nav-pf-persistent-secondary,
 .show-mobile-nav .persistent-secondary.mobile-nav-item-pf .nav-pf-persistent-secondary {
   left: 0;
   z-index: 1032;
+}
+.collapsed-secondary-nav-pf .persistent-secondary.active .nav-pf-persistent-secondary,
+.collapsed-secondary-nav-pf .persistent-secondary.mobile-nav-item-pf .nav-pf-persistent-secondary {
+  display: block;
+  left: 0;
 }
 .persistent-secondary:hover .nav-pf-persistent-secondary {
   display: block;
@@ -5137,6 +5230,17 @@ table.datatable th:active {
 }
 .collapsed .persistent-secondary:hover .nav-pf-persistent-secondary {
   left: 75px;
+}
+.collapsed.collapsed-secondary-nav-pf .persistent-secondary:hover .nav-pf-persistent-secondary {
+  left: 0;
+}
+@media (min-width: 1200px) {
+  .collapsed.collapsed-secondary-nav-pf .persistent-secondary:hover .nav-pf-persistent-secondary {
+    left: 0;
+  }
+  .hidden-icons-pf .collapsed.collapsed-secondary-nav-pf .persistent-secondary:hover .nav-pf-persistent-secondary {
+    left: 0;
+  }
 }
 .secondary-visible-pf.collapsed .persistent-secondary:hover .nav-pf-persistent-secondary {
   display: block;
@@ -5155,8 +5259,10 @@ table.datatable th:active {
 .nav-pf-persistent-secondary .persistent-secondary-header > a {
   margin-right: 7px;
 }
-.nav-pf-persistent-secondary .persistent-secondary-header > a:hover {
+.nav-pf-persistent-secondary .persistent-secondary-header > a:hover,
+.nav-pf-persistent-secondary .persistent-secondary-header > a:focus {
   text-decoration: none;
+  color: #0099d3;
 }
 .nav-pf-persistent-secondary h5 {
   color: #ffffff;
@@ -5170,9 +5276,9 @@ table.datatable th:active {
   margin-bottom: 0;
 }
 .nav-pf-persistent-secondary > .list-group > .list-group-item {
-  padding: 0 0 5px 0;
   background-color: transparent;
   border: none;
+  padding: 0 0 5px 0;
 }
 .nav-pf-persistent-secondary > .list-group > .list-group-item > a {
   background-color: transparent;
@@ -5235,10 +5341,23 @@ table.datatable th:active {
 .nav-pf-persistent-secondary > .list-group > .list-group-item .list-group-item-value {
   display: inline-block;
   line-height: 20px;
+  max-width: none;
   opacity: 1;
   overflow: hidden;
   padding-left: 5px;
   text-overflow: ellipsis;
+}
+.nav-pf-persistent-secondary .secondary-collapse-toggle-pf {
+  display: inline-block;
+  font-family: "FontAwesome";
+  font-size: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+.nav-pf-persistent-secondary .secondary-collapse-toggle-pf:before {
+  content: '\f190';
+}
+.nav-pf-persistent-secondary .secondary-collapse-toggle-pf.collapsed:before {
+  content: '\f18e';
 }
 .show-mobile-nav .persistent-secondary:hover .nav-pf-persistent-secondary {
   display: none;
