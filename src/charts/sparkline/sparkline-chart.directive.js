@@ -44,56 +44,23 @@
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
-         <div pf-sparkline-chart config="config" chart-data="data" chart-height="custChartHeight" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+         <label class="label-title">Default Tooltip</label>
+         <div pf-sparkline-chart config="defaultConfig" chart-data="data" chart-height="60"></div>
        </div>
-       <hr class="col-md-12">
        <div class="col-md-12">
-         <form role="form">
-           <div class="form-group">
-             <label>Tooltip Type</label>
-             </br>
-             <label class="radio-inline">
-               <input type="radio" ng-model="config.tooltipType" value="default">Default</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="config.tooltipType" value="usagePerDay">Usage Per Day</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="config.tooltipType" value="valuePerDay">Value Per Day</input>
-             </label>
-             <label class="radio-inline">
-               <input type="radio" ng-model="config.tooltipType" value="percentage">Percentage</input>
-             </label>
-           </div>
-         </form>
-         <div class="row">
-           <div class="col-md-6">
-             <form role="form"">
-               <div class="form-group">
-                 <label>Show</label>
-                 </br>
-                 <label class="checkbox-inline">
-                   <input type="checkbox" ng-model="custShowXAxis">X Axis</input>
-                 </label>
-                 <label class="checkbox-inline">
-                   <input type="checkbox" ng-model="custShowYAxis">Y Axis</input>
-                 </label>
-               </div>
-             </form>
-           </div>
-           <div class="col-md-3">
-             <form role="form" >
-               <div class="form-group">
-                 <label>Chart Height</label>
-                 </br>
-                 <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
-               </div>
-             </form>
-           </div>
-           <div class="col-md-3">
-                 <button ng-click="addDataPoint()">Add Data Point</button>
-           </div>
-         </div>
+         <hr class="col-md-12">
+         <label class="label-title">Usage Per Day Tooltip</label>
+         <div pf-sparkline-chart config="usagePerDayConfig" chart-data="data" chart-height="60"></div>
+       </div>
+       <div class="col-md-12">
+         <hr class="col-md-12">
+         <label class="label-title">Value Per Day Tooltip</label>
+         <div pf-sparkline-chart config="valuePerDayConfig" chart-data="data" chart-height="60"></div>
+       </div>
+       <div class="col-md-12">
+         <hr class="col-md-12">
+         <label class="label-title">Percentage Tooltip</label>
+         <div pf-sparkline-chart config="percentageConfig" chart-data="data" chart-height="60"></div>
        </div>
      </div>
    </file>
@@ -101,9 +68,24 @@
    <file name="script.js">
      angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
 
-       $scope.config = {
-         chartId: 'exampleSparkline',
+       $scope.defaultConfig = {
+         chartId: 'exampleSparkline1',
          tooltipType: 'default'
+       };
+
+       $scope.usagePerDayConfig = {
+         chartId: 'exampleSparkline2',
+         tooltipType: 'usagePerDay'
+       };
+
+       $scope.valuePerDayConfig = {
+         chartId: 'exampleSparkline3',
+         tooltipType: 'valuePerDay'
+       };
+
+       $scope.percentageConfig = {
+         chartId: 'exampleSparkline4',
+         tooltipType: 'percentage'
        };
 
        var today = new Date();
@@ -116,15 +98,6 @@
          total: 100,
          xData: dates,
          yData: ['used', 10, 20, 30, 20, 30, 10, 14, 20, 25, 68, 54, 56, 78, 56, 67, 88, 76, 65, 87, 76]
-       };
-
-       $scope.custShowXAxis = false;
-       $scope.custShowYAxis = false;
-       $scope.custChartHeight = 60;
-
-       $scope.addDataPoint = function () {
-         $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
-         $scope.data.yData.push(Math.round(Math.random() * 100));
        };
      });
    </file>

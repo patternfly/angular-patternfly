@@ -21,11 +21,6 @@
 
         <form role="form" style="width:300px">
           Total = {{total}}, Used = {{used}}, Available = {{available}}
-          <div class="form-group">
-            <label>Used</label>
-            <input type="text" class="form-control" ng-model="newUsed">
-          </div>
-          <input type="button" ng-click="submitform(newUsed)" value="Go" />
         </form>
      </div>
    </file>
@@ -47,16 +42,6 @@
            ["used", "available"]
          ],
          order: null
-       };
-
-       $scope.updateAvailable = function (val) {
-         $scope.available =  $scope.total - $scope.used;
-       }
-
-       $scope.submitform = function (val) {
-         $scope.used = val;
-         $scope.updateAvailable();
-         $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
        };
      });
    </file>

@@ -70,44 +70,6 @@
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
-        <form role="form">
-          <div class="form-group">
-            <label>Selection</label>
-            </br>
-            <label class="radio-inline">
-              <input type="radio" ng-model="selectType" value="checkbox" ng-change="updateSelectionType()">Checkbox</input>
-            </label>
-            <label class="radio-inline">
-              <input type="radio" ng-model="selectType" value="row" ng-change="updateSelectionType()">Row</input>
-            </label>
-            <label class="radio-inline">
-              <input type="radio" ng-model="selectType" value="none" ng-change="updateSelectionType()">None</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-12">
-        <form role="form">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="config.dblClick">Double Click</input>
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="config.multiSelect" ng-disabled="config.dblClick">Multi Select</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-12">
-        <form role="form">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="showDisabled">Show Disabled Rows</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-12">
         <label style="font-weight:normal;vertical-align:center;">Events: </label>
       </div>
       <div class="col-md-12">
@@ -151,24 +113,11 @@
         };
 
         $scope.selectType = 'checkbox';
-        $scope.updateSelectionType = function() {
-          if ($scope.selectType === 'checkbox') {
-            $scope.config.selectItems = false;
-            $scope.config.showSelectBox = true;
-          } else if ($scope.selectType === 'row') {
-            $scope.config.selectItems = true;
-            $scope.config.showSelectBox = false;
-          } else {
-            $scope.config.selectItems = false
-            $scope.config.showSelectBox = false;
-          }
-        };
-
-        $scope.showDisabled = false;
+        $scope.showDisabled = true;
 
         $scope.config = {
          selectItems: false,
-         multiSelect: false,
+         multiSelect: true,
          dblClick: false,
          selectionMatchProp: 'name',
          selectedItems: [],

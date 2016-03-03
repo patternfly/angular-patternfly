@@ -17,50 +17,35 @@
 
    <file name="index.html">
      <div ng-controller="NotificationDemoCtrl">
-
-       <pf-inline-notification pf-notification-type="type"
-                        pf-notification-header="header"
-                        pf-notification-message="message"
-                        pf-notification-persistent="isPersistent">
+       <pf-inline-notification pf-notification-type="types[0]"
+                               pf-notification-header="headers[0]"
+                               pf-notification-message="message">
        </pf-inline-notification>
-
-       <form class="form-horizontal">
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="header">Header:</label>
-           <div class="col-sm-10">
-            <input type="text" class="form-control" ng-model="header" id="header"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="message">Message:</label>
-           <div class="col-sm-10">
-            <input type="text" class="form-control" ng-model="message" id="message"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="type">Type:</label>
-           <div class="col-sm-10">
-            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="type">Persistent:</label>
-           <div class="col-sm-10">
-            <input type="checkbox" ng-model="isPersistent"></input>
-           </div>
-         </div>
-       </form>
+       <pf-inline-notification pf-notification-type="types[1]"
+                               pf-notification-header="headers[1]"
+                               pf-notification-message="message">
+       </pf-inline-notification>
+       <pf-inline-notification pf-notification-type="types[2]"
+                               pf-notification-header="headers[2]"
+                               pf-notification-message="message">
+       </pf-inline-notification>
+       <pf-inline-notification pf-notification-type="types[3]"
+                               pf-notification-header="headers[3]"
+                               pf-notification-message="persistentMessage"
+                               pf-notification-persistent="true">
+       </pf-inline-notification>
      </div>
    </file>
 
    <file name="script.js">
      angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
        $scope.types = ['success','info','danger', 'warning'];
-       $scope.type = $scope.types[0];
+       //$scope.type = $scope.types[0];
        $scope.isPersistent = false;
 
-       $scope.header = 'Default Header.';
-       $scope.message = 'Default Message.';
+       $scope.headers = ['Success Header.', 'Info Header.','Danger Header.', 'Warning Header.'];
+       $scope.message = 'Default message.';
+       $scope.persistentMessage = 'Persistent enabled.';
      });
    </file>
 
