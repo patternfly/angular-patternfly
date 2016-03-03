@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/heatmap/heatmap.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/6987c8b/src/charts/heatmap/heatmap.directive.js#L123" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfHeatMap</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/heatmap/heatmap.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3f89212/src/charts/heatmap/heatmap.directive.js#L135" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfHeatMap</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
@@ -47,21 +47,34 @@
     <div class="row">
       <div class="col-md-5 example-heatmap-container">
         <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
-             show-legend="true"></div>
+             show-legend="showLegends"></div>
       </div>
       <div class="col-md-5 example-heatmap-container">
         <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
-             show-legend="true" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
+             show-legend="showLegends" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
              heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
              click-action="clickAction"></div>
       </div>
     </div>
-    <br/>
     <div class="row">
-      <div class="col-md-5 example-heatmap-container">
-        <div pf-heatmap id="id" chart-title="titleNoData" data="data" chart-data-available="false"
-             show-legend="false"></div>
-        </div>
+      <div class="col-md-3">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="dataAvailable">Data Available</input>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-3">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="showLegends">Show Legends</input>
+            </label>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </script>
@@ -127,7 +140,6 @@
     $scope.dataAvailable = true;
     $scope.title = 'Utilization - Using Defaults';
     $scope.titleAlt = 'Utilization - Overriding Defaults';
-    $scope.titleNoData = 'Utilization - No Data';
     $scope.legendLabels = ['< 60%','70%', '70-80%' ,'80-90%', '> 90%'];
     $scope.thresholds = [0.6, 0.7, 0.8, 0.9];
     $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#f00'];
