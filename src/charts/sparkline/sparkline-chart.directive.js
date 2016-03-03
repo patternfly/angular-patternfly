@@ -48,19 +48,19 @@
          <div pf-sparkline-chart config="defaultConfig" chart-data="data" chart-height="60"></div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Usage Per Day Tooltip</label>
          <div pf-sparkline-chart config="usagePerDayConfig" chart-data="data" chart-height="60"></div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Value Per Day Tooltip</label>
          <div pf-sparkline-chart config="valuePerDayConfig" chart-data="data" chart-height="60"></div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Percentage Tooltip</label>
-         <div pf-sparkline-chart config="percentageConfig" chart-data="data" chart-height="60" show-x-axis="true" show-y-axis="true"></div>
+         <div pf-sparkline-chart config="percentageConfig" chart-data="data" chart-height="60"></div>
        </div>
      </div>
    </file>

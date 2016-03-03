@@ -598,11 +598,6 @@ angular.module('patternfly.card').directive('pfCard', function () {
 
         <form role="form" style="width:300px">
           Total = {{total}}, Used = {{used}}, Available = {{available}}
-          <div class="form-group">
-            <label>Used</label>
-            <input type="text" class="form-control" ng-model="newUsed">
-          </div>
-          <input type="button" ng-click="submitform(newUsed)" value="Go" />
         </form>
      </div>
    </file>
@@ -624,16 +619,6 @@ angular.module('patternfly.card').directive('pfCard', function () {
            ["used", "available"]
          ],
          order: null
-       };
-
-       $scope.updateAvailable = function (val) {
-         $scope.available =  $scope.total - $scope.used;
-       }
-
-       $scope.submitform = function (val) {
-         $scope.used = val;
-         $scope.updateAvailable();
-         $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
        };
      });
    </file>
@@ -1165,34 +1150,21 @@ angular.module('patternfly.charts').directive('pfEmptyChart', function () {
        <div class="row">
          <div class="col-md-5 example-heatmap-container">
            <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
-                show-legend="showLegends"></div>
+                show-legend="true"></div>
          </div>
          <div class="col-md-5 example-heatmap-container">
            <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
-                show-legend="showLegends" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
+                show-legend="true" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
                 heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
                 click-action="clickAction"></div>
          </div>
        </div>
+       <br/>
        <div class="row">
-         <div class="col-md-3">
-           <form role="form">
-             <div class="form-group">
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="dataAvailable">Data Available</input>
-               </label>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-           <form role="form">
-             <div class="form-group">
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="showLegends">Show Legends</input>
-               </label>
-             </div>
-           </form>
-         </div>
+         <div class="col-md-5 example-heatmap-container">
+           <div pf-heatmap id="id" chart-title="titleNoData" data="data" chart-data-available="false"
+                show-legend="false"></div>
+           </div>
        </div>
      </div>
    </file>
@@ -1255,6 +1227,7 @@ angular.module('patternfly.charts').directive('pfEmptyChart', function () {
        $scope.dataAvailable = true;
        $scope.title = 'Utilization - Using Defaults';
        $scope.titleAlt = 'Utilization - Overriding Defaults';
+       $scope.titleNoData = 'Utilization - No Data';
        $scope.legendLabels = ['< 60%','70%', '70-80%' ,'80-90%', '> 90%'];
        $scope.thresholds = [0.6, 0.7, 0.8, 0.9];
        $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#f00'];
@@ -1496,19 +1469,19 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
          <div pf-sparkline-chart config="defaultConfig" chart-data="data" chart-height="60"></div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Usage Per Day Tooltip</label>
          <div pf-sparkline-chart config="usagePerDayConfig" chart-data="data" chart-height="60"></div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Value Per Day Tooltip</label>
          <div pf-sparkline-chart config="valuePerDayConfig" chart-data="data" chart-height="60"></div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Percentage Tooltip</label>
-         <div pf-sparkline-chart config="percentageConfig" chart-data="data" chart-height="60" show-x-axis="true" show-y-axis="true"></div>
+         <div pf-sparkline-chart config="percentageConfig" chart-data="data" chart-height="60"></div>
        </div>
      </div>
    </file>
@@ -1787,22 +1760,22 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
        <div pf-trends-chart config="largeConfig" chart-data="data"></div>
      </div>
      <div class="col-md-12">
-       <br/>
+       <hr class="col-md-12">
        <label class="label-title">Small Layout</label>
        <div pf-trends-chart config="smallConfig" chart-data="data"></div>
      </div>
      <div class="col-md-12">
-       <br/>
+       <hr class="col-md-12">
        <label class="label-title">Compact Layout</label>
        <div pf-trends-chart config="compactConfig" chart-data="data"></div>
      </div>
      <div class="col-md-12">
-       <br/>
+       <hr class="col-md-12">
        <label class="label-title">Inline Layout</label>
-       <div pf-trends-chart config="inlineConfig" chart-data="data" show-x-axis="true" show-y-axis="true"></div>
+       <div pf-trends-chart config="inlineConfig" chart-data="data"></div>
      </div>
      <div class="col-md-12">
-       <br/>
+       <hr class="col-md-12">
        <label class="label-title">No Data Available</label>
        <div pf-trends-chart config="inlineConfig" chart-data="noData"></div>
      </div>
@@ -2137,7 +2110,7 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
          </div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Available Donut Center Label</label>
          <div pf-utilization-trend-chart config="config"
               chart-data="data" center-label="availableCenterLabel"
@@ -2146,7 +2119,7 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
          </div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Percent Donut Center Label</label>
          <div pf-utilization-trend-chart config="config"
               chart-data="data" center-label="percentCenterLabel"
@@ -2155,18 +2128,16 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
          </div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">No Donut Center Label</label>
          <div pf-utilization-trend-chart config="config"
               chart-data="data" center-label="noneCenterLabel"
               donut-config="noneDonutConfig" sparkline-config="noneSparklineConfig"
-              sparkline-chart-height="60"
-              show-sparkline-x-axis="true"
-              show-sparkline-y-axis="true">
+              sparkline-chart-height="60">
          </div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">No Data Available</label>
          <div pf-utilization-trend-chart config="config"
               chart-data="noData" center-label="noneCenterLabel"
@@ -3120,50 +3091,35 @@ angular.module('patternfly.form').directive('pfRemainingCharsCount', ["$timeout"
 
    <file name="index.html">
      <div ng-controller="NotificationDemoCtrl">
-
-       <pf-inline-notification pf-notification-type="type"
-                        pf-notification-header="header"
-                        pf-notification-message="message"
-                        pf-notification-persistent="isPersistent">
+       <pf-inline-notification pf-notification-type="types[0]"
+                               pf-notification-header="headers[0]"
+                               pf-notification-message="message">
        </pf-inline-notification>
-
-       <form class="form-horizontal">
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="header">Header:</label>
-           <div class="col-sm-10">
-            <input type="text" class="form-control" ng-model="header" id="header"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="message">Message:</label>
-           <div class="col-sm-10">
-            <input type="text" class="form-control" ng-model="message" id="message"/>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="type">Type:</label>
-           <div class="col-sm-10">
-            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
-           </div>
-         </div>
-         <div class="form-group">
-           <label class="col-sm-2 control-label" for="type">Persistent:</label>
-           <div class="col-sm-10">
-            <input type="checkbox" ng-model="isPersistent"></input>
-           </div>
-         </div>
-       </form>
+       <pf-inline-notification pf-notification-type="types[1]"
+                               pf-notification-header="headers[1]"
+                               pf-notification-message="message">
+       </pf-inline-notification>
+       <pf-inline-notification pf-notification-type="types[2]"
+                               pf-notification-header="headers[2]"
+                               pf-notification-message="message">
+       </pf-inline-notification>
+       <pf-inline-notification pf-notification-type="types[3]"
+                               pf-notification-header="headers[3]"
+                               pf-notification-message="persistentMessage"
+                               pf-notification-persistent="true">
+       </pf-inline-notification>
      </div>
    </file>
 
    <file name="script.js">
      angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications ) {
        $scope.types = ['success','info','danger', 'warning'];
-       $scope.type = $scope.types[0];
+       //$scope.type = $scope.types[0];
        $scope.isPersistent = false;
 
-       $scope.header = 'Default Header.';
-       $scope.message = 'Default Message.';
+       $scope.headers = ['Success Header.', 'Info Header.','Danger Header.', 'Warning Header.'];
+       $scope.message = 'Default message.';
+       $scope.persistentMessage = 'Persistent enabled.';
      });
    </file>
 
@@ -4959,44 +4915,6 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
-        <form role="form">
-          <div class="form-group">
-            <label>Selection</label>
-            </br>
-            <label class="radio-inline">
-              <input type="radio" ng-model="selectType" value="checkbox" ng-change="updateSelectionType()">Checkbox</input>
-            </label>
-            <label class="radio-inline">
-              <input type="radio" ng-model="selectType" value="row" ng-change="updateSelectionType()">Row</input>
-            </label>
-            <label class="radio-inline">
-              <input type="radio" ng-model="selectType" value="none" ng-change="updateSelectionType()">None</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-12">
-        <form role="form">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="config.dblClick">Double Click</input>
-            </label>
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="config.multiSelect" ng-disabled="config.dblClick">Multi Select</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-12">
-        <form role="form">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="showDisabled">Show Disabled Rows</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-12">
         <label style="font-weight:normal;vertical-align:center;">Events: </label>
       </div>
       <div class="col-md-12">
@@ -5040,24 +4958,11 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
         };
 
         $scope.selectType = 'checkbox';
-        $scope.updateSelectionType = function() {
-          if ($scope.selectType === 'checkbox') {
-            $scope.config.selectItems = false;
-            $scope.config.showSelectBox = true;
-          } else if ($scope.selectType === 'row') {
-            $scope.config.selectItems = true;
-            $scope.config.showSelectBox = false;
-          } else {
-            $scope.config.selectItems = false
-            $scope.config.showSelectBox = false;
-          }
-        };
-
-        $scope.showDisabled = false;
+        $scope.showDisabled = true;
 
         $scope.config = {
          selectItems: false,
-         multiSelect: false,
+         multiSelect: true,
          dblClick: false,
          selectionMatchProp: 'name',
          selectedItems: [],

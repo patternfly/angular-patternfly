@@ -29,34 +29,21 @@
        <div class="row">
          <div class="col-md-5 example-heatmap-container">
            <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
-                show-legend="showLegends"></div>
+                show-legend="true"></div>
          </div>
          <div class="col-md-5 example-heatmap-container">
            <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
-                show-legend="showLegends" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
+                show-legend="true" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
                 heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
                 click-action="clickAction"></div>
          </div>
        </div>
+       <br/>
        <div class="row">
-         <div class="col-md-3">
-           <form role="form">
-             <div class="form-group">
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="dataAvailable">Data Available</input>
-               </label>
-             </div>
-           </form>
-         </div>
-         <div class="col-md-3">
-           <form role="form">
-             <div class="form-group">
-               <label class="checkbox-inline">
-                 <input type="checkbox" ng-model="showLegends">Show Legends</input>
-               </label>
-             </div>
-           </form>
-         </div>
+         <div class="col-md-5 example-heatmap-container">
+           <div pf-heatmap id="id" chart-title="titleNoData" data="data" chart-data-available="false"
+                show-legend="false"></div>
+           </div>
        </div>
      </div>
    </file>
@@ -119,6 +106,7 @@
        $scope.dataAvailable = true;
        $scope.title = 'Utilization - Using Defaults';
        $scope.titleAlt = 'Utilization - Overriding Defaults';
+       $scope.titleNoData = 'Utilization - No Data';
        $scope.legendLabels = ['< 60%','70%', '70-80%' ,'80-90%', '> 90%'];
        $scope.thresholds = [0.6, 0.7, 0.8, 0.9];
        $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#f00'];

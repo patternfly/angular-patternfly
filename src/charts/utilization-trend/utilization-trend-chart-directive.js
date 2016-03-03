@@ -53,7 +53,7 @@
          </div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Available Donut Center Label</label>
          <div pf-utilization-trend-chart config="config"
               chart-data="data" center-label="availableCenterLabel"
@@ -62,7 +62,7 @@
          </div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">Percent Donut Center Label</label>
          <div pf-utilization-trend-chart config="config"
               chart-data="data" center-label="percentCenterLabel"
@@ -71,18 +71,16 @@
          </div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">No Donut Center Label</label>
          <div pf-utilization-trend-chart config="config"
               chart-data="data" center-label="noneCenterLabel"
               donut-config="noneDonutConfig" sparkline-config="noneSparklineConfig"
-              sparkline-chart-height="60"
-              show-sparkline-x-axis="true"
-              show-sparkline-y-axis="true">
+              sparkline-chart-height="60">
          </div>
        </div>
        <div class="col-md-12">
-         <br/>
+         <hr class="col-md-12">
          <label class="label-title">No Data Available</label>
          <div pf-utilization-trend-chart config="config"
               chart-data="noData" center-label="noneCenterLabel"

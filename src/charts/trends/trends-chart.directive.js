@@ -40,22 +40,22 @@
        <div pf-trends-chart config="largeConfig" chart-data="data"></div>
      </div>
      <div class="col-md-12">
-       <br/>
+       <hr class="col-md-12">
        <label class="label-title">Small Layout</label>
        <div pf-trends-chart config="smallConfig" chart-data="data"></div>
      </div>
      <div class="col-md-12">
-       <br/>
+       <hr class="col-md-12">
        <label class="label-title">Compact Layout</label>
        <div pf-trends-chart config="compactConfig" chart-data="data"></div>
      </div>
      <div class="col-md-12">
-       <br/>
+       <hr class="col-md-12">
        <label class="label-title">Inline Layout</label>
-       <div pf-trends-chart config="inlineConfig" chart-data="data" show-x-axis="true" show-y-axis="true"></div>
+       <div pf-trends-chart config="inlineConfig" chart-data="data"></div>
      </div>
      <div class="col-md-12">
-       <br/>
+       <hr class="col-md-12">
        <label class="label-title">No Data Available</label>
        <div pf-trends-chart config="inlineConfig" chart-data="noData"></div>
      </div>
