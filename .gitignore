@@ -21,6 +21,7 @@ dist/docs/img
 dist/docs/index.html
 
 
+docs
 node_modules
 lib
 .bower
