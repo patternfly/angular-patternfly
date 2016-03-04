@@ -13,23 +13,24 @@ module.exports = function (grunt) {
               'help': 'Task list helper for your Grunt enabled projects.',
               'clean': 'Deletes the content of the dist directory.',
               'build': 'Builds the project (including documentation) into the dist directory. You can specify modules to be built as arguments (' +
-                'grunt build:buttons:notification) otherwise all available modules are built.',
+              'grunt build:buttons:notification) otherwise all available modules are built.',
               'test': 'Executes the karma testsuite.',
               'watch': 'Whenever js source files (from the src directory) change, the tasks executes jslint and documentation build.',
-              'ngdocs': 'Builds documentation into dist/docs.',
-              'ngdocs:view': 'Builds documentation into dist/docs and runs a web server. The docs can be accessed on http://localhost:8000/'
+              'ngdocs': 'Builds documentation into docs.',
+              'ngdocs:view': 'Builds documentation into docs and runs a web server. The docs can be accessed on http://localhost:8000/',
+              'ngdocs:publish': 'Publishes the ngdocs to the dist area. This should only be done when bumping the release version.'
             },
             groups: {
               'Basic project tasks': ['help', 'clean', 'build', 'test'],
-              'Documentation tasks': ['ngdocs', 'ngdocs:view']
+              'Documentation tasks': ['ngdocs', 'ngdocs:view', 'ngdocs:publish']
             }
           }
         }
       },
       clean: {
-        docs: ['dist/docs'],
+        docs: ['docs'],
         templates: ['templates/'],
-        all: ['dist/*']
+        all: ['dist/*', '!dist/docs']
       },
       concat: {
         options: {
@@ -45,7 +46,7 @@ module.exports = function (grunt) {
           options: {
             hostname: '0.0.0.0',
             port: grunt.option("port") || 8000,
-            base: 'dist/docs',
+            base: 'docs',
             livereload: 35722,
             open: true
           }
@@ -55,13 +56,13 @@ module.exports = function (grunt) {
         docdata: {
           cwd: 'lib/patternfly/dist',
           src: ['fonts/*', 'img/*'],
-          dest: 'dist/docs',
+          dest: 'docs',
           expand: true
         },
         fa: {
           cwd: 'lib/patternfly/',
           src: ['components/font-awesome/**'],
-          dest: 'dist/docs',
+          dest: 'docs',
           expand: true
         },
         styles: {
@@ -73,7 +74,13 @@ module.exports = function (grunt) {
         img: {
           cwd: 'misc/',
           src: 'patternfly-orb.svg',
-          dest: 'dist/docs/img',
+          dest: 'docs/img',
+          expand: true
+        },
+        publish: {
+          cwd: 'docs',
+          src: ['**'],
+          dest: 'dist/docs',
           expand: true
         }
       },
@@ -115,7 +122,7 @@ module.exports = function (grunt) {
       ngdocs: {
         options: {
           title: 'Angular Patternfly Documentation',
-          dest: 'dist/docs',
+          dest: 'docs',
           image: 'misc/logo-alt.svg',
           scripts: ['lib/jquery/dist/jquery.js',
             'lib/bootstrap/dist/js/bootstrap.js',
@@ -144,14 +151,14 @@ module.exports = function (grunt) {
       ngtemplates: {
         options: {
           htmlmin: {
-            collapseBooleanAttributes:      true,
-            collapseWhitespace:             true,
-            removeAttributeQuotes:          true,
-            removeComments:                 false,
-            removeEmptyAttributes:          true,
-            removeRedundantAttributes:      true,
-            removeScriptTypeAttributes:     true,
-            removeStyleLinkTypeAttributes:  true
+            collapseBooleanAttributes: true,
+            collapseWhitespace: true,
+            removeAttributeQuotes: true,
+            removeComments: false,
+            removeEmptyAttributes: true,
+            removeRedundantAttributes: true,
+            removeScriptTypeAttributes: true,
+            removeStyleLinkTypeAttributes: true
           }
         },
         'patternfly.form': {
@@ -205,6 +212,11 @@ module.exports = function (grunt) {
           }]
         }
       },
+      remove: {
+        published: {
+          dirList: ['dist/docs']
+        }
+      },
       uglify: {
         options: {
           mangle: false
@@ -230,6 +242,8 @@ module.exports = function (grunt) {
       }
     });
 
+    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:styles', 'copy:img']);
+
     // You can specify which modules to build as arguments of the build task.
     grunt.registerTask('build', 'Create bootstrap build files', function () {
       var concatSrc = [];
@@ -248,13 +262,13 @@ module.exports = function (grunt) {
         concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
     });
 
     // Runs all the tasks of build with the exception of tests
     grunt.registerTask('deploy', 'Prepares the project for deployment. Does not run unit tests', function () {
       var concatSrc = 'src/**/*.js';
-      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copy', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);
@@ -264,6 +278,7 @@ module.exports = function (grunt) {
     grunt.registerTask('check', ['lint', 'test']);
     grunt.registerTask('help', ['availabletasks']);
     grunt.registerTask('server', ['ngdocs:view']);
+    grunt.registerTask('ngdocs:publish', ['remove:published', 'copy:publish']);
 
   }
 
