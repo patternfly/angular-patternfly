@@ -588,13 +588,14 @@ angular.module('patternfly.card').directive('pfCard', function () {
  *
  * @param {string} id the ID of the container that the chart should bind to
  * @param {expression} config the c3 configuration options for the chart
+ * @param {function (chart))=} getChartCallback the callback user function to be called once the chart is generated, containing the c3 chart object
  *
  * @example
 
  <example module="patternfly.charts">
    <file name="index.html">
      <div ng-controller="ChartCtrl">
-        <div pf-c3-chart id="chartId"  config="chartConfig"></div>
+        <div pf-c3-chart id="chartId" config="chartConfig" get-chart-callback="getChart"></div>
 
         <form role="form" style="width:300px">
           Total = {{total}}, Used = {{used}}, Available = {{available}}
@@ -602,7 +603,8 @@ angular.module('patternfly.card').directive('pfCard', function () {
             <label>Used</label>
             <input type="text" class="form-control" ng-model="newUsed">
           </div>
-          <input type="button" ng-click="submitform(newUsed)" value="Go" />
+          <input type="button" ng-click="submitform(newUsed)" value="Set Used" />
+          <input type="button" ng-click="focusUsed()" value="Focus Used" />
         </form>
      </div>
    </file>
@@ -626,6 +628,14 @@ angular.module('patternfly.card').directive('pfCard', function () {
          order: null
        };
 
+       $scope.getChart = function (chart) {
+         $scope.chart = chart;
+       }
+
+       $scope.focusUsed = function () {
+         $scope.chart.focus("Used");
+       }
+
        $scope.updateAvailable = function (val) {
          $scope.available =  $scope.total - $scope.used;
        }
@@ -646,17 +656,23 @@ angular.module('patternfly.card').directive('pfCard', function () {
     return {
       restrict: 'A',
       scope: {
-        config: '='
+        config: '=',
+        getChartCallback: '='
       },
       template: '<div id=""></div>',
       replace: true,
       link: function (scope, element, attrs) {
         scope.$watch('config', function () {
           $timeout(function () {
+            // store the chart object
+            var chart;
             //generate c3 chart data
             var chartData = scope.config;
             chartData.bindto = '#' + attrs.id;
-            c3.generate(chartData);
+            chart = c3.generate(chartData);
+            if (scope.getChartCallback) {
+              scope.getChartCallback(chart);
+            }
           });
         }, true);
       }
