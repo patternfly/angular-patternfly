@@ -1,0 +1,10 @@
+---
+version: '2'
+services:
+  common:
+    build: "."
+    environment:
+      NODE_ENV: production
+  app:
+    extends:
+      service: common
