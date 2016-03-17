@@ -52,6 +52,7 @@ angular.module('patternfly', [
   'patternfly.notification',
   'patternfly.select',
   'patternfly.sort',
+  'patternfly.toolbars',
   'patternfly.utils',
   'patternfly.validation',
   'patternfly.views'
