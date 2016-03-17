@@ -23,7 +23,7 @@ describe('Directive: pfCard', function() {
 
     it("should set the headTitle and subTitle and inner content", function() {
 
-      element = compileCard('<div pf-card head-title="My card title" sub-title="My card subtitle title">Inner content goes here</div>', $scope);
+      element = compileCard('<div pf-card head-title="My card title" sub-title="My card subtitle title"><span>Inner content goes here</span></div>', $scope);
 
       headTitle = angular.element(element).find('.card-pf-title').html();
       expect(headTitle).toBe("My card title");
