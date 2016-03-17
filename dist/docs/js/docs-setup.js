@@ -37,7 +37,7 @@ NG_DOCS={
       "type": "directive",
       "moduleName": "patternfly.charts",
       "shortDescription": "Directive for wrapping c3 library",
-      "keywords": "$scope add angular api application bind button c3 c3chartdefaults chart chartconfig chartctrl chartid charts class columns config configuration container controller data default dependency directive donut form form-control form-group function getdefaultdonutconfig groups html js library mhz module newused ng-click ng-controller ng-model note null options order patternfly pf-c3-chart role script style submitform text total type updateavailable val width wrapping"
+      "keywords": "$scope add angular api application bind button c3 c3chartdefaults callback called chart chartconfig chartctrl chartid charts class columns config configuration container controller data default dependency directive donut focus focusused form form-control form-group function generated get-chart-callback getchart getchartcallback getdefaultdonutconfig groups html js library mhz module newused ng-click ng-controller ng-model note null object options order patternfly pf-c3-chart role script set style submitform text total type updateavailable user val width wrapping"
     },
     {
       "section": "api",

@@ -501,7 +501,7 @@
       '</table>';
   };
 
-  $.fn.pGetUtilizationDonutTooltipContentsFn = function (units) {
+  $.fn.pfGetUtilizationDonutTooltipContentsFn = function (units) {
     return function (d) {
       return '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
         (Math.round(d[0].ratio * 1000) / 10) + '%' + ' ' + units + ' ' + d[0].name +
@@ -998,6 +998,10 @@
 
       // Set up an event listener for the node
       node.children('.treegrid-node').on('click', function (e) {
+        if (typeof options.callback === 'function') {
+          options.callback(e);
+        }
+
         var icon = node.find('span.expand-icon');
         if (icon.hasClass('fa-angle-right')) {
           node.removeClass('collapsed');
@@ -1373,3 +1377,66 @@
   };
 }(jQuery));
 
+(function ($) {
+  'use strict';
+
+  var level2class = function (level) {
+    switch (level) {
+    case 'error':
+      return ['danger', 'error-circle-o'];
+    case 'warning':
+      return ['warning', 'warning-triangle-o'];
+    case 'info':
+      return ['info', 'info'];
+    case 'success':
+      return ['success', 'ok'];
+    }
+  };
+
+  $.fn.toastNotify = function (options) {
+    var classes, container, wrapper, toast, button, close, icon, dismiss;
+
+    options = $.extend({
+      level:       'info',
+      containerId: 'notification-area',
+      timeout:     5000
+    }, options);
+
+    classes   = level2class(options.level);
+    container = $('#' + options.containerId);
+    wrapper   = $('<div>').addClass('row').css('display', 'none');
+    toast     = $('<div>').addClass('col-xs-12 toast-pf alert alert-dismissable alert-' + classes[0]);
+    button    = $('<div>').addClass('close').attr('type', 'button').data('dismiss', 'alert');
+    close     = $('<span>').addClass('pficon pficon-close');
+    icon      = $('<span>').addClass('pficon pficon-' + classes[1]);
+
+    dismiss = function () {
+      wrapper.remove();
+      if (container.children().length === 0) {
+        wrapper.hide();
+      }
+    };
+
+    if (container.length === 0) {
+      container = $('<div>').attr('id', options.containerId).addClass('toast-pf-area container');
+      $(document.body).append(container);
+    }
+
+    button.append(close);
+    toast.append(button, icon, options.message);
+    wrapper.append(toast);
+    container.append(wrapper);
+
+    wrapper.show();
+    toast.show('fast');
+
+    button.click(function () {
+      dismiss();
+      if (typeof options.onClose === 'function') {
+        options.onClose(options);
+      }
+    });
+
+    setTimeout(dismiss, options.timeout);
+  };
+}(jQuery));

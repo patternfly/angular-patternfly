@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/c3/c3-chart.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3f89212/src/charts/c3/c3-chart.directive.js#L65" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfC3Chart</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/c3/c3-chart.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/c8a2e5f/src/charts/c3/c3-chart.directive.js#L75" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfC3Chart</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
@@ -11,11 +11,13 @@ In order to use patternfly charts you must add &#39;patternfly.charts&#39; as a 
 <h2 id="usage">Usage</h2>
 <div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pf-c3-chart
      id="{string}"
-     config="{expression}"&gt;
+     config="{expression}"
+     [get-chart-callback="{function (chart))}"]&gt;
    ...
 &lt;/ANY&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>id</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pfc3chart-page"><p>the ID of the container that the chart should bind to</p>
 </div></td></tr><tr><td>config</td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pfc3chart-page"><p>the c3 configuration options for the chart</p>
+</div></td></tr><tr><td>getChartCallback <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-function">function (chart)</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pfc3chart-page"><p>the callback user function to be called once the chart is generated, containing the c3 chart object</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-charts-directive-page patternfly-charts-directive-pfc3chart-page"><h4 id="example_source">Source</h4>
@@ -24,7 +26,7 @@ In order to use patternfly charts you must add &#39;patternfly.charts&#39; as a 
 <pre class="prettyprint linenums" ng-set-text="index.html-3" ng-html-wrap-loaded="patternfly.charts angular.js script.js"></pre>
 <script type="text/ng-template" id="index.html-3">
   <div ng-controller="ChartCtrl">
-     <div pf-c3-chart id="chartId"  config="chartConfig"></div>
+     <div pf-c3-chart id="chartId" config="chartConfig" get-chart-callback="getChart"></div>
 
      <form role="form" style="width:300px">
        Total = {{total}}, Used = {{used}}, Available = {{available}}
@@ -32,7 +34,8 @@ In order to use patternfly charts you must add &#39;patternfly.charts&#39; as a 
          <label>Used</label>
          <input type="text" class="form-control" ng-model="newUsed">
        </div>
-       <input type="button" ng-click="submitform(newUsed)" value="Go" />
+       <input type="button" ng-click="submitform(newUsed)" value="Set Used" />
+       <input type="button" ng-click="focusUsed()" value="Focus Used" />
      </form>
   </div>
 </script>
@@ -57,6 +60,14 @@ In order to use patternfly charts you must add &#39;patternfly.charts&#39; as a 
       ],
       order: null
     };
+
+    $scope.getChart = function (chart) {
+      $scope.chart = chart;
+    }
+
+    $scope.focusUsed = function () {
+      $scope.chart.focus("Used");
+    }
 
     $scope.updateAvailable = function (val) {
       $scope.available =  $scope.total - $scope.used;
