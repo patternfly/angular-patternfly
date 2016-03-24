@@ -68,7 +68,7 @@
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
+     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope, pfUtils ) {
 
        $scope.config = {
          chartId: 'exampleLine',
