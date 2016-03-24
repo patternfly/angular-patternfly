@@ -17,6 +17,7 @@
     getDefaultSparklineLegend: patternflyDefaults.getDefaultSparklineLegend,
     getDefaultSparklinePoint: patternflyDefaults.getDefaultSparklinePoint,
     getDefaultSparklineTooltip: patternflyDefaults.getDefaultSparklineTooltip,
-    getDefaultSparklineConfig: patternflyDefaults.getDefaultSparklineConfig
+    getDefaultSparklineConfig: patternflyDefaults.getDefaultSparklineConfig,
+    getDefaultLineConfig: patternflyDefaults.getDefaultLineConfig
   });
 })();
