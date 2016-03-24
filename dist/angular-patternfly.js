@@ -1647,6 +1647,39 @@ angular.module('patternfly.charts').directive('pfLineChart', ["pfUtils", functio
           }
         };
 
+        $scope.lineTooltip = function () {
+          return {
+            contents: $scope.config.tooltipFn,
+            position: function (data, width, height, element) {
+              var center;
+              var top;
+              var chartBox;
+              var graphOffsetX;
+              var x;
+
+              try {
+                center = parseInt(element.getAttribute('x'));
+                top = parseInt(element.getAttribute('y'));
+                chartBox = document.querySelector('#' + $scope.lineChartId).getBoundingClientRect();
+                graphOffsetX = document.querySelector('#' + $scope.lineChartId + ' g.c3-axis-y').getBoundingClientRect().right;
+                x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
+
+                return {
+                  top: top - height,
+                  left: Math.min(x, chartBox.width - width)
+                };
+              } catch (e) {
+              }
+            }
+          };
+        };
+
+        /*
+         * Setup Chart tooltip function. Default is Line Chart default tooltip
+         * If tooltipFn is not null, use it to override the default tooltip.
+         */
+        $scope.defaultConfig.tooltip = $scope.config.tooltipFn ? $scope.lineTooltip() : null;
+
         /*
          * Setup Chart type option. Default is Line Chart.
          */
