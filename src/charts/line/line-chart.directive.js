@@ -74,7 +74,7 @@
          chartId: 'exampleLine',
          grid: {y: {show: false}},
          point: {r: 1},
-         color: {pattern: ["#0088ce", "#3f9c35"]}
+         color: {pattern: [pfUtils.colorPalette.blue, pfUtils.colorPalette.green]}
        };
 
        var today = new Date();

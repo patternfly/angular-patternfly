@@ -943,14 +943,14 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["pfUtils", "$t
         }
 
         $scope.getStatusColor = function (used, thresholds) {
-          var color = '#0088CE';
+          var color = pfUtils.colorPalette.blue;
 
           if (thresholds) {
-            color = '#3f9c35';
+            color = pfUtils.colorPalette.green;
             if (used >= thresholds.error) {
-              color = '#CC0000';
+              color = pfUtils.colorPalette.red;
             } else if (used >= thresholds.warning) {
-              color = '#EC7A08';
+              color = pfUtils.colorPalette.orange;
             }
           }
 
@@ -963,7 +963,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["pfUtils", "$t
           color = { pattern: [] };
           percentUsed = scope.data.used / scope.data.total * 100.0;
           color.pattern[0] = $scope.getStatusColor(percentUsed, scope.config.thresholds);
-          color.pattern[1] = '#D1D1D1';
+          color.pattern[1] = pfUtils.colorPalette.black300;
           return color;
         };
 
@@ -1540,7 +1540,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
          chartId: 'exampleLine',
          grid: {y: {show: false}},
          point: {r: 1},
-         color: {pattern: ["#0088ce", "#3f9c35"]}
+         color: {pattern: [pfUtils.colorPalette.blue, pfUtils.colorPalette.green]}
        };
 
        var today = new Date();
@@ -1595,7 +1595,7 @@ angular.module('patternfly.charts').directive('pfLineChart', ["pfUtils", functio
          */
         $scope.getLineData = function (chartData) {
           var lineData  = {
-            type: 'line'
+            type: $scope.setAreaChart ? "area" : "line"
           };
 
           if (chartData && chartData.dataAvailable !== false && chartData.xData) {
@@ -4690,7 +4690,9 @@ angular
     },
     mergeDeep: function (source1, source2) {
       return mergeDeep({}, angular.copy(source1), angular.copy(source2));
-    }
+    },
+
+    colorPalette: $.pfPaletteColors
   });
 })();
 
