@@ -35,7 +35,7 @@ describe('Directive: pfDonutPctChart', function() {
   it("should trigger error threshold", function() {
     element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
 
-    expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#CC0000');  //red
+    expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#cc0000');  //red
   });
 
   it("should trigger warning threshold", function() {
@@ -43,7 +43,7 @@ describe('Directive: pfDonutPctChart', function() {
 
     $scope.data.used = 850;
     $scope.$digest();
-    expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#EC7A08');  //orange
+    expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#ec7a08');  //orange
   });
 
   it("should trigger ok threshold", function() {
@@ -61,7 +61,7 @@ describe('Directive: pfDonutPctChart', function() {
 
     element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
 
-    expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#0088CE');  //blue
+    expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#0088ce');  //blue
   });
 
   it("should show 'used' center label by default", function() {

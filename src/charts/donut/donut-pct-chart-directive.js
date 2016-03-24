@@ -260,14 +260,14 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUti
         }
 
         $scope.getStatusColor = function (used, thresholds) {
-          var color = '#0088CE';
+          var color = pfUtils.colorPalette.blue;
 
           if (thresholds) {
-            color = '#3f9c35';
+            color = pfUtils.colorPalette.green;
             if (used >= thresholds.error) {
-              color = '#CC0000';
+              color = pfUtils.colorPalette.red;
             } else if (used >= thresholds.warning) {
-              color = '#EC7A08';
+              color = pfUtils.colorPalette.orange;
             }
           }
 
@@ -280,7 +280,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUti
           color = { pattern: [] };
           percentUsed = scope.data.used / scope.data.total * 100.0;
           color.pattern[0] = $scope.getStatusColor(percentUsed, scope.config.thresholds);
-          color.pattern[1] = '#D1D1D1';
+          color.pattern[1] = pfUtils.colorPalette.black300;
           return color;
         };
 
