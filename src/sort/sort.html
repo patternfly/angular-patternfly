@@ -8,7 +8,7 @@
         </button>
         <ul class="dropdown-menu">
           <li ng-repeat="item in config.fields" ng-class="{'selected': item === config.currentField}">
-            <a class="sort-field" role="menuitem" tabindex="-1" ng-click="selectField(item)">
+            <a href="javascript:void(0);" class="sort-field" role="menuitem" tabindex="-1" ng-click="selectField(item)">
               {{item.title}}
             </a>
           </li>
