@@ -23,12 +23,30 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "patternfly.card.directive:pfCard",
-      "shortName": "pfCard",
+      "id": "patternfly.card.directive:pfCard - Timeframe Filters",
+      "shortName": "pfCard - Timeframe Filters",
       "type": "directive",
       "moduleName": "patternfly.card",
       "shortDescription": "Directive for easily displaying a card with html content",
-      "keywords": "$scope actionbarconfig actual add alert angular api array bars based blue border bottom call callback callbackfn called capacity card chart chart-data chart-title chartctrl chartid charts class clicked cluster compact config configmemory configphysical configsingle configuration configvirtual content contents controller cpu d-- data2 data3 data4 data5 datamemory dataphysical datasingle datavirtual dates days defaultfilter defined demo directive disk displaying drop easily events example2trendschart fa fa-flag fa-plus-circle false filter filterconfig filterconfigheader filters fn footer footerconfig function gb gettime grey head-title header headtitle hides href html icon iconclass inline integer items js label label-title layout layoutinline left link list-style-type memory memorytrendschart mhz module multiple navigate ng-controller panel patternfly percentage performance pf-card pf-trends-chart pf-utilization-bar-chart physical physicaltrendschart position properties push resources script selected show-titles-separator show-top-border showtitlesseparator showtopborder single storage style sub-title subtitle system tb text threshold-error threshold-warning timeframe title title2 title3 title4 title5 today tooltiptype top total trend trendlabel trends true type units units2 units3 units4 units5 usage user utilization valuetype var view virtual virtualtrendschart width xdata ydata"
+      "keywords": "$scope alert angular api array based blue border bottom call callback callbackfn called card chartctrl charts class clicked configuration content contents controller days defaultfilter defined demo directive displaying drop easily events fa fa-flag false filter filterconfig filterconfigheader filters fn footer footerconfig function grey head-title header headtitle hides href html icon iconclass integer items js label label-title left link list-style-type module navigate ng-controller panel patternfly pf-card position properties script selected show-top-border showtitlesseparator showtopborder style sub-title subtitle text timeframe title today top true user view width"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.card.directive:pfCard - Trends",
+      "shortName": "pfCard - Trends",
+      "type": "directive",
+      "moduleName": "patternfly.card",
+      "shortDescription": "Directive for easily displaying a card with html content",
+      "keywords": "$scope actionbarconfig actual add alert angular api array based blue border bottom call callback callbackfn called capacity card chart chart-data chartctrl chartid charts class clicked cluster compact config configmemory configphysical configsingle configuration configvirtual content controller d-- datamemory dataphysical datasingle datavirtual dates days defaultfilter defined demo directive disk displaying drop easily events example2trendschart fa fa-flag fa-plus-circle false filter filterconfig filters fn footer footerconfig function gb gettime grey head-title headtitle hides href html icon iconclass inline integer items js label label-title layout left link list-style-type memory memorytrendschart mhz module multiple navigate ng-controller panel patternfly percentage performance pf-card pf-trends-chart physical physicaltrendschart properties push script selected show-titles-separator show-top-border showtitlesseparator showtopborder single storage style sub-title subtitle tb text title today tooltiptype top total trend trendlabel trends true units user utilization valuetype var view virtual virtualtrendschart width xdata ydata"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.card.directive:pfCard - Utilization",
+      "shortName": "pfCard - Utilization",
+      "type": "directive",
+      "moduleName": "patternfly.card",
+      "shortDescription": "Directive for easily displaying a card with html content",
+      "keywords": "$scope angular api array bars based blue border bottom call callbackfn called card chart-data chart-title chartctrl charts class clicked configuration content controller cpu data2 data3 data4 data5 days defaultfilter defined demo directive disk displaying drop easily false filter filters footer function gb grey head-title headtitle hides href html icon iconclass inline integer items js label-title layout layoutinline left link list-style-type memory mhz module multiple navigate ng-controller panel patternfly pf-card pf-utilization-bar-chart properties resources script selected show-top-border showtitlesseparator showtopborder style sub-title subtitle system tb text threshold-error threshold-warning title title2 title3 title4 title5 today top total true type units units2 units3 units4 units5 usage user utilization width"
     },
     {
       "section": "api",
