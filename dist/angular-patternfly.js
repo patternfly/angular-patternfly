@@ -157,9 +157,11 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
  * <li>.count         - the number count of the main statuses
  * <li>.href          - the href to navigate to if one clicks on the title or count
  * <li>.iconClass     - an icon to display to the left of the count
+ * <li>.iconImage     - an image to display to the left of the count
  * <li>.notifications - an array of status icons & counts
  *   <ul style='list-style-type: none'>
  *   <li>.iconClass   - an icon to display to the right of the notification count
+ *   <li>.iconImage   - an image to display to the left of the notification count
  *   <li>.count         - the number count of the notification status
  *   <li>.href          - href to navigate to if one clicks on the notification status icon or count
  *   </ul>
@@ -170,6 +172,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
  * <li><strong>.notification</strong>  - an <em>object</em> of containing a single notification icon & count
  *   <ul style='list-style-type: none'>
  *   <li>.iconClass   - an icon to display to the right of the notification count
+ *   <li>.iconImage   - an image to display to the left of the notification count
  *   <li>.count         - the number count of the notification status
  *   <li>.href          - href to navigate to if one clicks on the notification status icon or count
  *   </ul>
@@ -237,12 +240,12 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
       "count":3,
       "notifications":[
         {
-          "iconClass":"pficon pficon-openshift",
+          "iconImage":"img/kubernetes.svg",
           "count":1,
           "href":"#"
         },
         {
-          "iconClass":"pficon pficon-kubernetes",
+          "iconImage":"img/OpenShift-logo.svg",
           "count":2,
           "href":"#"
         }
@@ -5870,7 +5873,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
   'use strict';
 
   $templateCache.put('card/aggregate-status/aggregate-status-card.html',
-    "<div ng-if=!isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': shouldShowTopBorder, 'card-pf-aggregate-status-alt': isAltLayout}\"><h2 class=card-pf-title><a href={{status.href}} ng-if=status.href><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></a> <span ng-if=!status.href><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in status.notifications\"><a href={{notification.href}} ng-if=notification.href><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': shouldShowTopBorder}\"><h2 class=card-pf-title><span ng-if=status.iconClass class={{status.iconClass}}></span> <a ng-if=status.href href={{status.href}}><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</a> <span ng-if=!status.href><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</span></h2><div class=card-pf-body><p ng-if=\"status.notification.iconClass || status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=status.notification.href href={{status.notification.href}}><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></a> <span ng-if=!status.notification.href><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></span></span></p></div></div>"
+    "<div ng-if=!isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': shouldShowTopBorder, 'card-pf-aggregate-status-alt': isAltLayout}\"><h2 class=card-pf-title><a href={{status.href}} ng-if=status.href><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></a> <span ng-if=!status.href><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in status.notifications\"><a href={{notification.href}} ng-if=notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': shouldShowTopBorder}\"><h2 class=card-pf-title><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.iconClass class={{status.iconClass}}></span> <a ng-if=status.href href={{status.href}}><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</a> <span ng-if=!status.href><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</span></h2><div class=card-pf-body><p ng-if=\"status.notification.iconImage || status.notification.iconClass || status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=status.notification.href href={{status.notification.href}}><image ng-if=status.notification.iconImage ng-src={{status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></a> <span ng-if=!status.notification.href><image ng-if=status.notification.iconImage ng-src={{status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></span></span></p></div></div>"
   );
 
 
