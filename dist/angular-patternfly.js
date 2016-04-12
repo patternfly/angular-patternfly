@@ -1388,7 +1388,7 @@ angular.module('patternfly.charts').directive('pfEmptyChart', function () {
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function ($compile) {
+angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window", function ($compile, $window) {
   'use strict';
   return {
     restrict: 'A',
@@ -1563,6 +1563,21 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", function
         }
         setStyles();
       });
+
+      angular.element($window).bind('resize', function () {
+        setSizes();
+        redraw();
+      });
+
+      scope.$watch(
+        function () {
+          return [element[0].offsetWidth, element[0].offsetHeight].join('x');
+        },
+        function (value) {
+          setSizes();
+          redraw();
+        }
+      );
     }
   };
 }]);
