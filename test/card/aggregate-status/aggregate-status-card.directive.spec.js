@@ -196,6 +196,33 @@ describe('Directive: pfAggregateStatusCard', function() {
       //notification should not have a count
       expect(notifications.eq(0).find('span').eq(1).html()).not.toBe('6');
     });
+
+    it("should set of the iconImage value", function() {
+
+      $scope.aggStatusAlt = {
+        "title":"Providers",
+        "count":3,
+        "notifications":[
+          {
+            "iconImage":"img/kubernetes.svg",
+            "count":1,
+            "href":"#"
+          },
+          {
+            "iconImage":"img/OpenShift-logo.svg",
+            "count":2
+          }
+        ]
+      };
+
+      element = compileCard('<div pf-aggregate-status-card status="aggStatusAlt" layout="tall"></div>', $scope);
+
+      // should have the images
+      imageElements = angular.element(element).find('.card-pf-icon-image');
+      expect(imageElements.length).toBe(2);
+      expect(angular.element(imageElements[0]).attr('src')).toBe('img/kubernetes.svg');
+      expect(angular.element(imageElements[1]).attr('src')).toBe('img/OpenShift-logo.svg');
+    });
   });
 
 });

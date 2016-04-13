@@ -9,9 +9,11 @@
  * <li>.count         - the number count of the main statuses
  * <li>.href          - the href to navigate to if one clicks on the title or count
  * <li>.iconClass     - an icon to display to the left of the count
+ * <li>.iconImage     - an image to display to the left of the count
  * <li>.notifications - an array of status icons & counts
  *   <ul style='list-style-type: none'>
  *   <li>.iconClass   - an icon to display to the right of the notification count
+ *   <li>.iconImage   - an image to display to the left of the notification count
  *   <li>.count         - the number count of the notification status
  *   <li>.href          - href to navigate to if one clicks on the notification status icon or count
  *   </ul>
@@ -22,6 +24,7 @@
  * <li><strong>.notification</strong>  - an <em>object</em> of containing a single notification icon & count
  *   <ul style='list-style-type: none'>
  *   <li>.iconClass   - an icon to display to the right of the notification count
+ *   <li>.iconImage   - an image to display to the left of the notification count
  *   <li>.count         - the number count of the notification status
  *   <li>.href          - href to navigate to if one clicks on the notification status icon or count
  *   </ul>
@@ -89,12 +92,12 @@
       "count":3,
       "notifications":[
         {
-          "iconClass":"pficon pficon-openshift",
+          "iconImage":"img/kubernetes.svg",
           "count":1,
           "href":"#"
         },
         {
-          "iconClass":"pficon pficon-kubernetes",
+          "iconImage":"img/OpenShift-logo.svg",
           "count":2,
           "href":"#"
         }
