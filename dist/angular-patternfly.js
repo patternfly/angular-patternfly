@@ -1650,6 +1650,19 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
            </div>
          </div>
        </div>
+       <div class="col-md-12">
+         <div class="row">
+           <div class="col-md-6">
+             <form role="form"">
+               <div class="form-group">
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="data.dataAvailable">Data Available</input>
+                 </label>
+               </div>
+             </form>
+           </div>
+         </div>
+       </div>
      </div>
    </file>
 
@@ -1670,6 +1683,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
        }
 
        $scope.data = {
+         dataAvailable: true,
          xData: dates,
          yData0: ['Created', 12, 10,10, 62, 17, 10, 15, 13, 17, 10, 12, 10, 10, 12, 17, 16, 15, 13, 17, 10],
          yData1: ['Deleted', 10, 17, 76,14, 10, 10, 10, 10, 10, 10, 10, 17, 17, 14, 10, 10, 10, 10, 10, 10]
@@ -5911,7 +5925,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
 
   $templateCache.put('charts/line/line-chart.html',
-    "<span><div pf-c3-chart id={{lineChartId}} config=chartConfig></div></span>"
+    "<span><div pf-c3-chart id={{lineChartId}} ng-if=\"chartData.dataAvailable !== false\" config=chartConfig></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=chartConfig.size.height></div></span>"
   );
 
 
