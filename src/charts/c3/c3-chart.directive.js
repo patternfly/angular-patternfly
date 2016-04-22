@@ -91,10 +91,12 @@
             var chart;
             //generate c3 chart data
             var chartData = scope.config;
-            chartData.bindto = '#' + attrs.id;
-            chart = c3.generate(chartData);
-            if (scope.getChartCallback) {
-              scope.getChartCallback(chart);
+            if (chartData) {
+              chartData.bindto = '#' + attrs.id;
+              chart = c3.generate(chartData);
+              if (scope.getChartCallback) {
+                scope.getChartCallback(chart);
+              }
             }
           });
         }, true);
