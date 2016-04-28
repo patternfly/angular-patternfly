@@ -14,7 +14,7 @@
  * <li>.title       - (String) The title to display for the sort field
  * <li>.sortType    - (String) The sort type, 'alpha' or 'numeric'
  * </ul>
- * <li>.sortId   - (Object) Id of the current sort field
+ * <li>.currentField   - (Object) Currently selected field
  * <li>.isAscending - (boolean) Current sort direction is ascending. True for ascending, False for descending
  * <li>.onSortChange - ( function(sortId, sortDirection ) Function to call when the current sort params change
  * </ul>
