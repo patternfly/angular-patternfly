@@ -1,5 +1,5 @@
 /* =============================================================
- * bootstrap-combobox.js v1.1.6
+ * bootstrap-combobox.js v1.1.7
  * =============================================================
  * Copyright 2012 Daniel Farrell
  *
@@ -25,13 +25,13 @@
 
   var Combobox = function ( element, options ) {
     this.options = $.extend({}, $.fn.combobox.defaults, options);
+    this.template = this.options.template || this.template
     this.$source = $(element);
     this.$container = this.setup();
     this.$element = this.$container.find('input[type=text]');
     this.$target = this.$container.find('input[type=hidden]');
     this.$button = this.$container.find('.dropdown-toggle');
     this.$menu = $(this.options.menu).appendTo('body');
-    this.template = this.options.template || this.template
     this.matcher = this.options.matcher || this.matcher;
     this.sorter = this.options.sorter || this.sorter;
     this.highlighter = this.options.highlighter || this.highlighter;
@@ -97,6 +97,9 @@
 
   , transferAttributes: function() {
     this.options.placeholder = this.$source.attr('data-placeholder') || this.options.placeholder
+    if(this.options.appendId !== "undefined") {
+    	this.$element.attr('id', this.$source.attr('id') + this.options.appendId);
+    }
     this.$element.attr('placeholder', this.options.placeholder)
     this.$target.prop('name', this.$source.prop('name'))
     this.$target.val(this.$source.val())
@@ -175,9 +178,9 @@
 
   , template: function() {
       if (this.options.bsVersion == '2') {
-        return '<div class="combobox-container"><input type="hidden" /> <div class="input-append"> <input type="text" autocomplete="off" /> <span class="add-on dropdown-toggle" data-dropdown="dropdown"> <span class="caret"/> <i class="icon-remove"/> </span> </div> </div>'
+        return '<div class="combobox-container"><input type="hidden" /> <div class="input-append"> <input type="text" autocomplete="false" /> <span class="add-on dropdown-toggle" data-dropdown="dropdown"> <span class="caret"/> <i class="icon-remove"/> </span> </div> </div>'
       } else {
-        return '<div class="combobox-container"> <input type="hidden" /> <div class="input-group"> <input type="text" autocomplete="off" /> <span class="input-group-addon dropdown-toggle" data-dropdown="dropdown"> <span class="caret" /> <span class="glyphicon glyphicon-remove" /> </span> </div> </div>'
+        return '<div class="combobox-container"> <input type="hidden" /> <div class="input-group"> <input type="text" autocomplete="false" /> <span class="input-group-addon dropdown-toggle" data-dropdown="dropdown"> <span class="caret" /> <span class="glyphicon glyphicon-remove" /> </span> </div> </div>'
       }
     }
 
@@ -327,16 +330,33 @@
         case 38: // up arrow
           e.preventDefault();
           this.prev();
+          this.fixMenuScroll();
           break;
 
         case 40: // down arrow
           e.preventDefault();
           this.next();
+          this.fixMenuScroll();
           break;
       }
 
       e.stopPropagation();
     }
+
+  , fixMenuScroll: function(){
+      var active = this.$menu.find('.active');
+      if(active.length){
+          var top = active.position().top;
+          var bottom = top + active.height();
+          var scrollTop = this.$menu.scrollTop();
+          var menuHeight = this.$menu.height();
+          if(bottom > menuHeight){
+              this.$menu.scrollTop(scrollTop + bottom - menuHeight);
+          } else if(top < 0){
+              this.$menu.scrollTop(scrollTop + top);
+          }
+      }
+  }
 
   , keydown: function (e) {
       this.suppressKeyPressRepeat = ~$.inArray(e.keyCode, [40,38,9,13,27]);
@@ -351,6 +371,10 @@
   , keyup: function (e) {
       switch(e.keyCode) {
         case 40: // down arrow
+         if (!this.shown){
+           this.toggle();
+         }
+         break;
         case 39: // right arrow
         case 38: // up arrow
         case 37: // left arrow

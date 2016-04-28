@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/card/aggregate-status/aggregate-status-card.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/059ddcf/src/card/aggregate-status/aggregate-status-card.directive.js#L129" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfAggregateStatusCard</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/card/aggregate-status/aggregate-status-card.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/70ca227/src/card/aggregate-status/aggregate-status-card.directive.js#L132" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfAggregateStatusCard</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.card</code>
 </span>
 </div>
@@ -21,9 +21,11 @@
 <li>.count         - the number count of the main statuses
 <li>.href          - the href to navigate to if one clicks on the title or count
 <li>.iconClass     - an icon to display to the left of the count
+<li>.iconImage     - an image to display to the left of the count
 <li>.notifications - an array of status icons &amp; counts
   <ul style='list-style-type: none'>
   <li>.iconClass   - an icon to display to the right of the notification count
+  <li>.iconImage   - an image to display to the left of the notification count
   <li>.count         - the number count of the notification status
   <li>.href          - href to navigate to if one clicks on the notification status icon or count
   </ul>
@@ -34,6 +36,7 @@ When layout=&#39;mini&#39;, only one notification can be specified:<br>
 <li><strong>.notification</strong>  - an <em>object</em> of containing a single notification icon &amp; count
   <ul style='list-style-type: none'>
   <li>.iconClass   - an icon to display to the right of the notification count
+  <li>.iconImage   - an image to display to the left of the notification count
   <li>.count         - the number count of the notification status
   <li>.href          - href to navigate to if one clicks on the notification status icon or count
   </ul>
@@ -99,12 +102,12 @@ When layout=&#39;mini&#39;, only one notification can be specified:<br>
      "count":3,
      "notifications":[
        {
-         "iconClass":"pficon pficon-openshift",
+         "iconImage":"img/kubernetes.svg",
          "count":1,
          "href":"#"
        },
        {
-         "iconClass":"pficon pficon-kubernetes",
+         "iconImage":"img/OpenShift-logo.svg",
          "count":2,
          "href":"#"
        }
