@@ -157,9 +157,11 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
  * <li>.count         - the number count of the main statuses
  * <li>.href          - the href to navigate to if one clicks on the title or count
  * <li>.iconClass     - an icon to display to the left of the count
+ * <li>.iconImage     - an image to display to the left of the count
  * <li>.notifications - an array of status icons & counts
  *   <ul style='list-style-type: none'>
  *   <li>.iconClass   - an icon to display to the right of the notification count
+ *   <li>.iconImage   - an image to display to the left of the notification count
  *   <li>.count         - the number count of the notification status
  *   <li>.href          - href to navigate to if one clicks on the notification status icon or count
  *   </ul>
@@ -170,6 +172,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
  * <li><strong>.notification</strong>  - an <em>object</em> of containing a single notification icon & count
  *   <ul style='list-style-type: none'>
  *   <li>.iconClass   - an icon to display to the right of the notification count
+ *   <li>.iconImage   - an image to display to the left of the notification count
  *   <li>.count         - the number count of the notification status
  *   <li>.href          - href to navigate to if one clicks on the notification status icon or count
  *   </ul>
@@ -237,12 +240,12 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
       "count":3,
       "notifications":[
         {
-          "iconClass":"pficon pficon-openshift",
+          "iconImage":"img/kubernetes.svg",
           "count":1,
           "href":"#"
         },
         {
-          "iconClass":"pficon pficon-kubernetes",
+          "iconImage":"img/OpenShift-logo.svg",
           "count":2,
           "href":"#"
         }
@@ -772,10 +775,12 @@ angular.module('patternfly.card').directive('pfCard', function () {
             var chart;
             //generate c3 chart data
             var chartData = scope.config;
-            chartData.bindto = '#' + attrs.id;
-            chart = c3.generate(chartData);
-            if (scope.getChartCallback) {
-              scope.getChartCallback(chart);
+            if (chartData) {
+              chartData.bindto = '#' + attrs.id;
+              chart = c3.generate(chartData);
+              if (scope.getChartCallback) {
+                scope.getChartCallback(chart);
+              }
             }
           });
         }, true);
@@ -1647,6 +1652,19 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
            </div>
          </div>
        </div>
+       <div class="col-md-12">
+         <div class="row">
+           <div class="col-md-6">
+             <form role="form"">
+               <div class="form-group">
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="data.dataAvailable">Data Available</input>
+                 </label>
+               </div>
+             </form>
+           </div>
+         </div>
+       </div>
      </div>
    </file>
 
@@ -1667,6 +1685,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
        }
 
        $scope.data = {
+         dataAvailable: true,
          xData: dates,
          yData0: ['Created', 12, 10,10, 62, 17, 10, 15, 13, 17, 10, 12, 10, 10, 12, 17, 16, 15, 13, 17, 10],
          yData1: ['Deleted', 10, 17, 76,14, 10, 10, 10, 10, 10, 10, 10, 17, 17, 14, 10, 10, 10, 10, 10, 10]
@@ -3991,7 +4010,7 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
  * <li>.title       - (String) The title to display for the sort field
  * <li>.sortType    - (String) The sort type, 'alpha' or 'numeric'
  * </ul>
- * <li>.sortId   - (Object) Id of the current sort field
+ * <li>.currentField   - (Object) Currently selected field
  * <li>.isAscending - (boolean) Current sort direction is ascending. True for ascending, False for descending
  * <li>.onSortChange - ( function(sortId, sortDirection ) Function to call when the current sort params change
  * </ul>
@@ -5870,7 +5889,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
   'use strict';
 
   $templateCache.put('card/aggregate-status/aggregate-status-card.html',
-    "<div ng-if=!isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': shouldShowTopBorder, 'card-pf-aggregate-status-alt': isAltLayout}\"><h2 class=card-pf-title><a href={{status.href}} ng-if=status.href><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></a> <span ng-if=!status.href><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in status.notifications\"><a href={{notification.href}} ng-if=notification.href><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': shouldShowTopBorder}\"><h2 class=card-pf-title><span ng-if=status.iconClass class={{status.iconClass}}></span> <a ng-if=status.href href={{status.href}}><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</a> <span ng-if=!status.href><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</span></h2><div class=card-pf-body><p ng-if=\"status.notification.iconClass || status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=status.notification.href href={{status.notification.href}}><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></a> <span ng-if=!status.notification.href><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></span></span></p></div></div>"
+    "<div ng-if=!isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': shouldShowTopBorder, 'card-pf-aggregate-status-alt': isAltLayout}\"><h2 class=card-pf-title><a href={{status.href}} ng-if=status.href><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></a> <span ng-if=!status.href><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in status.notifications\"><a href={{notification.href}} ng-if=notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': shouldShowTopBorder}\"><h2 class=card-pf-title><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.iconClass class={{status.iconClass}}></span> <a ng-if=status.href href={{status.href}}><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</a> <span ng-if=!status.href><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</span></h2><div class=card-pf-body><p ng-if=\"status.notification.iconImage || status.notification.iconClass || status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=status.notification.href href={{status.notification.href}}><image ng-if=status.notification.iconImage ng-src={{status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></a> <span ng-if=!status.notification.href><image ng-if=status.notification.iconImage ng-src={{status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></span></span></p></div></div>"
   );
 
 
@@ -5908,7 +5927,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
 
   $templateCache.put('charts/line/line-chart.html',
-    "<span><div pf-c3-chart id={{lineChartId}} config=chartConfig></div></span>"
+    "<span><div pf-c3-chart id={{lineChartId}} ng-if=\"chartData.dataAvailable !== false\" config=chartConfig></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=chartConfig.size.height></div></span>"
   );
 
 
