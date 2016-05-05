@@ -337,6 +337,11 @@
   float: right;
 }
 
+.toolbar-pf-include-actions {
+  display: inline-block;
+  margin: 0 5px;
+}
+
 /* Utilization bar chart - Animate load */
 .utilization-bar-chart-pf .progress-bar {
   -webkit-transition: width .75s ease-in-out;

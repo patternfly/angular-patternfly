@@ -40,6 +40,7 @@
  *             <li>.isDisabled - (Boolean) set to true to disable the action
  *             <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
  *           </ul>
+ *         <li>.actionsInclude  - (File) HTML file to include for application defined buttons
  *       </ul>
  *   </ul>
  *
@@ -101,7 +102,22 @@
       </div>
     </div>
   </file>
-
+  <file name="example-actions.html">
+    <div class="dropdown primary-action">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Dropdown
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu " aria-labelledby="dropdownMenu1">
+        <li role="presentation"><a role="menuitem" tabindex="-1">Action</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1">Another action</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1">Something else here</a></li>
+        <li role="presentation" class="divider"></li>
+        <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1">Disabled link</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1">Separated link</a></li>
+      </ul>
+    </div>
+  </file>
   <file name="script.js">
   angular.module('patternfly.toolbars').controller('ViewCtrl', ['$scope', 'pfViewUtils',
     function ($scope, pfViewUtils) {
@@ -303,6 +319,7 @@
       };
 
       $scope.actionsConfig = {
+        actionsInclude: 'example-actions.html',
         primaryActions: [
           {
             name: 'Action 1',
