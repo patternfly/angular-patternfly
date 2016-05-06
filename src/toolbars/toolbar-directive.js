@@ -40,6 +40,7 @@
  *             <li>.isDisabled - (Boolean) set to true to disable the action
  *             <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
  *           </ul>
+ *         <li>.actionsInclude  - (Boolean) set to true if using the actions transclude to add custom action buttons (only available if using Angular 1.5 or later)
  *       </ul>
  *   </ul>
  *
@@ -377,7 +378,9 @@ angular.module('patternfly.toolbars').directive('pfToolbar', function () {
       config: '='
     },
     replace: true,
-    transclude: false,
+    transclude: {
+      'moreActions': '?actions'
+    },
     templateUrl: 'toolbars/toolbar.html',
     controller: function ($scope) {
       $scope.viewSelected = function (viewId) {
