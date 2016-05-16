@@ -3964,7 +3964,7 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
       selectPickerOptions: '=pfSelect'
     },
     link: function (scope, element, attrs, ngModel) {
-      var optionCollectionList, optionCollection, $render = ngModel.$render;
+      var optionCollectionList, optionCollectionExpr, optionCollection, $render = ngModel.$render;
 
       var selectpickerRefresh = function (argument) {
         scope.$applyAsync(function () {
@@ -3981,7 +3981,8 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
 
       if (attrs.ngOptions) {
         optionCollectionList = attrs.ngOptions.split('in ');
-        optionCollection = optionCollectionList[optionCollectionList.length - 1];
+        optionCollectionExpr = optionCollectionList[optionCollectionList.length - 1].split(/track by|\|/);
+        optionCollection = optionCollectionExpr[0];
 
         scope.$parent.$watchCollection(optionCollection, selectpickerRefresh);
       }
