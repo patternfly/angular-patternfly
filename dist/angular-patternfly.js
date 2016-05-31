@@ -4272,7 +4272,34 @@ angular.module('patternfly.sort').directive('pfSort', function () {
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-toolbar id="exampleToolbar" config="toolbarConfig"></div>
+        <div pf-toolbar id="exampleToolbar" config="toolbarConfig">
+         <actions>
+           <span class="dropdown primary-action" dropdown>
+             <button class="btn btn-default dropdown-toggle" dropdown-toggle type="button">
+               Menu Action
+               <span class="caret"></span>
+             </button>
+             <ul class="dropdown-menu">
+               <li role="menuitem" ng-click="optionSelected(1)">
+                 <a class="secondary-action">Option 1</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(2)">
+                 <a class="secondary-action">Option 2</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(3)">
+                 <a class="secondary-action">Option 3</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(4)">
+                 <a class="secondary-action">Option 4</a>
+               </li>
+             </ul>
+           </span>
+           <button class="btn btn-default primary-action" type="button" ng-click="doAdd()">
+             <span class="fa fa-plus"></span>
+             Add Action
+           </button>
+         </actions>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -4574,7 +4601,8 @@ angular.module('patternfly.sort').directive('pfSort', function () {
             title: 'Do something similar',
             actionFn: performAction
           }
-        ]
+        ],
+        actionsInclude: true
       };
 
       $scope.toolbarConfig = {
@@ -4587,6 +4615,13 @@ angular.module('patternfly.sort').directive('pfSort', function () {
       $scope.listConfig = {
         selectionMatchProp: 'name',
         checkDisabled: false
+      };
+
+      $scope.doAdd = function () {
+        $scope.actionsText = "Add Action\n" + $scope.actionsText;
+      };
+      $scope.optionSelected = function (option) {
+        $scope.actionsText = "Option " + option + " selected\n" + $scope.actionsText;
       };
     }
   ]);
@@ -4602,7 +4637,7 @@ angular.module('patternfly.toolbars').directive('pfToolbar', function () {
     },
     replace: true,
     transclude: {
-      'moreActions': '?actions'
+      'actions': '?'
     },
     templateUrl: 'toolbars/toolbar.html',
     controller: ["$scope", function ($scope) {
@@ -6025,7 +6060,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
     "<div class=container-fluid><div class=\"row toolbar-pf\"><div class=col-sm-12><form class=toolbar-pf-actions ng-class=\"{'no-filter-results': !config.filterConfig}\"><div pf-filter-fields id={{filterDomId}}_fields config=config.filterConfig ng-if=config.filterConfig add-filter-fn=addFilter></div><div pf-sort id={{sortDomId}} config=config.sortConfig ng-if=config.sortConfig></div><div class=\"form-group toolbar-actions\" ng-if=\"config.actionsConfig &&\n" +
     "                   ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||\n" +
     "                    (config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0) ||\n" +
-    "                    config.actionsConfig.actionsInclude)\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in config.actionsConfig.primaryActions\" title={{action.title}} ng-click=handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div ng-if=config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=moreActions></div><div class=\"dropdown dropdown-kebab-pf\" ng-if=\"config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0\"><button class=\"btn btn-link dropdown-toggle\" type=button id={{filterDomId}}_kebab data-toggle=dropdown aria-haspopup=true aria-expanded=true><span class=\"fa fa-ellipsis-v\"></span></button><ul class=dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat=\"action in config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=\"toolbar-pf-view-selector pull-right\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><ul class=list-inline><li ng-repeat=\"view in config.viewsConfig.viewsList\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}}><a><i class=\"view-selector {{view.iconClass}}\" ng-click=viewSelected(view.id)></i></a></li></ul></div></form><div pf-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->"
+    "                    config.actionsConfig.actionsInclude)\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in config.actionsConfig.primaryActions\" title={{action.title}} ng-click=handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div ng-if=config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div class=\"dropdown dropdown-kebab-pf\" ng-if=\"config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0\"><button class=\"btn btn-link dropdown-toggle\" type=button id={{filterDomId}}_kebab data-toggle=dropdown aria-haspopup=true aria-expanded=true><span class=\"fa fa-ellipsis-v\"></span></button><ul class=dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat=\"action in config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=\"toolbar-pf-view-selector pull-right\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><ul class=list-inline><li ng-repeat=\"view in config.viewsConfig.viewsList\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}}><a><i class=\"view-selector {{view.iconClass}}\" ng-click=viewSelected(view.id)></i></a></li></ul></div></form><div pf-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->"
   );
 
 }]);

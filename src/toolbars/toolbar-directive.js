@@ -49,7 +49,34 @@
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-toolbar id="exampleToolbar" config="toolbarConfig"></div>
+        <div pf-toolbar id="exampleToolbar" config="toolbarConfig">
+         <actions>
+           <span class="dropdown primary-action" dropdown>
+             <button class="btn btn-default dropdown-toggle" dropdown-toggle type="button">
+               Menu Action
+               <span class="caret"></span>
+             </button>
+             <ul class="dropdown-menu">
+               <li role="menuitem" ng-click="optionSelected(1)">
+                 <a class="secondary-action">Option 1</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(2)">
+                 <a class="secondary-action">Option 2</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(3)">
+                 <a class="secondary-action">Option 3</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(4)">
+                 <a class="secondary-action">Option 4</a>
+               </li>
+             </ul>
+           </span>
+           <button class="btn btn-default primary-action" type="button" ng-click="doAdd()">
+             <span class="fa fa-plus"></span>
+             Add Action
+           </button>
+         </actions>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -351,7 +378,8 @@
             title: 'Do something similar',
             actionFn: performAction
           }
-        ]
+        ],
+        actionsInclude: true
       };
 
       $scope.toolbarConfig = {
@@ -364,6 +392,13 @@
       $scope.listConfig = {
         selectionMatchProp: 'name',
         checkDisabled: false
+      };
+
+      $scope.doAdd = function () {
+        $scope.actionsText = "Add Action\n" + $scope.actionsText;
+      };
+      $scope.optionSelected = function (option) {
+        $scope.actionsText = "Option " + option + " selected\n" + $scope.actionsText;
       };
     }
   ]);
@@ -379,7 +414,7 @@ angular.module('patternfly.toolbars').directive('pfToolbar', function () {
     },
     replace: true,
     transclude: {
-      'moreActions': '?actions'
+      'actions': '?'
     },
     templateUrl: 'toolbars/toolbar.html',
     controller: function ($scope) {
