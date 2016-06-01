@@ -558,4 +558,26 @@ describe('Directive:  pfToolbar', function () {
     filter = element.find('.toolbar-actions');
     expect(filter.length).toBe(0);
   });
-})
+
+  it ('should add custom actions in the correct location', function () {
+    var actionBar = element.find('.toolbar-actions');
+    expect(actionBar.length).toBe(1);
+
+    var includeActions = actionBar.find('.toolbar-pf-include-actions');
+    expect(includeActions.length).toBe(0);
+
+    $scope.config.actionsConfig.actionsInclude = true;
+
+    var includeHtml = '<div pf-toolbar config="config"><actions><button class="btn btn-default add-action" type="button">Add Action</button></actions></div>';
+    compileHTML(includeHtml, $scope);
+
+    actionBar = element.find('.toolbar-actions');
+    expect(actionBar.length).toBe(1);
+
+    includeActions = actionBar.find('.toolbar-pf-include-actions');
+    expect(includeActions.length).toBe(1);
+
+    var addAction = includeActions.find('.add-action');
+    expect(addAction.length).toBe(1);
+  });
+});

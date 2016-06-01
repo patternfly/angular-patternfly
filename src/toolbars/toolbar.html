@@ -15,7 +15,7 @@
                   ng-disabled="action.isDisabled === true">
             {{action.name}}
           </button>
-          <div ng-if="config.actionsConfig.actionsInclude" pf-transclude class="toolbar-pf-include-actions" ng-tranclude="moreActions"></div>
+          <div ng-if="config.actionsConfig.actionsInclude" pf-transclude class="toolbar-pf-include-actions" ng-tranclude="actions"></div>
           <div class="dropdown  dropdown-kebab-pf" ng-if="config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0">
             <button class="btn btn-link dropdown-toggle" type="button" id="{{filterDomId}}_kebab" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="fa fa-ellipsis-v"></span>
