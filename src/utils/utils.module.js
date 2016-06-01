@@ -1,2 +1,2 @@
 
-angular.module( 'patternfly.utils', [] );
+angular.module( 'patternfly.utils', ['ui.bootstrap'] );
