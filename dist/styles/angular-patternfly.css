@@ -407,3 +407,7 @@
 .toolbar-pf-actions.no-filter-results {
   margin-bottom: 10px;
 }
+
+.drawer-pf .panel-title a {
+  cursor: pointer;
+}
