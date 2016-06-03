@@ -26,7 +26,8 @@ module.exports = function(config) {
       'src/**/*.js',
       'src/**/*.html',
       'test/utils/*.js',
-      'test/**/*.spec.js'
+      'test/**/*.spec.js',
+      'test/**/*.html'
     ],
 
     // list of files to exclude
@@ -35,7 +36,8 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
-      'src/**/*.html': 'ng-html2js'
+      'src/**/*.html': 'ng-html2js',
+      'test/**/*.html': 'ng-html2js'
     },
 
     ngHtml2JsPreprocessor: {
