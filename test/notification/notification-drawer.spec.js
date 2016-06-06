@@ -280,9 +280,9 @@ describe('Directive:  pfNotificationDrawer', function () {
       }
     ];
 
-    $scope.actionButtonClicked = false;
-    $scope.actionButtonCB = function () {
-      $scope.actionButtonClicked = true;
+    $scope.actionButtonClicked = '';
+    $scope.actionButtonCB = function (group) {
+      $scope.actionButtonClicked = group.heading;
     };
 
     //
@@ -312,7 +312,7 @@ describe('Directive:  pfNotificationDrawer', function () {
     };
 
     var htmlTmp = '<div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"' +
-                  '     action-button-title="Mark All Read" action-button-callback="actionButtonCB()" notification-groups="groups"' +
+                  '     action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"' +
                   '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
                   '     custom-scope="customScope">' +
                   '</div>';
@@ -397,15 +397,18 @@ describe('Directive:  pfNotificationDrawer', function () {
     expect(collapsedPanels.length).toBe(0);
   });
 
-  it ('should invoke the action button callback when the action buttun is clicked', function () {
-    var actionButton = element.find('.drawer-pf-action .btn-link');
+  it ('should invoke the action button callback when the action button is clicked', function () {
+    var collapseElements = element.find('.panel-collapse.collapse');
+    expect(collapseElements.length).toBe(5);
+
+    var actionButton = angular.element(collapseElements[1]).find('.drawer-pf-action .btn-link');
     expect(actionButton.length).toBe(1);
-    expect($scope.actionButtonClicked).toBeFalsy();
+    expect($scope.actionButtonClicked).toBe('');
 
     eventFire(actionButton[0], 'click');
     $scope.$digest();
 
-    expect($scope.actionButtonClicked).toBeTruthy();
+    expect($scope.actionButtonClicked).toBe('Group 2');
   });
 
   it ('should perform actions when kebab items are clicked', function () {

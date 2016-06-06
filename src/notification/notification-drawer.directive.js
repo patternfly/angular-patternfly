@@ -17,7 +17,7 @@
  * @param {string}  drawerTitle  Title to display for the drawer
  * @param {object} notificationGroups Array of notification groups to add to the drawer
  * @param {string} actionButtonTitle Text for the lower action button of the drawer (optional, if not specified there will be no action button)
- * @param {function} actionButtonCallback Callback method for the lower action button of the drawer
+ * @param {function} actionButtonCallback function(notificationGroup) Callback method for action button for each group, the notificationGroup is passed (Optional)
  * @param {string} headingInclude Include src for the heading area for each notification group, access the group via notificationGroup
  * @param {string} subheadingInclude Include src for the sub-heading area for each notification group, access the group via notificationGroup
  * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the group via notification
@@ -44,7 +44,7 @@
      <div class="layout-pf-fixed">
        <div class="navbar-pf-vertical">
          <div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"
-              action-button-title="Mark All Read" action-button-callback="actionButtonCB()" notification-groups="groups"
+              action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"
               heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
               custom-scope="customScope">
          </div>
@@ -365,8 +365,8 @@
        ];
 
        $scope.actionsText = "";
-       $scope.actionButtonCB = function () {
-         $scope.actionsText = "Action Button clicked!" + "\n" + $scope.actionsText;
+       $scope.actionButtonCB = function (group) {
+         $scope.actionsText = "Action Button clicked: " + group.heading + "\n" + $scope.actionsText;
        };
 
        //
@@ -412,7 +412,7 @@ angular.module('patternfly.notification').directive('pfNotificationDrawer', func
       drawerTitle: '@',
       notificationGroups: '=',
       actionButtonTitle: '@',
-      actionButtonCallback: '&?',
+      actionButtonCallback: '=?',
       headingInclude: '@',
       subheadingInclude: '@',
       notificationBodyInclude: '@',
