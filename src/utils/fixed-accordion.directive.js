@@ -3,6 +3,7 @@
  * @name patternfly.utils:pfFixedAccordion
  * @restrict A
  * @element ANY
+ * @param {string} scrollSelector specifies the selector to be used to find the element that should scroll (optional, the entire collapse area scrolls by default)
  * @param {string} groupHeight Height to set for accordion group (optional)
  * @param {string} groupClass Class to set for accordion group (optional)
  *
@@ -55,12 +56,13 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
   return {
     restrict: 'A',
     scope: {
+      scrollSelector: '@',
       groupHeight: '@',
       groupClass: '@'
     },
-    link: function ($scope, $element) {
+    link: function ($scope, $element, $attrs) {
       var setCollapseHeights = function () {
-        var height, openPanel, contentHeight, bodyHeight, overflowY = 'hidden', parentElement = $element.find('.panel-group');
+        var componentSelector, height, openPanel, contentHeight, bodyHeight, overflowY = 'hidden', parentElement = $element.find('.panel-group');
 
         height = parentElement.height();
 
@@ -90,17 +92,40 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
           overflowY = 'auto';
         }
 
-        // Set the max-height for the collapse panels
-        parentElement.find('.panel-collapse').each(function (index, collapsePanel) {
-          // set the max-height
-          angular.element(collapsePanel).css('max-height', bodyHeight + 'px');
-          angular.element(collapsePanel).css('overflow-y', 'auto');
-        });
-
         // Reopen the initially opened panel
         if (openPanel && openPanel.length > 0) {
           openPanel.addClass("in");
         }
+
+        $timeout(function () {
+          // Set the max-height for the fixed height components
+          parentElement.find('.panel-collapse').each(function (index, collapsePanel) {
+            var $panel = angular.element(collapsePanel);
+            var scrollElement = $panel;
+            var innerHeight = 0;
+            var selected;
+            var $sibling;
+
+            if (angular.isDefined($scope.scrollSelector)) {
+              selected = angular.element($panel.find($scope.scrollSelector));
+              if (selected.length === 1) {
+                scrollElement = angular.element(selected[0]);
+                $panel.children().each(function (j, sibling) {
+                  if (sibling !== scrollElement[0]) {
+                    $sibling = angular.element(sibling);
+                    innerHeight += $sibling.prop('offsetHeight');
+                    innerHeight += parseInt($sibling.css('margin-top'));
+                    innerHeight += parseInt($sibling.css('margin-bottom'));
+                  }
+                });
+              }
+            }
+
+            // set the max-height
+            angular.element(scrollElement).css('max-height', (bodyHeight - innerHeight) + 'px');
+            angular.element(scrollElement).css('overflow-y', 'auto');
+          });
+        });
 
         angular.element(parentElement).css('overflow-y', overflowY);
       };

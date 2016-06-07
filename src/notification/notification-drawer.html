@@ -2,7 +2,7 @@
   <div class="drawer-pf-title">
     <h3 class="text-center">{{drawerTitle}}</h3>
   </div>
-  <div pf-fixed-accordion>
+  <div pf-fixed-accordion scroll-selector=".panel-body">
     <div class="panel-group">
       <div class="panel panel-default" ng-repeat="notificationGroup in notificationGroups track by $index">
         <div class="panel-heading">
@@ -20,11 +20,11 @@
               <span class="spinner spinner-xs spinner-inline"></span> Loading More
             </div>
           </div>
+          <div class="drawer-pf-action" ng-if="actionButtonTitle">
+            <a class="btn btn-link btn-block" ng-click="actionButtonCallback(notificationGroup)">{{actionButtonTitle}}</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="drawer-pf-action" ng-if="actionButtonTitle">
-    <a class="btn btn-link" ng-click="actionButtonCallback()">{{actionButtonTitle}}</a>
   </div>
 </div>
