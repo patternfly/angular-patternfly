@@ -37,7 +37,7 @@ angular.module('patternfly.form', []);
  *   Notification module for patternfly.
  *
  */
-angular.module('patternfly.notification', []);
+angular.module('patternfly.notification', ['patternfly.utils']);
 ;/**
  * @name  patternfly
  *
@@ -79,7 +79,7 @@ angular.module('patternfly.toolbars', [
   'patternfly.sort',
   'patternfly.views']);
 ;
-angular.module( 'patternfly.utils', [] );
+angular.module( 'patternfly.utils', ['ui.bootstrap'] );
 ;/**
  * @name  patternfly
  *
@@ -3637,6 +3637,468 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
   };
 });
 ;/**
+ * @ngdoc directive
+ * @name patternfly.notification.directive:pfNotificationDrawer
+ *
+ * @description
+ *   Directive for rendering a notification drawer. This provides a common mechanism to handle how the notification
+ *   drawer should look and behave without mandating the look of the notification group heading or notification body.
+ *   <br><br>
+ *   An array of notification groups must be passed to create each group in the drawer. Each notification
+ *   group must include an array of notifications to be shown for that group, the array MUST be called 'notifications'.
+ *   You must provide the source for the heading, sub-heading, and notification body to show the content you desire for each.
+ *   Pass a customScope object containing any scope variables/functions you need to access from the included source, access these
+ *   via hanlders.<your handler> in your included source.
+ *   <br><br>
+ *
+ * @param {boolean} drawerHidden Flag if the drawer is currently hidden
+ * @param {string}  drawerTitle  Title to display for the drawer
+ * @param {object} notificationGroups Array of notification groups to add to the drawer
+ * @param {string} actionButtonTitle Text for the lower action button of the drawer (optional, if not specified there will be no action button)
+ * @param {function} actionButtonCallback function(notificationGroup) Callback method for action button for each group, the notificationGroup is passed (Optional)
+ * @param {string} headingInclude Include src for the heading area for each notification group, access the group via notificationGroup
+ * @param {string} subheadingInclude Include src for the sub-heading area for each notification group, access the group via notificationGroup
+ * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the group via notification
+ * @param {object} customScope Object containing any variables/functions used by the included src, access via customScope.<xxx>
+ *
+ * @example
+ <example module="patternfly.notification" deps="patternfly.utils, patternfly.filters, patternfly.sort, patternfly.views">
+ <file name="index.html">
+   <div ng-controller="DrawerCtrl" class="row example-container">
+     <div class="col-md-12 pre-demo-text">
+       <label>Click the notifications indicator to show the Notification Drawer: </label>
+     </div>
+     <div class="navbar-pf-vertical">
+       <nav class="collapse navbar-collapse">
+         <ul class="nav navbar-nav navbar-left navbar-iconic">
+           <li class="drawer-pf-trigger dropdown">
+             <a class="nav-item-iconic drawer-pf-trigger-icon" ng-click="toggleShowDrawer()">
+               <span class="fa fa-bell" title="Notifications"></span>
+             </a>
+           </li>
+         </ul>
+       </nav>
+     </div>
+     <div class="layout-pf-fixed">
+       <div class="navbar-pf-vertical">
+         <div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"
+              action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"
+              heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
+              custom-scope="customScope">
+         </div>
+       </div>
+     </div>
+     <div class="col-md-12">
+       <label class="actions-label">Actions: </label>
+     </div>
+     <div class="col-md-12">
+       <textarea rows="3" class="col-md-12">{{actionsText}}</textarea>
+     </div>
+   </div>
+ </file>
+ <file name="heading.html">
+   {{notificationGroup.heading}}
+ </file>
+ <file name="subheading.html">
+   {{notificationGroup.subHeading}}
+ </file>
+ <file name="notification-body.html">
+   <div class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
+     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+       <span class="fa fa-ellipsis-v"></span>
+     </button>
+     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
+       <li ng-repeat="action in notification.actions"
+           role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
+           ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
+         <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="customScope.handleAction(notification, action)">
+           {{action.name}}
+         </a>
+       </li>
+     </ul>
+   </div>
+   <span ng-if="notification.status" class="{{'pull-left ' + customScope.getNotficationStatusIconClass(notification)}}"></span>
+   <span class="drawer-pf-notification-message">{{notification.message}}</span>
+   <div class="drawer-pf-notification-info">
+     <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
+     <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
+   </div>
+ </file>
+ <file name="script.js">
+   angular.module('patternfly.notification').controller('DrawerCtrl', ['$scope',
+     function ($scope) {
+       var currentTime = (new Date()).getTime();
+       $scope.hideDrawer = true;
+       $scope.toggleShowDrawer = function () {
+         $scope.hideDrawer = !$scope.hideDrawer;
+       };
+
+       var menuActions = [
+          {
+            name: 'Action',
+            title: 'Perform an action'
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else'
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: ''
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something'
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar'
+          }
+        ];
+
+
+       $scope.groups = [
+         {
+           heading: "Notification Tab 1",
+           subHeading: "5 New Events",
+           notifications: [
+             {
+               unread: true,
+               message: "A New Event! Huzzah! Bold",
+               status: 'info',
+               actions: menuActions,
+               timeStamp: currentTime - (1 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'ok',
+               actions: menuActions,
+               timeStamp: currentTime - (2 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'warning',
+               actions: menuActions,
+               timeStamp: currentTime - (10 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'error',
+               actions: menuActions,
+               timeStamp: currentTime - (12 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "A New Event! Huzzah! Bold",
+               status: 'info',
+               actions: menuActions,
+               timeStamp: currentTime - (1 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'error',
+               actions: menuActions,
+               timeStamp: currentTime - (2 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'ok',
+               actions: menuActions,
+               timeStamp: currentTime - (10 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'warning',
+               actions: menuActions,
+               timeStamp: currentTime - (12 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'info',
+               actions: menuActions,
+               timeStamp: currentTime - (240 * 60 * 60 * 1000)
+             }
+           ],
+           isLoading: true
+         },
+         {
+           heading: "Notification Tab 2",
+           subHeading: "3 New Events",
+           notifications: [
+             {
+               unread: true,
+               message: "A New Event! Huzzah! Bold",
+               status: 'info',
+               actions: menuActions,
+               timeStamp: currentTime - (1 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'error',
+               actions: menuActions,
+               timeStamp: currentTime - (2 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'warning',
+               actions: menuActions,
+               timeStamp: currentTime - (10 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'ok',
+               actions: menuActions,
+               timeStamp: currentTime - (12 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'warning',
+               actions: menuActions,
+               timeStamp: currentTime - (240 * 60 * 60 * 1000)
+             }
+           ]
+         },
+         {
+           heading: "Notification Tab 3",
+           subHeading: "3 New Events",
+           notifications: [
+             {
+               unread: true,
+               message: "A New Event! Huzzah! Bold",
+               status: 'ok',
+               actions: menuActions,
+               timeStamp: currentTime - (1 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'warning',
+               actions: menuActions,
+               timeStamp: currentTime - (2 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'info',
+               actions: menuActions,
+               timeStamp: currentTime - (10 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'ok',
+               actions: menuActions,
+               timeStamp: currentTime - (12 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'error',
+               actions: menuActions,
+               timeStamp: currentTime - (240 * 60 * 60 * 1000)
+             }
+           ]
+         },
+         {
+           heading: "Notification Tab 4",
+           subHeading: "3 New Events",
+           notifications: [
+             {
+               unread: true,
+               message: "A New Event! Huzzah! Bold",
+               status: 'warning',
+               actions: menuActions,
+               timeStamp: currentTime - (1 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'ok',
+               actions: menuActions,
+               timeStamp: currentTime - (2 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'ok',
+               actions: menuActions,
+               timeStamp: currentTime - (10 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'error',
+               actions: menuActions,
+               timeStamp: currentTime - (12 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'info',
+               actions: menuActions,
+               timeStamp: currentTime - (240 * 60 * 60 * 1000)
+             }
+           ]
+         },
+         {
+           heading: "Notification Tab 5",
+           subHeading: "3 New Events",
+           notifications: [
+             {
+               unread: true,
+               message: "A New Event! Huzzah! Bold",
+               status: 'error',
+               actions: menuActions,
+               timeStamp: currentTime - (1 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'error',
+               actions: menuActions,
+               timeStamp: currentTime - (2 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'warning',
+               actions: menuActions,
+               timeStamp: currentTime - (10 * 60 * 60 * 1000)
+             },
+             {
+               unread: false,
+               message: "Another Event Notification",
+               status: 'warning',
+               actions: menuActions,
+               timeStamp: currentTime - (12 * 60 * 60 * 1000)
+             },
+             {
+               unread: true,
+               message: "Another Event Notification",
+               status: 'error',
+               actions: menuActions,
+               timeStamp: currentTime - (240 * 60 * 60 * 1000)
+             }
+           ]
+         }
+       ];
+
+       $scope.actionsText = "";
+       $scope.actionButtonCB = function (group) {
+         $scope.actionsText = "Action Button clicked: " + group.heading + "\n" + $scope.actionsText;
+       };
+
+       //
+       // Define customScope to contain anything that needs to be accessed from the included source
+       // html files (heading, subheading, or notificaton body).
+       //
+
+       $scope.customScope = {};
+       $scope.customScope.getNotficationStatusIconClass = function (notification) {
+         var retClass = '';
+         if (notification && notification.status) {
+           if (notification.status === 'info') {
+             retClass = "pficon pficon-info";
+           } else if (notification.status === 'error') {
+             retClass = "pficon pficon-error-circle-o";
+           } else if (notification.status === 'warning') {
+             retClass = "pficon pficon-warning-triangle-o";
+           } else if (notification.status === 'ok') {
+             retClass = "pficon pficon-ok";
+           }
+         }
+         return retClass;
+       };
+       $scope.customScope.handleAction = function (notification, action) {
+         if (action.isDisabled) {
+           return;
+         }
+         var newText = notification.message + " - " + action.name;
+         $scope.actionsText = newText + "\n" + $scope.actionsText;
+       };
+
+     }
+   ]);
+ </file>
+</example>
+*/
+angular.module('patternfly.notification').directive('pfNotificationDrawer', ["$window", "$timeout", "$document", function ($window, $timeout, $document) {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      drawerHidden: '=?',
+      drawerTitle: '@',
+      notificationGroups: '=',
+      actionButtonTitle: '@',
+      actionButtonCallback: '=?',
+      headingInclude: '@',
+      subheadingInclude: '@',
+      notificationBodyInclude: '@',
+      customScope: '=?'
+    },
+    templateUrl: 'notification/notification-drawer.html',
+    link: function (scope, element) {
+
+      scope.$watch('notificationGroups', function () {
+        var openFound = false;
+        scope.notificationGroups.forEach(function (group) {
+          if (group.open) {
+            if (openFound) {
+              group.open = false;
+            } else {
+              openFound = true;
+            }
+          }
+        });
+      });
+
+      scope.$watch('drawerHidden', function () {
+        $timeout(function () {
+          angular.element($window).triggerHandler('resize');
+        }, 100);
+      });
+
+      scope.toggleCollapse = function (selectedGroup) {
+        if (selectedGroup.open) {
+          selectedGroup.open = false;
+        } else {
+          scope.notificationGroups.forEach(function (group) {
+            group.open = false;
+          });
+          selectedGroup.open = true;
+        }
+      };
+
+      if (scope.groupHeight) {
+        element.find('.panel-group').css("height", scope.groupHeight);
+      }
+      if (scope.groupClass) {
+        element.find('.panel-group').addClass(scope.groupClass);
+      }
+    }
+  };
+}]);
+;/**
  * @ngdoc service
  * @name patternfly.notification.Notification
  * @requires $rootScope
@@ -3964,7 +4426,7 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
       selectPickerOptions: '=pfSelect'
     },
     link: function (scope, element, attrs, ngModel) {
-      var optionCollectionList, optionCollection, $render = ngModel.$render;
+      var optionCollectionList, optionCollectionExpr, optionCollection, $render = ngModel.$render;
 
       var selectpickerRefresh = function (argument) {
         scope.$applyAsync(function () {
@@ -3981,7 +4443,8 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
 
       if (attrs.ngOptions) {
         optionCollectionList = attrs.ngOptions.split('in ');
-        optionCollection = optionCollectionList[optionCollectionList.length - 1];
+        optionCollectionExpr = optionCollectionList[optionCollectionList.length - 1].split(/track by|\|/);
+        optionCollection = optionCollectionExpr[0];
 
         scope.$parent.$watchCollection(optionCollection, selectpickerRefresh);
       }
@@ -4271,7 +4734,34 @@ angular.module('patternfly.sort').directive('pfSort', function () {
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-toolbar id="exampleToolbar" config="toolbarConfig"></div>
+        <div pf-toolbar id="exampleToolbar" config="toolbarConfig">
+         <actions>
+           <span class="dropdown primary-action" dropdown>
+             <button class="btn btn-default dropdown-toggle" dropdown-toggle type="button">
+               Menu Action
+               <span class="caret"></span>
+             </button>
+             <ul class="dropdown-menu">
+               <li role="menuitem" ng-click="optionSelected(1)">
+                 <a class="secondary-action">Option 1</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(2)">
+                 <a class="secondary-action">Option 2</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(3)">
+                 <a class="secondary-action">Option 3</a>
+               </li>
+               <li role="menuitem" ng-click="optionSelected(4)">
+                 <a class="secondary-action">Option 4</a>
+               </li>
+             </ul>
+           </span>
+           <button class="btn btn-default primary-action" type="button" ng-click="doAdd()">
+             <span class="fa fa-plus"></span>
+             Add Action
+           </button>
+         </actions>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -4573,7 +5063,8 @@ angular.module('patternfly.sort').directive('pfSort', function () {
             title: 'Do something similar',
             actionFn: performAction
           }
-        ]
+        ],
+        actionsInclude: true
       };
 
       $scope.toolbarConfig = {
@@ -4586,6 +5077,13 @@ angular.module('patternfly.sort').directive('pfSort', function () {
       $scope.listConfig = {
         selectionMatchProp: 'name',
         checkDisabled: false
+      };
+
+      $scope.doAdd = function () {
+        $scope.actionsText = "Add Action\n" + $scope.actionsText;
+      };
+      $scope.optionSelected = function (option) {
+        $scope.actionsText = "Option " + option + " selected\n" + $scope.actionsText;
       };
     }
   ]);
@@ -4601,7 +5099,7 @@ angular.module('patternfly.toolbars').directive('pfToolbar', function () {
     },
     replace: true,
     transclude: {
-      'moreActions': '?actions'
+      'actions': '?'
     },
     templateUrl: 'toolbars/toolbar.html',
     controller: ["$scope", function ($scope) {
@@ -4660,6 +5158,156 @@ angular.module('patternfly.toolbars').directive('pfToolbar', function () {
     }
   };
 });
+;/**
+ * @ngdoc directive
+ * @name patternfly.utils:pfFixedAccordion
+ * @restrict A
+ * @element ANY
+ * @param {string} scrollSelector specifies the selector to be used to find the element that should scroll (optional, the entire collapse area scrolls by default)
+ * @param {string} groupHeight Height to set for accordion group (optional)
+ * @param {string} groupClass Class to set for accordion group (optional)
+ *
+ * @description
+ *   Directive for setting a ui-boostrap accordion to use a fixed height (collapse elements scroll when necessary)
+ *
+ * @example
+ <example module="patternfly.utils" deps="ui.bootstrap">
+ <file name="index.html">
+ <div class="row example-container">
+   <div class="col-md-4">
+     <accordion  pf-fixed-accordion  group-height="350px" close-others="true">
+       <accordion-group is-open="false" heading="Lorem ipsum">
+         Praesent sagittis est et arcu fringilla placerat. Cras erat ante, dapibus non mauris ac, volutpat sollicitudin ligula. Morbi gravida nisl vel risus tempor, sit amet luctus erat tempus. Curabitur blandit sem non pretium bibendum. Donec eleifend non turpis vitae vestibulum. Vestibulum ut sem ac nunc posuere blandit sed porta lorem. Cras rutrum velit vel leo iaculis imperdiet.
+       </accordion-group>
+       <accordion-group is-open="false" heading="Dolor sit amet">
+         Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.
+       </accordion-group>
+       <accordion-group is-open="false" heading="Consectetur">
+         Curabitur nisl quam, interdum a venenatis a, consequat a ligula. Nunc nec lorem in erat rhoncus lacinia at ac orci. Sed nec augue congue, vehicula justo quis, venenatis turpis. Nunc quis consectetur purus. Nam vitae viverra lacus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eu augue felis. Maecenas in dignissim purus, quis pulvinar lectus. Vivamus euismod ultrices diam, in mattis nibh.
+       </accordion-group>
+       <accordion-group is-open="false" heading="Adipisicing elit">
+         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+       </accordion-group>
+       <accordion-group is-open="false" heading="Suspendisse lectus tortor">
+         Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.
+       </accordion-group>
+       <accordion-group is-open="false" heading="Velit mauris">
+         Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.
+       </accordion-group>
+       <accordion-group is-open="false" heading="Aliquam convallis">
+         Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus, felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.
+       </accordion-group>
+       <accordion-group is-open="false" heading="Vulputate dictum">
+         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at ante. Mauris eleifend, quam a vulputate dictum, massa quam dapibus leo, eget vulputate orci purus ut lorem. In fringilla mi in ligula. Pellentesque aliquam quam vel dolor. Nunc adipiscing. Sed quam odio, tempus ac, aliquam molestie, varius ac, tellus. Vestibulum ut nulla aliquam risus rutrum interdum. Pellentesque lorem. Curabitur sit amet erat quis risus feugiat viverra. Pellentesque augue justo, sagittis et, lacinia at, venenatis non, arcu. Nunc nec libero. In cursus dictum risus. Etiam tristique nisl a nulla. Ut a orci. Curabitur dolor nunc, egestas at, accumsan at, malesuada nec, magna.
+       </accordion-group>
+     </accordion>
+   </div>
+ </div>
+ </file>
+
+ <file name="script.js">
+ angular.module('patternfly.utils').controller( 'AccordionCntrl', function($scope) {
+ });
+ </file>
+ </example>
+ */
+angular.module('patternfly.utils').directive('pfFixedAccordion', ["$window", "$timeout", function ($window, $timeout) {
+  'use strict';
+  return {
+    restrict: 'A',
+    scope: {
+      scrollSelector: '@',
+      groupHeight: '@',
+      groupClass: '@'
+    },
+    link: function ($scope, $element, $attrs) {
+      var setCollapseHeights = function () {
+        var componentSelector, height, openPanel, contentHeight, bodyHeight, overflowY = 'hidden', parentElement = $element.find('.panel-group');
+
+        height = parentElement.height();
+
+        // Close any open panel
+        openPanel = parentElement.find('.collapse.in');
+        if (openPanel && openPanel.length > 0) {
+          openPanel.removeClass('in');
+        }
+
+        // Determine the necessary height for the closed content
+        contentHeight = 0;
+        parentElement.children().each(function (index, groupHeading) {
+          var headingElement = angular.element(groupHeading);
+          contentHeight += headingElement.prop('offsetHeight');
+          contentHeight += parseInt(headingElement.css('margin-top'));
+          contentHeight += parseInt(headingElement.css('margin-bottom'));
+        });
+
+        // Determine the height remaining for opened collapse panels
+        bodyHeight = height - contentHeight;
+
+        // Make sure we have enough height to be able to scroll the contents if necessary
+        if (bodyHeight < 25) {
+          bodyHeight = 25;
+
+          // Allow the parent to scroll so the child elements are accessible
+          overflowY = 'auto';
+        }
+
+        // Reopen the initially opened panel
+        if (openPanel && openPanel.length > 0) {
+          openPanel.addClass("in");
+        }
+
+        $timeout(function () {
+          // Set the max-height for the fixed height components
+          parentElement.find('.panel-collapse').each(function (index, collapsePanel) {
+            var $panel = angular.element(collapsePanel);
+            var scrollElement = $panel;
+            var innerHeight = 0;
+            var selected;
+            var $sibling;
+
+            if (angular.isDefined($scope.scrollSelector)) {
+              selected = angular.element($panel.find($scope.scrollSelector));
+              if (selected.length === 1) {
+                scrollElement = angular.element(selected[0]);
+                $panel.children().each(function (j, sibling) {
+                  if (sibling !== scrollElement[0]) {
+                    $sibling = angular.element(sibling);
+                    innerHeight += $sibling.prop('offsetHeight');
+                    innerHeight += parseInt($sibling.css('margin-top'));
+                    innerHeight += parseInt($sibling.css('margin-bottom'));
+                  }
+                });
+              }
+            }
+
+            // set the max-height
+            angular.element(scrollElement).css('max-height', (bodyHeight - innerHeight) + 'px');
+            angular.element(scrollElement).css('overflow-y', 'auto');
+          });
+        });
+
+        angular.element(parentElement).css('overflow-y', overflowY);
+      };
+
+      if ($scope.groupHeight) {
+        $element.find('.panel-group').css("height", $scope.groupHeight);
+      }
+      if ($scope.groupClass) {
+        $element.find('.panel-group').addClass($scope.groupClass);
+      }
+
+      $timeout(function () {
+        setCollapseHeights();
+      }, 100);
+
+      // Update on window resizing
+      angular.element($window).bind('resize', function () {
+        setCollapseHeights();
+      });
+    }
+  };
+}]);
 ;
 /**
  * @ngdoc directive
@@ -5999,6 +6647,11 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
   );
 
 
+  $templateCache.put('notification/notification-drawer.html',
+    "<div class=drawer-pf ng-class=\"{hide: drawerHidden}\"><div class=drawer-pf-title><h3 class=text-center>{{drawerTitle}}</h3></div><div pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-click=toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=headingInclude></a></h4><span class=panel-counter ng-include src=subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open}\"><div class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div class=drawer-pf-action ng-if=actionButtonTitle><a class=\"btn btn-link btn-block\" ng-click=actionButtonCallback(notificationGroup)>{{actionButtonTitle}}</a></div></div></div></div></div></div>"
+  );
+
+
   $templateCache.put('notification/notification-list.html',
     "<div data-ng-show=\"notifications.data.length > 0\"><div ng-repeat=\"notification in notifications.data\"><pf-inline-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-inline-notification></div></div>"
   );
@@ -6024,7 +6677,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
     "<div class=container-fluid><div class=\"row toolbar-pf\"><div class=col-sm-12><form class=toolbar-pf-actions ng-class=\"{'no-filter-results': !config.filterConfig}\"><div pf-filter-fields id={{filterDomId}}_fields config=config.filterConfig ng-if=config.filterConfig add-filter-fn=addFilter></div><div pf-sort id={{sortDomId}} config=config.sortConfig ng-if=config.sortConfig></div><div class=\"form-group toolbar-actions\" ng-if=\"config.actionsConfig &&\n" +
     "                   ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||\n" +
     "                    (config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0) ||\n" +
-    "                    config.actionsConfig.actionsInclude)\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in config.actionsConfig.primaryActions\" title={{action.title}} ng-click=handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div ng-if=config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=moreActions></div><div class=\"dropdown dropdown-kebab-pf\" ng-if=\"config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0\"><button class=\"btn btn-link dropdown-toggle\" type=button id={{filterDomId}}_kebab data-toggle=dropdown aria-haspopup=true aria-expanded=true><span class=\"fa fa-ellipsis-v\"></span></button><ul class=dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat=\"action in config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=\"toolbar-pf-view-selector pull-right\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><ul class=list-inline><li ng-repeat=\"view in config.viewsConfig.viewsList\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}}><a><i class=\"view-selector {{view.iconClass}}\" ng-click=viewSelected(view.id)></i></a></li></ul></div></form><div pf-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->"
+    "                    config.actionsConfig.actionsInclude)\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in config.actionsConfig.primaryActions\" title={{action.title}} ng-click=handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div ng-if=config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div class=\"dropdown dropdown-kebab-pf\" ng-if=\"config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0\"><button class=\"btn btn-link dropdown-toggle\" type=button id={{filterDomId}}_kebab data-toggle=dropdown aria-haspopup=true aria-expanded=true><span class=\"fa fa-ellipsis-v\"></span></button><ul class=dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat=\"action in config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=\"toolbar-pf-view-selector pull-right\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><ul class=list-inline><li ng-repeat=\"view in config.viewsConfig.viewsList\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}}><a><i class=\"view-selector {{view.iconClass}}\" ng-click=viewSelected(view.id)></i></a></li></ul></div></form><div pf-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->"
   );
 
 }]);
