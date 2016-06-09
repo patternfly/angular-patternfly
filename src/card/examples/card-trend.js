@@ -34,11 +34,11 @@
 
  <file name="index.html">
    <div ng-controller="ChartCtrl">
-     <label class="label-title">Card With Single Trend Chart</label>
+     <label class="label-title">Card With Single Trend</label>
      <div pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
        <div pf-trends-chart config="configSingle" chart-data="dataSingle"></div>
      </div>
-     <label class="label-title">Card With Multiple Trends</label>
+     <label class="label-title">Card with Multiple Trends</label>
      <div pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
           show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
        <div pf-trends-chart config="configVirtual" chart-data="dataVirtual"></div>
