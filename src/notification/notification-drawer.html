@@ -4,7 +4,7 @@
   </div>
   <div pf-fixed-accordion scroll-selector=".panel-body">
     <div class="panel-group">
-      <div class="panel panel-default" ng-repeat="notificationGroup in notificationGroups track by $index">
+      <div class="panel panel-default" ng-repeat="notificationGroup in notificationGroups track by $index" ng-class="{'panel-open': notificationGroup.open}">
         <div class="panel-heading">
           <h4 class="panel-title">
             <a ng-click="toggleCollapse(notificationGroup)" ng-class="{collapsed: !notificationGroup.open}" ng-include src="headingInclude"></a>
