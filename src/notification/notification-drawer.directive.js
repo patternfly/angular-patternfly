@@ -18,9 +18,11 @@
  * @param {object} notificationGroups Array of notification groups to add to the drawer
  * @param {string} actionButtonTitle Text for the lower action button of the drawer (optional, if not specified there will be no action button)
  * @param {function} actionButtonCallback function(notificationGroup) Callback method for action button for each group, the notificationGroup is passed (Optional)
+ * @param {string} titleInclude Include src for the title area for the notification drawer, use this to customize the drawer title area
  * @param {string} headingInclude Include src for the heading area for each notification group, access the group via notificationGroup
  * @param {string} subheadingInclude Include src for the sub-heading area for each notification group, access the group via notificationGroup
- * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the group via notification
+ * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the notification via notification
+ * @param {string} notificationFooterInclude Include src for the notification footer for each notification, access the notification via notification
  * @param {object} customScope Object containing any variables/functions used by the included src, access via customScope.<xxx>
  *
  * @example
@@ -46,7 +48,7 @@
          <div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"
               action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"
               heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
-              custom-scope="customScope">
+              notification-footer-include="notification-footer.html" custom-scope="customScope">
          </div>
        </div>
      </div>
@@ -63,6 +65,12 @@
  </file>
  <file name="subheading.html">
    {{notificationGroup.subHeading}}
+ </file>
+ <file name="notification-footer.html">
+   <a class="btn btn-link btn-block" role="button" ng-click="customScope.clearAll(notificationGroup)">
+     <span class="pficon pficon-close"></span>
+     <span> Clear All</span>
+   </a>
  </file>
  <file name="notification-body.html">
    <div class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
@@ -397,6 +405,10 @@
          var newText = notification.message + " - " + action.name;
          $scope.actionsText = newText + "\n" + $scope.actionsText;
        };
+       $scope.customScope.clearAll = function (group) {
+         var newText = group.heading + " - Clear All";
+         $scope.actionsText = newText + "\n" + $scope.actionsText;
+       };
 
      }
    ]);
@@ -413,9 +425,11 @@ angular.module('patternfly.notification').directive('pfNotificationDrawer', func
       notificationGroups: '=',
       actionButtonTitle: '@',
       actionButtonCallback: '=?',
+      titleInclude: '@',
       headingInclude: '@',
       subheadingInclude: '@',
       notificationBodyInclude: '@',
+      notificationFooterInclude: '@',
       customScope: '=?'
     },
     templateUrl: 'notification/notification-drawer.html',

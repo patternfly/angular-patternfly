@@ -7,8 +7,9 @@ describe('Directive:  pfNotificationDrawer', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.notification', 'patternfly.utils', 'notification/notification-drawer.html',
-           'test/notification/heading.html', 'test/notification/subheading.html', 'test/notification/notification-body.html');
+    module('patternfly.notification', 'patternfly.utils', 'notification/notification-drawer.html', 'test/notification/title.html',
+           'test/notification/heading.html', 'test/notification/subheading.html', 'test/notification/notification-body.html',
+           'test/notification/notification-footer.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -307,14 +308,16 @@ describe('Directive:  pfNotificationDrawer', function () {
       return retClass;
     };
     $scope.actionPerformed = undefined;
-    $scope.customScope.handleAction = function (notification, action) {
+    $scope.actionItem = undefined;
+    $scope.customScope.handleAction = function (item, action) {
+      $scope.actionItem = item ;
       $scope.actionPerformed = action;
     };
 
-    var htmlTmp = '<div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"' +
+    var htmlTmp = '<div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
                   '     action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"' +
                   '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
-                  '     custom-scope="customScope">' +
+                  '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
                   '</div>';
 
       compileHTML(htmlTmp, $scope);
@@ -324,6 +327,9 @@ describe('Directive:  pfNotificationDrawer', function () {
     var title = element.find('.drawer-pf-title .text-center');
     expect(title.length).toBe(1);
     expect(title.text()).toBe("Notifications Drawer");
+
+    var customTitle = element.find('.drawer-pf-title .title-class');
+    expect(customTitle.length).toBe(1);
   });
 
   it('should have the correct headings', function () {
@@ -344,6 +350,20 @@ describe('Directive:  pfNotificationDrawer', function () {
     expect(angular.element(subheading[2]).text()).toBe("3 New Events");
     expect(angular.element(subheading[3]).text()).toBe("4 New Events");
     expect(angular.element(subheading[4]).text()).toBe("5 New Events");
+  });
+
+  it('should have the correct notification footer', function () {
+    var footers = element.find('.footer-class');
+    expect(footers.length).toBe(5);
+
+    expect($scope.actionPerformed).toBeUndefined();
+    expect($scope.actionItem).toBeUndefined();
+
+    eventFire(footers[2], 'click');
+    $scope.$digest();
+
+    expect($scope.actionPerformed).toBe('Clear All');
+    expect($scope.actionItem.heading).toBe('Group 3');
   });
 
   it('should have the correct status icons', function () {
