@@ -3656,9 +3656,11 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
  * @param {object} notificationGroups Array of notification groups to add to the drawer
  * @param {string} actionButtonTitle Text for the lower action button of the drawer (optional, if not specified there will be no action button)
  * @param {function} actionButtonCallback function(notificationGroup) Callback method for action button for each group, the notificationGroup is passed (Optional)
+ * @param {string} titleInclude Include src for the title area for the notification drawer, use this to customize the drawer title area
  * @param {string} headingInclude Include src for the heading area for each notification group, access the group via notificationGroup
  * @param {string} subheadingInclude Include src for the sub-heading area for each notification group, access the group via notificationGroup
- * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the group via notification
+ * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the notification via notification
+ * @param {string} notificationFooterInclude Include src for the notification footer for each notification, access the notification via notification
  * @param {object} customScope Object containing any variables/functions used by the included src, access via customScope.<xxx>
  *
  * @example
@@ -3684,7 +3686,7 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
          <div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"
               action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"
               heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
-              custom-scope="customScope">
+              notification-footer-include="notification-footer.html" custom-scope="customScope">
          </div>
        </div>
      </div>
@@ -3701,6 +3703,12 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
  </file>
  <file name="subheading.html">
    {{notificationGroup.subHeading}}
+ </file>
+ <file name="notification-footer.html">
+   <a class="btn btn-link btn-block" role="button" ng-click="customScope.clearAll(notificationGroup)">
+     <span class="pficon pficon-close"></span>
+     <span> Clear All</span>
+   </a>
  </file>
  <file name="notification-body.html">
    <div class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
@@ -4035,6 +4043,10 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
          var newText = notification.message + " - " + action.name;
          $scope.actionsText = newText + "\n" + $scope.actionsText;
        };
+       $scope.customScope.clearAll = function (group) {
+         var newText = group.heading + " - Clear All";
+         $scope.actionsText = newText + "\n" + $scope.actionsText;
+       };
 
      }
    ]);
@@ -4051,9 +4063,11 @@ angular.module('patternfly.notification').directive('pfNotificationDrawer', ["$w
       notificationGroups: '=',
       actionButtonTitle: '@',
       actionButtonCallback: '=?',
+      titleInclude: '@',
       headingInclude: '@',
       subheadingInclude: '@',
       notificationBodyInclude: '@',
+      notificationFooterInclude: '@',
       customScope: '=?'
     },
     templateUrl: 'notification/notification-drawer.html',
@@ -6648,7 +6662,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
 
   $templateCache.put('notification/notification-drawer.html',
-    "<div class=drawer-pf ng-class=\"{hide: drawerHidden}\"><div class=drawer-pf-title><h3 class=text-center>{{drawerTitle}}</h3></div><div pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-click=toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=headingInclude></a></h4><span class=panel-counter ng-include src=subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open}\"><div class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div class=drawer-pf-action ng-if=actionButtonTitle><a class=\"btn btn-link btn-block\" ng-click=actionButtonCallback(notificationGroup)>{{actionButtonTitle}}</a></div></div></div></div></div></div>"
+    "<div class=drawer-pf ng-class=\"{'hide': drawerHidden}\"><div ng-if=drawerTitle class=drawer-pf-title><h3 class=text-center>{{drawerTitle}}</h3></div><div ng-if=titleInclude class=drawer-pf-title ng-include src=titleInclude></div><div pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-click=toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=headingInclude></a></h4><span class=panel-counter ng-include src=subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open}\"><div class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div class=drawer-pf-action ng-if=actionButtonTitle><a class=\"btn btn-link btn-block\" ng-click=actionButtonCallback(notificationGroup)>{{actionButtonTitle}}</a></div><div ng-if=notificationFooterInclude ng-include src=notificationFooterInclude></div></div></div></div></div></div>"
   );
 
 

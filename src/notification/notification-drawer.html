@@ -1,7 +1,8 @@
-<div class="drawer-pf" ng-class="{hide: drawerHidden}">
-  <div class="drawer-pf-title">
+<div class="drawer-pf" ng-class="{'hide': drawerHidden}">
+  <div  ng-if="drawerTitle" class="drawer-pf-title">
     <h3 class="text-center">{{drawerTitle}}</h3>
   </div>
+  <div ng-if="titleInclude" class="drawer-pf-title" ng-include src="titleInclude"></div>
   <div pf-fixed-accordion scroll-selector=".panel-body">
     <div class="panel-group">
       <div class="panel panel-default" ng-repeat="notificationGroup in notificationGroups track by $index">
@@ -22,6 +23,8 @@
           </div>
           <div class="drawer-pf-action" ng-if="actionButtonTitle">
             <a class="btn btn-link btn-block" ng-click="actionButtonCallback(notificationGroup)">{{actionButtonTitle}}</a>
+          </div>
+          <div ng-if="notificationFooterInclude" ng-include src="notificationFooterInclude">
           </div>
         </div>
       </div>
