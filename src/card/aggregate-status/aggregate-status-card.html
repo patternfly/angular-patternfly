@@ -30,9 +30,9 @@
 </div>
 <div ng-if="isMiniLayout" class="card-pf card-pf-aggregate-status card-pf-aggregate-status-mini" ng-class="{'card-pf-accented': shouldShowTopBorder}">
   <h2 class="card-pf-title">
-    <image ng-if="status.iconImage" ng-src="{{status.iconImage}}" alt="" class="card-pf-icon-image"></image>
-    <span ng-if="status.iconClass" class="{{status.iconClass}}"></span>
     <a ng-if="status.href" href="{{status.href}}">
+      <image ng-if="status.iconImage" ng-src="{{status.iconImage}}" alt="" class="card-pf-icon-image"></image>
+      <span ng-if="status.iconClass" class="{{status.iconClass}}"></span>
       <span class="card-pf-aggregate-status-count">{{status.count}}</span>
       {{status.title}}
     </a>
