@@ -550,11 +550,11 @@ angular.module('patternfly.card').directive('pfCard', function () {
 
  <file name="index.html">
    <div ng-controller="ChartCtrl">
-     <label class="label-title">Card With Single Trend Chart</label>
+     <label class="label-title">Card With Single Trend</label>
      <div pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
        <div pf-trends-chart config="configSingle" chart-data="dataSingle"></div>
      </div>
-     <label class="label-title">Card With Multiple Trends</label>
+     <label class="label-title">Card with Multiple Trends</label>
      <div pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
           show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
        <div pf-trends-chart config="configVirtual" chart-data="dataVirtual"></div>
@@ -3656,9 +3656,11 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
  * @param {object} notificationGroups Array of notification groups to add to the drawer
  * @param {string} actionButtonTitle Text for the lower action button of the drawer (optional, if not specified there will be no action button)
  * @param {function} actionButtonCallback function(notificationGroup) Callback method for action button for each group, the notificationGroup is passed (Optional)
+ * @param {string} titleInclude Include src for the title area for the notification drawer, use this to customize the drawer title area
  * @param {string} headingInclude Include src for the heading area for each notification group, access the group via notificationGroup
  * @param {string} subheadingInclude Include src for the sub-heading area for each notification group, access the group via notificationGroup
- * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the group via notification
+ * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the notification via notification
+ * @param {string} notificationFooterInclude Include src for the notification footer for each notification, access the notification via notification
  * @param {object} customScope Object containing any variables/functions used by the included src, access via customScope.<xxx>
  *
  * @example
@@ -3684,7 +3686,7 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
          <div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"
               action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"
               heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
-              custom-scope="customScope">
+              notification-footer-include="notification-footer.html" custom-scope="customScope">
          </div>
        </div>
      </div>
@@ -3701,6 +3703,12 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
  </file>
  <file name="subheading.html">
    {{notificationGroup.subHeading}}
+ </file>
+ <file name="notification-footer.html">
+   <a class="btn btn-link btn-block" role="button" ng-click="customScope.clearAll(notificationGroup)">
+     <span class="pficon pficon-close"></span>
+     <span> Clear All</span>
+   </a>
  </file>
  <file name="notification-body.html">
    <div class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
@@ -4035,6 +4043,10 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
          var newText = notification.message + " - " + action.name;
          $scope.actionsText = newText + "\n" + $scope.actionsText;
        };
+       $scope.customScope.clearAll = function (group) {
+         var newText = group.heading + " - Clear All";
+         $scope.actionsText = newText + "\n" + $scope.actionsText;
+       };
 
      }
    ]);
@@ -4051,9 +4063,11 @@ angular.module('patternfly.notification').directive('pfNotificationDrawer', ["$w
       notificationGroups: '=',
       actionButtonTitle: '@',
       actionButtonCallback: '=?',
+      titleInclude: '@',
       headingInclude: '@',
       subheadingInclude: '@',
       notificationBodyInclude: '@',
+      notificationFooterInclude: '@',
       customScope: '=?'
     },
     templateUrl: 'notification/notification-drawer.html',
@@ -6540,7 +6554,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
   'use strict';
 
   $templateCache.put('card/aggregate-status/aggregate-status-card.html',
-    "<div ng-if=!isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': shouldShowTopBorder, 'card-pf-aggregate-status-alt': isAltLayout}\"><h2 class=card-pf-title><a href={{status.href}} ng-if=status.href><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></a> <span ng-if=!status.href><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in status.notifications\"><a href={{notification.href}} ng-if=notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': shouldShowTopBorder}\"><h2 class=card-pf-title><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.iconClass class={{status.iconClass}}></span> <a ng-if=status.href href={{status.href}}><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</a> <span ng-if=!status.href><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</span></h2><div class=card-pf-body><p ng-if=\"status.notification.iconImage || status.notification.iconClass || status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=status.notification.href href={{status.notification.href}}><image ng-if=status.notification.iconImage ng-src={{status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></a> <span ng-if=!status.notification.href><image ng-if=status.notification.iconImage ng-src={{status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></span></span></p></div></div>"
+    "<div ng-if=!isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': shouldShowTopBorder, 'card-pf-aggregate-status-alt': isAltLayout}\"><h2 class=card-pf-title><a href={{status.href}} ng-if=status.href><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></a> <span ng-if=!status.href><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> <span class=card-pf-aggregate-status-title>{{status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in status.notifications\"><a href={{notification.href}} ng-if=notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': shouldShowTopBorder}\"><h2 class=card-pf-title><a ng-if=status.href href={{status.href}}><image ng-if=status.iconImage ng-src={{status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.iconClass class={{status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</a> <span ng-if=!status.href><span class=card-pf-aggregate-status-count>{{status.count}}</span> {{status.title}}</span></h2><div class=card-pf-body><p ng-if=\"status.notification.iconImage || status.notification.iconClass || status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=status.notification.href href={{status.notification.href}}><image ng-if=status.notification.iconImage ng-src={{status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></a> <span ng-if=!status.notification.href><image ng-if=status.notification.iconImage ng-src={{status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=status.notification.iconClass class={{status.notification.iconClass}}></span><span ng-if=status.notification.count>{{status.notification.count}}</span></span></span></p></div></div>"
   );
 
 
@@ -6648,7 +6662,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
 
   $templateCache.put('notification/notification-drawer.html',
-    "<div class=drawer-pf ng-class=\"{hide: drawerHidden}\"><div class=drawer-pf-title><h3 class=text-center>{{drawerTitle}}</h3></div><div pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-click=toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=headingInclude></a></h4><span class=panel-counter ng-include src=subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open}\"><div class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div class=drawer-pf-action ng-if=actionButtonTitle><a class=\"btn btn-link btn-block\" ng-click=actionButtonCallback(notificationGroup)>{{actionButtonTitle}}</a></div></div></div></div></div></div>"
+    "<div class=drawer-pf ng-class=\"{'hide': drawerHidden}\"><div ng-if=drawerTitle class=drawer-pf-title><h3 class=text-center>{{drawerTitle}}</h3></div><div ng-if=titleInclude class=drawer-pf-title ng-include src=titleInclude></div><div pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-click=toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=headingInclude></a></h4><span class=panel-counter ng-include src=subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open}\"><div class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div class=drawer-pf-action ng-if=actionButtonTitle><a class=\"btn btn-link btn-block\" ng-click=actionButtonCallback(notificationGroup)>{{actionButtonTitle}}</a></div><div ng-if=notificationFooterInclude ng-include src=notificationFooterInclude></div></div></div></div></div></div>"
   );
 
 
