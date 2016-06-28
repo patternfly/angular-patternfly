@@ -29,8 +29,9 @@
  *
  * @param {object} data the Total and Used values for the donut chart.  Available is calculated as Total - Used.<br/>
  * <ul style='list-style-type: none'>
- * <li>.used   - number representing the amount used
- * <li>.total  - number representing the total amount
+ * <li>.used          - number representing the amount used
+ * <li>.total         - number representing the total amount
+ * <li>.dataAvailable - Flag if there is data available - default: true
  * </ul>
  *
  * @param {string=} center-label specifies the contents of the donut's center label.<br/>
@@ -41,6 +42,9 @@
  * <li> 'percent'   - displays the Usage Percent of the Total amount in the center label
  * <li> 'none'      - does not display the center label
  * </ul>
+ *
+ * @param {int=} chartHeight height of the donut chart
+
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
@@ -100,7 +104,27 @@
            <div class="col-md-12 text-center">
              <label>Custom Tooltip, Legend, Click handling, and Center Label</label><br>
              <label><strong>Click on Donut Arc!</strong></label>
-             <div pf-donut-pct-chart config="custConfig" data="custData"></div>
+             <div pf-donut-pct-chart config="custConfig" chart-height="custChartHeight" data="custData"></div>
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-md-3">
+             <form role="form"">
+               <div class="form-group">
+                 <label class="checkbox-inline">
+                   <input type="checkbox" ng-model="custData.dataAvailable">Data Available</input>
+                 </label>
+               </div>
+             </form>
+           </div>
+           <div class="col-md-3">
+             <form role="form" >
+               <div class="form-group">
+                 <label>Chart Height</label>
+                 </br>
+                 <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+               </div>
+             </form>
            </div>
          </div>
        </div>
@@ -172,8 +196,8 @@
        };
 
        $scope.availData = {
-           'used': '350',
-            'total': '1000'
+          'used': '350',
+          'total': '1000'
         };
 
        $scope.availLabel = "available";
@@ -223,9 +247,12 @@
          };
 
        $scope.custData = {
+         'dataAvailable': true,
          'used': '670',
          'total': '1000'
        };
+
+       $scope.custChartHeight = 200;
      });
    </file>
  </example>
@@ -238,6 +265,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUti
     scope: {
       config: '=',
       data: '=',
+      chartHeight: '=?',
       centerLabel: '=?'
     },
     replace: true,
@@ -347,6 +375,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUti
           return centerLabelText;
         };
 
+
         $scope.updateAll = function (scope) {
           $scope.updateAvailable();
           $scope.config.data = pfUtils.merge($scope.getDonutData($scope), $scope.config.data);
@@ -357,6 +386,8 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUti
 
         $scope.config = pfUtils.merge($().c3ChartDefaults().getDefaultDonutConfig(), $scope.config);
         $scope.updateAll($scope);
+
+
       }
     ],
     link: function (scope, element) {
@@ -386,7 +417,11 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUti
         scope.updateAll(scope);
         setupDonutChartTitle();
       }, true);
-
+      scope.$watch('chartHeight', function () {
+        if (scope.chartHeight) {
+          scope.config.size.height = scope.chartHeight;
+        }
+      });
       scope.$watch('data', function () {
         scope.updateAll(scope);
         setupDonutChartTitle();

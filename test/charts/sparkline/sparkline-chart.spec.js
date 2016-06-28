@@ -3,6 +3,7 @@ describe('Directive: pfSparklineChart', function() {
 
   beforeEach(module(
     'patternfly.charts',
+    'charts/empty-chart.html',
     'charts/sparkline/sparkline-chart.html'
   ));
 
@@ -162,4 +163,19 @@ describe('Directive: pfSparklineChart', function() {
     expect(isolateScope.config.data.columns[0][0]).toBe("dates");
     expect(isolateScope.config.data.columns[1][0]).toBe("used");
   });
+
+  it("should show empty chart when the dataAvailable is set to false", function() {
+    element = compileChart('<div pf-sparkline-chart config="config" chart-data="data"></div>', $scope);
+    var emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(0);
+
+    $scope.data.dataAvailable = false;
+
+
+    $scope.$digest();
+
+    emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(1);
+  });
+
 });
