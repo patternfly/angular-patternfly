@@ -8,6 +8,7 @@ then
   exit 0
 fi
 
+git checkout master
 # User info
 git config user.name "Admin"
 git config user.email "patternfly@redhat.com"

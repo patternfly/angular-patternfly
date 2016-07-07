@@ -4,7 +4,6 @@ node_js:
 before_install:
   - 'npm install -g bower grunt-cli'
 script:
-  - 'git checkout master'
   - 'npm install'
   - 'bower install'
   - 'grunt'
