@@ -1,5 +1,7 @@
 # AngularJS directives for [PatternFly](https://www.patternfly.org) 
 
+[![Join the chat at https://gitter.im/patternfly/angular-patternfly](https://badges.gitter.im/patternfly/angular-patternfly.svg)](https://gitter.im/patternfly/angular-patternfly?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This project will provide a set of common AngularJS directives for use with the PatternFly reference implementation.
 
 * Web site: https://www.patternfly.org
