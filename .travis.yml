@@ -11,6 +11,3 @@ script:
   - 'grunt ngdocs:publish'
 after_success:
   - sh -x ./publish.sh
-branches:
-  only: 
-  - master
