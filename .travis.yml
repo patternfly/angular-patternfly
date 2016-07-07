@@ -1,11 +1,16 @@
 language: node_js
 node_js:
   - '0.10'
-
 before_install:
   - 'npm install -g bower grunt-cli'
-
 script:
+  - 'git checkout master'
   - 'npm install'
   - 'bower install'
   - 'grunt'
+  - 'grunt ngdocs:publish'
+after_success:
+  - sh -x ./publish.sh
+branches:
+  only: 
+  - master
