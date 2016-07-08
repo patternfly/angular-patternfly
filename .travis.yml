@@ -1,12 +1,26 @@
 language: node_js
 node_js:
   - '0.10'
+
 before_install:
+  - 'git checkout -B master' # Reconcile detached HEAD
   - 'npm install -g bower grunt-cli'
+
 script:
   - 'npm install'
   - 'bower install'
   - 'grunt'
   - 'grunt ngdocs:publish'
+
 after_success:
   - sh -x ./publish.sh
+
+deploy:
+  provider: openshift
+  user: "$OPENSHIFT_USER"
+  password: "$OPENSHIFT_PWD"
+  domain: "patternfly"
+  app: angular
+  skip_cleanup: true
+  on:
+    tags: true
