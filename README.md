@@ -47,12 +47,12 @@ grunt help
 
 Note:
 
-1. Add Angular and Angular-PatternFly as a dependencies for your project and you'll receive all the libraries you'll need:
+1. Add Angular and Angular-PatternFly as dependencies for your project and you'll receive all the libraries you'll need:
 
         $ bower install angular --save
         $ bower install angular-patternfly --save
 
-2. Add the follwing CSS include to your HTML file(s):
+2. Add the following CSS include to your HTML file(s):
 
         <!-- Angular-PatternFly Styles -->
         <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.min.css" />
