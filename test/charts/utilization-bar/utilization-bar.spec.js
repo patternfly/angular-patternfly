@@ -3,6 +3,7 @@ describe('Directive: pfUtilizationBarChart', function() {
 
   beforeEach(module(
     'patternfly.charts',
+    'charts/empty-chart.html',
     'charts/utilization-bar/utilization-bar-chart.html'
   ));
 
@@ -86,6 +87,18 @@ describe('Directive: pfUtilizationBarChart', function() {
 
     subTitle = angular.element(element).find('.progress-bar span').html();
     expect(subTitle).toBe("<strong>500 TB</strong> Total");
+  });
+
+  it("should show empty chart when the dataAvailable is set to false", function() {
+    var emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(0);
+
+    $scope.data.dataAvailable = false;
+
+    $scope.$digest();
+
+    emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(1);
   });
 
 });

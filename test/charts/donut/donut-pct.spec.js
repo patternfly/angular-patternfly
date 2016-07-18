@@ -3,6 +3,7 @@ describe('Directive: pfDonutPctChart', function() {
 
   beforeEach(module(
     'patternfly.charts',
+    'charts/empty-chart.html',
     'charts/donut/donut-pct-chart.html'
   ));
 
@@ -116,4 +117,17 @@ describe('Directive: pfDonutPctChart', function() {
     expect(isoScope.getCenterLabelText(isoScope).bigText).toContain('Free');
     expect(isoScope.getCenterLabelText(isoScope).smText).toBe('');
   });
+
+  it("should show empty chart when the dataAvailable is set to false", function() {
+    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+    var emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(0);
+
+    $scope.data.dataAvailable = false;
+    $scope.$digest();
+
+    emptyChart = element.find('.empty-chart-content');
+    expect(emptyChart.length).toBe(1);
+  });
+
 });

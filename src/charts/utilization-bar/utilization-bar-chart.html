@@ -1,10 +1,10 @@
-<div class="utilization-bar-chart-pf">
+<div class="utilization-bar-chart-pf"  ng-class="{'data-unavailable-pf': chartData.dataAvailable === false}">
   <span ng-if="!layout || layout.type === 'regular'">
     <div ng-if="chartTitle" class="progress-description">{{chartTitle}}</div>
-    <div class="progress progress-label-top-right">
+    <div class="progress progress-label-top-right" ng-if="chartData.dataAvailable !== false">
       <div class="progress-bar" role="progressbar" ng-class="{'animate': animate,
            'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}"
-           ng-style="{width:chartData.percentageUsed + '%'}" tooltip="{{chartData.percentageUsed}}% Used">
+           ng-style="{width:chartData.percentageUsed + '%'}" tooltip="{{chartData.percentageUsed}}% Used" >
         <span ng-if="chartFooter" ng-bind-html="chartFooter"></span>
         <span ng-if="!chartFooter && (!footerLabelFormat || footerLabelFormat === 'actual')"><strong>{{chartData.used}} of {{chartData.total}} {{units}}</strong> Used</span>
         <span ng-if="!chartFooter && footerLabelFormat === 'percent'"><strong>{{chartData.percentageUsed}}%</strong> Used</span>
@@ -18,7 +18,7 @@
     <div class="progress-container progress-description-left progress-label-right"
          ng-style="{'padding-left':layout.titleLabelWidth, 'padding-right':layout.footerLabelWidth}">
       <div ng-if="chartTitle" class="progress-description"  ng-style="{'max-width':layout.titleLabelWidth}">{{chartTitle}}</div>
-      <div class="progress">
+      <div class="progress" ng-if="chartData.dataAvailable !== false">
         <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
              ng-class="{'animate': animate, 'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}"
              ng-style="{width:chartData.percentageUsed + '%'}" tooltip="{{chartData.percentageUsed}}% Used">
@@ -32,5 +32,5 @@
       </div>
     </div>
   </span>
+  <div pf-empty-chart ng-if="chartData.dataAvailable === false" chart-height="45"></div>
 </div>
-

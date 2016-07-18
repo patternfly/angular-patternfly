@@ -30,9 +30,10 @@
  *
  * @param {object} chartData the data to be shown as an area chart<br/>
  * <ul style='list-style-type: none'>
- * <li>.xData      - Array, X values for the data points, first element must be the name of the data
- * <li>.yData      - Array, Y Values for the data points, first element must be the name of the data
- * <li>.total      - (optional) The Total amount, used when determining percentages
+ * <li>.xData         - Array, X values for the data points, first element must be the name of the data
+ * <li>.yData         - Array, Y Values for the data points, first element must be the name of the data
+ * <li>.total         - (optional) The Total amount, used when determining percentages
+ * <li>.dataAvailable - Flag if there is data available - default: true
  * </ul>
  *
  * @param {int=} chartHeight   height of the sparkline chart
@@ -94,6 +95,17 @@
                  <button ng-click="addDataPoint()">Add Data Point</button>
            </div>
          </div>
+        <div class="row">
+         <div class="col-md-6">
+           <form role="form"">
+             <div class="form-group">
+               <label class="checkbox-inline">
+                 <input type="checkbox" ng-model="data.dataAvailable">Data Available</input>
+               </label>
+             </div>
+           </form>
+         </div>
+       </div>
        </div>
      </div>
    </file>
@@ -113,6 +125,7 @@
        }
 
        $scope.data = {
+         dataAvailable: true,
          total: 100,
          xData: dates,
          yData: ['used', 10, 20, 30, 20, 30, 10, 14, 20, 25, 68, 54, 56, 78, 56, 67, 88, 76, 65, 87, 76]
