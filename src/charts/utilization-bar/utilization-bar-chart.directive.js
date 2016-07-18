@@ -152,8 +152,8 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', function 
           scope.chartData.percentageUsed = Math.round(100 * (scope.chartData.used / scope.chartData.total));
 
           if (scope.thresholdError || scope.thresholdWarning) {
-            scope.isError = (scope.chartData.percentageUsed > scope.thresholdError);
-            scope.isWarn  = (scope.chartData.percentageUsed > scope.thresholdWarning &&
+            scope.isError = (scope.chartData.percentageUsed >= scope.thresholdError);
+            scope.isWarn  = (scope.chartData.percentageUsed >= scope.thresholdWarning &&
                              scope.chartData.percentageUsed < scope.thresholdError);
             scope.isOk    = (scope.chartData.percentageUsed < scope.thresholdWarning);
           }
