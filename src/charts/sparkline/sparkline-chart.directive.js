@@ -310,14 +310,14 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUt
         $scope.config.data = pfUtils.merge($scope.config.data, $scope.getSparklineData($scope.chartData));
 
         // Override defaults with callers specifications
-        $scope.chartConfig = pfUtils.merge($scope.config, $scope.defaultConfig);
+        $scope.chartConfig = pfUtils.merge($scope.defaultConfig, $scope.config);
       }
     ],
 
     link: function (scope) {
       scope.$watch('config', function () {
         scope.config.data = pfUtils.merge(scope.config.data, scope.getSparklineData(scope.chartData));
-        scope.chartConfig = pfUtils.merge(scope.config, scope.defaultConfig);
+        scope.chartConfig = pfUtils.merge(scope.defaultConfig, scope.config);
       }, true);
       scope.$watch('chartHeight', function () {
         if (scope.chartHeight) {
