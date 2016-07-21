@@ -8,14 +8,14 @@ default()
   SCRIPT=`basename $0`
   SCRIPT_DIR=`dirname $0`
   SCRIPT_DIR=`cd $SCRIPT_DIR; pwd`
-  TMP_DIR="/tmp/$SCRIPT.$$"
+  TMP_DIR="/tmp/patternfly-releases"
 
   BOWER_JSON=bower.json
   PACKAGE_JSON=package.json
 
   PTNFLY_REPO=https://github.com/patternfly/angular-patternfly.git
   PTNFLY_DIR="$TMP_DIR/angular-patternfly"
-  VERIFY_DIR="$TMP_DIR/verify"
+  VERIFY_DIR="$TMP_DIR/angular-patternfly-verify"
 }
 
 build()
@@ -72,6 +72,14 @@ clean()
 
   npm cache clean
   bower cache clean
+
+  # Remove for repo rebuild
+  if [ -d node_modules ]; then
+    rm -rf node_modules
+  fi
+  if [ -d lib ]; then
+    rm -rf lib
+  fi
 }
 
 # Install dependencies
@@ -111,6 +119,8 @@ push()
 # Setup local repo
 setup_repo() {
   echo "*** Setting up local repo $PTNFLY_DIR"
+  rm -rf $PTNFLY_DIR
+
   mkdir -p $TMP_DIR
   cd $TMP_DIR
 
@@ -129,13 +139,14 @@ cat <<- EEOOFF
 
     Note: After changes are pushed, a PR will need to be created via GitHub.
 
-    sh [-x] $SCRIPT [-h|f] -v <version>
+    sh [-x] $SCRIPT [-h|f|s] -v <version>
 
     Example: sh $SCRIPT -v 3.7.0 -f
 
     OPTIONS:
     h       Display this message (default) 
     f       Force push to new repo branch (e.g., bump-v3.7.0)
+    s       Skip repo setup (e.g., to rebuild previously created repo)
     v       The version number (e.g., 3.7.0)
 
 EEOOFF
@@ -143,10 +154,12 @@ EEOOFF
 
 verify()
 {
+  echo "*** Verifying install"
+  rm -rf $VERIFY_DIR
+
   mkdir -p $VERIFY_DIR
   cd $VERIFY_DIR
 
-  echo "*** Verifying bower install"
   bower install $PTNFLY_DIR
   check $? "bower install failure"
 }
@@ -160,10 +173,11 @@ verify()
     exit 1
   fi
 
-  while getopts hfv c; do
+  while getopts hfsv c; do
     case $c in
       h) usage; exit 0;;
       f) PUSH=1;;
+      s) SETUP=1;;
       v) VERSION=$2; shift
          BRANCH=bump-v$VERSION;;
       \?) usage; exit 1;;
@@ -176,7 +190,11 @@ verify()
   fi
 
   prereqs
-  setup_repo
+
+  if [ -z "$SETUP" ]; then
+    setup_repo
+  fi
+
   bump_bower
   bump_package
   clean
