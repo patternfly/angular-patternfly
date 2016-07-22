@@ -213,7 +213,7 @@ angular.module('patternfly.charts').directive('pfLineChart', function (pfUtils) 
     link: function (scope) {
       scope.$watch('config', function () {
         scope.config.data = pfUtils.merge(scope.config.data, scope.getLineData(scope.chartData));
-        scope.chartConfig = pfUtils.merge(scope.config, scope.defaultConfig);
+        scope.chartConfig = pfUtils.merge(scope.defaultConfig, scope.config);
       }, true);
       scope.$watch('showXAxis', function () {
         scope.chartConfig.axis.x.show = scope.showXAxis === true;
