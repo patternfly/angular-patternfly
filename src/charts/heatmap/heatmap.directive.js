@@ -18,10 +18,14 @@
  * @param {boolean=} showLegend flag to show the legend, defaults to true
  * @param {array=} legendLabels the labels for the legend - defaults: ['< 70%', '70-80%' ,'80-90%', '> 90%']
  * @param {number=} maxBlockSize the maximum size for blocks in the heatmap. Default: 50, Range: 5 - 50
+ * @param {number=} minBlockSize the minimum size for blocks in the heatmap. Default: 2
  * @param {number=} blockPadding the padding in pixels between blocks (default: 2)
  * @param {array=} thresholds the threshold values for the heapmap - defaults: [0.7, 0.8, 0.9]
  * @param {array=} heatmapColorPattern the colors that correspond to the various threshold values (lowest to hightest value ex: <70& to >90%) - defaults: ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000']
  * @param {function=} clickAction function(block) function to call when a block is clicked on
+ * @param {number=} rangeHoverSize the maximum size for highlighting blocks in the same range. Default: 15
+ * @param {boolean=} rangeOnHover flag to highlight blocks in the same range on hover, defaults to true
+ * @param {array=} rangeTooltips the tooltips for blocks in the same range - defaults: ['< 70%', '70-80%' ,'80-90%', '> 90%']
  * @example
  <example module="patternfly.charts">
    <file name="index.html">
@@ -31,12 +35,16 @@
            <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
                 show-legend="showLegends"></div>
          </div>
-         <div class="col-md-5 example-heatmap-container">
+         <div class="col-md-3 example-heatmap-container">
            <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
                 show-legend="showLegends" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
                 heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
                 click-action="clickAction"></div>
          </div>
+         <div class="col-md-3 example-heatmap-container">
+           <div pf-heatmap id="id" chart-title="titleSmall" data="data" chart-data-available="dataAvailable"
+                show-legend="showLegends" max-block-size="15" range-tooltips="rangeTooltips"></div>
+           </div>
        </div>
        <div class="row">
          <div class="col-md-3">
@@ -119,7 +127,9 @@
        $scope.dataAvailable = true;
        $scope.title = 'Utilization - Using Defaults';
        $scope.titleAlt = 'Utilization - Overriding Defaults';
+       $scope.titleSmall = 'Utilization - Small Blocks';
        $scope.legendLabels = ['< 60%','70%', '70-80%' ,'80-90%', '> 90%'];
+       $scope.rangeTooltips = ['Memory Utilization < 70%<br\>40 Nodes', 'Memory Utilization 70-80%<br\>4 Nodes', 'Memory Utilization 80-90%<br\>4 Nodes', 'Memory Utilization > 90%<br\>4 Nodes'];
        $scope.thresholds = [0.6, 0.7, 0.8, 0.9];
        $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#f00'];
 
@@ -144,16 +154,21 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile, $
       showLegend: '=?',
       legendLabels: '=?',
       maxBlockSize: '@',
+      minBlockSize: '@',
       blockPadding: '@',
       thresholds: '=?',
       heatmapColorPattern: '=?',
-      clickAction: '=?'
+      clickAction: '=?',
+      rangeOnHover: '=?',
+      rangeHoverSize: '@',
+      rangeTooltips: '=?'
     },
     templateUrl: 'charts/heatmap/heatmap.html',
     controller: function ($scope) {
       var thresholdDefaults = [0.7, 0.8, 0.9];
       var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
       var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
+      var rangeTooltipDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
       var heightDefault = 200;
 
       //Allow overriding of defaults
@@ -168,10 +183,28 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile, $
         }
       }
 
+      if ($scope.minBlockSize === undefined || isNaN($scope.minBlockSize)) {
+        $scope.minSize = 2;
+      } else {
+        $scope.minSize = parseInt($scope.minBlockSize);
+      }
+
       if ($scope.blockPadding === undefined || isNaN($scope.blockPadding)) {
         $scope.padding = 2;
       } else {
         $scope.padding = parseInt($scope.blockPadding);
+      }
+
+      if ($scope.rangeHoverSize === undefined || isNaN($scope.rangeHoverSize)) {
+        $scope.rangeHoverSize = 15;
+      } else {
+        $scope.rangeHoverSize = parseInt($scope.rangeHoverSize);
+      }
+
+      $scope.rangeOnHover = ($scope.rangeOnHover === undefined || $scope.rangeOnHover) ? true : false;
+
+      if (!$scope.rangeTooltips) {
+        $scope.rangeTooltips = rangeTooltipDefaults;
       }
 
       if (!$scope.thresholds) {
@@ -215,7 +248,15 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile, $
               blockSize * numberOfRows > containerHeight) {
             numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
           }
+        } else if ((blockSize - scope.padding) < scope.minSize) {
+          blockSize = scope.padding + scope.minSize;
 
+          // Attempt to square off the area, check if square fits
+          numberOfRows = Math.ceil(Math.sqrt(scope.data.length));
+          if (blockSize * numberOfRows > containerWidth ||
+              blockSize * numberOfRows > containerHeight) {
+            numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+          }
         } else {
           numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
         }
@@ -246,14 +287,25 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile, $
       var redraw = function () {
         var data = scope.data;
         var color = d3.scale.threshold().domain(scope.thresholds).range(scope.heatmapColorPattern);
+        var rangeTooltip = d3.scale.threshold().domain(scope.thresholds).range(scope.rangeTooltips);
         var blocks;
         var fillSize = blockSize - scope.padding;
         var highlightBlock = function (block, active) {
           block.style('fill-opacity', active ? 1 : 0.4);
         };
+        var highlightBlockColor = function (block, fillColor) {
+          // Get fill color from given block
+          var blockColor = color(block.map(function (d) {
+            return d[0].__data__.value;
+          }));
+          // If given color matches, apply highlight
+          if (blockColor === fillColor) {
+            block.style('fill-opacity', 1);
+          }
+        };
+
         var svg = window.d3.select(thisComponent);
         svg.selectAll('*').remove();
-
         blocks = svg.selectAll('rect').data(data).enter().append('rect');
         blocks.attr('x', function (d, i) {
           return Math.floor(i / numberOfRows) * blockSize;
@@ -262,6 +314,9 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile, $
         }).attr('width', fillSize).attr('height', fillSize).style('fill', function (d) {
           return color(d.value);
         }).attr('tooltip-html-unsafe', function (d, i) { //tooltip-html is throwing an exception
+          if (scope.rangeOnHover && fillSize <= scope.rangeHoverSize) {
+            return rangeTooltip(d.value);
+          }
           return d.tooltip;
         }).attr('tooltip-append-to-body', function (d, i) {
           return true;
@@ -271,8 +326,20 @@ angular.module('patternfly.charts').directive('pfHeatmap', function ($compile, $
 
         //Adding events
         blocks.on('mouseover', function () {
+          var fillColor;
           blocks.call(highlightBlock, false);
-          d3.select(this).call(highlightBlock, true);
+          if (scope.rangeOnHover && fillSize <= scope.rangeHoverSize) {
+            // Get fill color for current block
+            fillColor = color(d3.select(this).map(function (d) {
+              return d[0].__data__.value;
+            }));
+            // Highlight all blocks matching fill color
+            blocks[0].forEach(function (block) {
+              highlightBlockColor(d3.select(block), fillColor);
+            });
+          } else {
+            d3.select(this).call(highlightBlock, true);
+          }
         });
         blocks.on('click', function (d) {
           if (scope.clickAction) {
