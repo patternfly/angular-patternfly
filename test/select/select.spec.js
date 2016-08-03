@@ -30,7 +30,7 @@ describe('pf-select', function () {
       expect(select.text()).toBe('abc');
       expect(select).toEqualSelect(['a', ['b'], 'c']);
 
-      var bsSelect = angular.element(select).siblings('.bootstrap-select');
+      var bsSelect = angular.element(select).siblings('.dropdown-menu');
       var bsSelItems = bsSelect.find('li');
       expect(bsSelItems.length).toBe($scope.options.length);
       expect(bsSelItems.text()).toBe('abc');
@@ -49,7 +49,7 @@ describe('pf-select', function () {
       expect(select.text()).toBe('abc');
       expect(select).toEqualSelect([['a'], 'b', 'c']);
 
-      var bsSelect = angular.element(select).siblings('.bootstrap-select');
+      var bsSelect = angular.element(select).siblings('.dropdown-menu');
       var bsSelItems = bsSelect.find('li');
       expect(bsSelItems.length).toBe($scope.options.length);
       expect(bsSelItems.text()).toBe('abc');
@@ -63,7 +63,7 @@ describe('pf-select', function () {
       expect(select.text()).toBe('abcd');
       expect(select).toEqualSelect([['a'], 'b', 'c', 'd']);
 
-      bsSelect = angular.element(select).siblings('.bootstrap-select');
+      bsSelect = angular.element(select).siblings('.dropdown-menu');
       bsSelItems = bsSelect.find('li');
       expect(bsSelItems.length).toBe($scope.options.length);
       expect(bsSelItems.text()).toBe('abcd');
@@ -78,7 +78,7 @@ describe('pf-select', function () {
       expect(select.text()).toBe('abc');
       expect(select).toEqualSelect([['a'], 'b', 'c']);
 
-      var bsSelect = angular.element(select).siblings('.bootstrap-select');
+      var bsSelect = angular.element(select).siblings('.dropdown-menu');
       var bsSelItems = bsSelect.find('li');
       expect(bsSelItems.length).toBe($scope.options.length);
       expect(bsSelItems.text()).toBe('abc');

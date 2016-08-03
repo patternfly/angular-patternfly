@@ -54,7 +54,8 @@ describe('Directive: pfHeatmap', function() {
     expect(tooltip).toBe('Node 8 : My OpenShift Provider<br>96% : 96 Used of 100 Total<br>4 Available');
 
     color = block.attr('style');
-    expect(color.trim()).toBe('fill: #ce0000;');
+    var result = color.trim() == 'fill: #ce0000;' || color.trim() == 'fill: rgb(206, 0, 0);';
+    expect(result).toBe(true);
   });
 
   it("should block color based on color pattern overrides", function() {
@@ -67,7 +68,9 @@ describe('Directive: pfHeatmap', function() {
     block = angular.element(element).find('.heatmap-pf-svg').children().first();
 
     color = block.attr('style');
-    expect(color.trim()).toBe('fill: #ff0000;');
+
+    var result = color.trim() == 'fill: #ff0000;' || color.trim() == 'fill: rgb(255, 0, 0);';
+    expect(result).toBe(true);
   });
 
   it("should set color based on threshold overrides", function() {
@@ -78,7 +81,9 @@ describe('Directive: pfHeatmap', function() {
     element = compileChart('<div pf-heatmap chart-title="title" data="data" legend-labels="legendLabels" heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"></div>',$scope);
     block = angular.element(element).find('.heatmap-pf-svg').children().first();
     color = block.attr('style');
-    expect(color.trim()).toBe('fill: #ce0000;');
+
+    var result = color.trim() == 'fill: #ce0000;' || color.trim() == 'fill: rgb(206, 0, 0);';
+    expect(result).toBe(true);
   });
 
   it("should show a legend by default", function() {

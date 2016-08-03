@@ -129,7 +129,7 @@ module.exports = function (grunt) {
             'lib/bootstrap-combobox/js/bootstrap-combobox.js',
             'lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
             'lib/bootstrap-select/js/bootstrap-select.js',
-            'lib/bootstrap-treeview/src/js/bootstrap-treeview.js',
+            'lib/patternfly-bootstrap-treeview/src/js/bootstrap-treeview.js',
             'lib/c3/c3.js',
             'lib/d3/d3.js',
             'lib/patternfly/dist/js/patternfly.js',
