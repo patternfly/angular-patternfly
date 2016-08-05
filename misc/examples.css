@@ -103,3 +103,23 @@ hr {
   border: solid 1px #d1d1d1;
   margin: 0 10px;
 }
+
+.example-page-container.container-fluid {
+  position: fixed;
+  top: 37px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f5f5f5;
+  padding-top: 15px;
+}
+.hide-vertical-nav {
+  margin-top: 15px;
+  margin-left: 30px;
+}
+.example-info-text {
+  width: 100%;
+}
+.example-info-text:first-of-type {
+  margin-top: 10px;
+}
