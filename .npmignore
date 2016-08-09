@@ -22,7 +22,6 @@ dist/docs/index.html
 
 
 /docs
-/dist
 node_modules
 npm-debug.log
 lib
