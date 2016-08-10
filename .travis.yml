@@ -15,6 +15,9 @@ script:
 after_success:
   - sh -x ./scripts/publish.sh
 
+before_deploy:
+  - rvm 1.9.3 do gem install net-ssh -v 2.9.2
+
 deploy:
   provider: openshift
   user: "$OPENSHIFT_USER"
