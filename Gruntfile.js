@@ -166,6 +166,11 @@ module.exports = function (grunt) {
           src: ['form/**/*.html'],
           dest: 'templates/form.js'
         },
+        'patternfly.navigation': {
+          cwd: 'src/',
+          src: ['navigation/**/*.html'],
+          dest: 'templates/navigation.js'
+        },
         'patternfly.notification': {
           cwd: 'src/',
           src: ['notification/**/*.html'],

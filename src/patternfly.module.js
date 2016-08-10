@@ -9,6 +9,7 @@ angular.module('patternfly', [
   'patternfly.card',
   'patternfly.filters',
   'patternfly.form',
+  'patternfly.navigation',
   'patternfly.notification',
   'patternfly.select',
   'patternfly.sort',
