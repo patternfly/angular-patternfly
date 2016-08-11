@@ -83,7 +83,7 @@ angular.module('patternfly.notification').provider('Notifications', function () 
   'use strict';
 
   // time (in ms) the notifications are shown
-  this.delay = 5000;
+  this.delay = 8000;
   this.verbose = true;
   this.notifications = {};
   this.persist = {'error': true, 'httpError': true};
@@ -108,18 +108,6 @@ angular.module('patternfly.notification').provider('Notifications', function () 
     var verbose = this.verbose;
     var persist = this.persist;
 
-    var scheduleMessagePop = function () {
-      $timeout(function () {
-        var i;
-
-        for (i = 0; i < $rootScope.notifications.data.length; i++) {
-          if (!$rootScope.notifications.data[i].isPersistent) {
-            $rootScope.notifications.data.splice(i, 1);
-          }
-        }
-      }, delay);
-    };
-
     var modes = {
       info: { type: 'info', header: 'Info!', log: 'info'},
       success: { type: 'success', header: 'Success!', log: 'info'},
@@ -138,21 +126,41 @@ angular.module('patternfly.notification').provider('Notifications', function () 
       $rootScope.notifications.data = [];
     }
 
-    notifications.message = function (type, header, message, isPersistent) {
-      $rootScope.notifications.data.push({
+    notifications.message = function (type, header, message, isPersistent, closeCallback, actionTitle, actionCallback, menuActions) {
+      var notification = {
         type : type,
         header: header,
         message : message,
-        isPersistent: isPersistent
-      });
+        isPersistent: isPersistent,
+        closeCallback: closeCallback,
+        actionTitle: actionTitle,
+        actionCallback: actionCallback,
+        menuActions: menuActions
+      };
 
-      scheduleMessagePop();
+      notification.show = true;
+      $rootScope.notifications.data.push(notification);
+
+      if (!notification.isPersistent) {
+        notification.viewing = false;
+        $timeout(function () {
+          notification.show = false;
+          if (!notification.viewing) {
+            notifications.remove(notification);
+          }
+        }, delay);
+      }
     };
 
-
     function createNotifyMethod (mode) {
-      return function (message) {
-        notifications.message(modes[mode].type, modes[mode].header, message, persist[mode]);
+      return function (message, header, persistent, closeCallback, actionTitle, actionCallback, menuActions) {
+        if (angular.isUndefined(header)) {
+          header = modes[mode].header;
+        }
+        if (angular.isUndefined(persistent)) {
+          persistent = persist[mode];
+        }
+        notifications.message(modes[mode].type, header, message, persistent, closeCallback, actionTitle, actionCallback, menuActions);
         if (verbose) {
           $log[modes[mode].log](message);
         }
@@ -171,6 +179,23 @@ angular.module('patternfly.notification').provider('Notifications', function () 
         $log.error(message);
       }
     };
+
+    notifications.remove = function (notification) {
+      notifications.removeIndex($rootScope.notifications.data.indexOf(notification));
+    };
+
+    notifications.removeIndex = function (index) {
+      $rootScope.notifications.remove(index);
+    };
+
+    notifications.setViewing = function (notification, viewing) {
+      notification.viewing = viewing;
+      if (!viewing && !notification.show) {
+        notifications.remove(notification);
+      }
+    };
+
+    notifications.data = $rootScope.notifications.data;
 
     return notifications;
   }];
