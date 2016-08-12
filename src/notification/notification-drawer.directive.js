@@ -14,7 +14,9 @@
  *   <br><br>
  *
  * @param {boolean} drawerHidden Flag if the drawer is currently hidden
- * @param {string}  drawerTitle  Title to display for the drawer
+ * @param {boolean} allowExpand Flag if the drawer can be expanded. Optional, default: false
+ * @param {boolean} drawExpanded Flag if the drawer is expanded (only valid if allowExpand is true). Optional, default: false
+ * @param {string}  drawerTitle  Title to display for the drawer (leaving this blank will remove the provided expand capability)
  * @param {object} notificationGroups Array of notification groups to add to the drawer
  * @param {string} actionButtonTitle Text for the lower action button of the drawer (optional, if not specified there will be no action button)
  * @param {function} actionButtonCallback function(notificationGroup) Callback method for action button for each group, the notificationGroup is passed (Optional)
@@ -45,7 +47,7 @@
      </div>
      <div class="layout-pf-fixed">
        <div class="navbar-pf-vertical">
-         <div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"
+         <div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer" allow-expand="true"
               action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"
               heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
               notification-footer-include="notification-footer.html" custom-scope="customScope">
@@ -73,25 +75,58 @@
    </a>
  </file>
  <file name="notification-body.html">
-   <div class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
-     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-       <span class="fa fa-ellipsis-v"></span>
-     </button>
-     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
-       <li ng-repeat="action in notification.actions"
-           role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
-           ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
-         <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="customScope.handleAction(notification, action)">
-           {{action.name}}
-         </a>
-       </li>
-     </ul>
+   <div ng-if="!drawerExpanded">
+     <div class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
+       <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+         <span class="fa fa-ellipsis-v"></span>
+       </button>
+       <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
+         <li ng-repeat="action in notification.actions"
+             role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
+             ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
+           <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="customScope.handleAction(notification, action)">
+             {{action.name}}
+           </a>
+         </li>
+       </ul>
+     </div>
+     <span ng-if="notification.status" class="{{'pull-left ' + customScope.getNotficationStatusIconClass(notification)}}" ng-click="customScope.markRead(notification)"></span>
+     <span class="drawer-pf-notification-message" ng-click="customScope.markRead(notification)">{{notification.message}}</span>
+     <div class="drawer-pf-notification-info" ng-click="customScope.markRead(notification)">
+       <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
+       <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
+     </div>
    </div>
-   <span ng-if="notification.status" class="{{'pull-left ' + customScope.getNotficationStatusIconClass(notification)}}"></span>
-   <span class="drawer-pf-notification-message">{{notification.message}}</span>
-   <div class="drawer-pf-notification-info">
-     <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
-     <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
+   <div ng-if="drawerExpanded" class="container-fluid expanded-notification">
+     <div class="row">
+       <div class="col-sm-6">
+         <span class="pull-left {{customScope.getNotficationStatusIconClass(notification)}}"></span>
+         <span class="drawer-pf-notification-message notification-message"
+               tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip-placement="bottom" tooltip="{{notification.message}}">
+               {{notification.message}}
+         </span>
+       </div>
+       <div class="col-sm-6">
+         <div class="drawer-pf-notification-info">
+           <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
+           <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
+         </div>
+         <div class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
+           <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+             <span class="fa fa-ellipsis-v"></span>
+           </button>
+           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
+             <li ng-repeat="action in notification.actions"
+                 role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
+                 ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
+               <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="customScope.handleAction(notification, action)">
+                 {{action.name}}
+               </a>
+             </li>
+           </ul>
+         </div>
+       </div>
+     </div>
    </div>
  </file>
  <file name="script.js">
@@ -375,6 +410,10 @@
        $scope.actionsText = "";
        $scope.actionButtonCB = function (group) {
          $scope.actionsText = "Action Button clicked: " + group.heading + "\n" + $scope.actionsText;
+         group.notifications.forEach(function(nextNotification) {
+           nextNotification.unread = false;
+         });
+         group.subHeading =  "0 New Events";
        };
 
        //
@@ -408,19 +447,38 @@
        $scope.customScope.clearAll = function (group) {
          var newText = group.heading + " - Clear All";
          $scope.actionsText = newText + "\n" + $scope.actionsText;
+         group.notifications = [];
+         group.subHeading = "0 New Events";
        };
 
+       $scope.customScope.markRead = function (notification) {
+         if (notification.unread) {
+           notification.unread = false;
+           $scope.actionsText = "Mark notification read" + "\n" + $scope.actionsText;
+           var notificationGroup = $scope.groups.find(function(group) {
+             return group.notifications.find(function(nextNotification) {
+               return notification == nextNotification;
+             });
+           });
+           var unread = notificationGroup.notifications.filter(function(nextNotification) {
+             return nextNotification.unread;
+           });
+           notificationGroup.subHeading =  unread.length + " New Events";
+         }
+       };
      }
    ]);
  </file>
 </example>
 */
-angular.module('patternfly.notification').directive('pfNotificationDrawer', function ($window, $timeout, $document) {
+angular.module('patternfly.notification').directive('pfNotificationDrawer', function ($window, $timeout) {
   'use strict';
   return {
     restrict: 'A',
     scope: {
       drawerHidden: '=?',
+      allowExpand: '=?',
+      drawerExpanded: '=?',
       drawerTitle: '@',
       notificationGroups: '=',
       actionButtonTitle: '@',
@@ -433,6 +491,11 @@ angular.module('patternfly.notification').directive('pfNotificationDrawer', func
       customScope: '=?'
     },
     templateUrl: 'notification/notification-drawer.html',
+    controller: function ($scope) {
+      if (!$scope.allowExpand || angular.isUndefined($scope.drawerExpanded)) {
+        $scope.drawerExpanded = false;
+      }
+    },
     link: function (scope, element) {
 
       scope.$watch('notificationGroups', function () {
@@ -463,6 +526,10 @@ angular.module('patternfly.notification').directive('pfNotificationDrawer', func
           });
           selectedGroup.open = true;
         }
+      };
+
+      scope.toggleExpandDrawer = function () {
+        scope.drawerExpanded = !scope.drawerExpanded;
       };
 
       if (scope.groupHeight) {
