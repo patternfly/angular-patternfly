@@ -1,5 +1,6 @@
-<div class="drawer-pf" ng-class="{'hide': drawerHidden}">
+<div class="drawer-pf" ng-class="{'hide': drawerHidden, 'drawer-pf-expanded': drawerExpanded}">
   <div  ng-if="drawerTitle" class="drawer-pf-title">
+    <a ng-if="allowExpand" class="drawer-pf-toggle-expand" ng-click="toggleExpandDrawer()"></a>
     <h3 class="text-center">{{drawerTitle}}</h3>
   </div>
   <div ng-if="titleInclude" class="drawer-pf-title" ng-include src="titleInclude"></div>

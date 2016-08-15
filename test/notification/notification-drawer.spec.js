@@ -442,4 +442,44 @@ describe('Directive:  pfNotificationDrawer', function () {
 
     expect($scope.actionPerformed.name).toBe('Action1');
   });
+
+  it ('should show the expand toggle when allow expand is set to true', function () {
+    var expandToggle = element.find('.drawer-pf-toggle-expand');
+    expect(expandToggle.length).toBe(0);
+
+    var htmlTmp = '<div pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
+      '     action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"' +
+      '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
+      '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
+      '</div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    expandToggle = element.find('.drawer-pf-toggle-expand');
+    expect(expandToggle.length).toBe(1);
+  });
+
+  it ('should expand the drawer when the expand toggle is clicked', function () {
+    var expandedDrawer = element.find('.drawer-pf.drawer-pf-expanded');
+    expect(expandedDrawer.length).toBe(0);
+
+    var htmlTmp = '<div pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
+      '     action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"' +
+      '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
+      '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
+      '</div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    expandedDrawer = element.find('.drawer-pf.drawer-pf-expanded');
+    expect(expandedDrawer.length).toBe(0);
+    var expandToggle = element.find('.drawer-pf-toggle-expand');
+    expect(expandToggle.length).toBe(1);
+
+    eventFire(expandToggle[0], 'click');
+    $scope.$digest();
+
+    expandedDrawer = element.find('.drawer-pf.drawer-pf-expanded');
+    expect(expandedDrawer.length).toBe(1);
+  });
 });

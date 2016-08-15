@@ -419,3 +419,37 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 .navbar-brand-txt {
   line-height: 34px;
 }
+
+.drawer-pf-toggle-expand {
+  color: inherit;
+  cursor: pointer;
+  left: 0;
+  padding: 2px 5px;
+  position: absolute;
+}
+.drawer-pf-toggle-expand:before {
+  content: "\f100";
+  font-family: "FontAwesome";
+}
+.drawer-pf-toggle-expand:hover, .drawer-pf-toggle-expand:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+.drawer-pf.drawer-pf-expanded {
+  left: 270px;
+  width: inherit;
+}
+.drawer-pf.drawer-pf-expanded .drawer-pf-title a.drawer-pf-toggle-expand:before {
+  content: "\f101";
+}
+.drawer-pf-notification .expanded-notification .date {
+  border-right: none;
+  padding-right: 0;
+}
+.drawer-pf-notification .expanded-notification .drawer-pf-notification-info {
+  display: inline-block;
+}
+.drawer-pf-notification .expanded-notification .drawer-pf-notification-message {
+  display: inline-block;
+}
