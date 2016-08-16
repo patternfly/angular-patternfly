@@ -5400,7 +5400,7 @@ angular.module('patternfly.notification').provider('Notifications', function () 
   'use strict';
 
   // time (in ms) the notifications are shown
-  this.delay = 5000;
+  this.delay = 8000;
   this.verbose = true;
   this.notifications = {};
   this.persist = {'error': true, 'httpError': true};
@@ -5425,18 +5425,6 @@ angular.module('patternfly.notification').provider('Notifications', function () 
     var verbose = this.verbose;
     var persist = this.persist;
 
-    var scheduleMessagePop = function () {
-      $timeout(function () {
-        var i;
-
-        for (i = 0; i < $rootScope.notifications.data.length; i++) {
-          if (!$rootScope.notifications.data[i].isPersistent) {
-            $rootScope.notifications.data.splice(i, 1);
-          }
-        }
-      }, delay);
-    };
-
     var modes = {
       info: { type: 'info', header: 'Info!', log: 'info'},
       success: { type: 'success', header: 'Success!', log: 'info'},
@@ -5455,21 +5443,41 @@ angular.module('patternfly.notification').provider('Notifications', function () 
       $rootScope.notifications.data = [];
     }
 
-    notifications.message = function (type, header, message, isPersistent) {
-      $rootScope.notifications.data.push({
+    notifications.message = function (type, header, message, isPersistent, closeCallback, actionTitle, actionCallback, menuActions) {
+      var notification = {
         type : type,
         header: header,
         message : message,
-        isPersistent: isPersistent
-      });
+        isPersistent: isPersistent,
+        closeCallback: closeCallback,
+        actionTitle: actionTitle,
+        actionCallback: actionCallback,
+        menuActions: menuActions
+      };
 
-      scheduleMessagePop();
+      notification.show = true;
+      $rootScope.notifications.data.push(notification);
+
+      if (!notification.isPersistent) {
+        notification.viewing = false;
+        $timeout(function () {
+          notification.show = false;
+          if (!notification.viewing) {
+            notifications.remove(notification);
+          }
+        }, delay);
+      }
     };
 
-
     function createNotifyMethod (mode) {
-      return function (message) {
-        notifications.message(modes[mode].type, modes[mode].header, message, persist[mode]);
+      return function (message, header, persistent, closeCallback, actionTitle, actionCallback, menuActions) {
+        if (angular.isUndefined(header)) {
+          header = modes[mode].header;
+        }
+        if (angular.isUndefined(persistent)) {
+          persistent = persist[mode];
+        }
+        notifications.message(modes[mode].type, header, message, persistent, closeCallback, actionTitle, actionCallback, menuActions);
         if (verbose) {
           $log[modes[mode].log](message);
         }
@@ -5488,6 +5496,23 @@ angular.module('patternfly.notification').provider('Notifications', function () 
         $log.error(message);
       }
     };
+
+    notifications.remove = function (notification) {
+      notifications.removeIndex($rootScope.notifications.data.indexOf(notification));
+    };
+
+    notifications.removeIndex = function (index) {
+      $rootScope.notifications.remove(index);
+    };
+
+    notifications.setViewing = function (notification, viewing) {
+      notification.viewing = viewing;
+      if (!viewing && !notification.show) {
+        notifications.remove(notification);
+      }
+    };
+
+    notifications.data = $rootScope.notifications.data;
 
     return notifications;
   }];
@@ -5567,6 +5592,447 @@ angular.module('patternfly.notification').directive('pfNotificationList', functi
   function NotificationListController ($scope, $rootScope) {
     $scope.notifications = $rootScope.notifications;
   }
+});
+;/**
+ * @ngdoc directive
+ * @name patternfly.notification.directive:pfToastNotificationList
+ * @restrict A
+ * @scope
+ *
+ * @param {Array} notifications The list of current notifcations to display. Each notification should have the following (see pfToastNotification):
+ *           <ul style='list-style-type: none'>
+ *             <li>.type - (String) The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'
+ *             <li>.header - (String) The header to display for the notification (optional)
+ *             <li>.message - (String) The main text message of the notification.
+ *             <li>.actionTitle Text to show for the primary action, optional.
+ *             <li>.actionCallback (function(this notification)) Function to invoke when primary action is selected, optional
+ *             <li>.menuActions  Optional list of actions to place in the kebab menu:<br/>
+ *               <ul style='list-style-type: none'>
+ *                 <li>.name - (String) The name of the action, displayed on the button
+ *                 <li>.actionFn - (function(action, this notification)) Function to invoke when the action selected
+ *                 <li>.isDisabled - (Boolean) set to true to disable the action
+ *                 <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
+ *               </ul>
+ *             <li>.isPersistent Flag to show close button for the notification even if showClose is false.
+ *           </ul>
+ * @param {Boolean} showClose Flag to show the close button on all notifications (not shown if the notification has menu actions)
+ * @param {function} closeCallback (function(data)) Function to invoke when closes a toast notification
+ * @param {function} updateViewing (function(boolean, data)) Function to invoke when user is viewing/not-viewing (hovering on) a toast notification
+ *
+ * @description
+ * Using this directive displayes a list of toast notifications
+ *
+ * @example
+ <example module="patternfly.notification">
+
+   <file name="index.html">
+     <div ng-controller="ToastNotificationListDemoCtrl" >
+       <div pf-toast-notification-list notifications="notifications" show-close="showClose" close-callback="handleClose" update-viewing="updateViewing"></div>
+       <div class="row example-container">
+         <div class="col-md-12">
+           <form class="form-horizontal">
+             <div class="form-group">
+               <label class="col-sm-3 control-label" for="type">Show Close buttons:</label>
+               <div class="col-sm-1">
+                 <input type="checkbox" ng-model="showClose"/>
+               </div>
+             </div>
+             <div class="form-group">
+               <label class="col-sm-2 control-label" for="type">Type:</label>
+               <div class="col-sm-10">
+                <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+               </div>
+             </div>
+             <div class="form-group">
+               <label class="col-sm-2 control-label" for="header">Header:</label>
+               <div class="col-sm-10">
+                 <input type="text" class="form-control" ng-model="header" id="header"/>
+               </div>
+             </div>
+             <div class="form-group">
+               <label class="col-sm-2 control-label" for="message">Message:</label>
+               <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="message" id="message"/>
+               </div>
+             </div>
+             <div class="form-group">
+               <label class="col-sm-2 control-label" for="message">Primary Action:</label>
+               <div class="col-sm-10">
+                 <input type="text" class="form-control" ng-model="primaryAction" id="primaryAction"/>
+               </div>
+             </div>
+             <div class="form-group">
+               <label class="col-sm-2 control-label" for="type">Persistent:</label>
+               <div class="col-sm-1">
+                 <input type="checkbox" ng-model="persistent"/>
+               </div>
+               <label class="col-sm-2 control-label" for="type">Show Menu:</label>
+               <div class="col-sm-2">
+                 <input type="checkbox" ng-model="showMenu"/>
+               </div>
+             </div>
+             <div class="form-group">
+               <div class="col-sm-12">
+                 <button ng-click="notify()">Add notification - Click me several times</button>
+               </div>
+             </div>
+           </form>
+         </div>
+         <div class="col-md-12">
+           <label class="actions-label">Actions: </label>
+         </div>
+         <div class="col-md-12">
+           <textarea rows="3" class="col-md-12">{{actionText}}</textarea>
+         </div>
+       </div>
+     </div>
+   </file>
+
+   <file name="script.js">
+     angular.module('patternfly.notification').controller( 'ToastNotificationListDemoCtrl', function( $scope, $rootScope, Notifications ) {
+       $scope.message = 'Default Message.';
+
+       var typeMap = { 'Info': 'info',
+                       'Success': 'success',
+                       'Warning': 'warning',
+                       'Danger': 'danger' };
+
+       $scope.types = Object.keys(typeMap);
+
+       $scope.type = $scope.types[0];
+       $scope.header = 'Default header.';
+       $scope.message = 'Default notification message.';
+       $scope.showClose = false;
+       $scope.persistent = false;
+
+       $scope.primaryAction = '';
+
+       $scope.showMenu = false;
+       var performAction = function (menuAction, data) {
+         $scope.actionText += menuAction.name +  ": " + data.message + '\n';
+       };
+       $scope.menuActions = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ];
+
+       $scope.actionText = "";
+
+       $scope.handleAction = function (data) {
+         $scope.actionText = $scope.primaryAction + ": " + data.message + '\n' + $scope.actionText;
+       };
+       $scope.handleClose = function (data) {
+         $scope.actionText = "Closed: " + data.message + '\n'+ $scope.actionText;
+         Notifications.remove(data);
+       };
+       $scope.updateViewing = function (viewing, data) {
+         Notifications.setViewing(data, viewing);
+       };
+
+       $scope.notify = function () {
+         Notifications.message (
+           typeMap[$scope.type],
+           $scope.header,
+           $scope.message,
+           $scope.persistent,
+           $scope.handleClose,
+           $scope.primaryAction,
+           $scope.handleAction,
+           ($scope.showMenu ? $scope.menuActions : undefined)
+         );
+       }
+
+       $scope.notifications = Notifications.data;
+     });
+   </file>
+
+ </example>
+ */
+angular.module('patternfly.notification').directive('pfToastNotificationList', function () {
+  'use strict';
+
+  return {
+    restrict: 'A',
+    scope: {
+      notifications: '=',
+      showClose: '=?',
+      closeCallback: '=?',
+      updateViewing: '=?'
+    },
+    templateUrl: 'notification/toast-notification-list.html',
+    controller: ["$scope", function ($scope) {
+      $scope.handleClose = function (notification) {
+        if (angular.isFunction($scope.closeCallback)) {
+          $scope.closeCallback(notification);
+        }
+      };
+      $scope.handleViewingChange = function (isViewing, notification) {
+        if (angular.isFunction($scope.updateViewing)) {
+          $scope.updateViewing(isViewing, notification);
+        }
+      };
+    }]
+  };
+});
+;/**
+ * @ngdoc directive
+ * @name patternfly.notification.directive:pfToastNotification
+ * @restrict E
+ * @scope
+ *
+ * @param {string} notificationType The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'
+ * @param {string} header The header text of the notification.
+ * @param {string} message The main text message of the notification.
+ * @param {boolean} showClose Flag to show the close button, default: true
+ * @param {function} closeCallback (function(data)) Function to invoke when close action is selected, optional
+ * @param {string} actionTitle Text to show for the primary action, optional.
+ * @param {function} actionCallback (function(data)) Function to invoke when primary action is selected, optional
+ * @param {Array} menuActions  Optional list of actions to place in the kebab menu:<br/>
+ *           <ul style='list-style-type: none'>
+ *             <li>.name - (String) The name of the action, displayed on the button
+ *             <li>.actionFn - (function(action, data)) Function to invoke when the action selected
+ *             <li>.isDisabled - (Boolean) set to true to disable the action
+ *             <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
+ *           </ul>
+ * @param {function} updateViewing (function(boolean, data)) Function to invoke when user is viewing/no-viewing (hovering on) the toast
+ * @param {object} data Any data needed by the callbacks (optional)
+ *
+ * @description
+ * Toast notifications are used to notify users of a system occurence. Toast notifications should be transient and stay on the screen for 8 seconds,
+ * so that they do not block the information behind them for too long, but allows the user to read the message.
+ * The pfToastNotification directive allows status, header, message, primary action and menu actions for the notification. The notification can also
+ * allow the user to close the notification.
+ *
+ * Note: Using the kebab menu (menu actions) with the close button is not currently supported. If both are specified the close button will not be shown.
+ * Add a close menu item if you want to have both capabilities.
+ *
+ * @example
+ <example module="patternfly.notification">
+
+   <file name="index.html">
+     <div ng-controller="ToastNotificationDemoCtrl" class="row example-container">
+       <div class="col-md-12">
+         <div pf-toast-notification notification-type="{{type}}" header="{{header}}" message="{{message}}"
+              show-close="{{showClose}}" close-callback="closeCallback"
+              action-title="{{primaryAction}}" action-callback="handleAction"
+              menu-actions="menuActions">
+         </div>
+
+         <form class="form-horizontal">
+           <div class="form-group">
+             <label class="col-sm-2 control-label" for="header">Header:</label>
+             <div class="col-sm-10">
+              <input type="text" class="form-control" ng-model="header" id="header"/>
+             </div>
+           </div>
+           <div class="form-group">
+             <label class="col-sm-2 control-label" for="message">Message:</label>
+             <div class="col-sm-10">
+               <input type="text" class="form-control" ng-model="message" id="message"/>
+             </div>
+           </div>
+           <div class="form-group">
+             <label class="col-sm-2 control-label" for="message">Primary Action:</label>
+             <div class="col-sm-10">
+              <input type="text" class="form-control" ng-model="primaryAction" id="primaryAction"/>
+             </div>
+           </div>
+           <div class="form-group">
+             <label class="col-sm-2 control-label" for="type">Type:</label>
+             <div class="col-sm-10">
+              <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+             </div>
+           </div>
+           <div class="form-group">
+             <label class="col-sm-2 control-label" for="type">Show Close:</label>
+             <div class="col-sm-3">
+             <input type="checkbox" ng-model="showClose"/>
+             </div>
+             <label class="col-sm-2 control-label" for="type">Show Menu:</label>
+             <div class="col-sm-3">
+              <input type="checkbox" ng-model="showMenu"/>
+             </div>
+           </div>
+         </form>
+       </div>
+       <div class="col-md-12">
+         <label class="actions-label">Actions: </label>
+       </div>
+       <div class="col-md-12">
+         <textarea rows="3" class="col-md-12">{{actionText}}</textarea>
+       </div>
+     </div>
+   </file>
+
+   <file name="script.js">
+     angular.module( 'patternfly.notification' ).controller( 'ToastNotificationDemoCtrl', function( $scope, Notifications ) {
+       $scope.types = ['success','info','danger', 'warning'];
+       $scope.type = $scope.types[0];
+       $scope.showClose = false;
+
+       $scope.header = 'Default Header.';
+       $scope.message = 'Default Message.';
+       $scope.primaryAction = '';
+
+       $scope.showMenu = false;
+       var performAction = function (menuAction) {
+         $scope.actionText += menuAction.name + '\n';
+       };
+       var menuActions = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ];
+
+       $scope.$watch('showMenu',  function () {
+          if ($scope.showMenu) {
+            $scope.menuActions = menuActions;
+          } else {
+            $scope.menuActions = undefined;
+          }
+       });
+
+       $scope.actionText = "";
+
+       $scope.handleAction = function () {
+         $scope.actionText = $scope.primaryAction + '\n' + $scope.actionText;
+       };
+       $scope.closeCallback = function () {
+         $scope.actionText = "Close" + '\n' + $scope.actionText;
+       };
+     });
+   </file>
+
+ </example>
+ */
+angular.module( 'patternfly.notification' ).directive('pfToastNotification', function () {
+  'use strict';
+
+  return {
+    scope: {
+      'notificationType': '@',
+      'message': '@',
+      'header': '@',
+      'showClose': '@',
+      'closeCallback': '=?',
+      'actionTitle': '@',
+      'actionCallback': '=?',
+      'menuActions': '=?',
+      'updateViewing': '=?',
+      'data': '=?'
+    },
+    restrict: 'A',
+    templateUrl: 'notification/toast-notification.html',
+    controller: ["$scope", function ($scope) {
+      $scope.notificationType = $scope.notificationType || 'info';
+
+      $scope.updateShowClose = function () {
+        $scope.showCloseButton = ($scope.showClose === 'true') && (angular.isUndefined($scope.menuActions) || $scope.menuActions.length < 1);
+      };
+
+      $scope.handleClose = function () {
+        if (angular.isFunction($scope.closeCallback)) {
+          $scope.closeCallback($scope.data);
+        }
+      };
+
+      $scope.handleAction = function () {
+        if (angular.isFunction($scope.actionCallback)) {
+          $scope.actionCallback($scope.data);
+        }
+      };
+
+      $scope.handleMenuAction = function (menuAction) {
+        if (menuAction && angular.isFunction(menuAction.actionFn) && (menuAction.isDisabled !== true)) {
+          menuAction.actionFn(menuAction, $scope.data);
+        }
+      };
+
+      $scope.handleEnter = function () {
+        if (angular.isFunction($scope.updateViewing)) {
+          $scope.updateViewing(true, $scope.data);
+        }
+      };
+      $scope.handleLeave = function () {
+        if (angular.isFunction($scope.updateViewing)) {
+          $scope.updateViewing(false, $scope.data);
+        }
+      };
+
+      $scope.updateShowClose ();
+    }],
+    link: function (scope) {
+      scope.$watch('showClose', function () {
+        scope.updateShowClose();
+      });
+      scope.$watch('menuActions', function () {
+        scope.updateShowClose();
+      });
+    }
+  };
 });
 ;/**
  * @ngdoc directive
@@ -7904,6 +8370,16 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
   $templateCache.put('notification/notification.html',
     "<div class=\"alert alert-{{pfNotificationType}}\"><button ng-show=pfNotificationPersistent type=button class=close ng-click=$parent.notifications.remove($index)><span aria-hidden=true>&times;</span><span class=sr-only>Close</span></button> <span class=\"pficon pficon-ok\" ng-show=\"pfNotificationType === 'success'\"></span> <span class=\"pficon pficon-info\" ng-show=\"pfNotificationType === 'info'\"></span> <span class=\"pficon pficon-error-circle-o\" ng-show=\"pfNotificationType === 'danger'\"></span> <span class=\"pficon pficon-warning-triangle-o\" ng-show=\"pfNotificationType === 'warning'\"></span> <strong>{{pfNotificationHeader}}</strong> {{pfNotificationMessage}}</div>"
+  );
+
+
+  $templateCache.put('notification/toast-notification-list.html',
+    "<div class=toast-notification-list-pf data-ng-show=\"notifications.length > 0\"><div ng-repeat=\"notification in notifications\"><div pf-toast-notification notification-type={{notification.type}} header={{notification.header}} message={{notification.message}} show-close=\"{{(showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}\" close-callback=handleClose action-title={{notification.actionTitle}} action-callback=notification.actionCallback menu-actions=notification.menuActions update-viewing=handleViewingChange data=notification></div></div></div>"
+  );
+
+
+  $templateCache.put('notification/toast-notification.html',
+    "<div class=\"toast-pf alert alert-{{notificationType}}\" ng-class=\"{'alert-dismissable': showCloseButton}\" ng-mouseenter=handleEnter() ng-mouseleave=handleLeave()><div class=\"dropdown pull-right dropdown-kebab-pf\" ng-if=\"menuActions && menuActions.length > 0\"><button class=\"btn btn-link dropdown-toggle\" type=button id=dropdownKebabRight data-toggle=dropdown aria-haspopup=true aria-expanded=true><span class=\"fa fa-ellipsis-v\"></span></button><ul class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=dropdownKebabRight><li ng-repeat=\"menuAction in menuActions\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': menuAction.isSeparator === true, 'disabled': menuAction.isDisabled === true}\"><a ng-if=\"menuAction.isSeparator !== true\" class=secondary-action title={{menuAction.title}} ng-click=handleMenuAction(menuAction)>{{menuAction.name}}</a></li></ul></div><button ng-if=showCloseButton type=button class=close aria-hidden=true ng-click=handleClose()><span class=\"pficon pficon-close\"></span></button><div class=\"pull-right toast-pf-action\" ng-if=actionTitle><a ng-click=handleAction()>{{actionTitle}}</a></div><span class=\"pficon pficon-ok\" ng-if=\"notificationType === 'success'\"></span> <span class=\"pficon pficon-info\" ng-if=\"notificationType === 'info'\"></span> <span class=\"pficon pficon-error-circle-o\" ng-if=\"notificationType === 'danger'\"></span> <span class=\"pficon pficon-warning-triangle-o\" ng-if=\"notificationType === 'warning'\"></span> <span ng-if=header><strong>{{header}}</strong> {{message}}</span> <span ng-if=!header>{{message}}</span></div>"
   );
 
 }]);

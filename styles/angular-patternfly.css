@@ -453,3 +453,19 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 .drawer-pf-notification .expanded-notification .drawer-pf-notification-message {
   display: inline-block;
 }
+
+.toast-notification-list-pf {
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  z-index: 1050;
+}
+.toast-notification-list-pf .toast-pf.alert {
+  float: right;
+}
+.toast-pf-action > a {
+  cursor: pointer;
+}
+.toast-pf .dropdown-menu > li > a {
+  cursor: pointer;
+}

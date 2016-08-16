@@ -9525,11 +9525,24 @@ h6 .label {
   border-top: 0;
 }
 .list-group-item {
+  border-top: 0;
   border-left: 0;
   border-right: 0;
+  margin-bottom: 0;
 }
 .list-group-item-heading {
   font-weight: 600;
+}
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus {
+  border-top: solid 1px #39a5dc;
+  margin-top: -1px;
+  z-index: auto;
+}
+.list-group-item.active:first-child {
+  border-top: 1px solid #39a5dc !important;
+  margin-top: -1px;
 }
 .modal-header {
   background-color: #f5f5f5;

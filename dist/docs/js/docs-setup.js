@@ -221,6 +221,24 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.notification.directive:pfToastNotification",
+      "shortName": "pfToastNotification",
+      "type": "directive",
+      "moduleName": "patternfly.notification",
+      "shortDescription": "Toast notifications are used to notify users of a system occurence. Toast notifications should be transient and stay on the screen for 8 seconds,",
+      "keywords": "$scope $watch action action-callback action-title actioncallback actionfn actions actions-label actiontext actiontitle add allow allowed allows angular api block button callbacks capabilities checkbox class close close-callback closecallback col-md-12 col-sm-10 col-sm-2 col-sm-3 control-label controller currently danger data default directive disable disabled displayed example-container false flag form-control form-group form-horizontal function grouped handleaction header html info invoke isdisabled isseparator item js kebab list list-style-type long main menu menu-actions menuaction menuactions message module needed ng-controller ng-model ng-options note notification notification-type notifications notificationtype notify occurence optional patternfly perform performaction pf-select pf-toast-notification pftoastnotification place placehodler primary primaryaction read row rows screen script seconds selected separator set show-close showclose showmenu status stay style success supported system text title toast toastnotificationdemoctrl transient true type types unavailable undefined updateviewing user users var viewing warning"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.notification.directive:pfToastNotificationList",
+      "shortName": "pfToastNotificationList",
+      "type": "directive",
+      "moduleName": "patternfly.notification",
+      "shortDescription": "Using this directive displayes a list of toast notifications",
+      "keywords": "$rootscope $scope action actioncallback actionfn actions actions-label actiontext actiontitle allowed angular api button buttons checkbox class click close close-callback closecallback closed closes col-md-12 col-sm-1 col-sm-10 col-sm-12 col-sm-2 col-sm-3 control-label controller current danger data default directive disable disabled display displayed displayes example-container false flag form-control form-group form-horizontal function grouped handleaction handleclose header html info invoke isdisabled ispersistent isseparator js kebab list list-style-type main menu menuaction menuactions message module ng-click ng-controller ng-model ng-options notifcations notification notifications notify object optional patternfly perform performaction persistent pf-select pf-toast-notification-list pftoastnotification place placehodler primary primaryaction remove row rows script selected separator set setviewing show-close showclose showmenu style success text times title toast toastnotificationlistdemoctrl true type typemap types unavailable undefined update-viewing updateviewing user var viewing warning"
+    },
+    {
+      "section": "api",
       "id": "patternfly.notification.Notification",
       "shortName": "patternfly.notification.Notification",
       "type": "service",
