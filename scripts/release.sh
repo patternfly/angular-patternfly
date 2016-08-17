@@ -103,6 +103,16 @@ prereqs()
   check $? "Cannot find grunt in path"
 }
 
+# Publish to npm
+publish()
+{
+  echo "*** Publishing npm"
+  cd $PTNFLY_DIR
+
+  npm publish
+  check $? "npm publish failure"
+}
+
 # Push changes to remote repo
 push()
 {
@@ -131,6 +141,21 @@ setup_repo() {
   check $? "Local repo setup failure"
 }
 
+# Shrink wrap npm
+shrinkwrap()
+{
+  echo "*** Shrink wrapping $SHRINKWRAP_JSON"
+  cd $PTNFLY_DIR
+
+  # shrinkwrap
+  if [ -s $SHRINKWRAP_JSON ]; then
+    rm -f $SHRINKWRAP_JSON
+  fi
+
+  npm shrinkwrap
+  check $? "npm shrinkwrap failure"
+}
+
 usage()
 {
 cat <<- EEOOFF
@@ -139,13 +164,14 @@ cat <<- EEOOFF
 
     Note: After changes are pushed, a PR will need to be created via GitHub.
 
-    sh [-x] $SCRIPT [-h|f|s] -v <version>
+    sh [-x] $SCRIPT [-h|p|f|s] -v <version>
 
     Example: sh $SCRIPT -v 3.7.0 -f
 
     OPTIONS:
-    h       Display this message (default) 
+    h       Display this message (default)
     f       Force push to new repo branch (e.g., bump-v3.7.0)
+    p       Publish to npm from latest repo clone
     s       Skip new clone, clean, and install to rebuild previously created repo
     v       The version number (e.g., 3.7.0)
 
@@ -160,6 +186,9 @@ verify()
   mkdir -p $VERIFY_DIR
   cd $VERIFY_DIR
 
+  npm install $PTNFLY_DIR
+  check $? "npm install failure"
+
   bower install $PTNFLY_DIR
   check $? "bower install failure"
 }
@@ -173,10 +202,12 @@ verify()
     exit 1
   fi
 
-  while getopts hfsv c; do
+  while getopts hfpsv c; do
     case $c in
       h) usage; exit 0;;
       f) PUSH=1;;
+      p) PUBLISH=1
+         BRANCH=master-dist;;
       s) SETUP=1;;
       v) VERSION=$2; shift
          BRANCH=bump-v$VERSION;;
@@ -184,7 +215,7 @@ verify()
     esac
   done
 
-  if [ -z "$VERSION" ]; then
+  if [ -z "$VERSION" -a -z "$PUBLISH" -o -n "$VERSION" -a -n "$PUBLISH" ]; then
     usage
     exit 1
   fi
@@ -195,16 +226,24 @@ verify()
     setup_repo
   fi
 
-  bump_bower
-  bump_package
+  if [ -z "$PUBLISH" ]; then
+    bump_bower
+    bump_package
 
-  if [ -z "$SETUP" ]; then
-    clean
-    install
+    if [ -z "$SETUP" ]; then
+      clean
+      install
+    fi
+
+    build
+    shrinkwrap
+    verify
+  else
+    publish
+
+    # Skip remaining steps for npm publish
+    exit 0
   fi
-
-  build
-  verify
 
   if [ -n "$PUSH" ]; then
     push
