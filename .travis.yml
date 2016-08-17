@@ -23,7 +23,7 @@ deploy:
   app: angular
   skip_cleanup: true
   on:
-    branch: master-dist
+    branch: master
     condition: $TRAVIS_REPO_SLUG = "patternfly/angular-patternfly"
 
 notifications:
