@@ -48,7 +48,8 @@ bump_package()
   echo "*** Bumping version in $PACKAGE_JSON to $VERSION"
   cd $PTNFLY_DIR
 
-  sed "s|\"version\":.*|\"version\": \"$VERSION\",|" $PACKAGE_JSON > $PACKAGE_JSON.tmp
+  sed "s|\"version\":.*|\"version\": \"$VERSION\",|" $PACKAGE_JSON | \
+  sed "s|\"patternfly\":.*|\"patternfly\": \"~$VERSION\"|" > $PACKAGE_JSON.tmp
   mv $PACKAGE_JSON.tmp $PACKAGE_JSON
 }
 
