@@ -12,7 +12,7 @@ This project will provide a set of common AngularJS directives for use with the 
 * API Docs: http://angular-patternfly.rhcloud.com/#/api
 * Build Status: https://travis-ci.org/patternfly/angular-patternfly.svg?branch=master
 
-## Getting started
+## Getting started - TESTING
 
 You have to install required software before you're able to use grunt:
 
