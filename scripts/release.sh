@@ -240,6 +240,11 @@ verify()
     shrinkwrap
     verify
   else
+    clean
+    install
+    build
+    shrinkwrap
+    verify
     publish
 
     # Skip remaining steps for npm publish
