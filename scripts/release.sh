@@ -12,6 +12,7 @@ default()
 
   BOWER_JSON=bower.json
   PACKAGE_JSON=package.json
+  SHRINKWRAP_JSON=npm-shrinkwrap.json
 
   PTNFLY_REPO=https://github.com/patternfly/angular-patternfly.git
   PTNFLY_DIR="$TMP_DIR/angular-patternfly"
@@ -81,6 +82,11 @@ clean()
   if [ -d lib ]; then
     rm -rf lib
   fi
+
+  # shrinkwrap
+  if [ -s $SHRINKWRAP_JSON ]; then
+    rm -f $SHRINKWRAP_JSON
+  fi
 }
 
 # Install dependencies
@@ -138,7 +144,10 @@ setup_repo() {
   git clone $PTNFLY_REPO
   cd $PTNFLY_DIR
 
-  git checkout -B $BRANCH
+  git checkout $BRANCH
+  if [ "$?" -ne 0 ]; then
+    git checkout -B $BRANCH
+  fi
   check $? "Local repo setup failure"
 }
 
@@ -147,11 +156,6 @@ shrinkwrap()
 {
   echo "*** Shrink wrapping $SHRINKWRAP_JSON"
   cd $PTNFLY_DIR
-
-  # shrinkwrap
-  if [ -s $SHRINKWRAP_JSON ]; then
-    rm -f $SHRINKWRAP_JSON
-  fi
 
   npm shrinkwrap
   check $? "npm shrinkwrap failure"
