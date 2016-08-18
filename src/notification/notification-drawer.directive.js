@@ -97,7 +97,7 @@
        <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
      </div>
    </div>
-   <div ng-if="drawerExpanded" class="container-fluid expanded-notification">
+   <div ng-if="drawerExpanded" class="container-fluid">
      <div class="row">
        <div class="col-sm-6">
          <span class="pull-left {{customScope.getNotficationStatusIconClass(notification)}}"></span>
