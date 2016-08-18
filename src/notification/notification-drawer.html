@@ -15,7 +15,7 @@
         </div>
         <div class="panel-collapse collapse" ng-class="{in: notificationGroup.open}">
           <div class="panel-body">
-            <div class="drawer-pf-notification" ng-class="{unread: notification.unread}"
+            <div class="drawer-pf-notification" ng-class="{unread: notification.unread, 'expanded-notification': drawerExpanded}"
                  ng-repeat="notification in notificationGroup.notifications" ng-include src="notificationBodyInclude">
             </div>
             <div ng-if="notificationGroup.isLoading" class="drawer-pf-loading text-center">
