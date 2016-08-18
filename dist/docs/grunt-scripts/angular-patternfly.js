@@ -4871,7 +4871,7 @@ angular.module( 'patternfly.notification' ).directive('pfInlineNotification', fu
        <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
      </div>
    </div>
-   <div ng-if="drawerExpanded" class="container-fluid expanded-notification">
+   <div ng-if="drawerExpanded" class="container-fluid">
      <div class="row">
        <div class="col-sm-6">
          <span class="pull-left {{customScope.getNotficationStatusIconClass(notification)}}"></span>
@@ -8359,7 +8359,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
 
   $templateCache.put('notification/notification-drawer.html',
-    "<div class=drawer-pf ng-class=\"{'hide': drawerHidden, 'drawer-pf-expanded': drawerExpanded}\"><div ng-if=drawerTitle class=drawer-pf-title><a ng-if=allowExpand class=drawer-pf-toggle-expand ng-click=toggleExpandDrawer()></a><h3 class=text-center>{{drawerTitle}}</h3></div><div ng-if=titleInclude class=drawer-pf-title ng-include src=titleInclude></div><div pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-click=toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=headingInclude></a></h4><span class=panel-counter ng-include src=subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open}\"><div class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div class=drawer-pf-action ng-if=actionButtonTitle><a class=\"btn btn-link btn-block\" ng-click=actionButtonCallback(notificationGroup)>{{actionButtonTitle}}</a></div><div ng-if=notificationFooterInclude ng-include src=notificationFooterInclude></div></div></div></div></div></div>"
+    "<div class=drawer-pf ng-class=\"{'hide': drawerHidden, 'drawer-pf-expanded': drawerExpanded}\"><div ng-if=drawerTitle class=drawer-pf-title><a ng-if=allowExpand class=drawer-pf-toggle-expand ng-click=toggleExpandDrawer()></a><h3 class=text-center>{{drawerTitle}}</h3></div><div ng-if=titleInclude class=drawer-pf-title ng-include src=titleInclude></div><div pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-click=toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=headingInclude></a></h4><span class=panel-counter ng-include src=subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open}\"><div class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread, 'expanded-notification': drawerExpanded}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div class=drawer-pf-action ng-if=actionButtonTitle><a class=\"btn btn-link btn-block\" ng-click=actionButtonCallback(notificationGroup)>{{actionButtonTitle}}</a></div><div ng-if=notificationFooterInclude ng-include src=notificationFooterInclude></div></div></div></div></div></div>"
   );
 
 
@@ -8374,7 +8374,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
 
   $templateCache.put('notification/toast-notification-list.html',
-    "<div class=toast-notification-list-pf data-ng-show=\"notifications.length > 0\"><div ng-repeat=\"notification in notifications\"><div pf-toast-notification notification-type={{notification.type}} header={{notification.header}} message={{notification.message}} show-close=\"{{(showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}\" close-callback=handleClose action-title={{notification.actionTitle}} action-callback=notification.actionCallback menu-actions=notification.menuActions update-viewing=handleViewingChange data=notification></div></div></div>"
+    "<div class=toast-notifications-list-pf data-ng-show=\"notifications.length > 0\"><div ng-repeat=\"notification in notifications\"><div pf-toast-notification notification-type={{notification.type}} header={{notification.header}} message={{notification.message}} show-close=\"{{(showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}\" close-callback=handleClose action-title={{notification.actionTitle}} action-callback=notification.actionCallback menu-actions=notification.menuActions update-viewing=handleViewingChange data=notification></div></div></div>"
   );
 
 

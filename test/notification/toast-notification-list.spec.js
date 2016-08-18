@@ -121,7 +121,7 @@ describe('Directive: pfToastNotificationList', function () {
   });
 
   it('should have the correct number of toast notifications', function () {
-    var toasts = element.find('.toast-notification-list-pf .toast-pf');
+    var toasts = element.find('.toast-notifications-list-pf .toast-pf');
     expect(toasts.length).toBe(4);
 
     var okIcon = element.find('.pficon.pficon-ok');
@@ -136,7 +136,7 @@ describe('Directive: pfToastNotificationList', function () {
     $scope.notifications.splice(2, 1);
     $scope.$digest();
 
-    toasts = element.find('.toast-notification-list-pf .toast-pf');
+    toasts = element.find('.toast-notifications-list-pf .toast-pf');
     expect(toasts.length).toBe(3);
 
     okIcon = element.find('.pficon.pficon-ok');
@@ -151,7 +151,7 @@ describe('Directive: pfToastNotificationList', function () {
 
   it('should get the close callback invoked when an item is closed', function () {
     // No close buttons when there are menu actions
-    var closeButton = element.find('.toast-notification-list-pf .toast-pf button.close');
+    var closeButton = element.find('.toast-notifications-list-pf .toast-pf button.close');
     expect(closeButton.length).toBe(0);
 
     // No Menu Actions
@@ -162,7 +162,7 @@ describe('Directive: pfToastNotificationList', function () {
 
     compileHTML(htmlTmp, $scope);
 
-    var closeButton = element.find('.toast-notification-list-pf .toast-pf button.close');
+    var closeButton = element.find('.toast-notifications-list-pf .toast-pf button.close');
     expect(closeButton.length).toBe(3);
 
     expect($scope.closeData).toBeUndefined();
@@ -176,7 +176,7 @@ describe('Directive: pfToastNotificationList', function () {
 
   it('should get the action callback invoked when an action button is closed', function () {
     // No close buttons when there are menu actions
-    var closeButton = element.find('.toast-notification-list-pf .toast-pf .toast-pf-action > a');
+    var closeButton = element.find('.toast-notifications-list-pf .toast-pf .toast-pf-action > a');
     expect(closeButton.length).toBe(4);
 
     expect($scope.actionData).toBeUndefined();
