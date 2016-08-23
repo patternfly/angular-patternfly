@@ -8326,7 +8326,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
   'use strict';
 
   $templateCache.put('navigation/vertical-navigation.html',
-    "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=brandSrc ng-src=brandSrc alt=\"{{brandAlt}}\"> <span class=navbar-brand-txt ng-if=!brandSrc>{{brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-vertical-with-sub-menus': hasSubMenus,\n" +
+    "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=brandSrc ng-src={{brandSrc}} alt=\"{{brandAlt}}\"> <span class=navbar-brand-txt ng-if=!brandSrc>{{brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-vertical-with-sub-menus': hasSubMenus,\n" +
     "                    'nav-pf-persistent-secondary': persistentSecondary,\n" +
     "                    'nav-pf-vertical-collapsible-menus': pinnableMenus,\n" +
     "                    'hidden-icons-pf': hiddenIcons,\n" +
