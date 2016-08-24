@@ -32,7 +32,13 @@ describe('Directive:  pfVerticalNavigation', function () {
       {
         title: "Dolor",
         iconClass : "fa fa-shield",
-        href: "#/dolor"
+        href: "#/dolor",
+        badges: [
+          {
+            count: 1283,
+            tooltip: "Total number of items"
+          }
+        ]
       },
       {
         title: "Ipsum",
@@ -45,16 +51,36 @@ describe('Directive:  pfVerticalNavigation', function () {
             children: [
               {
                 title: "Recteque",
-                active: true,
-                href: "#/ipsum/intellegam/recteque"
+                href: "#/ipsum/intellegam/recteque",
+                badges: [
+                  {
+                    count: 6,
+                    tooltip: "Total number of error items",
+                    badgeClass: 'example-error-background'
+                  }
+                ]
               },
               {
                 title: "Suavitate",
-                href: "#/ipsum/intellegam/suavitate"
+                href: "#/ipsum/intellegam/suavitate",
+                badges: [
+                  {
+                    count: 0,
+                    tooltip: "Total number of items",
+                    badgeClass: 'example-ok-background'
+                  }
+                ]
               },
               {
                 title: "Vituperatoribus",
-                href: "#/ipsum/intellegam/vituperatoribus"
+                href: "#/ipsum/intellegam/vituperatoribus",
+                badges: [
+                  {
+                    count: 18,
+                    tooltip: "Total number of warning items",
+                    badgeClass: 'example-warning-background'
+                  }
+                ]
               }
             ]
           },
@@ -556,4 +582,77 @@ describe('Directive:  pfVerticalNavigation', function () {
 
     expect($scope.navigateItem).toBe($scope.navigationItems[2].children[0].children[0].title);
   });
+
+  it('should add badges', function () {
+    var primaryMenu = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus');
+    expect(primaryMenu.length).toBe(1);
+
+    var primaryItems = primaryMenu.find('> .list-group > .list-group-item');
+    expect(primaryItems.length).toBe(6);
+
+    var badges = angular.element(primaryItems[1]).find('.badge');
+    expect(badges.length).toBe(1);
+
+    var secondaryMenu = angular.element(primaryItems[2]).find('.nav-pf-secondary-nav');
+    expect(secondaryMenu.length).toBe(1);
+
+    var secondaryItems = angular.element(secondaryMenu).find('> .list-group > .list-group-item');
+    expect(secondaryItems.length).toBe(4);
+
+    var tertiaryMenu = angular.element(secondaryItems[0]).find('.nav-pf-tertiary-nav');
+    expect(tertiaryMenu.length).toBe(1);
+
+    var tertiaryBadges = angular.element(tertiaryMenu).find('.badge');
+    expect(tertiaryBadges.length).toBe(3);
+  });
+
+  it('should set classes on badges', function () {
+    var primaryMenu = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus');
+    expect(primaryMenu.length).toBe(1);
+
+    var primaryItems = primaryMenu.find('> .list-group > .list-group-item');
+    expect(primaryItems.length).toBe(6);
+
+    var secondaryMenu = angular.element(primaryItems[2]).find('.nav-pf-secondary-nav');
+    expect(secondaryMenu.length).toBe(1);
+
+    var secondaryItems = angular.element(secondaryMenu).find('> .list-group > .list-group-item');
+    expect(secondaryItems.length).toBe(4);
+
+    var tertiaryMenu = angular.element(secondaryItems[0]).find('.nav-pf-tertiary-nav');
+    expect(tertiaryMenu.length).toBe(1);
+
+    var errorBadge = angular.element(tertiaryMenu).find('.badge.example-error-background');
+    expect(errorBadge.length).toBe(1);
+
+    var warningBadge = angular.element(tertiaryMenu).find('.badge.example-warning-background');
+    expect(warningBadge.length).toBe(1);
+  });
+
+  it('should not show badges with a 0 count', function () {
+    var primaryMenu = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus');
+    expect(primaryMenu.length).toBe(1);
+
+    var primaryItems = primaryMenu.find('> .list-group > .list-group-item');
+    expect(primaryItems.length).toBe(6);
+
+    var secondaryMenu = angular.element(primaryItems[2]).find('.nav-pf-secondary-nav');
+    expect(secondaryMenu.length).toBe(1);
+
+    var secondaryItems = angular.element(secondaryMenu).find('> .list-group > .list-group-item');
+    expect(secondaryItems.length).toBe(4);
+
+    var tertiaryMenu = angular.element(secondaryItems[0]).find('.nav-pf-tertiary-nav');
+    expect(tertiaryMenu.length).toBe(1);
+
+    var errorBadge = angular.element(tertiaryMenu).find('.badge.example-error-background > span');
+    expect(errorBadge.length).toBe(1);
+
+    var warningBadge = angular.element(tertiaryMenu).find('.badge.example-warning-background > span');
+    expect(warningBadge.length).toBe(1);
+
+    var warningBadge = angular.element(tertiaryMenu).find('.example-ok-background > span');
+    expect(warningBadge.length).toBe(0);
+  });
+
 });

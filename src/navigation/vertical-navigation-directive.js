@@ -27,6 +27,12 @@
  * <li>.iconClass      - (string) Classes for icon to be shown on the menu (ex. "fa fa-dashboard")
  * <li>.href           - (string) href link to navigate to on click
  * <li>.children       - (array) Submenu items (same structure as top level items)
+ * <li>.badges         -  (array) Badges to display for the item, badges with a zero count are not displayed.
+ *   <ul style='list-style-type: none'>
+ *   <li>.count        - (number) Count to display in the badge
+ *   <li>.tooltip      - (string) Tooltip to display for the badge
+ *   <li>.badgeClass:  - (string) Additional class(es) to add to the badge
+ *   </ul>
  * </ul>
  * @param {function} navigateCallback function(item) Callback method invoked on a navigation item click (one with no submenus)
  * @param {function} itemClickCallback function(item) Callback method invoked on an item click
@@ -92,7 +98,13 @@
         {
            title: "Dolor",
            iconClass : "fa fa-shield",
-           href: "#/dolor"
+           href: "#/dolor",
+           badges: [
+             {
+               count: 1283,
+               tooltip: "Total number of items"
+             }
+           ]
         },
         {
            title: "Ipsum",
@@ -103,15 +115,35 @@
                  children: [
                     {
                        title: "Recteque",
-                       href: "#/ipsum/intellegam/recteque"
+                       href: "#/ipsum/intellegam/recteque",
+                       badges: [
+                         {
+                           count: 6,
+                           tooltip: "Total number of error items",
+                           badgeClass: 'example-error-background'
+                         }
+                       ]
                     },
                     {
                        title: "Suavitate",
-                       href: "#/ipsum/intellegam/suavitate"
+                       href: "#/ipsum/intellegam/suavitate",
+                       badges: [
+                         {
+                           count: 2,
+                           tooltip: "Total number of items"
+                         }
+                       ]
                     },
                     {
                        title: "Vituperatoribus",
-                       href: "#/ipsum/intellegam/vituperatoribus"
+                       href: "#/ipsum/intellegam/vituperatoribus",
+                       badges: [
+                         {
+                           count: 18,
+                           tooltip: "Total number of warning items",
+                           badgeClass: 'example-warning-background'
+                         }
+                       ]
                     }
                  ]
               },
@@ -573,10 +605,26 @@
           'desktop': 1200
         };
 
-        var bodyContentElement = angular.element(document.querySelector('.container-pf-nav-pf-vertical'));
+        var getBodyContentElement = function () {
+          return angular.element(document.querySelector('.container-pf-nav-pf-vertical'));
+        };
+
         var explicitCollapse = false;
         var hoverDelay = 500;
         var hideDelay = hoverDelay + 200;
+
+        var  initBodyElement = function () {
+          var bodyContentElement = getBodyContentElement();
+          if ($scope.hasSubMenus) {
+            bodyContentElement.addClass('container-pf-nav-pf-vertical-with-sub-menus');
+          }
+          if ($scope.persistentSecondary) {
+            bodyContentElement.addClass('nav-pf-persistent-secondary');
+          }
+          if ($scope.hiddenIcons) {
+            bodyContentElement.addClass('hidden-icons-pf');
+          }
+        };
 
         var updateMobileMenu = function (selected, secondaryItem) {
           $scope.items.forEach(function (item) {
@@ -606,6 +654,7 @@
 
         var checkNavState = function () {
           var width = $window.innerWidth;
+          var bodyContentElement = getBodyContentElement();
 
           // Check to see if we need to enter/exit the mobile state
           if (!$scope.ignoreMobile && width < breakpoints.tablet) {
@@ -640,6 +689,7 @@
         };
 
         var collapseMenu = function () {
+          var bodyContentElement = getBodyContentElement();
           $scope.navCollapsed = true;
 
           //Set the body class to the correct state
@@ -649,6 +699,7 @@
         };
 
         var expandMenu = function () {
+          var bodyContentElement = getBodyContentElement();
           $scope.navCollapsed = false;
 
           //Set the body class to the correct state
@@ -752,6 +803,7 @@
         };
 
         var updateSecondaryCollapsedState = function (setCollapsed, collapsedItem) {
+          var bodyContentElement = getBodyContentElement();
           if (collapsedItem) {
             collapsedItem.secondaryCollapsed = setCollapsed;
           }
@@ -773,6 +825,7 @@
         };
 
         var updateTertiaryCollapsedState = function (setCollapsed, collapsedItem) {
+          var bodyContentElement = getBodyContentElement();
           if (collapsedItem) {
             collapsedItem.tertiaryCollapsed = setCollapsed;
           }
@@ -807,16 +860,6 @@
         $scope.collapsedTertiaryNav = false;
         $scope.navCollapsed = false;
         $scope.forceHidden = false;
-
-        if ($scope.hasSubMenus) {
-          bodyContentElement.addClass('container-pf-nav-pf-vertical-with-sub-menus');
-        }
-        if ($scope.persistentSecondary) {
-          bodyContentElement.addClass('nav-pf-persistent-secondary');
-        }
-        if ($scope.hiddenIcons) {
-          bodyContentElement.addClass('hidden-icons-pf');
-        }
 
         $scope.handleNavBarToggleClick = function () {
 
@@ -981,6 +1024,7 @@
           event.stopImmediatePropagation();
         };
 
+        initBodyElement();
         checkNavState();
 
         angular.element($window).bind('resize', function () {
