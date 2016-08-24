@@ -27,7 +27,3 @@ deploy:
   on: # The branch and repo that triggered the build
     branch: master
     condition: $TRAVIS_REPO_SLUG = "patternfly/angular-patternfly"
-
-notifications:
-  email:
-    - patternfly-build@redhat.com
