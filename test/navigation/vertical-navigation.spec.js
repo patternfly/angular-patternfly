@@ -32,7 +32,13 @@ describe('Directive:  pfVerticalNavigation', function () {
       {
         title: "Dolor",
         iconClass : "fa fa-shield",
-        href: "#/dolor"
+        href: "#/dolor",
+        badges: [
+          {
+            count: 1283,
+            tooltip: "Total number of items"
+          }
+        ]
       },
       {
         title: "Ipsum",
@@ -45,16 +51,36 @@ describe('Directive:  pfVerticalNavigation', function () {
             children: [
               {
                 title: "Recteque",
-                active: true,
-                href: "#/ipsum/intellegam/recteque"
+                href: "#/ipsum/intellegam/recteque",
+                badges: [
+                  {
+                    count: 6,
+                    tooltip: "Total number of error items",
+                    badgeClass: 'example-error-background'
+                  }
+                ]
               },
               {
                 title: "Suavitate",
-                href: "#/ipsum/intellegam/suavitate"
+                href: "#/ipsum/intellegam/suavitate",
+                badges: [
+                  {
+                    count: 0,
+                    tooltip: "Total number of items",
+                    badgeClass: 'example-ok-background'
+                  }
+                ]
               },
               {
                 title: "Vituperatoribus",
-                href: "#/ipsum/intellegam/vituperatoribus"
+                href: "#/ipsum/intellegam/vituperatoribus",
+                badges: [
+                  {
+                    count: 18,
+                    tooltip: "Total number of warning items",
+                    badgeClass: 'example-warning-background'
+                  }
+                ]
               }
             ]
           },
@@ -182,7 +208,7 @@ describe('Directive:  pfVerticalNavigation', function () {
     var htmlTmp = '' +
       '<div id="verticalNavLayout" class="layout-pf layout-pf-fixed">' +
       '  <div pf-vertical-navigation items="navigationItems" brand-src="images/test.svg" brand-alt="ANGULAR PATTERNFLY"' +
-      '       has-sub-menus="true" pinnable-menus="true" update-active-items-on-click="true"' +
+      '       show-badges="true" pinnable-menus="true" update-active-items-on-click="true"' +
       '       navigate-callback="handleNavigateClick" item-click-callback="handleItemClick"' +
       '       ignore-mobile="true"' +
       '    <div>' +
@@ -203,7 +229,7 @@ describe('Directive:  pfVerticalNavigation', function () {
   });
 
   it('should add the vertical navigation menus', function () {
-    var primaryMenu = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus');
+    var primaryMenu = element.find('.nav-pf-vertical');
     expect(primaryMenu.length).toBe(1);
 
     var primaryItems = primaryMenu.find('> .list-group > .list-group-item');
@@ -223,7 +249,7 @@ describe('Directive:  pfVerticalNavigation', function () {
   });
 
   it('should update the content element', function () {
-    var content = element.find('.container-pf-nav-pf-vertical-with-sub-menus');
+    var content = element.find('.container-pf-nav-pf-vertical.nav-pf-vertical-with-badges');
     expect(content.length).toBe(0); // (1);  // This does not work for some reason the class is not there yet
   });
 
@@ -234,7 +260,7 @@ describe('Directive:  pfVerticalNavigation', function () {
     collased = element.find('.collapsed-tertiary-nav-pf');
     expect(collased.length).toBe(0);
 
-    var primaryItems = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item');
+    var primaryItems = element.find('.nav-pf-vertical > .list-group > .list-group-item');
     expect(primaryItems.length).toBe(6);
 
     // third item is active, use it to check for pin icon
@@ -273,7 +299,7 @@ describe('Directive:  pfVerticalNavigation', function () {
     var htmlTmp = '' +
       '<div id="verticalNavLayout" class="layout-pf layout-pf-fixed">' +
       '  <div pf-vertical-navigation items="navigationItems" brand-src="images/test.svg" brand-alt="ANGULAR PATTERNFLY"' +
-      '       has-sub-menus="true" pinnable-menus="true" update-active-items-on-click="true"' +
+      '       show-badges="true" pinnable-menus="true" update-active-items-on-click="true"' +
       '       navigate-callback="handleNavigateClick" item-click-callback="handleItemClick"' +
       '       ignore-mobile="true" hidden-icons="true"' +
       '    <div>' +
@@ -287,7 +313,7 @@ describe('Directive:  pfVerticalNavigation', function () {
 
     compileHTML(htmlTmp, $scope);
 
-    var primaryItems = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item');
+    var primaryItems = element.find('.nav-pf-vertical > .list-group > .list-group-item');
     expect(primaryItems.length).toBe(6);
 
     var iconSpan = angular.element(primaryItems[0]).find('> a > span');
@@ -295,10 +321,10 @@ describe('Directive:  pfVerticalNavigation', function () {
   });
 
   it('should go to collapse mode when collpase toggle is clicked', function () {
-    var menu = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus');
+    var menu = element.find('.nav-pf-vertical');
     expect(menu.length).toBe(1);
 
-    var collapsedMenu = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus.collapsed');
+    var collapsedMenu = element.find('.nav-pf-vertical.collapsed');
     expect(collapsedMenu.length).toBe(0);
 
     var navBarToggle = element.find('.navbar-header .navbar-toggle');
@@ -307,10 +333,10 @@ describe('Directive:  pfVerticalNavigation', function () {
     eventFire(navBarToggle[0], 'click');
     $scope.$digest();
 
-    menu = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus');
+    menu = element.find('.nav-pf-vertical');
     expect(menu.length).toBe(1);
 
-    collapsedMenu = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus.collapsed');
+    collapsedMenu = element.find('.nav-pf-vertical.collapsed');
     expect(collapsedMenu.length).toBe(1);
   });
 
@@ -323,7 +349,7 @@ describe('Directive:  pfVerticalNavigation', function () {
     var htmlTmp = '' +
       '<div id="verticalNavLayout" class="layout-pf layout-pf-fixed">' +
       '  <div pf-vertical-navigation items="navigationItems" brand-alt="ANGULAR PATTERNFLY"' +
-      '       has-sub-menus="true" pinnable-menus="true" update-active-items-on-click="true"' +
+      '       show-badges="true" pinnable-menus="true" update-active-items-on-click="true"' +
       '       navigate-callback="handleNavigateClick" item-click-callback="handleItemClick"' +
       '       ignore-mobile="true" hidden-icons="true"' +
       '    <div>' +
@@ -346,7 +372,7 @@ describe('Directive:  pfVerticalNavigation', function () {
   it('should invoke the navigateCallback when an item is clicked', function () {
     expect($scope.navigateItem).toBeUndefined();
 
-    var primaryItems = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item > a');
+    var primaryItems = element.find('.nav-pf-vertical > .list-group > .list-group-item > a');
     expect(primaryItems.length).toBe(6);
 
     eventFire(primaryItems[0], 'click');
@@ -364,7 +390,7 @@ describe('Directive:  pfVerticalNavigation', function () {
   it('should invoke the itemClickCallback when any item is clicked', function () {
     expect($scope.clickItem).toBeUndefined();
 
-    var primaryItems = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item > a');
+    var primaryItems = element.find('.nav-pf-vertical > .list-group > .list-group-item > a');
     expect(primaryItems.length).toBe(6);
 
     eventFire(primaryItems[0], 'click');
@@ -380,10 +406,10 @@ describe('Directive:  pfVerticalNavigation', function () {
   });
 
   it('should set active items on primary item click when updateActiveItemsOnClick is true', function () {
-    var primaryItems = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item > a');
+    var primaryItems = element.find('.nav-pf-vertical > .list-group > .list-group-item > a');
     expect(primaryItems.length).toBe(6);
 
-    var activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    var activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(0);
 
     var activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -397,7 +423,7 @@ describe('Directive:  pfVerticalNavigation', function () {
 
     expect($scope.clickItem).toBe($scope.navigationItems[0].title);
 
-    activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(1);
 
     activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -414,7 +440,7 @@ describe('Directive:  pfVerticalNavigation', function () {
 
     expect($scope.clickItem).toBe($scope.navigationItems[2].title);
 
-    activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(1);
 
     activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -427,7 +453,7 @@ describe('Directive:  pfVerticalNavigation', function () {
   });
 
   it('should set active items on secondary item click when updateActiveItemsOnClick is true', function () {
-    var primaryItems = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item');
+    var primaryItems = element.find('.nav-pf-vertical > .list-group > .list-group-item');
     expect(primaryItems.length).toBe(6);
 
     var secondaryItems = angular.element(primaryItems[2]).find('.nav-pf-secondary-nav > .list-group > .list-group-item > a');
@@ -437,7 +463,7 @@ describe('Directive:  pfVerticalNavigation', function () {
     eventFire(secondaryItems[1], 'click');
     $scope.$digest();
 
-    activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(1);
 
     activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -452,7 +478,7 @@ describe('Directive:  pfVerticalNavigation', function () {
     eventFire(secondaryItems[3], 'click');
     $scope.$digest();
 
-    activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(1);
 
     activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -465,7 +491,7 @@ describe('Directive:  pfVerticalNavigation', function () {
   });
 
   it('should set active items on tertiary item click when updateActiveItemsOnClick is true', function () {
-    var primaryItems = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item');
+    var primaryItems = element.find('.nav-pf-vertical > .list-group > .list-group-item');
     expect(primaryItems.length).toBe(6);
 
     var secondaryItems = angular.element(primaryItems[2]).find('.nav-pf-secondary-nav > .list-group > .list-group-item');
@@ -478,7 +504,7 @@ describe('Directive:  pfVerticalNavigation', function () {
     eventFire(tertiaryItems[1], 'click');
     $scope.$digest();
 
-    activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(1);
 
     activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -498,7 +524,7 @@ describe('Directive:  pfVerticalNavigation', function () {
     var htmlTmp = '' +
       '<div id="verticalNavLayout" class="layout-pf layout-pf-fixed">' +
       '  <div pf-vertical-navigation items="navigationItems" brand-src="images/test.svg" brand-alt="ANGULAR PATTERNFLY"' +
-      '       has-sub-menus="true" pinnable-menus="true"' +
+      '       show-badges="true" pinnable-menus="true"' +
       '       navigate-callback="handleNavigateClick" item-click-callback="handleItemClick"' +
       '       ignore-mobile="true"' +
       '    <div>' +
@@ -512,10 +538,10 @@ describe('Directive:  pfVerticalNavigation', function () {
 
     compileHTML(htmlTmp, $scope);
 
-    var primaryItems = element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item > a');
+    var primaryItems = element.find('.nav-pf-vertical > .list-group > .list-group-item > a');
     expect(primaryItems.length).toBe(6);
 
-    var activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    var activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(0);
 
     var activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -529,7 +555,7 @@ describe('Directive:  pfVerticalNavigation', function () {
 
     expect($scope.clickItem).toBe($scope.navigationItems[0].title);
 
-    activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(0);
 
     activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -545,7 +571,7 @@ describe('Directive:  pfVerticalNavigation', function () {
 
     expect($scope.clickItem).toBe($scope.navigationItems[2].title);
 
-    activePrimary =  element.find('.nav-pf-vertical.nav-pf-vertical-with-sub-menus > .list-group > .list-group-item.active');
+    activePrimary =  element.find('.nav-pf-vertical > .list-group > .list-group-item.active');
     expect(activePrimary.length).toBe(0);
 
     activeSecondary =  element.find('.nav-pf-secondary-nav > .list-group > .list-group-item.active');
@@ -556,4 +582,113 @@ describe('Directive:  pfVerticalNavigation', function () {
 
     expect($scope.navigateItem).toBe($scope.navigationItems[2].children[0].children[0].title);
   });
+
+  it('should add badges', function () {
+    var primaryMenu = element.find('.nav-pf-vertical');
+    expect(primaryMenu.length).toBe(1);
+
+    var primaryItems = primaryMenu.find('> .list-group > .list-group-item');
+    expect(primaryItems.length).toBe(6);
+
+    var badges = angular.element(primaryItems[1]).find('.badge');
+    expect(badges.length).toBe(1);
+
+    var secondaryMenu = angular.element(primaryItems[2]).find('.nav-pf-secondary-nav');
+    expect(secondaryMenu.length).toBe(1);
+
+    var secondaryItems = angular.element(secondaryMenu).find('> .list-group > .list-group-item');
+    expect(secondaryItems.length).toBe(4);
+
+    var tertiaryMenu = angular.element(secondaryItems[0]).find('.nav-pf-tertiary-nav');
+    expect(tertiaryMenu.length).toBe(1);
+
+    var tertiaryBadges = angular.element(tertiaryMenu).find('.badge');
+    expect(tertiaryBadges.length).toBe(3);
+  });
+
+  it('should set classes on badges', function () {
+    var primaryMenu = element.find('.nav-pf-vertical');
+    expect(primaryMenu.length).toBe(1);
+
+    var primaryItems = primaryMenu.find('> .list-group > .list-group-item');
+    expect(primaryItems.length).toBe(6);
+
+    var secondaryMenu = angular.element(primaryItems[2]).find('.nav-pf-secondary-nav');
+    expect(secondaryMenu.length).toBe(1);
+
+    var secondaryItems = angular.element(secondaryMenu).find('> .list-group > .list-group-item');
+    expect(secondaryItems.length).toBe(4);
+
+    var tertiaryMenu = angular.element(secondaryItems[0]).find('.nav-pf-tertiary-nav');
+    expect(tertiaryMenu.length).toBe(1);
+
+    var errorBadge = angular.element(tertiaryMenu).find('.badge.example-error-background');
+    expect(errorBadge.length).toBe(1);
+
+    var warningBadge = angular.element(tertiaryMenu).find('.badge.example-warning-background');
+    expect(warningBadge.length).toBe(1);
+  });
+
+  it('should not show badges with a 0 count', function () {
+    var primaryMenu = element.find('.nav-pf-vertical');
+    expect(primaryMenu.length).toBe(1);
+
+    var primaryItems = primaryMenu.find('> .list-group > .list-group-item');
+    expect(primaryItems.length).toBe(6);
+
+    var secondaryMenu = angular.element(primaryItems[2]).find('.nav-pf-secondary-nav');
+    expect(secondaryMenu.length).toBe(1);
+
+    var secondaryItems = angular.element(secondaryMenu).find('> .list-group > .list-group-item');
+    expect(secondaryItems.length).toBe(4);
+
+    var tertiaryMenu = angular.element(secondaryItems[0]).find('.nav-pf-tertiary-nav');
+    expect(tertiaryMenu.length).toBe(1);
+
+    var errorBadge = angular.element(tertiaryMenu).find('.badge.example-error-background > span');
+    expect(errorBadge.length).toBe(1);
+
+    var warningBadge = angular.element(tertiaryMenu).find('.badge.example-warning-background > span');
+    expect(warningBadge.length).toBe(1);
+
+    var warningBadge = angular.element(tertiaryMenu).find('.example-ok-background > span');
+    expect(warningBadge.length).toBe(0);
+  });
+
+  it('should not show badges when show-badges is not set', function () {
+    var primaryMenu = element.find('.nav-pf-vertical');
+    expect(primaryMenu.length).toBe(1);
+
+    var badgesMenu = element.find('.nav-pf-vertical.nav-pf-vertical-with-badges');
+    expect(badgesMenu.length).toBe(1);
+
+    var badgesShown = element.find('.badge-container-pf');
+    expect(badgesShown.length).toBeGreaterThan(0);
+
+    var htmlTmp = '' +
+    '<div id="verticalNavLayout" class="layout-pf layout-pf-fixed">' +
+    '  <div pf-vertical-navigation items="navigationItems" brand-src="images/test.svg" brand-alt="ANGULAR PATTERNFLY"' +
+    '       pinnable-menus="true" update-active-items-on-click="true"' +
+    '       navigate-callback="handleNavigateClick" item-click-callback="handleItemClick"' +
+    '       ignore-mobile="true" hidden-icons="true"' +
+    '    <div>' +
+    '      <div class="test-included-content"></div>' +
+    '    </div>' +
+    '  </div>' +
+    '  <div id="contentContainer" class="container-pf-nav-pf-vertical">' +
+    '  </div>' +
+    '</div>' +
+    '';
+    compileHTML(htmlTmp, $scope);
+
+    var primaryMenu = element.find('.nav-pf-vertical');
+    expect(primaryMenu.length).toBe(1);
+
+    var badgesMenu = element.find('.nav-pf-vertical-with-badges');
+    expect(badgesMenu.length).toBe(0);
+
+    var badgesShown = element.find('.badge-container-pf');
+    expect(badgesShown.length).toBe(0);
+  });
+
 });
