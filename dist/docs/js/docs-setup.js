@@ -185,6 +185,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.modals.directive:pfAboutModal",
+      "shortName": "pfAboutModal",
+      "type": "directive",
+      "moduleName": "patternfly.modals",
+      "shortDescription": "Directive for rendering modal windows.",
+      "keywords": "$scope additional-info additionalinfo admin administrator alt angular ante api bibendum btn btn-default call class closed commodo consequat controller copyright corner data dignissim directive donec egestas explaining false feugiat flag function fusce grahpic html iaculis img img-alt img-src imgalt imgsrc indicating interdum ipsum is-open isopen js label laoreet lectus list-style-type localhost lorem modal modalctrl modals module neque ng-click ng-controller nulla odio on-close onclose open opened patternfly pf-about-modal placerat product product-info productinfo quam rendering risus role script sed semper server source style suscipit suspendisse svg symbol tempus text title trademark tristique true urna user ut vel version vestibulum windows"
+    },
+    {
+      "section": "api",
       "id": "patternfly.navigation.directive:pfVerticalNavigation",
       "shortName": "pfVerticalNavigation",
       "type": "directive",
