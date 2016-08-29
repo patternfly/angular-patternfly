@@ -3864,7 +3864,7 @@ angular.module('patternfly.modals')
  *
  * @param {string} brandSrc src for brand image
  * @param {string} brandAlt  Text for product name when brand image is not available
- * @param {boolean} hasSubMenus Flag if there are secondary and/or tertiary navigation items, default: true
+ * @param {boolean} showBadges Flag if badges are used on navigation items, default: false
  * @param {boolean} persistentSecondary Flag to use persistent secondary menus, default: false
  * @param {boolean} hiddenIcons Flag to not show icons on the primary menu, default: false
  * @param {array} items List of navigation items
@@ -3873,6 +3873,13 @@ angular.module('patternfly.modals')
  * <li>.iconClass      - (string) Classes for icon to be shown on the menu (ex. "fa fa-dashboard")
  * <li>.href           - (string) href link to navigate to on click
  * <li>.children       - (array) Submenu items (same structure as top level items)
+ * <li>.badges         -  (array) Badges to display for the item, badges with a zero count are not displayed.
+ *   <ul style='list-style-type: none'>
+ *   <li>.count        - (number) Count to display in the badge
+ *   <li>.iconClass    - (string) Class to use for showing an icon before the count
+ *   <li>.tooltip      - (string) Tooltip to display for the badge
+ *   <li>.badgeClass:  - (string) Additional class(es) to add to the badge container
+ *   </ul>
  * </ul>
  * @param {function} navigateCallback function(item) Callback method invoked on a navigation item click (one with no submenus)
  * @param {function} itemClickCallback function(item) Callback method invoked on an item click
@@ -3889,7 +3896,7 @@ angular.module('patternfly.modals')
   </div>
   <div id="verticalNavLayout" class="layout-pf layout-pf-fixed faux-layout hidden" ng-controller="vertNavController">
     <div pf-vertical-navigation items="navigationItems" brand-alt="ANGULAR PATTERNFLY"
-         has-sub-menus="true" pinnable-menus="true" update-active-items-on-click="true"
+         show-badges="true" pinnable-menus="true" update-active-items-on-click="true"
          navigate-callback="handleNavigateClick">
       <div>
         <ul class="nav navbar-nav">
@@ -3921,7 +3928,7 @@ angular.module('patternfly.modals')
         </ul>
       </div>
     </div>
-    <div id="contentContainer" class="container-fluid container-cards-pf container-pf-nav-pf-vertical container-pf-nav-pf-vertical-with-sub-menus example-page-container">
+    <div id="contentContainer" class="container-fluid container-cards-pf container-pf-nav-pf-vertical example-page-container">
       <div id="includedContent"></div>
       </div>
     </div>
@@ -3938,7 +3945,13 @@ angular.module('patternfly.modals')
         {
            title: "Dolor",
            iconClass : "fa fa-shield",
-           href: "#/dolor"
+           href: "#/dolor",
+           badges: [
+             {
+               count: 1283,
+               tooltip: "Total number of items"
+             }
+           ]
         },
         {
            title: "Ipsum",
@@ -3949,15 +3962,35 @@ angular.module('patternfly.modals')
                  children: [
                     {
                        title: "Recteque",
-                       href: "#/ipsum/intellegam/recteque"
+                       href: "#/ipsum/intellegam/recteque",
+                       badges: [
+                         {
+                           count: 6,
+                           tooltip: "Total number of error items",
+                           badgeClass: 'example-error-background'
+                         }
+                       ]
                     },
                     {
                        title: "Suavitate",
-                       href: "#/ipsum/intellegam/suavitate"
+                       href: "#/ipsum/intellegam/suavitate",
+                       badges: [
+                         {
+                           count: 2,
+                           tooltip: "Total number of items"
+                         }
+                       ]
                     },
                     {
                        title: "Vituperatoribus",
-                       href: "#/ipsum/intellegam/vituperatoribus"
+                       href: "#/ipsum/intellegam/vituperatoribus",
+                       badges: [
+                         {
+                           count: 18,
+                           tooltip: "Total number of warning items",
+                           badgeClass: 'example-warning-background'
+                         }
+                       ]
                     }
                  ]
               },
@@ -3966,15 +3999,51 @@ angular.module('patternfly.modals')
                  children: [
                     {
                        title: "Exerci",
-                       href: "#/ipsum/copiosae/exerci"
+                       href: "#/ipsum/copiosae/exerci",
+                       badges: [
+                         {
+                           count: 2,
+                           tooltip: "Total number of error items",
+                           iconClass: 'pficon pficon-error-circle-o'
+                         },
+                         {
+                           count: 6,
+                           tooltip: "Total number warning error items",
+                           iconClass: 'pficon pficon-warning-triangle-o'
+                         }
+                       ]
                     },
                     {
                        title: "Quaeque",
-                       href: "#/ipsum/copiosae/quaeque"
+                       href: "#/ipsum/copiosae/quaeque",
+                       badges: [
+                         {
+                           count: 0,
+                           tooltip: "Total number of error items",
+                           iconClass: 'pficon pficon-error-circle-o'
+                         },
+                         {
+                           count: 4,
+                           tooltip: "Total number warning error items",
+                           iconClass: 'pficon pficon-warning-triangle-o'
+                         }
+                       ]
                     },
                     {
                        title: "Utroque",
-                       href: "#/ipsum/copiosae/utroque"
+                       href: "#/ipsum/copiosae/utroque",
+                       badges: [
+                         {
+                           count: 1,
+                           tooltip: "Total number of error items",
+                           iconClass: 'pficon pficon-error-circle-o'
+                         },
+                         {
+                           count: 2,
+                           tooltip: "Total number warning error items",
+                           iconClass: 'pficon pficon-warning-triangle-o'
+                         }
+                       ]
                     }
                  ]
               },
@@ -3997,7 +4066,19 @@ angular.module('patternfly.modals')
               },
               {
                  title: "Accumsan",
-                 href: "#/ipsum/Accumsan"
+                 href: "#/ipsum/Accumsan",
+                 badges: [
+                   {
+                     count: 2,
+                     tooltip: "Total number of error items",
+                     iconClass: 'pficon pficon-error-circle-o'
+                   },
+                   {
+                     count: 6,
+                     tooltip: "Total number warning error items",
+                     iconClass: 'pficon pficon-warning-triangle-o'
+                   }
+                 ]
               }
            ]
         },
@@ -4338,7 +4419,7 @@ angular.module('patternfly.modals')
       scope: {
         brandSrc: '@',
         brandAlt: '@',
-        hasSubMenus: '@',
+        showBadges: '@',
         persistentSecondary: '@',
         pinnableMenus: '@',
         hiddenIcons: '@',
@@ -4354,12 +4435,13 @@ angular.module('patternfly.modals')
       controller: ["$scope", function ($scope) {
         var routeChangeListener;
 
-        $scope.hasSubMenus = $scope.hasSubMenus !== 'false';
+        $scope.showBadges = $scope.showBadges === 'true';
         $scope.persistentSecondary = $scope.persistentSecondary === 'true';
         $scope.pinnableMenus = $scope.pinnableMenus === 'true';
         $scope.hiddenIcons = $scope.hiddenIcons === 'true';
         $scope.updateActiveItemsOnClick = $scope.updateActiveItemsOnClick === 'true';
         $scope.ignoreMobile = $scope.ignoreMobile === 'true';
+        $scope.activeSecondary = false;
 
         $scope.clearActiveItems = function () {
           $scope.items.forEach(function (item) {
@@ -4419,10 +4501,26 @@ angular.module('patternfly.modals')
           'desktop': 1200
         };
 
-        var bodyContentElement = angular.element(document.querySelector('.container-pf-nav-pf-vertical'));
+        var getBodyContentElement = function () {
+          return angular.element(document.querySelector('.container-pf-nav-pf-vertical'));
+        };
+
         var explicitCollapse = false;
         var hoverDelay = 500;
         var hideDelay = hoverDelay + 200;
+
+        var  initBodyElement = function () {
+          var bodyContentElement = getBodyContentElement();
+          if ($scope.showBadges) {
+            bodyContentElement.addClass('nav-pf-vertical-with-badges');
+          }
+          if ($scope.persistentSecondary) {
+            bodyContentElement.addClass('nav-pf-persistent-secondary');
+          }
+          if ($scope.hiddenIcons) {
+            bodyContentElement.addClass('hidden-icons-pf');
+          }
+        };
 
         var updateMobileMenu = function (selected, secondaryItem) {
           $scope.items.forEach(function (item) {
@@ -4452,6 +4550,7 @@ angular.module('patternfly.modals')
 
         var checkNavState = function () {
           var width = $window.innerWidth;
+          var bodyContentElement = getBodyContentElement();
 
           // Check to see if we need to enter/exit the mobile state
           if (!$scope.ignoreMobile && width < breakpoints.tablet) {
@@ -4486,6 +4585,7 @@ angular.module('patternfly.modals')
         };
 
         var collapseMenu = function () {
+          var bodyContentElement = getBodyContentElement();
           $scope.navCollapsed = true;
 
           //Set the body class to the correct state
@@ -4495,6 +4595,7 @@ angular.module('patternfly.modals')
         };
 
         var expandMenu = function () {
+          var bodyContentElement = getBodyContentElement();
           $scope.navCollapsed = false;
 
           //Set the body class to the correct state
@@ -4512,17 +4613,6 @@ angular.module('patternfly.modals')
           $timeout(function () {
             $scope.forceHidden = false;
           }, 500);
-        };
-
-        var setFirstChildActive = function (item) {
-          if (item && item.children && item.children.length > 0) {
-            if ($scope.updateActiveItemsOnClick ) {
-              item.children[0].isActive = true;
-            }
-            setFirstChildActive(item.children[0]);
-          } else if (item && $scope.navigateCallback) {
-            $scope.navigateCallback(item);
-          }
         };
 
         var setParentActive = function (item) {
@@ -4545,10 +4635,44 @@ angular.module('patternfly.modals')
           });
         };
 
-        var navigateToItem = function (item) {
-          var navTo = item.href;
+        var getFirstNavigateChild = function (item) {
+          var firstChild;
           if (!item.children || item.children.length < 1) {
+            firstChild = item;
+          } else {
+            firstChild = getFirstNavigateChild(item.children[0]);
+          }
+          return firstChild;
+        };
+
+        var setSecondaryItemVisible = function () {
+          var bodyContentElement = getBodyContentElement();
+          $scope.activeSecondary = false;
+
+          if ($scope.persistentSecondary && !$scope.inMobileState) {
+            $scope.items.forEach(function (topLevel) {
+              if (topLevel.children) {
+                topLevel.children.forEach(function (secondLevel) {
+                  if (secondLevel.isActive) {
+                    $scope.activeSecondary = true;
+                  }
+                });
+              }
+            });
+            if ($scope.activeSecondary) {
+              bodyContentElement.addClass('secondary-visible-pf');
+            } else {
+              bodyContentElement.removeClass('secondary-visible-pf');
+            }
+          }
+        };
+
+        var navigateToItem = function (item) {
+          var navItem = getFirstNavigateChild(item);
+          var navTo;
+          if (navItem) {
             $scope.showMobileNav = false;
+            navTo = navItem.href;
             if (navTo) {
               if (navTo.startsWith('#/')) {
                 navTo = navTo.substring(2);
@@ -4556,7 +4680,7 @@ angular.module('patternfly.modals')
               location.path(navTo);
             }
             if ($scope.navigateCallback) {
-              $scope.navigateCallback(item);
+              $scope.navigateCallback(navItem);
             }
           }
 
@@ -4566,11 +4690,11 @@ angular.module('patternfly.modals')
 
           if ($scope.updateActiveItemsOnClick ) {
             $scope.clearActiveItems();
-            item.isActive = true;
-            setParentActive(item);
+            navItem.isActive = true;
+            setParentActive(navItem);
+            setSecondaryItemVisible();
           }
-
-          setFirstChildActive(item);
+          setSecondaryItemVisible();
         };
 
         var primaryHover = function () {
@@ -4598,6 +4722,7 @@ angular.module('patternfly.modals')
         };
 
         var updateSecondaryCollapsedState = function (setCollapsed, collapsedItem) {
+          var bodyContentElement = getBodyContentElement();
           if (collapsedItem) {
             collapsedItem.secondaryCollapsed = setCollapsed;
           }
@@ -4619,6 +4744,7 @@ angular.module('patternfly.modals')
         };
 
         var updateTertiaryCollapsedState = function (setCollapsed, collapsedItem) {
+          var bodyContentElement = getBodyContentElement();
           if (collapsedItem) {
             collapsedItem.tertiaryCollapsed = setCollapsed;
           }
@@ -4653,16 +4779,6 @@ angular.module('patternfly.modals')
         $scope.collapsedTertiaryNav = false;
         $scope.navCollapsed = false;
         $scope.forceHidden = false;
-
-        if ($scope.hasSubMenus) {
-          bodyContentElement.addClass('container-pf-nav-pf-vertical-with-sub-menus');
-        }
-        if ($scope.persistentSecondary) {
-          bodyContentElement.addClass('nav-pf-persistent-secondary');
-        }
-        if ($scope.hiddenIcons) {
-          bodyContentElement.addClass('hidden-icons-pf');
-        }
 
         $scope.handleNavBarToggleClick = function () {
 
@@ -4827,6 +4943,7 @@ angular.module('patternfly.modals')
           event.stopImmediatePropagation();
         };
 
+        initBodyElement();
         checkNavState();
 
         angular.element($window).bind('resize', function () {
@@ -8506,10 +8623,11 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
   'use strict';
 
   $templateCache.put('navigation/vertical-navigation.html',
-    "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=brandSrc ng-src={{brandSrc}} alt=\"{{brandAlt}}\"> <span class=navbar-brand-txt ng-if=!brandSrc>{{brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-vertical-with-sub-menus': hasSubMenus,\n" +
-    "                    'nav-pf-persistent-secondary': persistentSecondary,\n" +
+    "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=brandSrc ng-src={{brandSrc}} alt=\"{{brandAlt}}\"> <span class=navbar-brand-txt ng-if=!brandSrc>{{brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-persistent-secondary': persistentSecondary,\n" +
     "                    'nav-pf-vertical-collapsible-menus': pinnableMenus,\n" +
     "                    'hidden-icons-pf': hiddenIcons,\n" +
+    "                    'nav-pf-vertical-with-badges': showBadges,\n" +
+    "                    'secondary-visible-pf': activeSecondary,\n" +
     "                    'show-mobile-secondary': showMobileSecondary,\n" +
     "                    'show-mobile-tertiary': showMobileTertiary,\n" +
     "                    'hover-secondary-nav-pf': hoverSecondaryNav,\n" +
@@ -8523,10 +8641,10 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
     "                       'active': item.isActive,\n" +
     "                       'is-hover': item.isHover,\n" +
     "                       'mobile-nav-item-pf': item.isMobileItem && showMobileSecondary,\n" +
-    "                       'mobile-secondary-item-pf': item.isMobileItem && showMobileTertiary}\" ng-mouseenter=handlePrimaryHover(item) ng-mouseleave=handlePrimaryUnHover(item)><a ng-click=\"handlePrimaryClick(item, $event)\"><span class={{item.iconClass}} ng-if=item.iconClass ng-class=\"{hidden: hiddenIcons}\" tooltip-append-to-body=true tooltip-enable={{navCollapsed}} tooltip-placement=bottom tooltip={{item.title}} tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span></a><div ng-if=\"item.children && item.children.length > 0\" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click=\"collapseSecondaryNav(item, $event)\" ng-class=\"{'collapsed': item.secondaryCollapsed}\"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat=\"secondaryItem in item.children\" class=list-group-item ng-class=\"{'tertiary-nav-item-pf': secondaryItem.children && secondaryItem.children.length > 0,\n" +
+    "                       'mobile-secondary-item-pf': item.isMobileItem && showMobileTertiary}\" ng-mouseenter=handlePrimaryHover(item) ng-mouseleave=handlePrimaryUnHover(item)><a ng-click=\"handlePrimaryClick(item, $event)\"><span class={{item.iconClass}} ng-if=item.iconClass ng-class=\"{hidden: hiddenIcons}\" tooltip-append-to-body=true tooltip-enable={{navCollapsed}} tooltip-placement=bottom tooltip={{item.title}} tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span><div ng-if=\"showBadges && item.badges\" class=badge-container-pf><div class=\"badge {{badge.badgeClass}}\" ng-repeat=\"badge in item.badges\" tooltip-append-to-body=true tooltip-placement=right tooltip={{badge.tooltip}}><span ng-if=\"badge.count && badge.iconClass\" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if=\"item.children && item.children.length > 0\" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click=\"collapseSecondaryNav(item, $event)\" ng-class=\"{'collapsed': item.secondaryCollapsed}\"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat=\"secondaryItem in item.children\" class=list-group-item ng-class=\"{'tertiary-nav-item-pf': secondaryItem.children && secondaryItem.children.length > 0,\n" +
     "                             'active': secondaryItem.isActive,\n" +
     "                             'is-hover': secondaryItem.isHover,\n" +
-    "                             'mobile-nav-item-pf': secondaryItem.isMobileItem}\" ng-mouseenter=handleSecondaryHover(secondaryItem) ng-mouseleave=handleSecondaryUnHover(secondaryItem)><a ng-click=\"handleSecondaryClick(item, secondaryItem, $event)\"><span class=list-group-item-value>{{secondaryItem.title}}</span></a><div ng-if=\"secondaryItem.children && secondaryItem.children.length > 0\" class=nav-pf-tertiary-nav><div class=nav-item-pf-header><a class=tertiary-collapse-toggle-pf ng-click=\"collapseTertiaryNav(secondaryItem, $event)\" ng-class=\"{'collapsed': secondaryItem.tertiaryCollapsed}\"></a> <span>{{secondaryItem.title}}</span></div><ul class=list-group><li ng-repeat=\"tertiaryItem in secondaryItem.children\" class=list-group-item ng-class=\"{'active': tertiaryItem.isActive}\"><a ng-click=\"handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)\"><span class=list-group-item-value>{{tertiaryItem.title}}</span></a></li></ul></div></li></ul></div></li></ul></div></nav></div>"
+    "                             'mobile-nav-item-pf': secondaryItem.isMobileItem}\" ng-mouseenter=handleSecondaryHover(secondaryItem) ng-mouseleave=handleSecondaryUnHover(secondaryItem)><a ng-click=\"handleSecondaryClick(item, secondaryItem, $event)\"><span class=list-group-item-value>{{secondaryItem.title}}</span><div ng-if=\"showBadges && secondaryItem.badges\" class=badge-container-pf><div class=\"badge {{badge.badgeClass}}\" ng-repeat=\"badge in secondaryItem.badges\" tooltip-append-to-body=true tooltip-placement=right tooltip={{badge.tooltip}}><span ng-if=\"badge.count && badge.iconClass\" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if=\"secondaryItem.children && secondaryItem.children.length > 0\" class=nav-pf-tertiary-nav><div class=nav-item-pf-header><a class=tertiary-collapse-toggle-pf ng-click=\"collapseTertiaryNav(secondaryItem, $event)\" ng-class=\"{'collapsed': secondaryItem.tertiaryCollapsed}\"></a> <span>{{secondaryItem.title}}</span></div><ul class=list-group><li ng-repeat=\"tertiaryItem in secondaryItem.children\" class=list-group-item ng-class=\"{'active': tertiaryItem.isActive}\"><a ng-click=\"handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)\"><span class=list-group-item-value>{{tertiaryItem.title}}</span><div ng-if=\"showBadges && tertiaryItem.badges\" class=badge-container-pf><div class=\"badge {{badge.badgeClass}}\" ng-repeat=\"badge in tertiaryItem.badges\" tooltip-append-to-body=true tooltip-placement=right tooltip={{badge.tooltip}}><span ng-if=\"badge.count && badge.iconClass\" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a></li></ul></div></li></ul></div></li></ul></div></nav></div>"
   );
 
 }]);

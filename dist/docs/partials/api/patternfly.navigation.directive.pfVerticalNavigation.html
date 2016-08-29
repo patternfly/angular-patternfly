@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/navigation/vertical-navigation-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/4900570/src/navigation/vertical-navigation-directive.js#L487" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfVerticalNavigation</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/navigation/vertical-navigation-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/a70f354/src/navigation/vertical-navigation-directive.js#L568" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfVerticalNavigation</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.navigation</code>
 </span>
 </div>
@@ -21,7 +21,7 @@ selector is added to the main content container.</p>
 <div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pf-vertical-navigation
      brand-src="{string}"
      brand-alt="{string}"
-     has-sub-menus="{boolean}"
+     show-badges="{boolean}"
      persistent-secondary="{boolean}"
      hidden-icons="{boolean}"
      items="{array}"
@@ -33,7 +33,7 @@ selector is added to the main content container.</p>
 &lt;/ANY&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>brandSrc</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>src for brand image</p>
 </div></td></tr><tr><td>brandAlt</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>Text for product name when brand image is not available</p>
-</div></td></tr><tr><td>hasSubMenus</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>Flag if there are secondary and/or tertiary navigation items, default: true</p>
+</div></td></tr><tr><td>showBadges</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>Flag if badges are used on navigation items, default: false</p>
 </div></td></tr><tr><td>persistentSecondary</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>Flag to use persistent secondary menus, default: false</p>
 </div></td></tr><tr><td>hiddenIcons</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>Flag to not show icons on the primary menu, default: false</p>
 </div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>List of navigation items</p>
@@ -42,6 +42,13 @@ selector is added to the main content container.</p>
 <li>.iconClass      - (string) Classes for icon to be shown on the menu (ex. &quot;fa fa-dashboard&quot;)
 <li>.href           - (string) href link to navigate to on click
 <li>.children       - (array) Submenu items (same structure as top level items)
+<li>.badges         -  (array) Badges to display for the item, badges with a zero count are not displayed.
+  <ul style='list-style-type: none'>
+  <li>.count        - (number) Count to display in the badge
+  <li>.iconClass    - (string) Class to use for showing an icon before the count
+  <li>.tooltip      - (string) Tooltip to display for the badge
+  <li>.badgeClass:  - (string) Additional class(es) to add to the badge container
+  </ul>
 </ul></div></td></tr><tr><td>navigateCallback</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>function(item) Callback method invoked on a navigation item click (one with no submenus)</p>
 </div></td></tr><tr><td>itemClickCallback</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>function(item) Callback method invoked on an item click</p>
 </div></td></tr><tr><td>updateActiveItemsOnClick</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-navigation-directive-page patternfly-navigation-directive-pfverticalnavigation-page"><p>Flag if active items should be marked on click rather than on navigation change, default: false</p>
@@ -60,7 +67,7 @@ selector is added to the main content container.</p>
 </div>
 <div id="verticalNavLayout" class="layout-pf layout-pf-fixed faux-layout hidden" ng-controller="vertNavController">
   <div pf-vertical-navigation items="navigationItems" brand-alt="ANGULAR PATTERNFLY"
-       has-sub-menus="true" pinnable-menus="true" update-active-items-on-click="true"
+       show-badges="true" pinnable-menus="true" update-active-items-on-click="true"
        navigate-callback="handleNavigateClick">
     <div>
       <ul class="nav navbar-nav">
@@ -92,7 +99,7 @@ selector is added to the main content container.</p>
       </ul>
     </div>
   </div>
-  <div id="contentContainer" class="container-fluid container-cards-pf container-pf-nav-pf-vertical container-pf-nav-pf-vertical-with-sub-menus example-page-container">
+  <div id="contentContainer" class="container-fluid container-cards-pf container-pf-nav-pf-vertical example-page-container">
     <div id="includedContent"></div>
     </div>
   </div>
@@ -112,7 +119,13 @@ angular.module('patternfly.navigation').controller('vertNavController', ['$scope
       {
          title: "Dolor",
          iconClass : "fa fa-shield",
-         href: "#/dolor"
+         href: "#/dolor",
+         badges: [
+           {
+             count: 1283,
+             tooltip: "Total number of items"
+           }
+         ]
       },
       {
          title: "Ipsum",
@@ -123,15 +136,35 @@ angular.module('patternfly.navigation').controller('vertNavController', ['$scope
                children: [
                   {
                      title: "Recteque",
-                     href: "#/ipsum/intellegam/recteque"
+                     href: "#/ipsum/intellegam/recteque",
+                     badges: [
+                       {
+                         count: 6,
+                         tooltip: "Total number of error items",
+                         badgeClass: 'example-error-background'
+                       }
+                     ]
                   },
                   {
                      title: "Suavitate",
-                     href: "#/ipsum/intellegam/suavitate"
+                     href: "#/ipsum/intellegam/suavitate",
+                     badges: [
+                       {
+                         count: 2,
+                         tooltip: "Total number of items"
+                       }
+                     ]
                   },
                   {
                      title: "Vituperatoribus",
-                     href: "#/ipsum/intellegam/vituperatoribus"
+                     href: "#/ipsum/intellegam/vituperatoribus",
+                     badges: [
+                       {
+                         count: 18,
+                         tooltip: "Total number of warning items",
+                         badgeClass: 'example-warning-background'
+                       }
+                     ]
                   }
                ]
             },
@@ -140,15 +173,51 @@ angular.module('patternfly.navigation').controller('vertNavController', ['$scope
                children: [
                   {
                      title: "Exerci",
-                     href: "#/ipsum/copiosae/exerci"
+                     href: "#/ipsum/copiosae/exerci",
+                     badges: [
+                       {
+                         count: 2,
+                         tooltip: "Total number of error items",
+                         iconClass: 'pficon pficon-error-circle-o'
+                       },
+                       {
+                         count: 6,
+                         tooltip: "Total number warning error items",
+                         iconClass: 'pficon pficon-warning-triangle-o'
+                       }
+                     ]
                   },
                   {
                      title: "Quaeque",
-                     href: "#/ipsum/copiosae/quaeque"
+                     href: "#/ipsum/copiosae/quaeque",
+                     badges: [
+                       {
+                         count: 0,
+                         tooltip: "Total number of error items",
+                         iconClass: 'pficon pficon-error-circle-o'
+                       },
+                       {
+                         count: 4,
+                         tooltip: "Total number warning error items",
+                         iconClass: 'pficon pficon-warning-triangle-o'
+                       }
+                     ]
                   },
                   {
                      title: "Utroque",
-                     href: "#/ipsum/copiosae/utroque"
+                     href: "#/ipsum/copiosae/utroque",
+                     badges: [
+                       {
+                         count: 1,
+                         tooltip: "Total number of error items",
+                         iconClass: 'pficon pficon-error-circle-o'
+                       },
+                       {
+                         count: 2,
+                         tooltip: "Total number warning error items",
+                         iconClass: 'pficon pficon-warning-triangle-o'
+                       }
+                     ]
                   }
                ]
             },
@@ -171,7 +240,19 @@ angular.module('patternfly.navigation').controller('vertNavController', ['$scope
             },
             {
                title: "Accumsan",
-               href: "#/ipsum/Accumsan"
+               href: "#/ipsum/Accumsan",
+               badges: [
+                 {
+                   count: 2,
+                   tooltip: "Total number of error items",
+                   iconClass: 'pficon pficon-error-circle-o'
+                 },
+                 {
+                   count: 6,
+                   tooltip: "Total number warning error items",
+                   iconClass: 'pficon pficon-warning-triangle-o'
+                 }
+               ]
             }
          ]
       },

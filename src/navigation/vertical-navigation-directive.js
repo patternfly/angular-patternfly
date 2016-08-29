@@ -18,7 +18,7 @@
  *
  * @param {string} brandSrc src for brand image
  * @param {string} brandAlt  Text for product name when brand image is not available
- * @param {boolean} hasSubMenus Flag if there are secondary and/or tertiary navigation items, default: true
+ * @param {boolean} showBadges Flag if badges are used on navigation items, default: false
  * @param {boolean} persistentSecondary Flag to use persistent secondary menus, default: false
  * @param {boolean} hiddenIcons Flag to not show icons on the primary menu, default: false
  * @param {array} items List of navigation items
@@ -27,6 +27,13 @@
  * <li>.iconClass      - (string) Classes for icon to be shown on the menu (ex. "fa fa-dashboard")
  * <li>.href           - (string) href link to navigate to on click
  * <li>.children       - (array) Submenu items (same structure as top level items)
+ * <li>.badges         -  (array) Badges to display for the item, badges with a zero count are not displayed.
+ *   <ul style='list-style-type: none'>
+ *   <li>.count        - (number) Count to display in the badge
+ *   <li>.iconClass    - (string) Class to use for showing an icon before the count
+ *   <li>.tooltip      - (string) Tooltip to display for the badge
+ *   <li>.badgeClass:  - (string) Additional class(es) to add to the badge container
+ *   </ul>
  * </ul>
  * @param {function} navigateCallback function(item) Callback method invoked on a navigation item click (one with no submenus)
  * @param {function} itemClickCallback function(item) Callback method invoked on an item click
@@ -43,7 +50,7 @@
   </div>
   <div id="verticalNavLayout" class="layout-pf layout-pf-fixed faux-layout hidden" ng-controller="vertNavController">
     <div pf-vertical-navigation items="navigationItems" brand-alt="ANGULAR PATTERNFLY"
-         has-sub-menus="true" pinnable-menus="true" update-active-items-on-click="true"
+         show-badges="true" pinnable-menus="true" update-active-items-on-click="true"
          navigate-callback="handleNavigateClick">
       <div>
         <ul class="nav navbar-nav">
@@ -75,7 +82,7 @@
         </ul>
       </div>
     </div>
-    <div id="contentContainer" class="container-fluid container-cards-pf container-pf-nav-pf-vertical container-pf-nav-pf-vertical-with-sub-menus example-page-container">
+    <div id="contentContainer" class="container-fluid container-cards-pf container-pf-nav-pf-vertical example-page-container">
       <div id="includedContent"></div>
       </div>
     </div>
@@ -92,7 +99,13 @@
         {
            title: "Dolor",
            iconClass : "fa fa-shield",
-           href: "#/dolor"
+           href: "#/dolor",
+           badges: [
+             {
+               count: 1283,
+               tooltip: "Total number of items"
+             }
+           ]
         },
         {
            title: "Ipsum",
@@ -103,15 +116,35 @@
                  children: [
                     {
                        title: "Recteque",
-                       href: "#/ipsum/intellegam/recteque"
+                       href: "#/ipsum/intellegam/recteque",
+                       badges: [
+                         {
+                           count: 6,
+                           tooltip: "Total number of error items",
+                           badgeClass: 'example-error-background'
+                         }
+                       ]
                     },
                     {
                        title: "Suavitate",
-                       href: "#/ipsum/intellegam/suavitate"
+                       href: "#/ipsum/intellegam/suavitate",
+                       badges: [
+                         {
+                           count: 2,
+                           tooltip: "Total number of items"
+                         }
+                       ]
                     },
                     {
                        title: "Vituperatoribus",
-                       href: "#/ipsum/intellegam/vituperatoribus"
+                       href: "#/ipsum/intellegam/vituperatoribus",
+                       badges: [
+                         {
+                           count: 18,
+                           tooltip: "Total number of warning items",
+                           badgeClass: 'example-warning-background'
+                         }
+                       ]
                     }
                  ]
               },
@@ -120,15 +153,51 @@
                  children: [
                     {
                        title: "Exerci",
-                       href: "#/ipsum/copiosae/exerci"
+                       href: "#/ipsum/copiosae/exerci",
+                       badges: [
+                         {
+                           count: 2,
+                           tooltip: "Total number of error items",
+                           iconClass: 'pficon pficon-error-circle-o'
+                         },
+                         {
+                           count: 6,
+                           tooltip: "Total number warning error items",
+                           iconClass: 'pficon pficon-warning-triangle-o'
+                         }
+                       ]
                     },
                     {
                        title: "Quaeque",
-                       href: "#/ipsum/copiosae/quaeque"
+                       href: "#/ipsum/copiosae/quaeque",
+                       badges: [
+                         {
+                           count: 0,
+                           tooltip: "Total number of error items",
+                           iconClass: 'pficon pficon-error-circle-o'
+                         },
+                         {
+                           count: 4,
+                           tooltip: "Total number warning error items",
+                           iconClass: 'pficon pficon-warning-triangle-o'
+                         }
+                       ]
                     },
                     {
                        title: "Utroque",
-                       href: "#/ipsum/copiosae/utroque"
+                       href: "#/ipsum/copiosae/utroque",
+                       badges: [
+                         {
+                           count: 1,
+                           tooltip: "Total number of error items",
+                           iconClass: 'pficon pficon-error-circle-o'
+                         },
+                         {
+                           count: 2,
+                           tooltip: "Total number warning error items",
+                           iconClass: 'pficon pficon-warning-triangle-o'
+                         }
+                       ]
                     }
                  ]
               },
@@ -151,7 +220,19 @@
               },
               {
                  title: "Accumsan",
-                 href: "#/ipsum/Accumsan"
+                 href: "#/ipsum/Accumsan",
+                 badges: [
+                   {
+                     count: 2,
+                     tooltip: "Total number of error items",
+                     iconClass: 'pficon pficon-error-circle-o'
+                   },
+                   {
+                     count: 6,
+                     tooltip: "Total number warning error items",
+                     iconClass: 'pficon pficon-warning-triangle-o'
+                   }
+                 ]
               }
            ]
         },
@@ -492,7 +573,7 @@
       scope: {
         brandSrc: '@',
         brandAlt: '@',
-        hasSubMenus: '@',
+        showBadges: '@',
         persistentSecondary: '@',
         pinnableMenus: '@',
         hiddenIcons: '@',
@@ -508,12 +589,13 @@
       controller: function ($scope) {
         var routeChangeListener;
 
-        $scope.hasSubMenus = $scope.hasSubMenus !== 'false';
+        $scope.showBadges = $scope.showBadges === 'true';
         $scope.persistentSecondary = $scope.persistentSecondary === 'true';
         $scope.pinnableMenus = $scope.pinnableMenus === 'true';
         $scope.hiddenIcons = $scope.hiddenIcons === 'true';
         $scope.updateActiveItemsOnClick = $scope.updateActiveItemsOnClick === 'true';
         $scope.ignoreMobile = $scope.ignoreMobile === 'true';
+        $scope.activeSecondary = false;
 
         $scope.clearActiveItems = function () {
           $scope.items.forEach(function (item) {
@@ -573,10 +655,26 @@
           'desktop': 1200
         };
 
-        var bodyContentElement = angular.element(document.querySelector('.container-pf-nav-pf-vertical'));
+        var getBodyContentElement = function () {
+          return angular.element(document.querySelector('.container-pf-nav-pf-vertical'));
+        };
+
         var explicitCollapse = false;
         var hoverDelay = 500;
         var hideDelay = hoverDelay + 200;
+
+        var  initBodyElement = function () {
+          var bodyContentElement = getBodyContentElement();
+          if ($scope.showBadges) {
+            bodyContentElement.addClass('nav-pf-vertical-with-badges');
+          }
+          if ($scope.persistentSecondary) {
+            bodyContentElement.addClass('nav-pf-persistent-secondary');
+          }
+          if ($scope.hiddenIcons) {
+            bodyContentElement.addClass('hidden-icons-pf');
+          }
+        };
 
         var updateMobileMenu = function (selected, secondaryItem) {
           $scope.items.forEach(function (item) {
@@ -606,6 +704,7 @@
 
         var checkNavState = function () {
           var width = $window.innerWidth;
+          var bodyContentElement = getBodyContentElement();
 
           // Check to see if we need to enter/exit the mobile state
           if (!$scope.ignoreMobile && width < breakpoints.tablet) {
@@ -640,6 +739,7 @@
         };
 
         var collapseMenu = function () {
+          var bodyContentElement = getBodyContentElement();
           $scope.navCollapsed = true;
 
           //Set the body class to the correct state
@@ -649,6 +749,7 @@
         };
 
         var expandMenu = function () {
+          var bodyContentElement = getBodyContentElement();
           $scope.navCollapsed = false;
 
           //Set the body class to the correct state
@@ -666,17 +767,6 @@
           $timeout(function () {
             $scope.forceHidden = false;
           }, 500);
-        };
-
-        var setFirstChildActive = function (item) {
-          if (item && item.children && item.children.length > 0) {
-            if ($scope.updateActiveItemsOnClick ) {
-              item.children[0].isActive = true;
-            }
-            setFirstChildActive(item.children[0]);
-          } else if (item && $scope.navigateCallback) {
-            $scope.navigateCallback(item);
-          }
         };
 
         var setParentActive = function (item) {
@@ -699,10 +789,44 @@
           });
         };
 
-        var navigateToItem = function (item) {
-          var navTo = item.href;
+        var getFirstNavigateChild = function (item) {
+          var firstChild;
           if (!item.children || item.children.length < 1) {
+            firstChild = item;
+          } else {
+            firstChild = getFirstNavigateChild(item.children[0]);
+          }
+          return firstChild;
+        };
+
+        var setSecondaryItemVisible = function () {
+          var bodyContentElement = getBodyContentElement();
+          $scope.activeSecondary = false;
+
+          if ($scope.persistentSecondary && !$scope.inMobileState) {
+            $scope.items.forEach(function (topLevel) {
+              if (topLevel.children) {
+                topLevel.children.forEach(function (secondLevel) {
+                  if (secondLevel.isActive) {
+                    $scope.activeSecondary = true;
+                  }
+                });
+              }
+            });
+            if ($scope.activeSecondary) {
+              bodyContentElement.addClass('secondary-visible-pf');
+            } else {
+              bodyContentElement.removeClass('secondary-visible-pf');
+            }
+          }
+        };
+
+        var navigateToItem = function (item) {
+          var navItem = getFirstNavigateChild(item);
+          var navTo;
+          if (navItem) {
             $scope.showMobileNav = false;
+            navTo = navItem.href;
             if (navTo) {
               if (navTo.startsWith('#/')) {
                 navTo = navTo.substring(2);
@@ -710,7 +834,7 @@
               location.path(navTo);
             }
             if ($scope.navigateCallback) {
-              $scope.navigateCallback(item);
+              $scope.navigateCallback(navItem);
             }
           }
 
@@ -720,11 +844,11 @@
 
           if ($scope.updateActiveItemsOnClick ) {
             $scope.clearActiveItems();
-            item.isActive = true;
-            setParentActive(item);
+            navItem.isActive = true;
+            setParentActive(navItem);
+            setSecondaryItemVisible();
           }
-
-          setFirstChildActive(item);
+          setSecondaryItemVisible();
         };
 
         var primaryHover = function () {
@@ -752,6 +876,7 @@
         };
 
         var updateSecondaryCollapsedState = function (setCollapsed, collapsedItem) {
+          var bodyContentElement = getBodyContentElement();
           if (collapsedItem) {
             collapsedItem.secondaryCollapsed = setCollapsed;
           }
@@ -773,6 +898,7 @@
         };
 
         var updateTertiaryCollapsedState = function (setCollapsed, collapsedItem) {
+          var bodyContentElement = getBodyContentElement();
           if (collapsedItem) {
             collapsedItem.tertiaryCollapsed = setCollapsed;
           }
@@ -807,16 +933,6 @@
         $scope.collapsedTertiaryNav = false;
         $scope.navCollapsed = false;
         $scope.forceHidden = false;
-
-        if ($scope.hasSubMenus) {
-          bodyContentElement.addClass('container-pf-nav-pf-vertical-with-sub-menus');
-        }
-        if ($scope.persistentSecondary) {
-          bodyContentElement.addClass('nav-pf-persistent-secondary');
-        }
-        if ($scope.hiddenIcons) {
-          bodyContentElement.addClass('hidden-icons-pf');
-        }
 
         $scope.handleNavBarToggleClick = function () {
 
@@ -981,6 +1097,7 @@
           event.stopImmediatePropagation();
         };
 
+        initBodyElement();
         checkNavState();
 
         angular.element($window).bind('resize', function () {

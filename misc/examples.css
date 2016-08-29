@@ -123,3 +123,10 @@ hr {
 .example-info-text:first-of-type {
   margin-top: 10px;
 }
+
+.example-error-background {
+  background-color: #cc0000 !important;
+}
+.example-warning-background {
+  background-color: #ec7a08 !important;
+}
