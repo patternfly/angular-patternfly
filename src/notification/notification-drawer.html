@@ -19,7 +19,8 @@
                  ng-repeat="notification in notificationGroup.notifications" ng-include src="notificationBodyInclude">
             </div>
             <div ng-if="notificationGroup.isLoading" class="drawer-pf-loading text-center">
-              <span class="spinner spinner-xs spinner-inline"></span> Loading More
+              <span class="spinner spinner-xs spinner-inline"></span>
+              <span translate>Loading More</span>
             </div>
           </div>
           <div class="drawer-pf-action" ng-if="actionButtonTitle">
