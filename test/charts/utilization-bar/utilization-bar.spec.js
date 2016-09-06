@@ -42,12 +42,14 @@ describe('Directive: pfUtilizationBarChart', function() {
     title = angular.element(element).find('.progress-description').html();
     expect(title).toBe("CPU Usage");
 
-    subTitle = angular.element(element).find('.progress-bar span').text();
+    subTitle = angular.element(element).find('.progress-bar span').html();
+    subTitle = angular.element(subTitle).text();
     expect(subTitle).toBe("8 of 16 GB Used");
 
     //test 'percent' used-label-format
     element = compileChart("<div pf-utilization-bar-chart chart-data=data footer-label-format='percent' chart-title=title units=units></div>", $scope);
-    subTitle = angular.element(element).find('.progress-bar span').text();
+    subTitle = angular.element(element).find('.progress-bar span').html();
+    subTitle = angular.element(subTitle).text();
     expect(subTitle).toBe("50% Used");
   });
 
