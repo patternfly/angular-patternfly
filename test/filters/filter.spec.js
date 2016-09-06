@@ -61,17 +61,17 @@ describe('Directive:  pfFilter', function () {
   });
 
   it('should have correct number of results', function () {
-    var results = angular.element(element).find('h5').text();
+    var results = angular.element(element).find('h5');
     expect(results.length).toBe(1);
-    expect(results).toBe("5 Results");
+    expect(results.text()).toBe("5 Results");
 
     $scope.filterConfig.resultsCount = 10;
 
     $scope.$digest();
 
-    results = angular.element(element).find('h5').text();
+    results = angular.element(element).find('h5');
     expect(results.length).toBe(1);
-    expect(results).toBe("10 Results");
+    expect(results.text()).toBe("10 Results");
   });
 
   it('should show active filters and clear filters button when there are filters', function () {
