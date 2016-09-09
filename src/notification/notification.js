@@ -181,7 +181,10 @@ angular.module('patternfly.notification').provider('Notifications', function () 
     };
 
     notifications.remove = function (notification) {
-      notifications.removeIndex($rootScope.notifications.data.indexOf(notification));
+      var index = $rootScope.notifications.data.indexOf(notification);
+      if (index !== -1) {
+        notifications.removeIndex(index);
+      }
     };
 
     notifications.removeIndex = function (index) {
