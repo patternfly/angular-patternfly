@@ -1102,11 +1102,13 @@
 
         angular.element($window).bind('resize', function () {
           checkNavState();
-          try {
-            $scope.$apply();
-          } catch (e) {
-            // Ignore, if we already applied, that is fine.
-          }
+          $timeout(function () {
+            try {
+              $scope.$apply();
+            } catch (e) {
+              // Ignore, if we already applied, that is fine.
+            }
+          });
         });
       }
     };
