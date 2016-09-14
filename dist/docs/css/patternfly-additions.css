@@ -1201,12 +1201,12 @@ select.selectpicker {
   background: #f1f1f1;
 }
 .bootstrap-switch .bootstrap-switch-handle-on {
-  border-bottom-left-radius: 0px;
-  border-top-left-radius: 0px;
+  border-bottom-left-radius: 1px - 1;
+  border-top-left-radius: 1px - 1;
 }
 .bootstrap-switch .bootstrap-switch-handle-off {
-  border-bottom-right-radius: 0px;
-  border-top-right-radius: 0px;
+  border-bottom-right-radius: 1px - 1;
+  border-top-right-radius: 1px - 1;
 }
 .bootstrap-switch input[type='radio'],
 .bootstrap-switch input[type='checkbox'] {
@@ -1266,14 +1266,14 @@ select.selectpicker {
 .bootstrap-switch.bootstrap-switch-inverse .bootstrap-switch-handle-on {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
-  border-bottom-right-radius: 0px;
-  border-top-right-radius: 0px;
+  border-bottom-right-radius: 1px - 1;
+  border-top-right-radius: 1px - 1;
 }
 .bootstrap-switch.bootstrap-switch-inverse .bootstrap-switch-handle-off {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
-  border-bottom-left-radius: 0px;
-  border-top-left-radius: 0px;
+  border-bottom-left-radius: 1px - 1;
+  border-top-left-radius: 1px - 1;
 }
 .bootstrap-switch.bootstrap-switch-focused {
   border-color: #0088ce;
@@ -1282,13 +1282,13 @@ select.selectpicker {
 }
 .bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label,
 .bootstrap-switch.bootstrap-switch-inverse.bootstrap-switch-off .bootstrap-switch-label {
-  border-bottom-right-radius: 0px;
-  border-top-right-radius: 0px;
+  border-bottom-right-radius: 1px - 1;
+  border-top-right-radius: 1px - 1;
 }
 .bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label,
 .bootstrap-switch.bootstrap-switch-inverse.bootstrap-switch-on .bootstrap-switch-label {
-  border-bottom-left-radius: 0px;
-  border-top-left-radius: 0px;
+  border-bottom-left-radius: 1px - 1;
+  border-top-left-radius: 1px - 1;
 }
 /*
  *  Bootstrap TouchSpin - v3.1.1
@@ -1502,7 +1502,7 @@ select.selectpicker {
 }
 /*!
  * Datetimepicker for Bootstrap 3
- * version : 4.17.37
+ * version : 4.15.35
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 .bootstrap-datetimepicker-widget {
@@ -2293,6 +2293,16 @@ fieldset[disabled] .combobox-container .input-group-addon.active {
 }
 .treeview span.icon.check-icon {
   margin-right: 10px;
+}
+.treeview span.image {
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: inline-block;
+  height: 1.19em;
+  line-height: 1em;
+  margin-right: 5px;
+  vertical-align: middle;
+  width: 12px;
 }
 .treeview span.indent {
   margin-right: 5px;
@@ -5423,6 +5433,7 @@ a.disabled {
 }
 .toolbar-pf-actions {
   display: table;
+  margin-bottom: 10px;
   width: 100%;
 }
 @media (min-width: 768px) {
@@ -5677,34 +5688,6 @@ a.disabled {
 .nav-pf-vertical.nav-pf-vertical-with-badges .list-group-item > a {
   width: 250px;
 }
-.nav-pf-vertical.collapsed {
-  width: 75px;
-}
-.nav-pf-vertical.collapsed > .list-group-item > a {
-  width: 75px;
-}
-.nav-pf-vertical.collapsed > .list-group-item > a > .list-group-item-value {
-  display: none;
-}
-.nav-pf-vertical.collapsed > .list-group-item > a > .badge-container-pf {
-  display: none;
-}
-.nav-pf-vertical.collapsed > .list-group-item.secondary-nav-item-pf.active > a,
-.nav-pf-vertical.collapsed > .list-group-item.secondary-nav-item-pf > a {
-  width: 75px;
-}
-.nav-pf-vertical.collapsed > .list-group-item.secondary-nav-item-pf.active > a:after,
-.nav-pf-vertical.collapsed > .list-group-item.secondary-nav-item-pf > a:after {
-  right: 10px;
-}
-.nav-pf-vertical.collapsed > .list-group-item.secondary-nav-item-pf.active > a,
-.nav-pf-vertical.collapsed > .list-group-item.secondary-nav-item-pf:hover > a {
-  width: 77px;
-}
-.nav-pf-vertical.collapsed > .list-group-item.secondary-nav-item-pf.active > a:after,
-.nav-pf-vertical.collapsed > .list-group-item.secondary-nav-item-pf:hover > a:after {
-  right: 11px;
-}
 .nav-pf-vertical h5 {
   color: #fff;
   cursor: default;
@@ -5785,31 +5768,31 @@ a.disabled {
 .hover-tertiary-nav-pf.nav-pf-vertical-with-badges .nav-pf-tertiary-nav {
   left: calc(250px * 2);
 }
-.collapsed {
+.nav-pf-vertical.collapsed {
   width: 75px;
 }
-.collapsed.collapsed-secondary-nav-pf {
+.nav-pf-vertical.collapsed.collapsed-secondary-nav-pf {
   width: 200px;
 }
-.collapsed.collapsed-secondary-nav-pf.nav-pf-vertical-with-badges {
+.nav-pf-vertical.collapsed.collapsed-secondary-nav-pf.nav-pf-vertical-with-badges {
   width: 250px;
 }
-.collapsed.collapsed-tertiary-nav-pf {
+.nav-pf-vertical.collapsed.collapsed-tertiary-nav-pf {
   width: 200px;
 }
-.collapsed.collapsed-tertiary-nav-pf.nav-pf-vertical-with-badges {
+.nav-pf-vertical.collapsed.collapsed-tertiary-nav-pf.nav-pf-vertical-with-badges {
   width: 250px;
 }
-.collapsed.hover-secondary-nav-pf {
+.nav-pf-vertical.collapsed.hover-secondary-nav-pf {
   width: calc(75px + 200px);
 }
-.collapsed.hover-secondary-nav-pf.nav-pf-vertical-with-badges {
+.nav-pf-vertical.collapsed.hover-secondary-nav-pf.nav-pf-vertical-with-badges {
   width: calc(75px + 250px);
 }
-.collapsed.hover-tertiary-nav-pf {
-  width: calc(75px + (250px * 2));
+.nav-pf-vertical.collapsed.hover-tertiary-nav-pf {
+  width: calc(75px + (200px * 2));
 }
-.collapsed.hover-tertiary-nav-pf.nav-pf-vertical-with-badges {
+.nav-pf-vertical.collapsed.hover-tertiary-nav-pf.nav-pf-vertical-with-badges {
   width: calc(75px + (250px * 2));
 }
 .show-mobile-nav.show-mobile-secondary {
@@ -6003,10 +5986,16 @@ a.disabled {
   color: #0088ce;
   text-decoration: none;
 }
+.nav-pf-vertical.collapsed {
+  width: 75px;
+}
 .nav-pf-vertical.collapsed .list-group-item > a {
   width: 75px;
 }
 .nav-pf-vertical.collapsed .list-group-item > a > .list-group-item-value {
+  display: none;
+}
+.nav-pf-vertical.collapsed .list-group-item > a > .badge-container-pf {
   display: none;
 }
 .nav-pf-vertical.collapsed .list-group-item.secondary-nav-item-pf.active > a,
@@ -6228,6 +6217,9 @@ a.disabled {
 .collapsed .nav-pf-secondary-nav .list-group-item > a > .list-group-item-value {
   display: inline-block;
 }
+.collapsed .nav-pf-secondary-nav .list-group-item > a > .badge-container-pf {
+  display: inline-block;
+}
 .collapsed .nav-pf-tertiary-nav {
   left: calc(75px + 200px);
 }
@@ -6235,6 +6227,9 @@ a.disabled {
   width: calc(200px - 20px);
 }
 .collapsed .nav-pf-tertiary-nav .list-group-item > a > .list-group-item-value {
+  display: inline-block;
+}
+.collapsed .nav-pf-tertiary-nav .list-group-item > a > .badge-container-pf {
   display: inline-block;
 }
 .collapsed.collapsed-secondary-nav-pf,
