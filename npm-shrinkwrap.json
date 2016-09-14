@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "3.10.0",
+  "version": "3.11.0",
   "dependencies": {
     "angular": {
       "version": "1.5.8",
@@ -33,9 +33,9 @@
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz"
     },
     "patternfly": {
-      "version": "3.10.0",
-      "from": "patternfly@>=3.10.0 <3.11.0",
-      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-3.10.0.tgz",
+      "version": "3.11.0",
+      "from": "patternfly@>=3.11.0 <3.12.0",
+      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-3.11.0.tgz",
       "dependencies": {
         "bootstrap": {
           "version": "3.3.7",
