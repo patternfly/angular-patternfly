@@ -52,12 +52,26 @@ Note:
         $ bower install angular --save
         $ bower install angular-patternfly --save
 
-2. Add the following CSS include to your HTML file(s):
+2. Add the core Patternfly CSS and script includes to your HTML file(s):
+
+        Please see:  https://github.com/patternfly/patternfly/blob/master/QUICKSTART.md
+
+3. Add the following CSS include to your HTML file(s):
 
         <!-- Angular-PatternFly Styles -->
         <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.min.css" />
 
-3. Add the following script includes to your HTML file(s), adjusting where necessary to pull in only what you need:
+4. Add the following script includes to your HTML file(s), adjusting where necessary to pull in only what you need:
+
+        <!-- Angular -->
+        <script src="bower_components/angular/angular.min.js"></script>
+
+        <!-- Angular-Bootstrap -->
+        <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+        <!-- Angular-Sanitize -->
+        <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 
         <!-- Angular-PatternFly  -->
         <script src="bower_components/angular-patternfly/dist/angular-patternfly.min.js"></script>
@@ -66,7 +80,7 @@ Note:
         <script src="bower_components/patternfly/components/c3/c3.min.js"></script>
         <script src="bower_components/patternfly/components/d3/d3.min.js"></script>
 
-4. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
+5. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
    In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application:
 
         my-app.module.js:
