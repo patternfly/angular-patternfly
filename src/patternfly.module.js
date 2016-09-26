@@ -17,6 +17,7 @@ angular.module('patternfly', [
   'patternfly.toolbars',
   'patternfly.utils',
   'patternfly.validation',
-  'patternfly.views'
+  'patternfly.views',
+  'patternfly.wizard'
 ]);
 
