@@ -26,6 +26,7 @@ module.exports = function(config) {
       'src/**/*.js',
       'src/**/*.html',
       'test/utils/*.js',
+      'test/wizard/script.js',
       'test/**/*.spec.js',
       'test/**/*.html'
     ],
