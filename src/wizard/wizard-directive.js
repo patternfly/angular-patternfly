@@ -3,22 +3,36 @@
   * @name patternfly.wizard.directive:pfWizard
   *
   * @description
-  * Directive for rendering a Wizard modal.
+  * Directive for rendering a Wizard modal.  Each wizard dynamically creates the step navigation both in the header and the left-hand side based on nested steps.
+  * Use the pf-wizardstep to define individual steps within a wizard and pf-wizardsubstep to define portions of pf-wizardsteps if so desired.  For instance, Step one can have two substeps - 1A and 1B when it is logical to group those together.
+  * <br /><br />
+  * The basic structure should be:
+  * <pre>
+  * <div pf-wizard>
+  *   <div pf-wizardstep>
+  *     <div pf-wizardsubstep><!-- content here --></div>
+  *     <div pf-wizardsubstep><!-- content here --></div>
+  *   </div>
+  *   <div pf-wizardstep><!-- additional configuration can be added here with substeps if desired --></div>
+  *   <div pf-wizardstep><!-- review steps and final command here --></div>
+  * </div>
+  * </pre>
   *
   * @param {string} title The wizard title displayed in the header
-  * @param {boolean} hideIndicators  Hides the step indicators in the header of the wizard
-  * @param {string} currentStep The current step can be changed externally - this is the title of the step to switch the wizard to
-  * @param {string} cancelTitle The text to display on the cancel button
-  * @param {string} backTitle The text to display on the back button
-  * @param {string} nextTitle The text to display on the next button
-  * @param {function (step) } backCallback Called to notify when the back button is clicked
-  * @param {function (step) } nextCallback Called to notify when the next button is clicked
-  * @param {function ()} onFinish Called to notify when when the wizard is complete.  Returns a boolean value to indicate if the finish operation is complete
-  * @param {function ()} onCancel Called when the wizard is canceled, returns a boolean value to indicate if cancel is successful
+  * @param {boolean=} hideIndicators  Hides the step indicators in the header of the wizard
+  * @param {string=} currentStep The current step can be changed externally - this is the title of the step to switch the wizard to
+  * @param {string=} cancelTitle The text to display on the cancel button
+  * @param {string=} backTitle The text to display on the back button
+  * @param {string=} nextTitle The text to display on the next button
+  * @param {function (step)=} backCallback Called to notify when the back button is clicked
+  * @param {function (step)=} nextCallback Called to notify when the next button is clicked
+  * @param {function ()=} onFinish Called to notify when when the wizard is complete.  Returns a boolean value to indicate if the finish operation is complete
+  * @param {function ()=} onCancel Called when the wizard is canceled, returns a boolean value to indicate if cancel is successful
   * @param {boolean} wizardReady Value that is set when the wizard is ready
-  * @param {boolean} wizardDone  Value that is set when the wizard is done
+  * @param {boolean=} wizardDone  Value that is set when the wizard is done
   * @param {string} loadingWizardTitle The text displayed when the wizard is loading
-  * @param {string} loadingSecondaryInformation Secondary descriptive information to display when the wizard is loading
+  * @param {string=} loadingSecondaryInformation Secondary descriptive information to display when the wizard is loading
+  * @param {number=} minHeight The minimum height the wizard should adjust to if the window height is decreased.  The wizard height is adjusted with the window resize event and this sets the minimum.
   *
   * @example
   <example module="patternfly.wizard" deps="patternfly.form">
@@ -300,7 +314,8 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       wizardReady: '=?',
       wizardDone: '=?',
       loadingWizardTitle: '=?',
-      loadingSecondaryInformation: '=?'
+      loadingSecondaryInformation: '=?',
+      minHeight: '=?'
     },
     templateUrl: 'wizard/wizard.html',
     controller: function ($scope, $timeout) {
@@ -654,10 +669,14 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
         }
       });
 
-      if ($window.innerHeight > 400) {
+      if (!$scope.minHeight) {
+        $scope.minHeight = 400;
+      }
+
+      if ($window.innerHeight > $scope.minHeight) {
         $element.height($window.innerHeight - 70);
       } else {
-        $element.height(400);
+        $element.height($scope.minHeight);
       }
       $scope.$on('$destroy', isOpenListener);
 
@@ -668,7 +687,7 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       });
 
       angular.element($window).bind('resize', function () {
-        if ($window.innerHeight > 400) {
+        if ($window.innerHeight > $scope.minHeight) {
           $element.height($window.innerHeight - 70);
         }
       });

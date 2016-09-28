@@ -105,14 +105,10 @@ describe('Directive:  pfWizard', function () {
 
   it('should dispatch the cancel event on the close button click', function () {
     var closeButton = element.find('.close');
-    $rootScope.$on('wizard.done', function (event, data) {
-      expect(data).toBe('cancel');
-    });
     spyOn($rootScope, '$emit');
     eventFire(closeButton[0], 'click');
     $scope.$digest();
-
-    expect($rootScope.$emit).toHaveBeenCalled();
+    expect($rootScope.$emit).toHaveBeenCalledWith('wizard.done', 'cancel');
   });
 
   it('should have three step indicators in the header', function () {
