@@ -190,7 +190,7 @@ describe('Directive:  pfWizard', function () {
     eventFire(indicator[1], 'click');
     $scope.$digest();
 
-    var selectedSectionTitle = element.find('.wizard-pf-row section.current').attr("step-title");
+    var selectedSectionTitle = element.find('.wizard-pf-step.active .wizard-pf-step-title').text();
     expect(selectedSectionTitle).toBe('Second Step');
   });
 

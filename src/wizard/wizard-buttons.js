@@ -5,7 +5,6 @@ function wizardButtonDirective (action) {
     .directive(action, function () {
       return {
         restrict: 'A',
-        replace: false,
         require: '^pf-wizard',
         scope: {
           callback: "=?"

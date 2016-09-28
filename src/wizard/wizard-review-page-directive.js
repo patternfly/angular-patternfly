@@ -13,7 +13,6 @@ angular.module('patternfly.wizard').directive('pfWizardReviewPage', function () 
   'use strict';
   return {
     restrict: 'A',
-    replace: true,
     scope: {
       shown: '=',
       wizardData: "="

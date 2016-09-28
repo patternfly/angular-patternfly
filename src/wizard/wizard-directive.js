@@ -299,7 +299,6 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
   return {
     restrict: 'A',
     transclude: true,
-    replace: true,
     scope: {
       title: '@',
       hideIndicators: '=?',
@@ -360,7 +359,6 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
         // Add watchers for the selected step
         $scope.nextStepEnabledWatcher = $scope.$watch('selectedStep.nextEnabled', function (value) {
           $scope.nextEnabled = value;
-          //console.log('next enabled: ' + value);
         });
         $scope.nextStepTooltipWatcher = $scope.$watch('selectedStep.nextTooltip', function (value) {
           $scope.nextTooltip = value;

@@ -23,7 +23,6 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
 
   return {
     restrict: 'A',
-    replace: true,
     transclude: true,
     scope: {
       stepTitle: '@',
