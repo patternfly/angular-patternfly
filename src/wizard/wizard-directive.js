@@ -32,7 +32,7 @@
   * @param {boolean=} wizardDone  Value that is set when the wizard is done
   * @param {string} loadingWizardTitle The text displayed when the wizard is loading
   * @param {string=} loadingSecondaryInformation Secondary descriptive information to display when the wizard is loading
-  * @param {number=} minHeight The minimum height the wizard should adjust to if the window height is decreased.  The wizard height is adjusted with the window resize event and this sets the minimum.
+  * @param {number=} wizardHeight The height the wizard should be set to.  If this is not set, the wizard height is adjusted with the window resize event.
   *
   * @example
   <example module="patternfly.wizard" deps="patternfly.form">
@@ -314,7 +314,7 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       wizardDone: '=?',
       loadingWizardTitle: '=?',
       loadingSecondaryInformation: '=?',
-      minHeight: '=?'
+      wizardHeight: '=?'
     },
     templateUrl: 'wizard/wizard.html',
     controller: function ($scope, $timeout) {
@@ -660,23 +660,23 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       };
     },
     link: function ($scope, $element, $attrs) {
-      // watching isOpen attribute to display modal when needed
-      var isOpenListener = $scope.$watch('isOpen', function (newVal, oldVal) {
-        if (newVal === true) {
-          $scope.openModal();
-        }
-      });
+      var INDICATOR_HEIGHT = 131,
+        FOOTER_HEIGHT = 58,
+        HEADER_HEIGHT = 41,
+        WINDOW_SPACING = 70;
 
-      if (!$scope.minHeight) {
-        $scope.minHeight = 400;
-      }
+      var minimumHeight = !$scope.hideIndicators ? INDICATOR_HEIGHT + HEADER_HEIGHT + FOOTER_HEIGHT : HEADER_HEIGHT + FOOTER_HEIGHT;
 
-      if ($window.innerHeight > $scope.minHeight) {
-        $element.height($window.innerHeight - 70);
+      // user has specified the height
+      if ($scope.wizardHeight) {
+        $element.height($scope.wizardHeight);
       } else {
-        $element.height($scope.minHeight);
+        if ($window.innerHeight - WINDOW_SPACING > minimumHeight) {
+          $element.height($window.innerHeight - WINDOW_SPACING);
+        } else {
+          $element.height(minimumHeight);
+        }
       }
-      $scope.$on('$destroy', isOpenListener);
 
       $scope.$watch('wizardReady', function () {
         if ($scope.wizardReady) {
@@ -685,8 +685,8 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       });
 
       angular.element($window).bind('resize', function () {
-        if ($window.innerHeight > $scope.minHeight) {
-          $element.height($window.innerHeight - 70);
+        if ($window.innerHeight - WINDOW_SPACING > minimumHeight && !$scope.wizardHeight) {
+          $element.height($window.innerHeight - WINDOW_SPACING);
         }
       });
     }

@@ -443,3 +443,7 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 .wizard-pf-singlestep {
   margin-left: 0;
 }
+
+.wizard-pf-row-adjustable {
+  top: 41px;
+}
