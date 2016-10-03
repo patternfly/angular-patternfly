@@ -444,6 +444,6 @@ accordion > .panel-group .panel-open .panel-title > a:before {
   margin-left: 0;
 }
 
-.wizard-pf-row-adjustable {
-  top: 41px;
+.wizard-pf-position-override {
+  position: relative;
 }

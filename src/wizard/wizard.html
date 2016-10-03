@@ -23,9 +23,9 @@
         <p class="blank-slate-pf-secondary-action">{{loadingSecondaryInformation}}</p>
       </div>
     </div>
-    <div class="wizard-pf-row" ng-class="{'wizard-pf-row-adjustable': hideIndicators}" ng-transclude></div>
+    <div class="wizard-pf-position-override" ng-transclude ></div>
   </div>
-  <div class="modal-footer wizard-pf-footer">
+  <div class="modal-footer wizard-pf-footer wizard-pf-position-override">
     <button pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel" ng-disabled="wizardDone" ng-click="onCancel()">{{cancelTitle}}</button>
     <div class="tooltip-wrapper" tooltip="{{prevTooltip}}" tooltip-placement="left">
       <button id="backButton" pf-wiz-previous class="btn btn-default" ng-disabled="!wizardReady || wizardDone || !prevEnabled || firstStep"

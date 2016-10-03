@@ -24,15 +24,15 @@
   * @param {string=} cancelTitle The text to display on the cancel button
   * @param {string=} backTitle The text to display on the back button
   * @param {string=} nextTitle The text to display on the next button
-  * @param {function (step)=} backCallback Called to notify when the back button is clicked
-  * @param {function (step)=} nextCallback Called to notify when the next button is clicked
-  * @param {function ()=} onFinish Called to notify when when the wizard is complete.  Returns a boolean value to indicate if the finish operation is complete
-  * @param {function ()=} onCancel Called when the wizard is canceled, returns a boolean value to indicate if cancel is successful
+  * @param {function(step)=} backCallback Called to notify when the back button is clicked
+  * @param {function(step)=} nextCallback Called to notify when the next button is clicked
+  * @param {function()=} onFinish Called to notify when when the wizard is complete.  Returns a boolean value to indicate if the finish operation is complete
+  * @param {function()=} onCancel Called when the wizard is canceled, returns a boolean value to indicate if cancel is successful
   * @param {boolean} wizardReady Value that is set when the wizard is ready
   * @param {boolean=} wizardDone  Value that is set when the wizard is done
   * @param {string} loadingWizardTitle The text displayed when the wizard is loading
   * @param {string=} loadingSecondaryInformation Secondary descriptive information to display when the wizard is loading
-  * @param {number=} wizardHeight The height the wizard should be set to.  If this is not set, the wizard height is adjusted with the window resize event.
+  * @param {string=} contentHeight The height the wizard content should be set to.  This defaults to 300px if the property is not supplied.
   *
   * @example
   <example module="patternfly.wizard" deps="patternfly.form">
@@ -50,6 +50,7 @@
     next-callback="nextCallback"
     back-callback="backCallback"
     wizard-done="deployComplete || deployInProgress"
+    content-height="'600px'"
     loading-secondary-information="secondaryLoadInformation">
       <div pf-wizard-step step-title="First Step" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
         <div ng-include="'detail-page.html'">
@@ -67,6 +68,7 @@
       </div>
       <div pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
         <form class="form-horizontal">
+          <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
           <div pf-form-group pf-label="Lorem">
             <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
           </div>
@@ -314,7 +316,7 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       wizardDone: '=?',
       loadingWizardTitle: '=?',
       loadingSecondaryInformation: '=?',
-      wizardHeight: '=?'
+      contentHeight: '=?'
     },
     templateUrl: 'wizard/wizard.html',
     controller: function ($scope, $timeout) {
@@ -388,6 +390,17 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       if (angular.isUndefined($scope.wizardReady)) {
         $scope.wizardReady = true;
       }
+
+      if (angular.isUndefined($scope.contentHeight)) {
+        $scope.contentHeight = '300px';
+      }
+      this.contentHeight = $scope.contentHeight;
+      $scope.contentStyle = {
+        'height': $scope.contentHeight,
+        'max-height': $scope.contentHeight,
+        'overflow-y': 'auto'
+      };
+      this.contentStyle = $scope.contentStyle;
 
       $scope.nextEnabled = false;
       $scope.prevEnabled = false;
@@ -659,34 +672,10 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
         this.goTo(0);
       };
     },
-    link: function ($scope, $element, $attrs) {
-      var INDICATOR_HEIGHT = 131,
-        FOOTER_HEIGHT = 58,
-        HEADER_HEIGHT = 41,
-        WINDOW_SPACING = 70;
-
-      var minimumHeight = !$scope.hideIndicators ? INDICATOR_HEIGHT + HEADER_HEIGHT + FOOTER_HEIGHT : HEADER_HEIGHT + FOOTER_HEIGHT;
-
-      // user has specified the height
-      if ($scope.wizardHeight) {
-        $element.height($scope.wizardHeight);
-      } else {
-        if ($window.innerHeight - WINDOW_SPACING > minimumHeight) {
-          $element.height($window.innerHeight - WINDOW_SPACING);
-        } else {
-          $element.height(minimumHeight);
-        }
-      }
-
+    link: function ($scope) {
       $scope.$watch('wizardReady', function () {
         if ($scope.wizardReady) {
           $scope.goTo($scope.getEnabledSteps()[0]);
-        }
-      });
-
-      angular.element($window).bind('resize', function () {
-        if ($window.innerHeight - WINDOW_SPACING > minimumHeight && !$scope.wizardHeight) {
-          $element.height($window.innerHeight - WINDOW_SPACING);
         }
       });
     }

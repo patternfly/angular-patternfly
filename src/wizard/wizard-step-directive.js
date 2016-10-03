@@ -392,7 +392,7 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
         $scope.pageNumber = wizard.getStepNumber($scope);
       });
       $scope.title =  $scope.stepTitle;
-
+      $scope.contentStyle = wizard.contentStyle;
       wizard.addStep($scope);
       $scope.wizard = wizard;
     }
