@@ -326,6 +326,42 @@ NG_DOCS={
       "moduleName": "patternfly.views",
       "shortDescription": "Directive for rendering a list view.",
       "keywords": "$scope action action-buttons actionbuttons actionfn actions address allow angular api applicable array based beam bedrock boston bourbon boxes button buttons california call called change changes checkbox checkbox-inline checkdisabled checkdisableditem checked city class click clicked clicking col-md-12 colorado config configuration controller cross current dblclick default denver deps determine determining dinosaur directive disable disabled display displayed dlbclick double dropdown east edwards elm enable-button-for-item-fn enablebuttonforitemfn enabled event eventtext example-container example-list-view examplelistview false flintstone font-weight form form-group frank fred function grouped handle handlecheckboxchange handleclick handledblclick handleselect handleselectionchange hide holly hollywood html invoke isdisabled isseparator isvisible item items jim john js jump length linda list list-group-item-heading list-group-item-text list-style-type list-view-container list-view-pf-additional-info list-view-pf-additional-info-item list-view-pf-description livingston main marie massachusetts matching mcgovern menu menu-actions menuactions module multiple multiselect nashville ng-change ng-controller ng-disabled ng-model nichols norfolk notify oak oncheckboxchange onclick ondblclick onselect onselectionchange optional pat patternfly pennsylvania perform performaction pf-list-view pittsburgh placeholder property radio radio-inline remains rendering return role row rows script second select selected selecteditems selection selectionmatchprop selections selectitems selecttype separator set settings showdisabled showselectbox smith street style tennessee thomas title tooltip true type unavailable update update-menu-action-for-item-fn updatemenuactionforitemfn updateselectiontype utils uuid var view viewctrl views virginia washingstone york"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.wizard.directive:pfWizard",
+      "shortName": "pfWizard",
+      "type": "directive",
+      "moduleName": "patternfly.wizard",
+      "shortDescription": "Directive for rendering a Wizard modal.  Each wizard dynamically creates the step navigation both in the header and the left-hand side based on nested steps.",
+      "keywords": "$emit $modal $on $parent $rootscope $scope $timeout ac additional amet angular animation api back-callback backcallback backdrop backtitle based basic blank-slate-pf blank-slate-pf-icon blank-slate-pf-main-action blank-slate-pf-secondary-action boolean btn btn-default btn-lg btn-primary button call called cancel canceldeploymentwizard canceled canceltitle changed class clicked close closewizard command complete configuration consistently content content-height contentheight controller creates current currentstep data default defaults define deploy deploycomplete deployinprogress deployment deploymentcomplete deploymentcontroller deployproviderready deployready deps description descriptive desired detail-page details details-extra details-general detailsgeneralcomplete detailsgeneralcontroller detailsreviewcontroller directive dismiss display displayed dolor dynamically eget example externally extra false final find finish finishedwizard form form-horizontal function general glyphicon glyphicon-ok-circle group header height hideindicators hides html indicate indicators individual initializewizard instance ipsum isdefined isundefined js left-hand length lg loading loading-secondary-information loadingsecondaryinformation loadingwizardtitle logical lorem modal modalinstance module navigation nested new-description new-ipsum new-lorem new-name next-callback next-enabled next-title nextbuttontitle nextcallback nexttitle ng-change ng-click ng-controller ng-if ng-include ng-model notify nunc ok-to-nav-away on-cancel on-finish on-show oncancel onfinish onshow open openwizardmodel operation pageshown parameters patternfly pf-form-group pf-label pf-wizard pf-wizard-review-page pf-wizard-step pf-wizard-substep pf-wizardstep pf-wizardsteps pf-wizardsubstep porta portions prev-enabled progress property ready reason rendering required result return returns review review-progress review-second-template review-summary review-template reviewtemplate script second secondary secondaryloadinformation set setting show-review show-review-details side sit size sociosqu spinner spinner-lg startdeploy static step step-id step-priority step-title stepid steps strict structure substeps successful summary summarycontroller supplied suspendisse switch tab templateurl text time title true type updatename updates ut var vivamus wisi wizard wizard-container wizard-data wizard-done wizard-pf-complete wizard-pf-contents wizard-pf-process wizard-pf-review-item wizard-pf-review-item-label wizard-pf-review-item-value wizard-pf-success-icon wizard-ready wizardcontroller wizarddata wizarddone wizarddonelistener wizardmodalcontroller wizardready wz-disabled"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.wizard.directive:pfWizardReviewPage",
+      "shortName": "pfWizardReviewPage",
+      "type": "directive",
+      "moduleName": "patternfly.wizard",
+      "shortDescription": "Directive for rendering a Wizard Review Page - should only be used within a wizard.",
+      "keywords": "api apply content data directive internal internally patternfly rendering review sets templates visible watched wizard wizarddata"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.wizard.directive:pfWizardStep",
+      "shortName": "pfWizardStep",
+      "type": "directive",
+      "moduleName": "patternfly.wizard",
+      "shortDescription": "Directive for rendering a Wizard step.  Each step can stand alone or have substeps.  This directive can only be used as a child of pf-wizard.",
+      "keywords": "allowclicknav api button called child click data default description details directive directly disables display displayed enabled entire expanded function header identifier indicates indicators leave navigate nextenabled nexttooltip numbered numeric oktonavaway onshow order passed patternfly pf-wizard prevenabled prevtooltip priority reached relative rendering review reviewtemplate screen sequentially sets shared showreview showreviewdetails stand step stepid steppriority steps steptitle substeps template text title tooltip user viewed wizard wizarddata wzdisabled"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.wizard.directive:pfWizardSubstep",
+      "shortName": "pfWizardSubstep",
+      "type": "directive",
+      "moduleName": "patternfly.wizard",
+      "shortDescription": "Directive for rendering a Wizard substep.  Each substep must be a child of a pf-wizardstep in a pf-wizard directive.",
+      "keywords": "allowclicknav api button called child click data default description details directive directly disables displayed enabled entire expanded function header identifier indicators leave navigate nextenabled numbered numeric oktonavaway onshow order passed patternfly pf-wizard pf-wizardstep prevenabled priority reached relative rendering review reviewtemplate screen sequentially sets shared showreviewdetails step stepid steppriority steps steptitle substep template text title user viewed wizard wizarddata wzdisabled"
     }
   ],
   "apis": {
