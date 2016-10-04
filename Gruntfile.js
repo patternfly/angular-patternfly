@@ -210,6 +210,11 @@ module.exports = function (grunt) {
           cwd: 'src/',
           src: ['views/**/*.html'],
           dest: 'templates/views.js'
+        },
+        'patternfly.wizard': {
+          cwd: 'src/',
+          src: ['wizard/**/*.html'],
+          dest: 'templates/wizard.js'
         }
       },
       // ng-annotate tries to make the code safe for minification automatically
