@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/wizard/wizard-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/4cd43fb/src/wizard/wizard-directive.js#L298" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfWizard</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/wizard/wizard-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/723fc26/src/wizard/wizard-directive.js#L299" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfWizard</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.wizard</code>
 </span>
 </div>
@@ -35,7 +35,8 @@ The basic structure should be:
      [wizard-done="{boolean}"]
      loading-wizard-title="{string}"
      [loading-secondary-information="{string}"]
-     [content-height="{string}"]&gt;
+     [content-height="{string}"]
+     [embed-in-page="{boolean}"]&gt;
    ...
 &lt;/ANY&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>title</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-wizard-directive-page patternfly-wizard-directive-pfwizard-page"><p>The wizard title displayed in the header</p>
@@ -53,6 +54,7 @@ The basic structure should be:
 </div></td></tr><tr><td>loadingWizardTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-wizard-directive-page patternfly-wizard-directive-pfwizard-page"><p>The text displayed when the wizard is loading</p>
 </div></td></tr><tr><td>loadingSecondaryInformation <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-wizard-directive-page patternfly-wizard-directive-pfwizard-page"><p>Secondary descriptive information to display when the wizard is loading</p>
 </div></td></tr><tr><td>contentHeight <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-wizard-directive-page patternfly-wizard-directive-pfwizard-page"><p>The height the wizard content should be set to.  This defaults to 300px if the property is not supplied.</p>
+</div></td></tr><tr><td>embedInPage <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-directive-page patternfly-wizard-directive-pfwizard-page"><p>Value that indicates wizard is embedded in a page (not a modal).  This moves the navigation buttons to the left hand side of the footer and removes the close button.</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-wizard-directive-page patternfly-wizard-directive-pfwizard-page"><h4 id="example_source">Source</h4>

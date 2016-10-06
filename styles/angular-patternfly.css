@@ -447,3 +447,11 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 .wizard-pf-position-override {
   position: relative;
 }
+
+.wizard-pf-footer-inline {
+  text-align: left;
+}
+
+.wizard-pf-cancel-inline {
+  margin-left: 25px;
+}
