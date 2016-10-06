@@ -33,6 +33,7 @@
   * @param {string} loadingWizardTitle The text displayed when the wizard is loading
   * @param {string=} loadingSecondaryInformation Secondary descriptive information to display when the wizard is loading
   * @param {string=} contentHeight The height the wizard content should be set to.  This defaults to 300px if the property is not supplied.
+  * @param {boolean=} embedInPage Value that indicates wizard is embedded in a page (not a modal).  This moves the navigation buttons to the left hand side of the footer and removes the close button.
   *
   * @example
   <example module="patternfly.wizard" deps="patternfly.form">
@@ -316,7 +317,8 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       wizardDone: '=?',
       loadingWizardTitle: '=?',
       loadingSecondaryInformation: '=?',
-      contentHeight: '=?'
+      contentHeight: '=?',
+      embedInPage: '=?'
     },
     templateUrl: 'wizard/wizard.html',
     controller: function ($scope, $timeout) {
