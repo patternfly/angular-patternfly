@@ -4,9 +4,11 @@
  *
  * @description
  *   Directive for rendering a list view.
+ *   Pass a customScope object containing any scope variables/functions you need to access from the transcluded source, access these
+ *   via 'customScope' in your transcluded hmtl.
  *   <br><br>
  *
- * @param {array} items Array of items to display in the list view
+ * @param {array} items Array of items to display in the list view. If an item in the array has a 'rowClass' field, the value of this field will be used as a class specified on the row (list-group-item).
  * @param {object} config Configuration settings for the list view:
  * <ul style='list-style-type: none'>
  * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
@@ -39,6 +41,7 @@
  *     <li>.isSeparator - (Boolean) set to true if this is a placeholder for a separator rather than an action
  *   </ul>
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
+ * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via customScope.<xxx>
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
@@ -301,7 +304,8 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
       menuActions: '=?',
       updateMenuActionForItemFn: '=?',
       actions: '=?',
-      updateActionForItemFn: '=?'
+      updateActionForItemFn: '=?',
+      customScope: '=?'
     },
     transclude: true,
     templateUrl: 'views/listview/list-view.html',
