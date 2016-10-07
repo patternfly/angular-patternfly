@@ -1,5 +1,5 @@
 <div class="list-view-pf">
-  <div class="list-group-item"
+  <div class="list-group-item {{item.rowClass}}"
        ng-repeat="item in items track by $index"
        ng-class="{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item)}">
     <div class="list-view-pf-checkbox" ng-if="config.showSelectBox" >

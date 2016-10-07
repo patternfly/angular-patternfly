@@ -1,10 +1,12 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/723fc26/src/views/listview/list-view-directive.js#L292" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/6f8f2cc/src/views/listview/list-view-directive.js#L295" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
 </h1>
 <div><h2 id="description">Description</h2>
 <div class="description"><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>Directive for rendering a list view.
+Pass a customScope object containing any scope variables/functions you need to access from the transcluded source, access these
+via &#39;customScope&#39; in your transcluded hmtl.
 <br><br></p>
 </div></div>
 <h2 id="usage">Usage</h2>
@@ -14,10 +16,11 @@
      action-buttons="{array}"
      enable-button-for-item-fn="{function (action, item))}"
      menu-actions="{array}"
-     update-menu-action-for-item-fn="{function (action, item))}"&gt;
+     update-menu-action-for-item-fn="{function (action, item))}"
+     custom-scope="{object}"&gt;
    ...
 &lt;/ANY&gt;</pre>
-<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>Array of items to display in the list view</p>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>Array of items to display in the list view. If an item in the array has a &#39;rowClass&#39; field, the value of this field will be used as a class specified on the row (list-group-item).</p>
 </div></td></tr><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>Configuration settings for the list view:</p>
 <ul style='list-style-type: none'>
 <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
@@ -47,6 +50,7 @@
   <li>.isDisabled - (Boolean) set to true to disable the action
   <li>.isSeparator - (Boolean) set to true if this is a placeholder for a separator rather than an action
 </ul></div></td></tr><tr><td>updateMenuActionForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>function(action, item) Used to update a menu action based on the current item</p>
+</div></td></tr><tr><td>customScope</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>Object containing any variables/functions used by the transcluded html, access via customScope.<xxx></p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><h4 id="example_source">Source</h4>
