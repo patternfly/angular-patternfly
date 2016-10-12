@@ -17,6 +17,9 @@ This project will provide a set of common AngularJS directives for use with the 
 You have to install required software before you're able to use grunt:
 
 * Install Node.js - Find more information on [Node.js](http://nodejs.org/)
+
+  Angular Patternfly stays up to date with the Node LTS [Release Schedule](https://github.com/nodejs/LTS#lts_schedule). If you're using Angular Patternfly downstream, we suggest the use of an actively supported version of Node/NPM, although prior versions of Node may work. 
+
 * Install npm - If npm is not already installed with Node.js, you have to install it manually. Find more information on [NPM](https://www.npmjs.org/)
 * Install Bower globally - Find more information on [Bower](http://bower.io/)
 
