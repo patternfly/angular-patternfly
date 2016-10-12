@@ -9,7 +9,7 @@
     <div class="list-view-pf-actions"
          ng-if="(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)">
       <button class="btn btn-default {{actionButton.class}}" ng-repeat="actionButton in actionButtons"
-              title="actionButton.title"
+              title="{{actionButton.title}}"
               ng-class="{'disabled' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}"
               ng-click="handleButtonAction(actionButton, item)">
         <div ng-if="actionButton.include" class="actionButton.includeClass" ng-include src="actionButton.include"></div>
