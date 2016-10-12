@@ -28,6 +28,9 @@
  *   <ul style='list-style-type: none'>
  *     <li>.name - (String) The name of the action, displayed on the button
  *     <li>.title - (String) Optional title, used for the tooltip
+ *     <li>.class - (String) Optional class to add to the action button
+ *     <li>.include - (String) Optional include src for the button. Used for custom button layouts (icons, dropdowns, etc)
+ *     <li>.includeClass - (String) Optional class to set on the include src div (only relevant when include is set).
  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
  *   </ul>
  * @param {function (action, item))} enableButtonForItemFn function(action, item) Used to enabled/disable an action button based on the current item
@@ -120,8 +123,8 @@
   </file>
 
   <file name="script.js">
- angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
-      function ($scope) {
+ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateCache',
+      function ($scope, $templateCache) {
         $scope.eventText = '';
         var handleSelect = function (item, e) {
           $scope.eventText = item.name + ' selected\r\n' + $scope.eventText;
@@ -239,6 +242,9 @@
           $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
         };
 
+        var buttonInclude = '<span class="fa fa-plus"></span>{{actionButton.name}}';
+
+        $templateCache.put('my-button-template', buttonInclude);
         $scope.actionButtons = [
           {
             name: 'Action 1',
@@ -247,7 +253,14 @@
           },
           {
             name: 'Action 2',
+            class: 'btn-primary',
             title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 3',
+            include: 'my-button-template',
+            title: 'Do something special',
             actionFn: performAction
           }
         ];

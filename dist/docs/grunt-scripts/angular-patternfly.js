@@ -7992,6 +7992,9 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
  *   <ul style='list-style-type: none'>
  *     <li>.name - (String) The name of the action, displayed on the button
  *     <li>.title - (String) Optional title, used for the tooltip
+ *     <li>.class - (String) Optional class to add to the action button
+ *     <li>.include - (String) Optional include src for the button. Used for custom button layouts (icons, dropdowns, etc)
+ *     <li>.includeClass - (String) Optional class to set on the include src div (only relevant when include is set).
  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
  *   </ul>
  * @param {function (action, item))} enableButtonForItemFn function(action, item) Used to enabled/disable an action button based on the current item
@@ -8084,8 +8087,8 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
   </file>
 
   <file name="script.js">
- angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
-      function ($scope) {
+ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateCache',
+      function ($scope, $templateCache) {
         $scope.eventText = '';
         var handleSelect = function (item, e) {
           $scope.eventText = item.name + ' selected\r\n' + $scope.eventText;
@@ -8203,6 +8206,9 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
           $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
         };
 
+        var buttonInclude = '<span class="fa fa-plus"></span>{{actionButton.name}}';
+
+        $templateCache.put('my-button-template', buttonInclude);
         $scope.actionButtons = [
           {
             name: 'Action 1',
@@ -8211,7 +8217,14 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
           },
           {
             name: 'Action 2',
+            class: 'btn-primary',
             title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 3',
+            include: 'my-button-template',
+            title: 'Do something special',
             actionFn: performAction
           }
         ];
@@ -9977,7 +9990,7 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
 
 
   $templateCache.put('views/listview/list-view.html',
-    "<div class=list-view-pf><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in items track by $index\" ng-class=\"{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item)}\"><div class=list-view-pf-checkbox ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change=\"checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)\"><button class=\"btn btn-default\" ng-repeat=\"actionButton in actionButtons\" title=actionButton.title ng-class=\"{'disabled' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}\" ng-click=\"handleButtonAction(actionButton, item)\">{{actionButton.name}}</button><div class=\"{{dropdownClass}} pull-right dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"menuActions && menuActions.length > 0\"><button class=\"btn btn-link dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': checkDisabled(item)}\" ng-click=\"setupActions(item, $event)\" data-toggle=dropdown aria-haspopup=true aria-expanded=true><span class=\"fa fa-ellipsis-v\"></span></button><ul class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"itemClick($event, item)\" ng-dblclick=\"dblClick($event, item)\"></div></div></div>"
+    "<div class=list-view-pf><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in items track by $index\" ng-class=\"{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item)}\"><div class=list-view-pf-checkbox ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change=\"checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)\"><button class=\"btn btn-default {{actionButton.class}}\" ng-repeat=\"actionButton in actionButtons\" title=actionButton.title ng-class=\"{'disabled' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}\" ng-click=\"handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div class=\"{{dropdownClass}} pull-right dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"menuActions && menuActions.length > 0\"><button class=\"btn btn-link dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': checkDisabled(item)}\" ng-click=\"setupActions(item, $event)\" data-toggle=dropdown aria-haspopup=true aria-expanded=true><span class=\"fa fa-ellipsis-v\"></span></button><ul class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"itemClick($event, item)\" ng-dblclick=\"dblClick($event, item)\"></div></div></div>"
   );
 
 }]);
