@@ -342,6 +342,11 @@
   margin: 0 5px;
 }
 
+.dropdown-kebab-pf.invisible {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Utilization bar chart - Animate load */
 .utilization-bar-chart-pf .progress-bar {
   -webkit-transition: width .75s ease-in-out;

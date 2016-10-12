@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/37022d3/src/views/listview/list-view-directive.js#L308" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/aadf359/src/views/listview/list-view-directive.js#L324" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -16,6 +16,8 @@ via &#39;customScope&#39; in your transcluded hmtl.
      action-buttons="{array}"
      enable-button-for-item-fn="{function (action, item))}"
      menu-actions="{array}"
+     hide-menu-for-item-fn="{function (item))}"
+     menu-class-for-item-fn="{function (item))}"
      update-menu-action-for-item-fn="{function (action, item))}"
      custom-scope="{object}"&gt;
    ...
@@ -52,7 +54,9 @@ via &#39;customScope&#39; in your transcluded hmtl.
   <li>.isVisible - (Boolean) set to false to hide the action
   <li>.isDisabled - (Boolean) set to true to disable the action
   <li>.isSeparator - (Boolean) set to true if this is a placeholder for a separator rather than an action
-</ul></div></td></tr><tr><td>updateMenuActionForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>function(action, item) Used to update a menu action based on the current item</p>
+</ul></div></td></tr><tr><td>hideMenuForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (item)</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>function(item) Used to hide all menu actions for a particular item</p>
+</div></td></tr><tr><td>menuClassForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (item)</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>function(item) Used to specify a class for an item&#39;s dropdown kebab</p>
+</div></td></tr><tr><td>updateMenuActionForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>function(action, item) Used to update a menu action based on the current item</p>
 </div></td></tr><tr><td>customScope</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>Object containing any variables/functions used by the transcluded html, access via customScope.<xxx></p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
@@ -68,7 +72,9 @@ via &#39;customScope&#39; in your transcluded hmtl.
                         action-buttons="actionButtons"
                         enable-button-for-item-fn="enableButtonForItemFn"
                         menu-actions="menuActions"
-                        update-menu-action-for-item-fn="updateMenuActionForItemFn">
+                        update-menu-action-for-item-fn="updateMenuActionForItemFn"
+                        menu-class-for-item-fn="getMenuClass"
+                        hide-menu-for-item-fn="hideMenuActions">
         <div class="list-view-pf-description">
           <div class="list-group-item-heading">
             {{item.name}}
@@ -228,7 +234,7 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
           state: "Colorado"
         },
         {
-          name: "Jim Beam",
+          name: "Jim Brown",
           address: "72 Bourbon Way",
           city: "Nashville",
           state: "Tennessee"
@@ -252,6 +258,18 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
           state: "New York"
         },
       ];
+
+      $scope.getMenuClass = function (item) {
+        var menuClass = "";
+        if (item.name === "Jim Brown") {
+          menuClass = 'red';
+        }
+        return menuClass;
+      };
+
+      $scope.hideMenuActions = function (item) {
+        return (item.name === "Marie Edwards");
+      };
 
       var performAction = function (action, item) {
         $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
