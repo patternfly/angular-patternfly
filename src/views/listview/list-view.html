@@ -8,11 +8,12 @@
 
     <div class="list-view-pf-actions"
          ng-if="(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)">
-      <button class="btn btn-default" ng-repeat="actionButton in actionButtons"
+      <button class="btn btn-default {{actionButton.class}}" ng-repeat="actionButton in actionButtons"
               title="actionButton.title"
               ng-class="{'disabled' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}"
               ng-click="handleButtonAction(actionButton, item)">
-        {{actionButton.name}}
+        <div ng-if="actionButton.include" class="actionButton.includeClass" ng-include src="actionButton.include"></div>
+        <span ng-if="!actionButton.include">{{actionButton.name}}</span>
       </button>
       <div class="{{dropdownClass}} pull-right dropdown-kebab-pf"
            id="kebab_{{$index}}"
