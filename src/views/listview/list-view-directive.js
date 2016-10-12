@@ -151,7 +151,8 @@
         };
 
         $scope.enableButtonForItemFn = function(action, item) {
-          return (action.name !=='Action 2') || (item.name !== "Frank Livingston");
+          return !((action.name ==='Action 2') && (item.name === "Frank Livingston")) &&
+                 !(action.name === 'Start' && item.started);
         };
 
         $scope.updateMenuActionForItemFn = function(action, item) {
@@ -258,10 +259,25 @@
           $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
         };
 
-        var buttonInclude = '<span class="fa fa-plus"></span>{{actionButton.name}}';
+        var startServer = function (action, item) {
+          $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
+          item.started = true;
+        };
 
+        var buttonInclude = '<span class="fa fa-plus"></span>{{actionButton.name}}';
         $templateCache.put('my-button-template', buttonInclude);
+
+        var startButtonInclude = '<span ng-disabled="item.started">{{item.started ? "Starting" : "Start"}}</span>';
+        $templateCache.put('start-button-template', startButtonInclude);
+
         $scope.actionButtons = [
+          {
+            name: 'Start',
+            class: 'btn-primary',
+            include: 'start-button-template',
+            title: 'Start the server',
+            actionFn: startServer
+          },
           {
             name: 'Action 1',
             title: 'Perform an action',
@@ -269,7 +285,6 @@
           },
           {
             name: 'Action 2',
-            class: 'btn-primary',
             title: 'Do something else',
             actionFn: performAction
           },
