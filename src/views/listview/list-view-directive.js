@@ -43,6 +43,8 @@
  *     <li>.isDisabled - (Boolean) set to true to disable the action
  *     <li>.isSeparator - (Boolean) set to true if this is a placeholder for a separator rather than an action
  *   </ul>
+ * @param {function (item))} hideMenuForItemFn function(item) Used to hide all menu actions for a particular item
+ * @param {function (item))} menuClassForItemFn function(item) Used to specify a class for an item's dropdown kebab
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
  * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via customScope.<xxx>
  * @example
@@ -55,7 +57,9 @@
                           action-buttons="actionButtons"
                           enable-button-for-item-fn="enableButtonForItemFn"
                           menu-actions="menuActions"
-                          update-menu-action-for-item-fn="updateMenuActionForItemFn">
+                          update-menu-action-for-item-fn="updateMenuActionForItemFn"
+                          menu-class-for-item-fn="getMenuClass"
+                          hide-menu-for-item-fn="hideMenuActions">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
               {{item.name}}
@@ -213,7 +217,7 @@
             state: "Colorado"
           },
           {
-            name: "Jim Beam",
+            name: "Jim Brown",
             address: "72 Bourbon Way",
             city: "Nashville",
             state: "Tennessee"
@@ -237,6 +241,18 @@
             state: "New York"
           },
         ];
+
+        $scope.getMenuClass = function (item) {
+          var menuClass = "";
+          if (item.name === "Jim Brown") {
+            menuClass = 'red';
+          }
+          return menuClass;
+        };
+
+        $scope.hideMenuActions = function (item) {
+          return (item.name === "Marie Edwards");
+        };
 
         var performAction = function (action, item) {
           $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
@@ -315,6 +331,8 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
       actionButtons: '=?',
       enableButtonForItemFn: '=?',
       menuActions: '=?',
+      hideMenuForItemFn: '=?',
+      menuClassForItemFn: '=?',
       updateMenuActionForItemFn: '=?',
       actions: '=?',
       updateActionForItemFn: '=?',
@@ -389,6 +407,24 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
               $scope.updateMenuActionForItemFn(action, item);
             });
           }
+        };
+
+        $scope.getMenuClassForItem = function (item) {
+          var menuClass = '';
+          if (angular.isFunction($scope.menuClassForItemFn)) {
+            menuClass = $scope.menuClassForItemFn(item);
+          }
+
+          return menuClass;
+        };
+
+        $scope.hideMenuForItem = function (item) {
+          var hideMenu = false;
+          if (angular.isFunction($scope.hideMenuForItemFn)) {
+            hideMenu = $scope.hideMenuForItemFn(item);
+          }
+
+          return hideMenu;
         };
 
         $scope.setupActions = function (item, event) {

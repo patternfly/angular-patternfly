@@ -130,3 +130,7 @@ hr {
 .example-warning-background {
   background-color: #ec7a08 !important;
 }
+
+.dropdown-kebab-pf.red .btn-link {
+  color: red;
+}

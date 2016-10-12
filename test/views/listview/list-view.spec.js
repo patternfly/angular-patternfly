@@ -49,6 +49,18 @@ describe('Directive:  pfDataList', function () {
       return (action.name !=='Action 2') || (item.uuid !== '2');
     };
 
+    $scope.hideMenuForItemFn = function(item) {
+      return (item.uuid === '2');
+    };
+
+    $scope.getMenuClassForItemFn = function(item) {
+      var menuClass = '';
+      if (item.uuid === '3') {
+        menuClass = 'test-class';
+      }
+      return menuClass;
+    };
+
     performedAction = undefined;
     var performAction = function (action) {
       performedAction = action;
@@ -107,6 +119,8 @@ describe('Directive:  pfDataList', function () {
       '  action-buttons="actionButtons" ' +
       '  enable-button-for-item-fn="enableButtonForItemFn" ' +
       '  menu-actions="menuActions" ' +
+      '  menu-class-for-item-fn="getMenuClassForItemFn" ' +
+      '  hide-menu-for-item-fn="hideMenuForItemFn" ' +
       '  update-menu-action-for-item-fn="updateActionForItemFn">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
       '</div>';
@@ -483,4 +497,20 @@ describe('Directive:  pfDataList', function () {
 
     expect(actionArea.length).toBe(0);
   });
-})
+
+  it ('should hide kebab menu when specified', function () {
+    var kebabs  = element.find('.dropdown-kebab-pf');
+    expect(kebabs.length).toBe(5);
+
+    var alteredKebab = element.find('.dropdown-kebab-pf.invisible');
+    expect(alteredKebab.length).toBe(1);
+  });
+
+  it ('should add a class to the kebab menu when specified', function () {
+    var kebabs  = element.find('.dropdown-kebab-pf');
+    expect(kebabs.length).toBe(5);
+
+    var alteredKebab = element.find('.dropdown-kebab-pf.test-class');
+    expect(alteredKebab.length).toBe(1);
+  });
+});
