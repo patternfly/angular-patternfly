@@ -6404,6 +6404,10 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
         });
       };
 
+      var selectpickerDestroy = function () {
+        element.selectpicker('destroy');
+      };
+
       element.selectpicker(scope.selectPickerOptions);
 
       ngModel.$render = function () {
@@ -6424,6 +6428,8 @@ angular.module('patternfly.select', []).directive('pfSelect', ["$timeout", funct
       }
 
       attrs.$observe('disabled', selectpickerRefresh);
+
+      scope.$on('$destroy', selectpickerDestroy);
     }
   };
 }]);
