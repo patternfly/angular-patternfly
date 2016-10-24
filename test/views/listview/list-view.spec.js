@@ -513,4 +513,19 @@ describe('Directive:  pfDataList', function () {
     var alteredKebab = element.find('.dropdown-kebab-pf.test-class');
     expect(alteredKebab.length).toBe(1);
   });
+
+  it('should allow expanding rows', function () {
+    var items;
+    $scope.listConfig.useExpandingRows = true;
+
+    $scope.$digest();
+
+    items = element.find('.list-view-pf-expand .fa-angle-right');
+    expect(items.length).toBe(5);
+
+    eventFire(items[0], 'click');
+
+    var openItem = element.find('.list-group-item-container');
+    expect(openItem.length).toBe(1);
+  });
 });
