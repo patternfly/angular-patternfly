@@ -8633,36 +8633,37 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
     }
   });
 })();
-;function wizardButtonDirective (action) {
+;(function () {
   'use strict';
-
-  angular.module('patternfly.wizard')
-    .directive(action, function () {
-      return {
-        restrict: 'A',
-        require: '^pf-wizard',
-        scope: {
-          callback: "=?"
-        },
-        link: function ($scope, $element, $attrs, wizard) {
-          $element.on("click", function (e) {
-            e.preventDefault();
-            $scope.$apply(function () {
-              // scope apply in button module
-              $scope.$eval($attrs[action]);
-              wizard[action.replace("pfWiz", "").toLowerCase()]($scope.callback);
+  function pfWizardButtonDirective (action) {
+    angular.module('patternfly.wizard')
+      .directive(action, function () {
+        return {
+          restrict: 'A',
+          require: '^pf-wizard',
+          scope: {
+            callback: "=?"
+          },
+          link: function ($scope, $element, $attrs, wizard) {
+            $element.on("click", function (e) {
+              e.preventDefault();
+              $scope.$apply(function () {
+                // scope apply in button module
+                $scope.$eval($attrs[action]);
+                wizard[action.replace("pfWiz", "").toLowerCase()]($scope.callback);
+              });
             });
-          });
-        }
-      };
-    });
-}
+          }
+        };
+      });
+  }
 
-wizardButtonDirective('pfWizNext');
-wizardButtonDirective('pfWizPrevious');
-wizardButtonDirective('pfWizFinish');
-wizardButtonDirective('pfWizCancel');
-wizardButtonDirective('pfWizReset');
+  pfWizardButtonDirective('pfWizNext');
+  pfWizardButtonDirective('pfWizPrevious');
+  pfWizardButtonDirective('pfWizFinish');
+  pfWizardButtonDirective('pfWizCancel');
+  pfWizardButtonDirective('pfWizReset');
+})();
 ;/**
   * @ngdoc directive
   * @name patternfly.wizard.directive:pfWizard
