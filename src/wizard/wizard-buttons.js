@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  function wizardButtonDirective (action) {
+  function pfWizardButtonDirective (action) {
     angular.module('patternfly.wizard')
       .directive(action, function () {
         return {
@@ -23,9 +23,9 @@
       });
   }
 
-  wizardButtonDirective('pfWizNext');
-  wizardButtonDirective('pfWizPrevious');
-  wizardButtonDirective('pfWizFinish');
-  wizardButtonDirective('pfWizCancel');
-  wizardButtonDirective('pfWizReset');
+  pfWizardButtonDirective('pfWizNext');
+  pfWizardButtonDirective('pfWizPrevious');
+  pfWizardButtonDirective('pfWizFinish');
+  pfWizardButtonDirective('pfWizCancel');
+  pfWizardButtonDirective('pfWizReset');
 })();
