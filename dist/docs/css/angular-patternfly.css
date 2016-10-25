@@ -460,3 +460,7 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 .wizard-pf-cancel-inline {
   margin-left: 25px;
 }
+
+.pf-expand-placeholder {
+  margin-right: 10px;
+}

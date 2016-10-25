@@ -7,6 +7,7 @@
  *   Pass a customScope object containing any scope variables/functions you need to access from the transcluded source, access these
  *   via 'customScope' in your transcluded hmtl.
  *   <br><br>
+ *   If using expanding rows, use a list-expanded-content element containing expandable content for each row.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.
  *
  * @param {array} items Array of items to display in the list view. If an item in the array has a 'rowClass' field, the value of this field will be used as a class specified on the row (list-group-item).
  * @param {object} config Configuration settings for the list view:
@@ -15,6 +16,7 @@
  * <li>.selectItems            - (boolean) Allow row selection, default is false
  * <li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
  * <li>.multiSelect            - (boolean) Allow multiple row selections, selectItems must also be set, not applicable when dblClick is true. Default is false
+ * <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
  * <li>.selectedItems          - (array) Current set of selected items
  * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
@@ -76,6 +78,36 @@
               {{item.state}}
             </div>
           </div>
+          <list-expanded-content>
+           {{item.city}}
+           <div class="row">
+            <div class="col-md-3">
+              <div pf-donut-pct-chart config="exampleChartConfig" data="{'used': '350','total': '1000'}" center-label="'Percent Used'"></div>
+            </div>
+            <div class="col-md-9">
+               <dl class="dl-horizontal">
+                 <dt>Host Name</dt>
+                 <dd>Hostceph1</dd>
+                 <dt>Device Path</dt>
+                 <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+                 <dt>Time</dt>
+                 <dd>January 15, 2016 10:45:11 AM</dd>
+                 <dt>Severity</dt>
+                 <dd>Warning</dd>
+                 <dt>Cluster</dt>
+                 <dd>Cluster 1</dd>
+               </dl>
+               <p>
+                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                 consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                 cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+               </p>
+             </div>
+           </div>
+          </list-expanded-content>
         </div>
       </div>
       <hr class="col-md-12">
@@ -114,6 +146,9 @@
             <label class="checkbox-inline">
               <input type="checkbox" ng-model="showDisabled">Show Disabled Rows</input>
             </label>
+           <label class="checkbox-inline">
+              <input type="checkbox" ng-model="config.useExpandingRows">Show Expanding Rows</input>
+           </label>
           </div>
         </form>
       </div>
@@ -161,6 +196,15 @@
           }
         };
 
+        $scope.exampleChartConfig = {
+          'chartId': 'pctChart',
+          'units': 'GB',
+          'thresholds': {
+            'warning':'60',
+            'error':'90'
+          }
+        };
+
         $scope.selectType = 'checkbox';
         $scope.updateSelectionType = function() {
           if ($scope.selectType === 'checkbox') {
@@ -185,6 +229,7 @@
          selectedItems: [],
          checkDisabled: checkDisabledItem,
          showSelectBox: true,
+         useExpandingRows: false,
          onSelect: handleSelect,
          onSelectionChange: handleSelectionChange,
          onCheckBoxChange: handleCheckBoxChange,
@@ -203,7 +248,8 @@
             name: "John Smith",
             address: "415 East Main Street",
             city: "Norfolk",
-            state: "Virginia"
+            state: "Virginia",
+            disableRowExpansion: true
           },
           {
             name: "Frank Livingston",
@@ -353,7 +399,9 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
       updateActionForItemFn: '=?',
       customScope: '=?'
     },
-    transclude: true,
+    transclude: {
+      expandedContent: '?listExpandedContent'
+    },
     templateUrl: 'views/listview/list-view.html',
     controller:
       function ($scope, $element) {
@@ -380,6 +428,7 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
           selectionMatchProp: 'uuid',
           selectedItems: [],
           checkDisabled: false,
+          useExpandingRows: false,
           showSelectBox: true,
           onSelect: null,
           onSelectionChange: null,
@@ -440,6 +489,10 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
           }
 
           return hideMenu;
+        };
+
+        $scope.toggleItemExpansion = function (item) {
+          item.isExpanded = !item.isExpanded;
         };
 
         $scope.setupActions = function (item, event) {

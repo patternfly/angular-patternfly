@@ -64,6 +64,7 @@
 		showTags: false,
 		multiSelect: false,
 		preventUnselect: false,
+		allowReselect: false,
 		hierarchicalCheck: false,
 		propagateCheckEvent: false,
 		wrapNodeText: false,
@@ -669,6 +670,10 @@
 			if (this._options.preventUnselect &&
 					(options && !options.unselecting) &&
 					(this._findNodes('true', 'state.selected').length === 1)) {
+				// Fire the nodeSelected event if reselection is allowed
+				if (this._options.allowReselect) {
+					this._triggerEvent('nodeSelected', node, options);
+				}
 				return this;
 			}
 
@@ -822,7 +827,7 @@
 			node.state.disabled = true;
 
 			// Disable all other states
-			if (!options.keepState) {
+			if (options && !options.keepState) {
 				this._setSelected(node, false, options);
 				this._setChecked(node, false, options);
 				this._setExpanded(node, false, options);

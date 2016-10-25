@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/9967db2/src/views/listview/list-view-directive.js#L339" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view-directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/df5af8b/src/views/listview/list-view-directive.js#L385" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -7,7 +7,8 @@
 <div class="description"><div class="patternfly-views-directive-page patternfly-views-directive-pflistview-page"><p>Directive for rendering a list view.
 Pass a customScope object containing any scope variables/functions you need to access from the transcluded source, access these
 via &#39;customScope&#39; in your transcluded hmtl.
-<br><br></p>
+<br><br>
+If using expanding rows, use a list-expanded-content element containing expandable content for each row.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.</p>
 </div></div>
 <h2 id="usage">Usage</h2>
 <div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pf-list-view
@@ -29,6 +30,7 @@ via &#39;customScope&#39; in your transcluded hmtl.
 <li>.selectItems            - (boolean) Allow row selection, default is false
 <li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
 <li>.multiSelect            - (boolean) Allow multiple row selections, selectItems must also be set, not applicable when dblClick is true. Default is false
+<li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
 <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
 <li>.selectedItems          - (array) Current set of selected items
 <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
@@ -91,6 +93,36 @@ via &#39;customScope&#39; in your transcluded hmtl.
             {{item.state}}
           </div>
         </div>
+        <list-expanded-content>
+         {{item.city}}
+         <div class="row">
+          <div class="col-md-3">
+            <div pf-donut-pct-chart config="exampleChartConfig" data="{'used': '350','total': '1000'}" center-label="'Percent Used'"></div>
+          </div>
+          <div class="col-md-9">
+             <dl class="dl-horizontal">
+               <dt>Host Name</dt>
+               <dd>Hostceph1</dd>
+               <dt>Device Path</dt>
+               <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+               <dt>Time</dt>
+               <dd>January 15, 2016 10:45:11 AM</dd>
+               <dt>Severity</dt>
+               <dd>Warning</dd>
+               <dt>Cluster</dt>
+               <dd>Cluster 1</dd>
+             </dl>
+             <p>
+               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+               tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+               quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+               consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+               cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+               proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+             </p>
+           </div>
+         </div>
+        </list-expanded-content>
       </div>
     </div>
     <hr class="col-md-12">
@@ -129,6 +161,9 @@ via &#39;customScope&#39; in your transcluded hmtl.
           <label class="checkbox-inline">
             <input type="checkbox" ng-model="showDisabled">Show Disabled Rows</input>
           </label>
+         <label class="checkbox-inline">
+            <input type="checkbox" ng-model="config.useExpandingRows">Show Expanding Rows</input>
+         </label>
         </div>
       </form>
     </div>
@@ -178,6 +213,15 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
         }
       };
 
+      $scope.exampleChartConfig = {
+        'chartId': 'pctChart',
+        'units': 'GB',
+        'thresholds': {
+          'warning':'60',
+          'error':'90'
+        }
+      };
+
       $scope.selectType = 'checkbox';
       $scope.updateSelectionType = function() {
         if ($scope.selectType === 'checkbox') {
@@ -202,6 +246,7 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
        selectedItems: [],
        checkDisabled: checkDisabledItem,
        showSelectBox: true,
+       useExpandingRows: false,
        onSelect: handleSelect,
        onSelectionChange: handleSelectionChange,
        onCheckBoxChange: handleCheckBoxChange,
@@ -220,7 +265,8 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
           name: "John Smith",
           address: "415 East Main Street",
           city: "Norfolk",
-          state: "Virginia"
+          state: "Virginia",
+          disableRowExpansion: true
         },
         {
           name: "Frank Livingston",
