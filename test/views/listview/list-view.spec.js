@@ -528,4 +528,18 @@ describe('Directive:  pfDataList', function () {
     var openItem = element.find('.list-group-item-container');
     expect(openItem.length).toBe(1);
   });
+
+  it('should allow expanding rows to disable individual expansion', function () {
+    $scope.systemModel[0].disableRowExpansion = true;
+    $scope.listConfig.useExpandingRows = true;
+    var htmlTmp = '<div pf-list-view items="systemModel" ' +
+      '  config="listConfig">' +
+      '</div>';
+
+    compileHTML(htmlTmp, $scope);
+
+    // Make sure one item is hiding the expansion action (based on the item settings above)
+    items = element.find('.list-view-pf-expand .fa-angle-right.ng-hide');
+    expect(items.length).toBe(1);
+  });
 });
