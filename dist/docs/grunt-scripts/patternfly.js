@@ -171,7 +171,7 @@
             }
 
             iNewStart = oSettings._iDisplayLength * (this.value - 1);
-            if (iNewStart > oSettings.fnRecordsDisplay()) {
+            if (iNewStart >= oSettings.fnRecordsDisplay()) {
               /* Display overrun */
               oSettings._iDisplayStart = (Math.ceil((oSettings.fnRecordsDisplay() - 1) /
                 oSettings._iDisplayLength) - 1) * oSettings._iDisplayLength;
@@ -1568,6 +1568,10 @@
       },
 
       init = function (handleItemSelections) {
+        // Hide the nav menus during initialization
+        navElement.addClass('hide-nav-pf');
+        bodyContentElement.addClass('hide-nav-pf');
+
         //Set correct state on load
         checkNavState();
 
