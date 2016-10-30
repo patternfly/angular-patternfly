@@ -39,9 +39,7 @@ describe('Directive: pfUtilizationBarChart', function() {
   });
 
   it("should set aria-valuenow values", function() {
-    remaining = angular.element(element).find('.progress-bar-remaining');
     used = angular.element(element).find('.progress-bar').not('.progress-bar-remaining');
-    expect(remaining.attr('aria-valuenow')).toBe("20");
     expect(used.attr('aria-valuenow')).toBe("80");
   });
 

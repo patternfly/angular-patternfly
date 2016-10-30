@@ -9,7 +9,7 @@
         <span ng-if="!chartFooter && (!footerLabelFormat || footerLabelFormat === 'actual')"><strong>{{chartData.used}} of {{chartData.total}} {{units}}</strong> Used</span>
         <span ng-if="!chartFooter && footerLabelFormat === 'percent'"><strong>{{chartData.percentageUsed}}%</strong> Used</span>
       </div>
-      <div class="progress-bar progress-bar-remaining" aria-valuenow="{{100 - chartData.percentageUsed}}" aria-valuemin="0" aria-valuemax="100"
+      <div class="progress-bar progress-bar-remaining"
            ng-style="{width:(100 - chartData.percentageUsed) + '%'}" tooltip="{{100 - chartData.percentageUsed}}% Available">
       </div>
     </div>
@@ -26,7 +26,7 @@
           <span ng-if="(!chartFooter) && (!footerLabelFormat || footerLabelFormat === 'actual')" ng-style="{'max-width':layout.footerLabelWidth}"><strong>{{chartData.used}} {{units}}</strong> Used</span>
           <span ng-if="(!chartFooter) && footerLabelFormat === 'percent'" ng-style="{'max-width':layout.footerLabelWidth}"><strong>{{chartData.percentageUsed}}%</strong> Used</span>
         </div>
-        <div class="progress-bar progress-bar-remaining" aria-valuenow="{{100 - chartData.percentageUsed}}" aria-valuemin="0" aria-valuemax="100"
+        <div class="progress-bar progress-bar-remaining"
              ng-style="{width:(100 - chartData.percentageUsed) + '%'}" tooltip="{{100 - chartData.percentageUsed}}% Available">
         </div>
       </div>
