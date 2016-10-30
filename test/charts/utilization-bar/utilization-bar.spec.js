@@ -38,6 +38,13 @@ describe('Directive: pfUtilizationBarChart', function() {
     expect(utilizationBar).toBe("80%");
   });
 
+  it("should set aria-valuenow values", function() {
+    remaining = angular.element(element).find('.progress-bar-remaining');
+    used = angular.element(element).find('.progress-bar').not('.progress-bar-remaining');
+    expect(remaining.attr('aria-valuenow')).toBe("20");
+    expect(used.attr('aria-valuenow')).toBe("80");
+  });
+
   it("should set the charts title and usage label", function() {
     title = angular.element(element).find('.progress-description').html();
     expect(title).toBe("CPU Usage");
