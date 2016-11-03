@@ -6,7 +6,9 @@ describe('Directive:  pfFilter', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.filters', 'patternfly.select', 'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html');
+    module('patternfly.filters',
+           'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html',
+           'bootstrap-select/bootstrap-select.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -101,10 +103,10 @@ describe('Directive:  pfFilter', function () {
     eventFire(fields[2], 'click');
     $scope.$digest();
     pfSelects = element.find('.filter-select');
-    expect(pfSelects.length).toBe(2); // 2 because it is a directive
+    expect(pfSelects.length).toBe(1);
 
     var items = pfSelects.find('li');
-    expect(items.length).toBe($scope.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
+    expect(items.length).toBe($scope.filterConfig.fields[2].filterValues.length);
   });
 
   it ('should enforce single selection for select dropdowns, accumative for others', function() {

@@ -39,13 +39,13 @@
          </div>
          <div class="form-group">
            <label class="col-sm-2 control-label" for="type">Type:</label>
-           <div class="col-sm-10">
-            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+           <div class="col-sm-4">
+            <div pf-bootstrap-select current-selection="type" id="type" selections="types"></divselect>
            </div>
          </div>
          <div class="form-group">
            <label class="col-sm-2 control-label" for="type">Persistent:</label>
-           <div class="col-sm-10">
+           <div class="col-sm-4">
             <input type="checkbox" ng-model="isPersistent"></input>
            </div>
          </div>

@@ -30,41 +30,32 @@ angular.module('patternfly.filters').directive('pfFilterFields', function () {
     },
     templateUrl: 'filters/filter-fields.html',
     controller: function ($scope) {
+      $scope.currentValue = null;
+
       $scope.setupConfig = function () {
         if ($scope.fields === undefined) {
           $scope.fields = [];
         }
         if (!$scope.currentField) {
           $scope.currentField = $scope.config.fields[0];
-          $scope.config.currentValue = null;
-        }
-
-        if ($scope.config.currentValue === undefined) {
-          $scope.config.currentValue = null;
         }
       };
 
       $scope.$watch('config', function () {
         $scope.setupConfig();
       }, true);
+
+      $scope.setupConfig();
     },
 
     link: function (scope, element, attrs) {
       scope.selectField = function (item) {
         scope.currentField = item;
-        scope.config.currentValue = null;
+        scope.currentValue = null;
       };
 
       scope.selectValue = function (filterValue) {
         scope.addFilterFn(scope.currentField, filterValue);
-        scope.config.currentValue = null;
-      };
-
-      scope.onValueKeyPress = function (keyEvent) {
-        if (keyEvent.which === 13) {
-          scope.addFilterFn(scope.currentField, scope.config.currentValue);
-          scope.config.currentValue = undefined;
-        }
       };
     }
   };

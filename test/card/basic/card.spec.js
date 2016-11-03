@@ -4,7 +4,8 @@ describe('Directive: pfCard', function() {
   beforeEach(module(
     'patternfly.card',
     'card/basic/card.html',
-    'card/basic/card-filter.html'
+    'card/basic/card-filter.html',
+    'bootstrap-select/bootstrap-select.html'
   ));
 
   beforeEach(inject(function(_$compile_, _$rootScope_) {

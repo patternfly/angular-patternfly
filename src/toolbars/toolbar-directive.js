@@ -45,7 +45,7 @@
  *   </ul>
  *
  * @example
-<example module="patternfly.toolbars" deps="patternfly.filters, patternfly.sort, patternfly.views">
+<example module="patternfly.toolbars">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
