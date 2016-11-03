@@ -27,6 +27,7 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
   'use strict';
   return {
     restrict: 'A',
+    require: '^pfWizard',
     transclude: true,
     scope: {
       stepTitle: '@',
@@ -47,7 +48,6 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
       showReviewDetails: '@?',
       reviewTemplate: '@?'
     },
-    require: '^pf-wizard',
     templateUrl: 'wizard/wizard-step.html',
     controller: function ($scope, $timeout) {
       var firstRun = true;

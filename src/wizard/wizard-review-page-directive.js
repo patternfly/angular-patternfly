@@ -17,7 +17,7 @@ angular.module('patternfly.wizard').directive('pfWizardReviewPage', function () 
       shown: '=',
       wizardData: "="
     },
-    require: '^pf-wizard',
+    require: '^pfWizard',
     templateUrl: 'wizard/wizard-review-page.html',
     controller: function ($scope) {
       $scope.toggleShowReviewDetails = function (step) {
