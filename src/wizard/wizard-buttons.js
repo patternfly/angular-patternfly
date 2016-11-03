@@ -5,7 +5,7 @@
       .directive(action, function () {
         return {
           restrict: 'A',
-          require: '^pf-wizard',
+          require: '^pfWizard',
           scope: {
             callback: "=?"
           },
