@@ -1,7 +1,7 @@
 describe('Directive: pfDatepicker', function() {
-  var $scope, $compile, $timeout, element, datepicker, dateInput;
+  var $scope, $compile, datepicker, dateInput;
 
-  beforeEach(module('patternfly.form', 'form/datepicker/datepicker.html'));
+  beforeEach(module('patternfly.jquery', 'form/datepicker/datepicker.html'));
 
   beforeEach(inject(function(_$compile_, _$rootScope_) {
     $compile = _$compile_;

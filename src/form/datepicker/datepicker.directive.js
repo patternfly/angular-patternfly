@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.form.directive:pfDatepicker
+ * @name patternfly.jquery.directive:pfDatepicker
  *
  * @description
  *  Angular directive to wrap the bootstrap datepicker http://bootstrap-datepicker.readthedocs.org/en/latest/
@@ -9,7 +9,7 @@
  * @param {string} options the configuration options for the date picker
  *
  * @example
- <example module="patternfly.form">
+ <example module="patternfly.datepicker">
    <file name="index.html">
      <form class="form-horizontal" ng-controller="FormDemoCtrl">
      <div>
@@ -21,7 +21,7 @@
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.form' ).controller( 'FormDemoCtrl', function( $scope ) {
+     angular.module( 'patternfly.jquery' ).controller( 'FormDemoCtrl', function( $scope ) {
        $scope.setToday = function () {
          $scope.date = new Date();
        }
@@ -35,7 +35,7 @@
    </file>
  </example>
  */
-angular.module('patternfly.form').directive('pfDatepicker', function () {
+angular.module('patternfly.jquery').directive('pfDatepicker', function () {
   'use strict';
 
   return {
