@@ -167,6 +167,11 @@ module.exports = function (grunt) {
           src: ['form/**/*.html'],
           dest: 'templates/form.js'
         },
+        'patternfly.bsselect': {
+          cwd: 'src/',
+          src: ['bootstrap-select/**/*.html'],
+          dest: 'templates/bootstrap-select.js'
+        },
         'patternfly.navigation': {
           cwd: 'src/',
           src: ['navigation/**/*.html'],
@@ -247,6 +252,10 @@ module.exports = function (grunt) {
         main: {
           files: ['Gruntfile.js'],
           tasks: ['eslint']
+        },
+        test: {
+          files: ['test/**/*.js'],
+          tasks: ['test']
         },
         all: {
           files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],
