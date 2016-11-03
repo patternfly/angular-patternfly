@@ -32,8 +32,8 @@
  * @example
  <example module="myApp" deps="patternfly.utils, patternfly.filters, patternfly.sort, patternfly.views">
   <file name="index.html">
-    <div>
-      <button class="btn btn-primary" id="showVerticalNavWithRouter" onclick="showVerticalNavWithRouter">Show Vertical Navigation with UIRouter</button>
+    <div ng-controller="showDemoController">
+      <button class="btn btn-primary" id="showVerticalNavWithRouter" ng-click="showVerticalNav()">Show Vertical Navigation with UIRouter</button>
       <label class="example-info-text">This will display the vertical nav bar and some mock content over the content of this page.</label>
       <label class="example-info-text">Exit the demo to return back to this page.</label>
     </div>
@@ -43,7 +43,7 @@
           navigate-callback="handleNavigateClickRouter">
         <div>
           <ul class="nav navbar-nav">
-          <li><button id="hideVerticalNavWithRouter" class="hide-vertical-nav">Exit Vertical Navigation Demo</button></li>
+          <li><button id="hideVerticalNavWithRouter" class="hide-vertical-nav" ng-click="hideVerticalNav()">Exit Vertical Navigation Demo</button></li>
           </ul>
           <ul class="nav navbar-nav navbar-right navbar-iconic">
             <li class="dropdown">
@@ -77,6 +77,15 @@
         </ui-view>
       </div>
     </div>
+  </file>
+  <file name="demo.js">
+   angular.module('patternfly.navigation').controller('showDemoController', ['$scope',
+   function ($scope) {
+       $scope.showVerticalNav = function () {
+         angular.element(document.querySelector("#verticalNavWithRouterLayout")).removeClass("hidden");
+       };
+     }
+   ]);
   </file>
   <file name="script.js">
     angular.module('myApp',['patternfly.navigation', 'ui.router'])
@@ -137,23 +146,16 @@
               title: "Exit Demo"
             }
           ];
+          $scope.hideVerticalNav = function() {
+            angular.element(document.querySelector("#verticalNavWithRouterLayout")).addClass("hidden");
+          };
           $scope.handleNavigateClickRouter = function (item) {
             if (item.title === "Exit Demo") {
-              angular.element(document.querySelector("#verticalNavWithRouterLayout")).addClass("hidden");
+              $scope.hideVerticalNav();
             }
           };
         }
       ]);
-  </file>
-  <file name="hide-show.js">
-    $(document).ready(function() {
-      $(document).on('click', '#showVerticalNavWithRouter', function() {
-        $(document.getElementById("verticalNavWithRouterLayout")).removeClass("hidden");
-      });
-      $(document).on('click', '#hideVerticalNavWithRouter', function() {
-        $(document.getElementById("verticalNavWithRouterLayout")).addClass("hidden");
-      });
-    });
   </file>
 </example>
 */
