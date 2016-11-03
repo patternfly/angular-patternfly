@@ -174,7 +174,7 @@ angular.module('patternfly.charts').directive('pfLineChart', function (pfUtils) 
           $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
         }
 
-        $scope.defaultConfig = $().c3ChartDefaults().getDefaultLineConfig();
+        $scope.defaultConfig = patternfly.c3ChartDefaults().getDefaultLineConfig();
         $scope.defaultConfig.axis = {
           x: {
             show: $scope.showXAxis === true,
