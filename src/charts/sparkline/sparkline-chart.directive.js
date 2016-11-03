@@ -232,7 +232,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUt
                     '</tr>';
                   break;
                 default:
-                  tipRows = $().c3ChartDefaults().getDefaultSparklineTooltip().contents(d);
+                  tipRows = patternfly.c3ChartDefaults().getDefaultSparklineTooltip().contents(d);
                 }
               }
               return $scope.getTooltipTableHTML(tipRows);
@@ -278,7 +278,7 @@ angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUt
           $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
         }
 
-        $scope.defaultConfig = $().c3ChartDefaults().getDefaultSparklineConfig();
+        $scope.defaultConfig = patternfly.c3ChartDefaults().getDefaultSparklineConfig();
         $scope.defaultConfig.axis = {
           x: {
             show: $scope.showXAxis === true,

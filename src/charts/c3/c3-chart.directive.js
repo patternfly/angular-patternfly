@@ -38,7 +38,7 @@
        $scope.total = 1000;
        $scope.available =  $scope.total - $scope.used;
 
-       $scope.chartConfig = $().c3ChartDefaults().getDefaultDonutConfig('MHz Used');
+       $scope.chartConfig = patternfly.c3ChartDefaults().getDefaultDonutConfig('MHz Used');
        $scope.chartConfig.data = {
          type: "donut",
          columns: [

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var patternflyDefaults = $().c3ChartDefaults();
+  var patternflyDefaults = patternfly.c3ChartDefaults();
 
   angular.module('patternfly.charts').constant('c3ChartDefaults', {
     getDefaultColors: patternflyDefaults.getDefaultColors,
