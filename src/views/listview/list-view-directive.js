@@ -7,7 +7,7 @@
  *   Pass a customScope object containing any scope variables/functions you need to access from the transcluded source, access these
  *   via 'customScope' in your transcluded hmtl.
  *   <br><br>
- *   If using expanding rows, use a list-expanded-content element containing expandable content for each row.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.
+ *   If using expanding rows, use a list-expanded-content element containing expandable content for each row.  Item data can be accessed inside list-expanded-content by using $parent.item.property.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.
  *
  * @param {array} items Array of items to display in the list view. If an item in the array has a 'rowClass' field, the value of this field will be used as a class specified on the row (list-group-item).
  * @param {object} config Configuration settings for the list view:
@@ -79,17 +79,16 @@
             </div>
           </div>
           <list-expanded-content>
-           {{item.city}}
            <div class="row">
             <div class="col-md-3">
               <div pf-donut-pct-chart config="exampleChartConfig" data="{'used': '350','total': '1000'}" center-label="'Percent Used'"></div>
             </div>
             <div class="col-md-9">
                <dl class="dl-horizontal">
-                 <dt>Host Name</dt>
-                 <dd>Hostceph1</dd>
-                 <dt>Device Path</dt>
-                 <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+                 <dt>Host</dt>
+                 <dd>{{$parent.item.city}}</dd>
+                 <dt>Admin</dt>
+                 <dd>{{$parent.item.name}}</dd>
                  <dt>Time</dt>
                  <dd>January 15, 2016 10:45:11 AM</dd>
                  <dt>Severity</dt>
