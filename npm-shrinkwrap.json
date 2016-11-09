@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "3.13.0",
+  "version": "3.14.0",
   "dependencies": {
     "angular": {
       "version": "1.5.8",
@@ -146,9 +146,9 @@
       "optional": true
     },
     "patternfly": {
-      "version": "3.13.0",
-      "from": "patternfly@>=3.13.0 <3.14.0",
-      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-3.13.0.tgz"
+      "version": "3.14.0",
+      "from": "patternfly@>=3.14.0 <3.15.0",
+      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-3.14.0.tgz"
     },
     "patternfly-bootstrap-combobox": {
       "version": "1.1.7",
