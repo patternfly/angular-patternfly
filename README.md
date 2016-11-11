@@ -83,16 +83,22 @@ Note:
         <script src="bower_components/patternfly/components/c3/c3.min.js"></script>
         <script src="bower_components/patternfly/components/d3/d3.min.js"></script>
 
-5. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
-   In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application:
+        <!-- Patternfly settings-->
+        <script src="bower_components/patternfly/dist/js/patternfly-settings.js"></script>
+
+5. (optional) The 'patternfly.charts' module and 'patternfly.jquery' modules are not dependencies in the default angular 'patternfly' module.
+   In order to use these you must add 'patternfly.charts' and/or 'patternfly.jquery' as dependencies in your application:
 
         my-app.module.js:
 
         angular.module('myApp', [
           'patternfly',
-          'patternfly.charts'
-        ]);
+          'patternfly.charts',
+          'patternfly.jquery'
+]);
 
+    Note: the pfSelect and datepicker directives are only available in the patternfly.jquery module. Using these directives requires the inclusion of the jQuery library.
+    
 ## API documentation
 
 The API documentation can be built with:

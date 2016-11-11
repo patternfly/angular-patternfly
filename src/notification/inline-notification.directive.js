@@ -40,7 +40,7 @@
          <div class="form-group">
            <label class="col-sm-2 control-label" for="type">Type:</label>
            <div class="col-sm-4">
-            <div pf-bootstrap-select current-selection="type" id="type" selections="types"></divselect>
+            <div pf-bootstrap-select current-selection="type" id="type" selections="types"></div>
            </div>
          </div>
          <div class="form-group">
