@@ -565,8 +565,8 @@
   </file>
 </example>
 */
- angular.module('patternfly.navigation').directive('pfVerticalNavigation', ['$location', '$rootScope', '$window', '$document', '$timeout',
-  function (location, rootScope, $window, $document, $timeout) {
+ angular.module('patternfly.navigation').directive('pfVerticalNavigation', ['$location', '$rootScope', '$window', '$document', '$timeout', '$state',
+  function (location, rootScope, $window, $document, $timeout, $state) {
     'use strict';
     return {
       restrict: 'A',
@@ -826,12 +826,23 @@
           var navTo;
           if (navItem) {
             $scope.showMobileNav = false;
-            navTo = navItem.href;
-            if (navTo) {
-              if (navTo.startsWith('#/')) {
-                navTo = navTo.substring(2);
+            if (navItem.uiSref && navItem.href) {
+              throw new Error('Using both uiSref and href on an item is not supported.');
+            }
+            if (navItem.uiSref) {
+              if ($state === undefined) {
+                throw new Error('uiSref is defined on item, but no $state has been injected. ' +
+                'Did you declare a dependency on "ui.router" module in your app?');
               }
-              location.path(navTo);
+              $state.go(navItem.uiSref, navItem.uiSrefOptions);
+            } else {
+              navTo = navItem.href;
+              if (navTo) {
+                if (navTo.startsWith('#/')) {
+                  navTo = navTo.substring(2);
+                }
+                location.path(navTo);
+              }
             }
             if ($scope.navigateCallback) {
               $scope.navigateCallback(navItem);
