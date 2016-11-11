@@ -9,7 +9,7 @@
  * @param {string} options the configuration options for the date picker
  *
  * @example
- <example module="patternfly.datepicker">
+ <example module="patternfly.jquery">
    <file name="index.html">
      <form class="form-horizontal" ng-controller="FormDemoCtrl">
      <div>

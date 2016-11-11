@@ -57,6 +57,13 @@ angular.module('patternfly.filters').directive('pfFilterFields', function () {
       scope.selectValue = function (filterValue) {
         scope.addFilterFn(scope.currentField, filterValue);
       };
+
+      scope.onValueKeyPress = function (keyEvent) {
+        if (keyEvent.which === 13 && scope.config.currentValue && scope.config.currentValue !== '') {
+          scope.addFilterFn(scope.currentField, scope.config.currentValue);
+          scope.config.currentValue = undefined;
+        }
+      };
     }
   };
 });

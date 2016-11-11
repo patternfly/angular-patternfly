@@ -192,6 +192,11 @@ module.exports = function (grunt) {
           src: ['charts/**/*.html'],
           dest: 'templates/charts.js'
         },
+        'patternfly.jquery': {
+          cwd: 'src/',
+          src: ['form/datepicker/*.html'],
+          dest: 'templates/jquery.js'
+        },
         'patternfly.filters': {
           cwd: 'src/',
           src: ['filters/**/*.html'],
