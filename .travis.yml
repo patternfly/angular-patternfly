@@ -6,6 +6,9 @@ env:
   global:
     - ENCRYPTION_LABEL: "aa286ccd339e"
     - COMMIT_AUTHOR_EMAIL: "patternfly-build@redhat.com"
+    - TRIGGER_REPO_SLUG: "patternfly/patternfly-atomic"
+    - TRIGGER_REPO_BRANCH: "master"
+
 
 before_install:
   - 'git checkout -B $TRAVIS_BRANCH' # Reconcile detached HEAD

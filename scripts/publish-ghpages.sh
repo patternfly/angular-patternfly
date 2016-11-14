@@ -3,10 +3,10 @@
 set -o errexit -o nounset
 
 ####################################
-# repo specific variables
+# repo specific variables should be set in .travis.yml
 ####################################
-TRIGGER_REPO_SLUG="patternfly/patternfly-atomic"
-TRIGGER_REPO_BRANCH="master"
+# TRIGGER_REPO_SLUG="patternfly/patternfly"
+# TRIGGER_REPO_BRANCH="master"
 ####################################
 ####################################
 
