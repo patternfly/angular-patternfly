@@ -5,7 +5,7 @@ set -o errexit -o nounset
 ####################################
 # repo specific variables
 ####################################
-TRIGGER_REPO_SLUG="patternfly/angular-patternfly"
+TRIGGER_REPO_SLUG="patternfly/patternfly-atomic"
 TRIGGER_REPO_BRANCH="master"
 ####################################
 ####################################
@@ -14,6 +14,7 @@ SCRIPT=`basename $0`
 ACTION="Manual"
 REPO_NAME="origin"
 SOURCE_BRANCH=`git rev-parse --abbrev-ref HEAD`
+QUIET=false
 
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -28,6 +29,9 @@ echoHeader () {
 }
 
 confirm () {
+  if $QUIET; then
+    true
+  else
     # call with a prompt string or use a default
     QUESTION="${1:-Are you sure? [y/N]} "
     echo -e -n $QUESTION
@@ -40,6 +44,7 @@ confirm () {
         false
         ;;
     esac
+  fi
 }
 
 setUserInfo () {
@@ -198,7 +203,9 @@ parseOpts() {
   while getopts htr:b: OPT "$@"; do
     case $OPT in
       h) usage; exit 0;;
-      t) ACTION="Travis";;
+      t) ACTION="Travis"
+         QUIET=true
+         ;;
       r) REPO_NAME=$OPTARG;;
       b) SOURCE_BRANCH=$OPTARG;;
     esac
