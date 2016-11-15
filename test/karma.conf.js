@@ -10,6 +10,8 @@ module.exports = function(config) {
     files: [
       'lib/jquery/dist/jquery.js',
       'lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+      'lib/moment/moment.js',
+      'lib/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
       'lib/bootstrap-select/js/bootstrap-select.js',
       'lib/d3/d3.js',
       'lib/c3/c3.js',
