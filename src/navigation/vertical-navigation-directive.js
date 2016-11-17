@@ -574,7 +574,7 @@
     if ($injector.has("$state")) {
       $state = $injector.get("$state");
     }
-    
+
     return {
       restrict: 'A',
       scope: {
