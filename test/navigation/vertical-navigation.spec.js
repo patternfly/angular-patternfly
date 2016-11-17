@@ -701,6 +701,26 @@ describe('Directive:  pfVerticalNavigation', function () {
 
 
 describe('Directive:  pfVerticalNavigation with ui.router', function () {
+  // Setting up some dummy controllers and some dummy states
+  angular.module('mockApp', ['ui.router'])
+    .controller('Controller0', function() {
+    this.message = 'Page 0';
+  }).controller('Controller1', function() {
+    this.message = 'Page 1';
+  }).config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise("/state0");
+
+    $stateProvider.state('state0', {
+      url: "/state0",
+      controller: 'Controller0',
+      controllerAs: 'vm'
+    }).state('state1', {
+      url: "/state1",
+      controller: 'Controller1',
+      controllerAs: 'vm'
+    });
+  });
+
   var $state;
   var $scope;
   var $compile;
@@ -712,14 +732,14 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
     module('patternfly.navigation', 'patternfly.utils', 'navigation/vertical-navigation.html');
   });
 
-  beforeEach(module('ui.router'));
+  beforeEach(module('mockApp'));
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$state_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $state = _$state_;
 
-    spyOn($state, 'go');
+    spyOn($state, 'go').and.callThrough();
   }));
 
   var compileHTML = function (markup, scope) {
@@ -735,14 +755,14 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
       {
         title: "Dashboard",
         iconClass: "fa fa-dashboard",
-        uiSref: 'dashboard',
+        uiSref: 'state1',
         uiSrefOptions: 'testing'
       },
       {
         title: "Dolor",
         iconClass : "fa fa-shield",
-        href: "#/dolor",
-        uiSref: 'dolor',
+        href: "#/state2",
+        uiSref: 'state2',
         badges: [
           {
             count: 1283,
@@ -781,10 +801,16 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
   it('should trigger the $state.go() function when an item with ui-sref defined is clicked', function () {
     var wellDefinedItem = element.find('.nav-pf-vertical > .list-group > .list-group-item:nth-child(1) > a');
 
+    expect($state.current.name).toBe("state0");
+
     // Click dashboard item
     wellDefinedItem.click();
-    
-    expect($state.go).toHaveBeenCalledWith('dashboard','testing');
+
+    expect($state.go).toHaveBeenCalledWith('state1','testing');
+
+    // Checking successful state transition
+    expect($state.current.name).toBe("state1");
+    expect($state.current.controller).toBe("Controller1");
   });
 
   it('should throw and error if both uiSref and href are used on an item', function () {
@@ -795,3 +821,4 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
     }).toThrow(new Error('Using both uiSref and href on an item is not supported.'));
   });
 });
+
