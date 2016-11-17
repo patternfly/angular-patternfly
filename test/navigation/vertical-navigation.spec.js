@@ -32,7 +32,7 @@ describe('Directive:  pfVerticalNavigation', function () {
       {
         title: "Dolor",
         iconClass : "fa fa-shield",
-        href: "#/dolor",
+        uiSref: "dolor",
         badges: [
           {
             count: 1283,
@@ -691,4 +691,107 @@ describe('Directive:  pfVerticalNavigation', function () {
     expect(badgesShown.length).toBe(0);
   });
 
+  it('should throw and error if uiSref is used when $state is undefined', function () {
+    var wellDefinedItem = element.find('.nav-pf-vertical > .list-group > .list-group-item:nth-child(2) > a');
+    expect(function() { 
+      wellDefinedItem.click();
+    }).toThrow(new Error("uiSref is defined on item, but no $state has been injected. Did you declare a dependency on \"ui.router\" module in your app?"));
+  });
+});
+
+
+describe('Directive:  pfVerticalNavigation with ui.router', function () {
+  var $state;
+  var $scope;
+  var $compile;
+  var element;
+  var isolateScope;
+
+  // load the controller's module
+  beforeEach(function () {
+    module('patternfly.navigation', 'patternfly.utils', 'navigation/vertical-navigation.html');
+  });
+
+  beforeEach(module('ui.router'));
+
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$state_) {
+    $compile = _$compile_;
+    $scope = _$rootScope_;
+    $state = _$state_;
+
+    spyOn($state, 'go');
+  }));
+
+  var compileHTML = function (markup, scope) {
+    element = angular.element(markup);
+    $compile(element)(scope);
+
+    scope.$digest();
+    isolateScope = element.isolateScope();
+  };
+
+  beforeEach(function () {
+    $scope.navigationItems = [
+      {
+        title: "Dashboard",
+        iconClass: "fa fa-dashboard",
+        uiSref: 'dashboard',
+        uiSrefOptions: 'testing'
+      },
+      {
+        title: "Dolor",
+        iconClass : "fa fa-shield",
+        href: "#/dolor",
+        uiSref: 'dolor',
+        badges: [
+          {
+            count: 1283,
+            tooltip: "Total number of items"
+          }
+        ]
+      }
+    ];
+
+    $scope.handleNavigateClick = function (item) {
+      $scope.navigateItem = item.title;
+    };
+
+    $scope.handleItemClick = function (item) {
+      $scope.clickItem = item.title;
+    };
+
+    var htmlTmp = '' +
+      '<div id="verticalNavLayout" class="layout-pf layout-pf-fixed">' +
+      '  <div pf-vertical-navigation items="navigationItems" brand-src="images/test.svg" brand-alt="ANGULAR PATTERNFLY"' +
+      '       show-badges="true" pinnable-menus="true" update-active-items-on-click="true"' +
+      '       navigate-callback="handleNavigateClick" item-click-callback="handleItemClick"' +
+      '       ignore-mobile="true"' +
+      '    <div>' +
+      '      <div class="test-included-content"></div>' +
+      '    </div>' +
+      '  </div>' +
+      '  <div id="contentContainer" class="container-pf-nav-pf-vertical">' +
+      '  </div>' +
+      ' </div>' +
+      '';
+
+    compileHTML(htmlTmp, $scope);
+  });
+
+  it('should trigger the $state.go() function when an item with ui-sref defined is clicked', function () {
+    var wellDefinedItem = element.find('.nav-pf-vertical > .list-group > .list-group-item:nth-child(1) > a');
+
+    // Click dashboard item
+    wellDefinedItem.click();
+    
+    expect($state.go).toHaveBeenCalledWith('dashboard','testing');
+  });
+
+  it('should throw and error if both uiSref and href are used on an item', function () {
+    var badDefinedItem = element.find('.nav-pf-vertical > .list-group > .list-group-item:nth-child(2) > a');
+
+    expect( function() {
+      badDefinedItem.click();
+    }).toThrow(new Error('Using both uiSref and href on an item is not supported.'));
+  });
 });
