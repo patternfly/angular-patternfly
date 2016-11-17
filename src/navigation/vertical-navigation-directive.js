@@ -565,9 +565,16 @@
   </file>
 </example>
 */
- angular.module('patternfly.navigation').directive('pfVerticalNavigation', ['$location', '$rootScope', '$window', '$document', '$timeout', '$state',
-  function (location, rootScope, $window, $document, $timeout, $state) {
+ angular.module('patternfly.navigation').directive('pfVerticalNavigation', ['$location', '$rootScope', '$window', '$document', '$timeout',  '$injector',
+  function (location, rootScope, $window, $document, $timeout, $injector) {
     'use strict';
+    var $state;
+
+    // Optional dependency on $state
+    if ($injector.has("$state")) {
+      $state = $injector.get("$state");
+    }
+    
     return {
       restrict: 'A',
       scope: {
