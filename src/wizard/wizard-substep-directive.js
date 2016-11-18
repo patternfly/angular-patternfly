@@ -39,7 +39,7 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
       showReviewDetails: '@?',
       reviewTemplate: '@?'
     },
-    require: '^pf-wizard-step',
+    require: '^pfWizardStep',
     templateUrl: 'wizard/wizard-substep.html',
     controller: function ($scope) {
       if (angular.isUndefined($scope.nextEnabled)) {

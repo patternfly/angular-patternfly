@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.select:pfSelect
+ * @name patternfly.jquery.directive:pfSelect
  * @element select
  *
  * @param {string} ngModel Model binding using the {@link https://docs.angularjs.org/api/ng/type/ngModel.NgModelController/ NgModelController} is mandatory.
@@ -12,7 +12,7 @@
  * as a default select decorator in {@link https://www.patternfly.org/widgets/#bootstrap-select Patternfly}.
  *
  * @example
- <example module="patternfly.select">
+ <example module="patternfly.jquery">
 
    <file name="index.html">
      <div ng-controller="SelectDemoCtrl">
@@ -53,7 +53,7 @@
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.select' ).controller( 'SelectDemoCtrl', function( $scope ) {
+     angular.module( 'patternfly.jquery').controller( 'SelectDemoCtrl', function( $scope ) {
        $scope.drinks = ['tea', 'coffee', 'water'];
        $scope.pets = ['Dog', 'Cat', 'Chicken'];
        $scope.pet = $scope.pets[0];
@@ -63,7 +63,7 @@
 
  </example>
  */
-angular.module('patternfly.select', []).directive('pfSelect', function ($timeout) {
+angular.module('patternfly.jquery').directive('pfSelect', function ($timeout) {
   'use strict';
 
   return {

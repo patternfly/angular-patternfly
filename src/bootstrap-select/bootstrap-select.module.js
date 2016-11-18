@@ -5,4 +5,4 @@
  *   Card module for patternfly.
  *
  */
-angular.module('patternfly.card', ['patternfly.bsselect']);
+angular.module('patternfly.bsselect', ['patternfly.autofocus', 'ui.bootstrap']);

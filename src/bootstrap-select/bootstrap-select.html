@@ -1,0 +1,22 @@
+<div dropdown class="dropdown btn-group bootstrap-select form-control" is-open="menuOpen" keyboard-nav="true">
+  <button dropdown-toggle type="button" class="btn dropdown-toggle btn-default"
+          aria-haspopup="true" aria-expanded="false">
+    <span class="filter-option pull-left">{{currentSelection ? currentSelection.label || currentSelection : placeholder}}</span>&nbsp;
+    <span class="bs-caret">
+      <span class="caret"></span>
+    </span>
+  </button>
+  <div dropdown-menu class="dropdown-menu {{dropdownMenuClass}}" ng-class="{open: menuOpen}">
+    <ul class="dropdown-menu inner" role="menu">
+      <li ng-repeat="item in selections track by $index" ng-class="{divider: item.divider, selected: item == currentSelection}">
+        <a ng-if="!item.divider" role="menuitem" tabindex="0"
+           ng-click="selectItem(item)"
+           ng-keypress="onItemKeyPress($event, item)"
+           ng-keydown="onItemKeyDown($event, item)">
+          <span class="text">{{item.label || item}}</span>
+          <span class="glyphicon glyphicon-ok check-mark"></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

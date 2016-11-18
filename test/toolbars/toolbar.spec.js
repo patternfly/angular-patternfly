@@ -7,9 +7,9 @@ describe('Directive:  pfToolbar', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.toolbars', 'patternfly.views', 'patternfly.filters', 'patternfly.select', 'toolbars/toolbar.html',
+    module('patternfly.toolbars', 'patternfly.views', 'patternfly.filters', 'patternfly.jquery', 'toolbars/toolbar.html',
            'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html',
-           'sort/sort.html');
+           'sort/sort.html', 'bootstrap-select/bootstrap-select.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_, pfViewUtils) {
@@ -183,10 +183,10 @@ describe('Directive:  pfToolbar', function () {
     eventFire(fields[2], 'click');
     $scope.$digest();
     pfSelects = element.find('.filter-select');
-    expect(pfSelects.length).toBe(2); // 2 because it is a directive
+    expect(pfSelects.length).toBe(1);
 
     var items = pfSelects.find('li');
-    expect(items.length).toBe($scope.config.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
+    expect(items.length).toBe($scope.config.filterConfig.fields[2].filterValues.length);
   });
 
   it ('should clear a filter when the close button is clicked', function () {

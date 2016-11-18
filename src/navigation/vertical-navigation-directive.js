@@ -90,11 +90,6 @@ angular.module('patternfly.navigation').directive('pfVerticalNavigation', ['$loc
         }
       },
       link: function ($scope) {
-        var breakpoints = {
-          'tablet': 768,
-          'desktop': 1200
-        };
-
         var getBodyContentElement = function () {
           return angular.element(document.querySelector('.container-pf-nav-pf-vertical'));
         };
@@ -147,7 +142,7 @@ angular.module('patternfly.navigation').directive('pfVerticalNavigation', ['$loc
           var bodyContentElement = getBodyContentElement();
 
           // Check to see if we need to enter/exit the mobile state
-          if (!$scope.ignoreMobile && width < breakpoints.tablet) {
+          if (!$scope.ignoreMobile && width < patternfly.pfBreakpoints.tablet) {
             if (!$scope.inMobileState) {
               $scope.inMobileState = true;
 

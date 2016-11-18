@@ -21,12 +21,13 @@
                  ng-keypress="onValueKeyPress($event)"/>
         </div>
         <div ng-if="currentField.filterType === 'select'">
-          <select pf-select class="form-control filter-select" id="currentValue"
-                  ng-model="config.currentValue"
-                  ng-options="filterValue for filterValue in currentField.filterValues"
-                  ng-change="selectValue(config.currentValue)">
-          <option value="">{{currentField.placeholder}}</option>
-          </select>
+          <div pf-bootstrap-select class="filter-select"
+               selections="currentField.filterValues"
+               current-selection="currentValue"
+               update-on-select="false"
+               on-change="selectValue"
+               placeholder="{{currentField.placeholder}}">
+          </div>
         </div>
       </div>
     </div>

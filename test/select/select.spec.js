@@ -2,7 +2,7 @@ describe('pf-select', function () {
 
   var $scope, $compile;
 
-  beforeEach(module('patternfly.select'));
+  beforeEach(module('patternfly.jquery'));
 
   beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_) {
     $scope = _$rootScope_;

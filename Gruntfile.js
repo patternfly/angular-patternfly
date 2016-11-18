@@ -167,6 +167,11 @@ module.exports = function (grunt) {
           src: ['form/**/*.html'],
           dest: 'templates/form.js'
         },
+        'patternfly.bsselect': {
+          cwd: 'src/',
+          src: ['bootstrap-select/**/*.html'],
+          dest: 'templates/bootstrap-select.js'
+        },
         'patternfly.navigation': {
           cwd: 'src/',
           src: ['navigation/**/*.html'],
@@ -186,6 +191,11 @@ module.exports = function (grunt) {
           cwd: 'src/',
           src: ['charts/**/*.html'],
           dest: 'templates/charts.js'
+        },
+        'patternfly.jquery': {
+          cwd: 'src/',
+          src: ['form/datepicker/*.html'],
+          dest: 'templates/jquery.js'
         },
         'patternfly.filters': {
           cwd: 'src/',
@@ -247,6 +257,10 @@ module.exports = function (grunt) {
         main: {
           files: ['Gruntfile.js'],
           tasks: ['eslint']
+        },
+        test: {
+          files: ['test/**/*.js'],
+          tasks: ['test']
         },
         all: {
           files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],

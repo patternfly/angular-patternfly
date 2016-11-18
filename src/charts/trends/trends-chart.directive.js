@@ -59,12 +59,7 @@
            <form role="form" >
              <div class="form-group">
                <label>Layout</label></br>
-               <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
-                 <option value="large" ng-selected="true" selected>Large</option>
-                 <option value="small">Small</option>
-                 <option value="compact">Compact</option>
-                 <option value="inline">Inline</option>
-               </select>
+               <div pf-bootstrap-select class="pf-select-sm" selections="layouts" current-selection="config.layout"></div>
              </div>
            </form>
          </div>
@@ -100,6 +95,7 @@
  <file name="script.js">
  angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
 
+       $scope.layouts = ["large", "small", "compact", "inline"];
        $scope.config = {
          chartId      : 'exampleTrendsChart',
          title        : 'Network Utilization Trends',
@@ -152,11 +148,6 @@
        $scope.$watch('valueType', function (newValue) {
          $scope.config.valueType = newValue;
        });
-
-       $scope.$watch('layout', function (newValue) {
-         $scope.config.layout = newValue;
-       });
-
      });
  </file>
  </example>
