@@ -28,7 +28,8 @@ module.exports = function(config) {
       'test/utils/*.js',
       'test/wizard/script.js',
       'test/**/*.spec.js',
-      'test/**/*.html'
+      'test/**/*.html',
+      'lib/angular-ui-router/release/angular-ui-router.min.js'
     ],
 
     // list of files to exclude
