@@ -158,6 +158,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.form.directive:pfDateTimepicker",
+      "shortName": "pfDateTimepicker",
+      "type": "directive",
+      "moduleName": "patternfly.form",
+      "shortDescription": "Angular directive to wrap the bootstrap datetimepicker http://eonasdan.github.io/bootstrap-datetimepicker/",
+      "keywords": "$scope angular api bootstrap class configuration controller datetimepicker directive form format formdemoctrl function github hh html http io js module moment ng-bind ng-controller object options patternfly pf-date-timepicker picker script time wrap"
+    },
+    {
+      "section": "api",
       "id": "patternfly.form.directive:pfFormButtons",
       "shortName": "pfFormButtons",
       "type": "directive",
@@ -384,6 +393,8 @@ NG_DOCS={
     "bootstrap.js",
     "bootstrap-combobox.js",
     "bootstrap-datepicker.js",
+    "moment.js",
+    "bootstrap-datetimepicker.js",
     "bootstrap-select.js",
     "bootstrap-treeview.js",
     "c3.js",
