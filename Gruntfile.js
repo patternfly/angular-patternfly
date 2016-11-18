@@ -128,6 +128,8 @@ module.exports = function (grunt) {
             'lib/bootstrap/dist/js/bootstrap.js',
             'lib/bootstrap-combobox/js/bootstrap-combobox.js',
             'lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+            'lib/moment/moment.js',
+            'lib/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
             'lib/bootstrap-select/js/bootstrap-select.js',
             'lib/patternfly-bootstrap-treeview/src/js/bootstrap-treeview.js',
             'lib/c3/c3.js',
