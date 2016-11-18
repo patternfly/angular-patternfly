@@ -3,18 +3,7 @@
  * @name patternfly.navigation.directive:pfVerticalNavigation - Router
  *
  * @description
- *   Directive for vertical navigation. This sets up the nav bar header with the collapse button (hamburger) and the
- *   application brand image (or text) as well as the vertical navigation bar containing the navigation items. This
- *   directive supports primary, secondary, and tertiary navigation with options to allow pinning of the secondary and
- *   tertiary navigation menus as well as the option for persistent secondary menus.
- *   <br><br>
- *   The remaining parts of the navbar header can be transcluded.
- *   <br><br>
- *   Tha navigation items are marked active based on the current location and the href value for the item. If not using
- *   href's on the items to navigate, set update-active-items-on-click to "true".
- *   <br><br>
- *   This directive works in conjunction with the main content container if the 'container-pf-nav-pf-vertical' class
- *   selector is added to the main content container.
+ *   This example shows how to use pfVerticalNavigation with angular-ui-router's $states and uiSrefs.
  *
  * @param {string} brandSrc src for brand image
  * @param {string} brandAlt  Text for product name when brand image is not available
