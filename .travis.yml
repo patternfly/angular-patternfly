@@ -2,6 +2,14 @@ language: node_js
 node_js:
   - '4'
 
+env:
+  global:
+    - ENCRYPTION_LABEL: "aa286ccd339e"
+    - COMMIT_AUTHOR_EMAIL: "patternfly-build@redhat.com"
+    - TRIGGER_REPO_SLUG: "patternfly/angular-patternfly"
+    - TRIGGER_REPO_BRANCH: "master"
+
+
 before_install:
   - 'git checkout -B $TRAVIS_BRANCH' # Reconcile detached HEAD
   - 'npm install -g bower grunt-cli'
@@ -14,6 +22,7 @@ script:
 
 after_success:
   - sh -x ./scripts/publish.sh
+  - ./scripts/publish-ghpages.sh -t docs
 
 # OpenShift expects its deployment branch to be "master-dist". This can be changed using:
 # rhc app-configure patternfly/angular --deployment-branch master-dist
