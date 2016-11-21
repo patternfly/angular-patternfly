@@ -17,7 +17,7 @@ describe('Directive: pfUtilizationBarChart', function() {
 
     $scope.data = {
       'used': '8',
-      'total': '16'
+      'total': '10'
     };
 
     $scope.title = 'CPU Usage';
@@ -33,9 +33,14 @@ describe('Directive: pfUtilizationBarChart', function() {
     return el;
   };
 
-  it("should set the width of the inner bar to be 50%", function() {
+  it("should set the width of the inner bar to be 80%", function() {
     utilizationBar = angular.element(element).find('.progress-bar').css('width');
-    expect(utilizationBar).toBe("50%");
+    expect(utilizationBar).toBe("80%");
+  });
+
+  it("should set aria-valuenow values", function() {
+    used = angular.element(element).find('.progress-bar').not('.progress-bar-remaining');
+    expect(used.attr('aria-valuenow')).toBe("80");
   });
 
   it("should set the charts title and usage label", function() {
@@ -43,12 +48,12 @@ describe('Directive: pfUtilizationBarChart', function() {
     expect(title).toBe("CPU Usage");
 
     subTitle = angular.element(element).find('.progress-bar span').text();
-    expect(subTitle).toBe("8 of 16 GB Used");
+    expect(subTitle).toBe("8 of 10 GB Used");
 
     //test 'percent' used-label-format
     element = compileChart("<div pf-utilization-bar-chart chart-data=data footer-label-format='percent' chart-title=title units=units></div>", $scope);
     subTitle = angular.element(element).find('.progress-bar span').text();
-    expect(subTitle).toBe("50% Used");
+    expect(subTitle).toBe("80% Used");
   });
 
   it("should set the layout to be 'inline', and use custom widths", function() {
