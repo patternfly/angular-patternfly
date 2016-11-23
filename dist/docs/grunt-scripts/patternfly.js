@@ -492,16 +492,7 @@
     'desktop': 1200
   };
 
-  if (typeof define === 'function' && define.amd) {
-    define("patternfly", function () {
-      return patternfly;
-    });
-  } else if ('undefined' !== typeof exports && 'undefined' !== typeof module) {
-    module.exports = patternfly;
-  } else {
-    window.patternfly = patternfly;
-  }
-
+  window.patternfly = patternfly;
 })(window);
 
 
@@ -1120,13 +1111,7 @@
 
       forceResize = function (delay) {
         setTimeout(function () {
-          if (window.dispatchEvent) {
-            window.dispatchEvent(new Event('resize'));
-          }
-          // Special case for IE
-          if ($(document).fireEvent) {
-            $(document).fireEvent('onresize');
-          }
+          $(window).trigger('resize');
         }, delay);
       },
 

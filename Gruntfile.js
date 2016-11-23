@@ -126,7 +126,7 @@ module.exports = function (grunt) {
           image: 'misc/logo-alt.svg',
           scripts: ['lib/jquery/dist/jquery.js',
             'lib/bootstrap/dist/js/bootstrap.js',
-            'lib/bootstrap-combobox/js/bootstrap-combobox.js',
+            'lib/patternfly-bootstrap-combobox/js/bootstrap-combobox.js',
             'lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
             'lib/moment/moment.js',
             'lib/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
