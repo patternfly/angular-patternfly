@@ -15,6 +15,10 @@ ACTION="Manual"
 REPO_NAME="origin"
 SOURCE_BRANCH=`git rev-parse --abbrev-ref HEAD`
 QUIET=false
+USE_SITE_REPO=false
+PUSH_REPO=false
+PUSH_BRANCH="gh-pages"
+BOWER_WEB_FILES_ONLY=false
 
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -80,19 +84,23 @@ checkTriggerRepo () {
 }
 
 inferRepo () {
-  REPO=`git config remote.${REPO_NAME}.url`
-  SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
-  echo "Inferred REPO ${SSH_REPO}"
+  if [[ "${REPO_NAME}" == *.git ]]; then
+    PUSH_REPO=$REPO_NAME
+  else
+    REPO=`git config remote.${REPO_NAME}.url`
+    # Use the externally set global PUSH_REPO by default
+    PUSH_REPO="${REPO/https:\/\/github.com\//git@github.com:}"
+  fi
+  echo "Inferred REPO ${PUSH_REPO}"
 }
 
 confirmRepo () {
-  confirm "${YELLOW}Push ${SITE_FOLDER} to repo ${SSH_REPO}/gh-pages? [y/N] ${NC}"
+  confirm "${YELLOW}Push ${SITE_FOLDER} to repo ${PUSH_REPO}/${PUSH_BRANCH}? [y/N] ${NC}"
   return $?
 }
 
 checkRemoteBranchExists () {
-  BRANCH="${1:-gh-pages}"
-  EXISTING=`git ls-remote --heads ${REPO} ${BRANCH}`
+  EXISTING=`git ls-remote --heads ${PUSH_REPO} ${PUSH_BRANCH}`
   echo $EXISTING
 }
 
@@ -115,12 +123,15 @@ cleanBranch () {
 }
 
 cloneSite () {
-  git clone --branch gh-pages $SSH_REPO github.io
+  git clone --branch ${PUSH_BRANCH} $PUSH_REPO github.io
 }
 
 copySite () {
   echo rsync -q -rav --delete --exclude .git ${SITE_FOLDER} github.io
   rsync -q -rav --delete --exclude .git ${SITE_FOLDER}/ github.io/
+  if $BOWER_WEB_FILES_ONLY; then
+    find ${SITE_FOLDER}/components -type f -not -regex ".*/.*\.\(html\|js\|css\|less\|otf\|eot\|svg\|ttf\|woff\|woff2\)" -print0 | xargs -0 rm
+  fi
 }
 
 pushSite () {
@@ -131,10 +142,10 @@ pushSite () {
   else
     echo -e "${YELLOW}Changes in site directory, committing changes.${NC}"
     git -C github.io commit -q -a -m "Added files from commit #${SHA} "
-    echo -e "Pushing commit ${SHA} to repo ${SSH_REPO}."
+    echo -e "Pushing commit ${SHA} to repo ${PUSH_REPO}."
     confirmRepo && rc=$? || rc=$?
     if [ "$rc" = 0 ]; then
-      git -C github.io push $SSH_REPO gh-pages:gh-pages
+      git -C github.io push $PUSH_REPO ${PUSH_BRANCH}:${PUSH_BRANCH}
     fi
   fi
 }
@@ -145,30 +156,31 @@ splitSite () {
   git commit -q -m "Added ${SITE_FOLDER} folder"
 
   SHA=`git subtree split --prefix ${SITE_FOLDER} gh-pages-deploy`
-  echo -e "Pushing commit ${SHA} to repo ${SSH_REPO}."
+  echo -e "Pushing commit ${SHA} to repo ${PUSH_REPO}."
   confirmRepo && rc=$? || rc=$?
   if [ "$rc" = 0 ]; then
-   git push ${SSH_REPO} ${SHA}:refs/heads/gh-pages --force
+   git push ${PUSH_REPO} ${SHA}:refs/heads/${PUSH_BRANCH} --force
   fi
 }
 
 deploySite () {
-  if [ "$SOURCE_BRANCH" = "gh-pages" -o "$SOURCE_BRANCH" = "gh-pages-deploy" ]; then
-    echo -e "${RED}Error: cannot deploy from the gh-pages branch.  Please checkout a different branch."
+  if [ "$SOURCE_BRANCH" = "gh-pages-deploy" ]; then
+    echo -e "${RED}Error: cannot deploy from the current branch.  Please checkout a different branch.${NC}"
+    exit -1
   fi
 
   git checkout ${SOURCE_BRANCH}
   inferRepo $REPO_NAME
-  EXISTING=`checkRemoteBranchExists gh-pages`
+  EXISTING=`checkRemoteBranchExists`
   if [ -n "$EXISTING" ]; then
-    echo -e "${GREEN}### gh-pages branch exists, pushing updates${NC}"
+    echo -e "${GREEN}### ${PUSH_BRANCH} branch exists, pushing updates${NC}"
     cleanSite
     cloneSite
     copySite
     pushSite
     cleanSite
   else
-    echo -e "${GREEN}### gh-pages branch does not exist, splitting branch${NC}"
+    echo -e "${GREEN}### ${PUSH_BRANCH} branch does not exist, splitting branch${NC}"
     cleanBranch
     splitSite
     cleanBranch
@@ -200,14 +212,15 @@ checkSiteFolderExists () {
 }
 
 parseOpts() {
-  while getopts htr:b: OPT "$@"; do
+  while getopts htwb:r: OPT "$@"; do
     case $OPT in
       h) usage; exit 0;;
       t) ACTION="Travis"
          QUIET=true
          ;;
       r) REPO_NAME=$OPTARG;;
-      b) SOURCE_BRANCH=$OPTARG;;
+      w) BOWER_WEB_FILES_ONLY=true;;
+      b) PUSH_BRANCH=$OPTARG;;
     esac
   done
 
@@ -218,7 +231,7 @@ parseOpts() {
 usage () {
 cat <<- EEOOFF
 
-    This script will publish files to the gh-pages branch of your repo.
+    This script will publish files to the ${PUSH_BRANCH} branch of your repo.
 
     $SCRIPT [option] folder
 
@@ -227,19 +240,20 @@ cat <<- EEOOFF
     OPTIONS:
     h       Display this message
     t       Perform a deploy from travis, using a travis encrypted key
-    r       Repository name to publish to (deafult: origin)
-    b       Source branch to publish from (default: master)
+    w       Remove non-web files from the SITE_FOLDER/components folder prior to publishing
+    b       Remote branch this script will publish to
+            default: gh-pages
+    r       Git repo this script will publish to
+            eg.: origin, upstream, bleathem, git@github.com:bleathem/bleathem.github.io.git
+            default: origin
 
 EEOOFF
 }
 
 main () {
   parseOpts "$@"
-
   checkSiteFolderExists
-
-  echoHeader "${ACTION} deploy of ${REPO_NAME}/${SOURCE_BRANCH}:${SITE_FOLDER} to gh-pages"
-
+  echoHeader "${ACTION} deploy of ${SOURCE_BRANCH}:${SITE_FOLDER} to ${PUSH_BRANCH}"
   case $ACTION in
     Manual)
       manualDeploy "$@"
