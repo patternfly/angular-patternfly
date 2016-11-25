@@ -125,10 +125,6 @@ plugins: [
 ...
 ```
 
-#### Don't use v3.14.0!
-
-In version 3.14.0  Patternfly (which is brought in as a dependency from the same version of Angular-Patternfly) [has been refactored](https://github.com/patternfly/patternfly/pull/527) to separate the jQuery dependent functions from the basic patternfly settings in the javascript file. In the spite of these change, support for CommonJS and AMD has been introduced; however it turns out that this approach breaks out Webpack compatibility. This support has been rolled back in v3.15.0, so it's safe to use this version and later ones.
-
 ## API documentation
 
 The API documentation can be built with:
