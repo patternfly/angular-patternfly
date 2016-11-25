@@ -93,6 +93,42 @@ Note:
           'patternfly.charts'
         ]);
 
+### Using with Webpack
+
+In order to use Angular-Patternfly in a Webpack-bundled application there are some things you need to keep in mind:
+
+#### Create an alias for the jQuery module
+
+In order to let Webpack find the correct jQuery module when assembling all the dependencies you need to create an alias for it in the webpack.conf.js file:
+
+```
+...
+resolve: {
+  alias: {
+    "jquery": "angular-patternfly/node_modules/patternfly/node_modules/jquery"
+  }
+}
+...
+```
+
+Additionally, you have to use the `webpack.ProvidePlugin` so the $ and the jQuery variables are added to the `window` object, making them available to the other modules (Patternfly included):
+```
+...
+plugins: [
+  new webpack.ProvidePlugin({
+    $: "jquery",
+    jQuery: "jquery",
+    "window.jQuery": "jquery",
+    "window.jquery": "jquery"
+  })
+]
+...
+```
+
+#### Don't use v3.14.0!
+
+In version 3.14.0  Patternfly (which is brought in as a dependency from the same version of Angular-Patternfly) [has been refactored](https://github.com/patternfly/patternfly/pull/527) to separate the jQuery dependent functions from the basic patternfly settings in the javascript file. In the spite of these change, support for CommonJS and AMD has been introduced; however it turns out that this approach breaks out Webpack compatibility. This support has been rolled back in v3.15.0, so it's safe to use this version and later ones.
+
 ## API documentation
 
 The API documentation can be built with:
