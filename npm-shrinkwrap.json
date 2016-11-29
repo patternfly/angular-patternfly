@@ -18,9 +18,9 @@
       "resolved": "https://registry.npmjs.org/angular-sanitize/-/angular-sanitize-1.5.8.tgz"
     },
     "angular-ui-bootstrap": {
-      "version": "0.13.4",
-      "from": "angular-ui-bootstrap@>=0.13.0 <0.14.0",
-      "resolved": "https://registry.npmjs.org/angular-ui-bootstrap/-/angular-ui-bootstrap-0.13.4.tgz"
+      "version": "0.14.3",
+      "from": "angular-ui-bootstrap@>=0.14.0 <=0.14.3",
+      "resolved": "https://registry.npmjs.org/angular-ui-bootstrap/-/angular-ui-bootstrap-0.14.3.tgz"
     },
     "bootstrap": {
       "version": "3.3.7",
