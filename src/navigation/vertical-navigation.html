@@ -38,10 +38,19 @@
                        'mobile-secondary-item-pf': item.isMobileItem && showMobileTertiary}"
             ng-mouseenter="handlePrimaryHover(item)" ng-mouseleave="handlePrimaryUnHover(item)">
           <a ng-click="handlePrimaryClick(item, $event)">
-            <span class="{{item.iconClass}}" ng-if="item.iconClass" ng-class="{hidden: hiddenIcons}" tooltip-append-to-body="true" tooltip-enable="{{navCollapsed}}" tooltip-placement="bottom" tooltip="{{item.title}}" tooltip-class="nav-pf-vertical-tooltip"></span>
+            <span class="{{item.iconClass}}" ng-if="item.iconClass" ng-class="{hidden: hiddenIcons}"
+              uib-tooltip="{{item.title}}"
+              tooltip-append-to-body="true"
+              tooltip-enable="{{navCollapsed}}"
+              tooltip-placement="bottom"
+              tooltip-class="nav-pf-vertical-tooltip">
+            </span>
             <span class="list-group-item-value">{{item.title}}</span>
             <div ng-if="showBadges && item.badges" class="badge-container-pf">
-              <div class="badge {{badge.badgeClass}}" ng-repeat="badge in item.badges" tooltip-append-to-body="true" tooltip-placement="right" tooltip="{{badge.tooltip}}">
+              <div class="badge {{badge.badgeClass}}" ng-repeat="badge in item.badges"
+                uib-tooltip="{{badge.tooltip}}"
+                tooltip-append-to-body="true"
+                tooltip-placement="right">
                 <span ng-if="badge.count && badge.iconClass" class="{{badge.iconClass}}"></span>
                 <span ng-if="badge.count">{{badge.count}}</span>
               </div>
@@ -62,7 +71,10 @@
                 <a ng-click="handleSecondaryClick(item, secondaryItem, $event)">
                   <span class="list-group-item-value">{{secondaryItem.title}}</span>
                   <div ng-if="showBadges && secondaryItem.badges" class="badge-container-pf">
-                    <div class="badge {{badge.badgeClass}}" ng-repeat="badge in secondaryItem.badges" tooltip-append-to-body="true" tooltip-placement="right" tooltip="{{badge.tooltip}}">
+                    <div class="badge {{badge.badgeClass}}" ng-repeat="badge in secondaryItem.badges"
+                      uib-tooltip="{{badge.tooltip}}"
+                      tooltip-append-to-body="true"
+                      tooltip-placement="right">
                       <span ng-if="badge.count && badge.iconClass" class="{{badge.iconClass}}"></span>
                       <span ng-if="badge.count">{{badge.count}}</span>
                     </div>
@@ -78,7 +90,10 @@
                       <a ng-click="handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)">
                         <span class="list-group-item-value">{{tertiaryItem.title}}</span>
                         <div ng-if="showBadges && tertiaryItem.badges" class="badge-container-pf">
-                          <div class="badge {{badge.badgeClass}}" ng-repeat="badge in tertiaryItem.badges" tooltip-append-to-body="true" tooltip-placement="right" tooltip="{{badge.tooltip}}">
+                          <div class="badge {{badge.badgeClass}}" ng-repeat="badge in tertiaryItem.badges"
+                            uib-tooltip="{{badge.tooltip}}"
+                            tooltip-append-to-body="true"
+                            tooltip-placement="right">
                             <span ng-if="badge.count && badge.iconClass" class="{{badge.iconClass}}"></span>
                             <span ng-if="badge.count">{{badge.count}}</span>
                           </div>

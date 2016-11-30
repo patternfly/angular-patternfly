@@ -153,11 +153,11 @@
   </div>
   </file>
   <file name="script.js">
-  angular.module('patternfly.wizard').controller('WizardModalController', ['$scope', '$timeout', '$modal', '$rootScope',
-    function ($scope, $timeout, $modal, $rootScope) {
+  angular.module('patternfly.wizard').controller('WizardModalController', ['$scope', '$timeout', '$uibModal', '$rootScope',
+    function ($scope, $timeout, $uibModal, $rootScope) {
       $scope.openWizardModel = function () {
         var wizardDoneListener,
-            modalInstance = $modal.open({
+            modalInstance = $uibModal.open({
               animation: true,
               backdrop: 'static',
               templateUrl: 'wizard-container.html',
