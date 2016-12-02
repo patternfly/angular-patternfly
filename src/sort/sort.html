@@ -1,12 +1,12 @@
 <div class="sort-pf">
   <form>
     <div class="form-group">
-      <div class="dropdown btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <div uib-dropdown class="btn-group">
+        <button uib-dropdown-toggle type="button" class="btn btn-default">
           {{config.currentField.title}}
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        <ul uib-dropdown-menu>
           <li ng-repeat="item in config.fields" ng-class="{'selected': item === config.currentField}">
             <a href="javascript:void(0);" class="sort-field" role="menuitem" tabindex="-1" ng-click="selectField(item)">
               {{item.title}}

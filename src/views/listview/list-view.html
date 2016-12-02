@@ -20,19 +20,16 @@
           <div ng-if="actionButton.include" class="actionButton.includeClass" ng-include src="actionButton.include"></div>
           <span ng-if="!actionButton.include">{{actionButton.name}}</span>
         </button>
-        <div class="{{dropdownClass}} pull-right dropdown-kebab-pf {{getMenuClassForItem(item)}} {{hideMenuForItem(item) ? 'invisible' : ''}}"
+        <div uib-dropdown class="{{dropdownClass}} pull-right dropdown-kebab-pf {{getMenuClassForItem(item)}} {{hideMenuForItem(item) ? 'invisible' : ''}}"
              id="kebab_{{$index}}"
              ng-if="menuActions && menuActions.length > 0">
-          <button class="btn btn-link dropdown-toggle" type="button"
+          <button uib-dropdown-toggle class="btn btn-link" type="button"
                   id="dropdownKebabRight_{{$index}}"
                   ng-class="{'disabled': checkDisabled(item)}"
-                  ng-click="setupActions(item, $event)"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="true">
+                  ng-click="setupActions(item, $event)">
             <span class="fa fa-ellipsis-v"></span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-right {{$index}}" aria-labelledby="dropdownKebabRight_{{$index}}" >
+          <ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right {{$index}}" aria-labelledby="dropdownKebabRight_{{$index}}" >
             <li ng-repeat="menuAction in menuActions"
                 ng-if="menuAction.isVisible !== false"
                 role="{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}"

@@ -78,24 +78,24 @@ angular.module('patternfly.modals')
     },
     templateUrl: 'modals/about-modal.html',
     transclude: true,
-    controller: ['$scope', '$modal', '$transclude', function ($scope, $modal, $transclude) {
+    controller: ['$scope', '$uibModal', '$transclude', function ($scope, $uibModal, $transclude) {
       if ($scope.isOpen === undefined) {
         $scope.isOpen = false;
       }
 
       // The ui-bootstrap modal only supports either template or templateUrl as a way to specify the content.
-      // When the content is retrieved, it is compiled and linked against the provided scope by the $modal service.
+      // When the content is retrieved, it is compiled and linked against the provided scope by the $uibModal service.
       // Unfortunately, there is no way to provide transclusion there.
       //
       // The solution below embeds a placeholder directive (i.e., pfAboutModalTransclude) to append the transcluded DOM.
       // The transcluded DOM is from a different location than the modal, so it needs to be handed over to the
       // placeholder directive. Thus, we're passing the actual DOM, not the parsed HTML.
       $scope.openModal = function () {
-        $modal.open({
-          controller: ['$scope', '$modalInstance', 'content', function ($scope, $modalInstance, content) {
+        $uibModal.open({
+          controller: ['$scope', '$uibModalInstance', 'content', function ($scope, $uibModalInstance, content) {
             $scope.template = content;
             $scope.close = function () {
-              $modalInstance.close();
+              $uibModalInstance.close();
             };
             $scope.$watch(
               function () {
@@ -103,7 +103,7 @@ angular.module('patternfly.modals')
               },
               function (newValue) {
                 if (newValue === false) {
-                  $modalInstance.close();
+                  $uibModalInstance.close();
                 }
               }
             );

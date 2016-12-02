@@ -27,14 +27,14 @@
   </div>
   <div class="modal-footer wizard-pf-footer wizard-pf-position-override" ng-class="{'wizard-pf-footer-inline': embedInPage}">
     <button pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel" ng-disabled="wizardDone" ng-click="onCancel()" ng-if="!embedInPage">{{cancelTitle}}</button>
-    <div class="tooltip-wrapper" tooltip="{{prevTooltip}}" tooltip-placement="left">
+    <div class="tooltip-wrapper" uib-tooltip="{{prevTooltip}}" tooltip-placement="left">
       <button id="backButton" pf-wiz-previous class="btn btn-default" ng-disabled="!wizardReady || wizardDone || !prevEnabled || firstStep"
               callback="backCallback">
         <span class="i fa fa-angular-left"></span>
         {{backTitle}}
       </button>
     </div>
-    <div class="tooltip-wrapper" tooltip="{{nextTooltip}}" tooltip-placement="left">
+    <div class="tooltip-wrapper" uib-tooltip="{{nextTooltip}}" tooltip-placement="left">
       <button id="nextButton" pf-wiz-next class="btn btn-primary wizard-pf-next" ng-disabled="!wizardReady || !nextEnabled"
               callback="nextCallback">
         {{nextTitle}}
