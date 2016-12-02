@@ -9,19 +9,14 @@ env:
     - TRIGGER_REPO_SLUG: "patternfly/angular-patternfly"
     - TRIGGER_REPO_BRANCH: "master"
 
-
 before_install:
   - 'git checkout -B $TRAVIS_BRANCH' # Reconcile detached HEAD
   - 'npm install -g bower grunt-cli'
 
 script:
-  - 'npm install'
-  - 'bower install'
-  - 'grunt'
-  - 'grunt ngdocs:publish'
+  - sh -x ./scripts/build.sh
 
 after_success:
-  - sh -x ./scripts/publish.sh
   - ./scripts/publish-ghpages.sh -t docs
 
 # OpenShift expects its deployment branch to be "master-dist". This can be changed using:

@@ -41,7 +41,8 @@
     "karma-junit-reporter": "0.2.2",
     "karma-ng-html2js-preprocessor": "~0.1",
     "karma-phantomjs-launcher": "^1.0.0",
-    "matchdep": "0.3.0"
+    "matchdep": "0.3.0",
+    "nsp": "^2.6.1"
   },
   "scripts": {
     "test": "grunt test"
