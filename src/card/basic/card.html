@@ -1,8 +1,6 @@
 <div ng-class="showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'">
   <div ng-if="showHeader()" ng-class="shouldShowTitlesSeparator ? 'card-pf-heading' : 'card-pf-heading-no-bottom'">
-    <div ng-if="showFilterInHeader()" uib-dropdown class="card-pf-time-frame-filter">
-      <div ng-include="'card/basic/card-filter.html'"></div>
-    </div>
+    <div ng-if="showFilterInHeader()" ng-include="'card/basic/card-filter.html'"></div>
     <h2 class="card-pf-title">{{headTitle}}</h2>
   </div>
 
@@ -12,9 +10,7 @@
     <div ng-transclude></div>
   </div>
   <div ng-if="footer" class="card-pf-footer">
-    <div ng-if="showFilterInFooter()" uib-dropdown class="card-pf-time-frame-filter">
-      <div ng-include="'card/basic/card-filter.html'"></div>
-    </div>
+    <div ng-if="showFilterInFooter()" ng-include="'card/basic/card-filter.html'"></div>
     <p>
       <a ng-if="footer.href" href="{{footer.href}}" ng-class="{'card-pf-link-with-icon':footer.iconClass,'card-pf-link':!footer.iconClass}">
         <span ng-if="footer.iconClass" class="{{footer.iconClass}} card-pf-footer-text"></span>
