@@ -134,7 +134,7 @@ module.exports = function (grunt) {
             'lib/angular-animate/angular-animate.js',
             'lib/angular-bootstrap/ui-bootstrap-tpls.js',
             'misc/angular-bootstrap-prettify.js',
-            'lib/lodash/lodash.min.js',
+            'lib/lodash/dist/lodash.min.js',
             'dist/angular-patternfly.js',
             'lib/angular-ui-router/release/angular-ui-router.min.js'],
           html5Mode: false,

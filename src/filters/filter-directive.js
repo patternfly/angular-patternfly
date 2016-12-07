@@ -179,7 +179,7 @@ angular.module('patternfly.filters').directive('pfFilter', function () {
     templateUrl: 'filters/filter.html',
     controller: function ($scope) {
       $scope.filterExists = function (filter) {
-        var foundFilter = _.findWhere($scope.config.appliedFilters, {title: filter.title, value: filter.value});
+        var foundFilter = _.find($scope.config.appliedFilters, {title: filter.title, value: filter.value});
         return foundFilter !== undefined;
       };
 
