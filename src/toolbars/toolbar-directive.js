@@ -434,7 +434,7 @@ angular.module('patternfly.toolbars').directive('pfToolbar', function () {
       };
 
       $scope.filterExists = function (filter) {
-        var foundFilter = _.findWhere($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
+        var foundFilter = _.find($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
         return foundFilter !== undefined;
       };
 
