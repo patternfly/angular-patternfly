@@ -22,7 +22,7 @@
  * </ul>
  *
  * @example
-<example module="patternfly.filters" deps="patternfly.select">
+<example module="patternfly.filters">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">

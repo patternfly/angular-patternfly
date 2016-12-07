@@ -56,8 +56,10 @@ angular.module('patternfly.filters').directive('pfFilterFields', function () {
       };
 
       scope.selectValue = function (filterValue) {
-        scope.addFilterFn(scope.currentField, filterValue);
-        scope.config.currentValue = null;
+        if (angular.isDefined(filterValue)) {
+          scope.addFilterFn(scope.currentField, filterValue);
+          scope.config.currentValue = null;
+        }
       };
 
       scope.onValueKeyPress = function (keyEvent) {

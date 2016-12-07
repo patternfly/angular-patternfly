@@ -6,7 +6,7 @@ describe('Directive:  pfFilter', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.filters', 'patternfly.select', 'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html');
+    module('patternfly.filters', 'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -94,16 +94,16 @@ describe('Directive:  pfFilter', function () {
   });
 
   it ('should add a dropdown select when a select type is chosen', function() {
-    var pfSelects = element.find('.filter-select');
+    var filterSelect = element.find('.filter-select');
     var fields = element.find('.filter-field');
 
-    expect(pfSelects.length).toBe(0);
+    expect(filterSelect.length).toBe(0);
     eventFire(fields[2], 'click');
     $scope.$digest();
-    pfSelects = element.find('.filter-select');
-    expect(pfSelects.length).toBe(2); // 2 because it is a directive
+    filterSelect = element.find('.filter-select');
+    expect(filterSelect.length).toBe(1);
 
-    var items = pfSelects.find('li');
+    var items = filterSelect.find('li');
     expect(items.length).toBe($scope.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
   });
 

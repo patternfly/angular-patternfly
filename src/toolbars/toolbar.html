@@ -2,8 +2,12 @@
   <div class="row toolbar-pf">
     <div class="col-sm-12">
       <form class="toolbar-pf-actions" ng-class="{'no-filter-results': !config.filterConfig}">
-        <div pf-filter-fields id="{{filterDomId}}_fields" config="config.filterConfig" ng-if="config.filterConfig" add-filter-fn="addFilter"></div>
-        <div pf-sort id="{{sortDomId}}" config="config.sortConfig" ng-if="config.sortConfig"></div>
+        <div class="form-group toolbar-apf-filter">
+          <div pf-filter-fields id="{{filterDomId}}_fields" config="config.filterConfig" ng-if="config.filterConfig" add-filter-fn="addFilter"></div>
+        </div>
+        <div class="form-group">
+          <div pf-sort id="{{sortDomId}}" config="config.sortConfig" ng-if="config.sortConfig"></div>
+        </div>
         <div class="form-group toolbar-actions"
              ng-if="config.actionsConfig &&
                    ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||
@@ -34,16 +38,14 @@
             </ul>
           </div>
         </div>
-        <div class="toolbar-pf-view-selector pull-right" ng-if="config.viewsConfig && config.viewsConfig.views">
-          <ul class="list-inline">
-            <li ng-repeat="view in config.viewsConfig.viewsList"
-                ng-class="{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}"
-                title={{view.title}}>
-              <a>
-                <i class="view-selector {{view.iconClass}}" ng-click="viewSelected(view.id)"></i>
-              </a>
-            </li>
-          </ul>
+        <div class="toolbar-pf-action-right">
+          <div class="form-group toolbar-pf-view-selector" ng-if="config.viewsConfig && config.viewsConfig.views">
+            <button ng-repeat="view in config.viewsConfig.viewsList" class="btn btn-link"
+                    ng-class="{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}"
+                    title={{view.title}}  ng-click="viewSelected(view.id)">
+              <i class="{{view.iconClass}}"></i>
+            </button>
+          </div>
         </div>
       </form>
       <div pf-filter-results id="{{filterDomId}_results}" config="config.filterConfig" ng-if="config.filterConfig"></div>

@@ -7,9 +7,9 @@ describe('Directive:  pfToolbar', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.toolbars', 'patternfly.views', 'patternfly.filters', 'patternfly.select', 'toolbars/toolbar.html',
-           'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html',
-           'sort/sort.html');
+    module('patternfly.toolbars', 'patternfly.views', 'patternfly.filters', 'toolbars/toolbar.html',
+      'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html',
+      'sort/sort.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_, pfViewUtils) {
@@ -176,16 +176,19 @@ describe('Directive:  pfToolbar', function () {
   });
 
   it ('should add a dropdown select when a select type is chosen', function() {
-    var pfSelects = element.find('.filter-select');
+    var filterSelect = element.find('.filter-select');
     var fields = element.find('.filter-field');
 
-    expect(pfSelects.length).toBe(0);
+    expect(filterSelect.length).toBe(0);
+    expect(fields.length).toBe(3);
+
     eventFire(fields[2], 'click');
     $scope.$digest();
-    pfSelects = element.find('.filter-select');
-    expect(pfSelects.length).toBe(2); // 2 because it is a directive
 
-    var items = pfSelects.find('li');
+    filterSelect = element.find('.filter-select');
+    expect(filterSelect.length).toBe(1);
+
+    var items = filterSelect.find('li');
     expect(items.length).toBe($scope.config.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
   });
 
@@ -264,7 +267,7 @@ describe('Directive:  pfToolbar', function () {
   });
 
   it ('should show the correct view selection buttons', function () {
-    var selectors = element.find('.view-selector');
+    var selectors = element.find('.toolbar-pf-view-selector .btn-link');
     expect(selectors.length).toBe(5);
 
     expect(element.find('.fa-dashboard').length).toBe(1);
@@ -291,22 +294,21 @@ describe('Directive:  pfToolbar', function () {
   it ('should update the currently selected view when a view selector clicked', function () {
     var viewSelector = element.find('.toolbar-pf-view-selector');
     var active = element.find('.active');
-    var listSelector = element.find('.fa-th-list');
+    var listSelector = element.find('.toolbar-pf-view-selector .btn-link');
 
     expect(viewSelector.length).toBe(1);
     expect(active.length).toBe(0);
-    expect(listSelector.length).toBe(1);
+    expect(listSelector.length).toBe(5);
 
     eventFire(listSelector[0], 'click');
     $scope.$apply();
 
-    listSelector = element.find('.fa-th-list');
     active = element.find('.active');
     expect(active.length).toBe(1);
   });
 
   it ('should call the callback function when a view selector clicked', function () {
-    var listSelector = element.find('.fa-th-list');
+    var listSelector = element.find('.toolbar-pf-view-selector .btn-link');
     var functionCalled = false;
 
     var onViewSelect = function () {
@@ -315,7 +317,7 @@ describe('Directive:  pfToolbar', function () {
 
     $scope.config.viewsConfig.onViewSelect = onViewSelect;
     expect(functionCalled).toBeFalsy();
-    expect(listSelector.length).toBe(1);
+    expect(listSelector.length).toBe(5);
 
     eventFire(listSelector[0], 'click');
     $scope.$apply();

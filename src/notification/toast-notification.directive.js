@@ -64,7 +64,19 @@
            <div class="form-group">
              <label class="col-sm-2 control-label" for="type">Type:</label>
              <div class="col-sm-10">
-              <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+               <div class="btn-group" uib-dropdown>
+                 <button type="button" uib-dropdown-toggle class="btn btn-default">
+                   {{type}}
+                   <span class="caret"></span>
+                 </button>
+                 <ul uib-dropdown-menu class="dropdown-menu-right" role="menu">
+                   <li ng-repeat="item in types" ng-class="{'selected': item === type}">
+                     <a role="menuitem" tabindex="-1" ng-click="updateType(item)">
+                       {{item}}
+                     </a>
+                   </li>
+                 </ul>
+               </div>
              </div>
            </div>
            <div class="form-group">
@@ -97,6 +109,10 @@
        $scope.header = 'Default Header.';
        $scope.message = 'Default Message.';
        $scope.primaryAction = '';
+
+       $scope.updateType = function(item) {
+         $scope.type = item;
+       };
 
        $scope.showMenu = false;
        var performAction = function (menuAction) {

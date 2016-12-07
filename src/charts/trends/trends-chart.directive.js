@@ -59,12 +59,19 @@
            <form role="form" >
              <div class="form-group">
                <label>Layout</label></br>
-               <select pf-select class="pf-select-sm" ng-model="layout" id="layout">
-                 <option value="large" ng-selected="true" selected>Large</option>
-                 <option value="small">Small</option>
-                 <option value="compact">Compact</option>
-                 <option value="inline">Inline</option>
-               </select>
+               <div class="btn-group" uib-dropdown>
+                 <button type="button" uib-dropdown-toggle class="btn btn-default">
+                   {{layout.title}}
+                   <span class="caret"></span>
+                 </button>
+                 <ul uib-dropdown-menu class="dropdown-menu-right" role="menu">
+                   <li ng-repeat="item in layouts" ng-class="{'selected': item === layout}">
+                     <a role="menuitem" tabindex="-1" ng-click="updateLayout(item)">
+                       {{item.title}}
+                     </a>
+                   </li>
+                 </ul>
+               </div>
              </div>
            </form>
          </div>
@@ -72,10 +79,19 @@
            <form role="form" ng-hide="layout == 'inline'">
              <div class="form-group">
                <label>Title Value Type</label></br>
-               <select pf-select class="pf-select-sm" ng-model="valueType" id="valueType">
-                 <option value="actual" ng-selected="true" selected>Actual</option>
-                 <option value="percentage">Percentage</option>
-               </select>
+               <div class="btn-group" uib-dropdown>
+                 <button type="button" uib-dropdown-toggle class="btn btn-default">
+                   {{valueType.title}}
+                   <span class="caret"></span>
+                 </button>
+                 <ul uib-dropdown-menu class="dropdown-menu-right" role="menu">
+                   <li ng-repeat="item in valueTypes" ng-class="{'selected': item === valueType}">
+                     <a role="menuitem" tabindex="-1" ng-click="updateValueType(item)">
+                       {{item.title}}
+                     </a>
+                   </li>
+                 </ul>
+               </div>
              </div>
            </form>
          </div>
@@ -98,7 +114,7 @@
    </div>
  </file>
  <file name="script.js">
- angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
+ angular.module( 'demo', ['patternfly.charts', 'patternfly.card', 'ui.bootstrap'] ).controller( 'ChartCtrl', function( $scope ) {
 
        $scope.config = {
          chartId      : 'exampleTrendsChart',
@@ -128,6 +144,50 @@
           }
        }
 
+       $scope.layouts = [
+         {
+           title: "Large",
+           value: "large"
+         },
+         {
+           title: "Small",
+           value: "small"
+         },
+         {
+           title: "Compact",
+           value: "compact"
+         },
+         {
+           title: "Inline",
+           value: "inline"
+         }
+       ];
+
+       $scope.layout = $scope.layouts[0];
+
+       $scope.updateLayout = function(item) {
+         $scope.layout = item;
+         $scope.config.layout = item.value;
+       };
+
+       $scope.valueTypes = [
+         {
+           title: "Actual",
+           value: "actual"
+         },
+         {
+           title: "Percentage",
+           value: "percentage"
+         }
+       ];
+
+       $scope.valueType = $scope.valueTypes[0];
+
+       $scope.updateValueType = function(item) {
+         $scope.valueType = item;
+         $scope.config.valueType = item.value;
+       };
+
       var today = new Date();
       var dates = ['dates'];
       for (var d = 20 - 1; d >= 0; d--) {
@@ -148,15 +208,6 @@
          $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
          $scope.data.yData.push(Math.round(Math.random() * 100));
        };
-
-       $scope.$watch('valueType', function (newValue) {
-         $scope.config.valueType = newValue;
-       });
-
-       $scope.$watch('layout', function (newValue) {
-         $scope.config.layout = newValue;
-       });
-
      });
  </file>
  </example>

@@ -124,17 +124,11 @@ module.exports = function (grunt) {
           title: 'Angular Patternfly Documentation',
           dest: 'docs',
           image: 'misc/logo-alt.svg',
-          scripts: ['lib/jquery/dist/jquery.js',
-            'lib/bootstrap/dist/js/bootstrap.js',
-            'lib/patternfly-bootstrap-combobox/js/bootstrap-combobox.js',
-            'lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
+          scripts: [
             'lib/moment/moment.js',
-            'lib/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
-            'lib/bootstrap-select/js/bootstrap-select.js',
-            'lib/patternfly-bootstrap-treeview/src/js/bootstrap-treeview.js',
             'lib/c3/c3.js',
             'lib/d3/d3.js',
-            'lib/patternfly/dist/js/patternfly.js',
+            'lib/patternfly/dist/js/patternfly-settings.js',
             'lib/angular/angular.js',
             'lib/angular-sanitize/angular-sanitize.js',
             'lib/angular-animate/angular-animate.js',
@@ -249,6 +243,10 @@ module.exports = function (grunt) {
         main: {
           files: ['Gruntfile.js'],
           tasks: ['eslint']
+        },
+        test: {
+          files: ['test/**/*.js'],
+          tasks: ['test']
         },
         all: {
           files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],
