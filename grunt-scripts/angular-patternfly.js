@@ -1640,11 +1640,11 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
           return i % numberOfRows * blockSize;
         }).attr('width', fillSize).attr('height', fillSize).style('fill', function (d) {
           return color(d.value);
-        }).attr('tooltip-html-unsafe', function (d, i) { //tooltip-html is throwing an exception
+        }).attr('uib-tooltip-html', function (d, i) { //tooltip-html is throwing an exception
           if (scope.rangeOnHover && fillSize <= scope.rangeHoverSize) {
-            return rangeTooltip(d.value);
+            return '"' + rangeTooltip(d.value) + '"';
           }
-          return d.tooltip;
+          return "'" + d.tooltip + "'";
         }).attr('tooltip-append-to-body', function (d, i) {
           return true;
         }).attr('tooltip-animation', function (d, i) {
