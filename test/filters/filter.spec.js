@@ -6,7 +6,7 @@ describe('Directive:  pfFilter', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.filters', 'patternfly.select', 'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html');
+    module('patternfly.filters', 'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
