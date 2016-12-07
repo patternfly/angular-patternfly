@@ -40,7 +40,7 @@
     "angular": "1.5.*",
     "angular-animate": "1.5.*",
     "angular-sanitize": "1.5.*",
-    "angular-bootstrap": "0.14.x",
+    "angular-bootstrap": "2.3.x",
     "lodash": "4.x",
     "patternfly": "~3.15.0"
   },
