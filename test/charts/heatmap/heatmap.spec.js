@@ -49,9 +49,9 @@ describe('Directive: pfHeatmap', function() {
     element = compileChart('<div pf-heatmap chart-title="title" data="data"></div>',$scope);
 
     block = angular.element(element).find('.heatmap-pf-svg').children().first();
-    tooltip = block.attr('tooltip-html-unsafe');
+    tooltip = block.attr('uib-tooltip-html');
 
-    expect(tooltip).toBe('Node 8 : My OpenShift Provider<br>96% : 96 Used of 100 Total<br>4 Available');
+    expect(tooltip).toBe("'Node 8 : My OpenShift Provider<br>96% : 96 Used of 100 Total<br>4 Available'");
 
     color = block.attr('style');
     var result = color.trim() == 'fill: #ce0000;' || color.trim() == 'fill: rgb(206, 0, 0);';
