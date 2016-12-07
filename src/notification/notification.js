@@ -46,7 +46,19 @@
          <div class="form-group">
            <label class="col-sm-2 control-label" for="type">Type:</label>
            <div class="col-sm-10">
-            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+             <div class="btn-group" uib-dropdown>
+               <button type="button" uib-dropdown-toggle class="btn btn-default">
+                 {{type}}
+                 <span class="caret"></span>
+               </button>
+               <ul uib-dropdown-menu class="dropdown-menu-right" role="menu">
+                 <li ng-repeat="item in types" ng-class="{'selected': item === type}">
+                   <a role="menuitem" tabindex="-1" ng-click="updateType(item)">
+                     {{item}}
+                   </a>
+                 </li>
+               </ul>
+             </div>
            </div>
          </div>
          <div class="form-group">
@@ -69,6 +81,11 @@
        $scope.types = Object.keys(typeMap);
 
        $scope.type = $scope.types[0];
+
+       $scope.updateType = function(item) {
+         $scope.type = item;
+       };
+
        $scope.message = 'Default notification message.';
 
        $scope.notify = function () {
@@ -225,7 +242,19 @@ angular.module('patternfly.notification').provider('Notifications', function () 
          <div class="form-group">
            <label class="col-sm-2 control-label" for="type">Type:</label>
            <div class="col-sm-10">
-            <select pf-select ng-model="type" id="type" ng-options="o as o for o in types"></select>
+             <div class="btn-group" uib-dropdown>
+               <button type="button" uib-dropdown-toggle class="btn btn-default">
+                 {{type}}
+                 <span class="caret"></span>
+               </button>
+               <ul uib-dropdown-menu class="dropdown-menu-right" role="menu">
+                 <li ng-repeat="item in types" ng-class="{'selected': item === type}">
+                   <a role="menuitem" tabindex="-1" ng-click="updateType(item)">
+                     {{item}}
+                   </a>
+                 </li>
+               </ul>
+             </div>
            </div>
          </div>
          <div class="form-group">
@@ -256,6 +285,10 @@ angular.module('patternfly.notification').provider('Notifications', function () 
 
        $scope.type = $scope.types[0];
        $scope.message = 'Default notification message.';
+
+       $scope.updateType = function(item) {
+         $scope.type = item;
+       };
 
        $scope.notify = function () {
          typeMap[$scope.type]($scope.message);

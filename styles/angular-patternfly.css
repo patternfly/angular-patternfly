@@ -325,6 +325,11 @@
   color: #fff !important;
 }
 
+@media (min-width: 768px) {
+  .toolbar-pf-actions .toolbar-apf-filter {
+    padding-left: 0;
+  }
+}
 .toolbar-pf-actions .toolbar-pf-view-selector a {
   cursor: pointer;
 }
