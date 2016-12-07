@@ -8,9 +8,9 @@
   "main": "index.js",
   "homepage": "https://github.com/patternfly/angular-patternfly",
   "dependencies": {
-    "angular": "1.3.0 - 1.5.*",
-    "angular-animate": "1.3.0 - 1.5.*",
-    "angular-sanitize": "1.3.0 - 1.5.*",
+    "angular": "1.5.*",
+    "angular-animate": "1.5.*",
+    "angular-sanitize": "1.5.*",
     "angular-ui-bootstrap": "0.14.x",
     "lodash": "4.x",
     "patternfly": "~3.15.0"
