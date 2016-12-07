@@ -307,15 +307,15 @@
   color: #999999;
 }
 
-.sort-pf .form-group .btn-link {
-  color: #222;
+.sort-pf .btn-link {
+  color: #252525;
   font-size: 16px;
   line-height: 1;
   padding: 4px 0;
   margin-left: 10px;
 }
 
-.sort-pf .form-group .btn-link:hover {
+.sort-pf .btn-link:hover {
   color: #0099d3;
 }
 
