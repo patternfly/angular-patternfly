@@ -51,8 +51,8 @@
       <div class="col-md-12">
         <div pf-toolbar id="exampleToolbar" config="toolbarConfig">
          <actions>
-           <span class="dropdown primary-action" dropdown>
-             <button class="btn btn-default dropdown-toggle" dropdown-toggle type="button">
+           <span class="dropdown primary-action" uib-dropdown>
+             <button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type="button">
                Menu Action
                <span class="caret"></span>
              </button>
