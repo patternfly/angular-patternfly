@@ -18,7 +18,7 @@
   <!------------->
   <!-- becomes -->
   <!------------->
-  angular.module('patternfly.notification').directive('pfNotificationDrawer', {
+  angular.module('patternfly.notification').component('pfNotificationDrawer', {
     bindings: {
       scrollSelector: '@',
       groupHeight: '@',
@@ -32,7 +32,7 @@
   ```
 3. Any initialization logic should be moved out of link functions and into $onInit functions
 4. Any event listeners that are added for $window or $timeout events should be cleaned up in $onDestroy
-5. $scope watchers should be moved to $onChanges
+5. $scope watchers should be moved to $onChanges for bound properties (defined in bindings object)
 6. If DOM manipulation still must happen, there is a $postLink function.  A bit more investigation will be necessary to see if these components can be upgraded to Angular 2.
 
 ## View Conversion
