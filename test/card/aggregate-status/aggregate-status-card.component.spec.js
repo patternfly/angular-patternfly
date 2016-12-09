@@ -1,4 +1,4 @@
-describe('Directive: pfAggregateStatusCard', function() {
+describe('Component: pfAggregateStatusCard', function() {
   var $scope, $compile, element, cardClass, notifications;
 
   beforeEach(module('patternfly.card', 'card/aggregate-status/aggregate-status-card.html'));
@@ -8,7 +8,7 @@ describe('Directive: pfAggregateStatusCard', function() {
     $scope = _$rootScope_;
   }));
 
-  describe('Page with pf-aggregate-status-card directive', function () {
+  describe('Page with pf-aggregate-status-card component', function () {
 
     var compileCard = function (markup, scope) {
       var el = $compile(markup)(scope);
@@ -25,7 +25,7 @@ describe('Directive: pfAggregateStatusCard', function() {
         "iconClass": "fa fa-shield",
       };
 
-      element = compileCard('<div pf-aggregate-status-card status="status"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card status="status"></pf-aggregate-status-card>', $scope);
 
       //Make sure the count is getting set properly in the title
       expect(angular.element(element).find('.card-pf-aggregate-status-count').html()).toBe("793");
@@ -50,7 +50,7 @@ describe('Directive: pfAggregateStatusCard', function() {
         "iconClass": "fa fa-shield"
       };
 
-      element = compileCard('<div pf-aggregate-status-card status="status"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card status="status"></pf-aggregate-status-card>', $scope);
 
       //Make sure a link renders in the title
       expect(angular.element(element).find('.card-pf-title').find('a').size()).toBe(0);
@@ -76,7 +76,7 @@ describe('Directive: pfAggregateStatusCard', function() {
        ]
       };
 
-      element = compileCard('<div pf-aggregate-status-card status="status"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card status="status"></pf-aggregate-status-card>', $scope);
 
       notifications = angular.element(element).find('.card-pf-aggregate-status-notification');
 
@@ -97,7 +97,7 @@ describe('Directive: pfAggregateStatusCard', function() {
     });
 
     it("should show the top border", function() {
-      element = compileCard('<div pf-aggregate-status-card show-top-border="true"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card show-top-border="true"></pf-aggregate-status-card>', $scope);
 
       // showTopBorder set to true, results in having the .card-pf-accented class
       cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-accented');
@@ -106,7 +106,7 @@ describe('Directive: pfAggregateStatusCard', function() {
     });
 
     it("should hide the top border", function() {
-      element = compileCard('<div pf-aggregate-status-card show-top-border="false"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card show-top-border="false"></pf-aggregate-status-card>', $scope);
 
       // showTopBorder set to false, results in not having the .card-pf-accented class
       cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-accented');
@@ -127,7 +127,7 @@ describe('Directive: pfAggregateStatusCard', function() {
         }
       };
 
-      element = compileCard('<div pf-aggregate-status-card status="status" layout="mini"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card status="status" layout="mini"></pf-aggregate-status-card>', $scope);
 
       // should have the mini layout class
       cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-aggregate-status-mini');
@@ -158,7 +158,7 @@ describe('Directive: pfAggregateStatusCard', function() {
           }
       };
 
-      element = compileCard('<div pf-aggregate-status-card status="status" layout="mini"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card status="status" layout="mini"></pf-aggregate-status-card>', $scope);
 
       // should have the mini layout class
       cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-aggregate-status-mini');
@@ -186,7 +186,7 @@ describe('Directive: pfAggregateStatusCard', function() {
           }
       };
 
-      element = compileCard('<div pf-aggregate-status-card status="status" layout="mini"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card status="status" layout="mini"></pf-aggregate-status-card>', $scope);
 
       notifications = angular.element(element).find('.card-pf-aggregate-status-notification');
 
@@ -215,7 +215,7 @@ describe('Directive: pfAggregateStatusCard', function() {
         ]
       };
 
-      element = compileCard('<div pf-aggregate-status-card status="aggStatusAlt" layout="tall"></div>', $scope);
+      element = compileCard('<pf-aggregate-status-card status="aggStatusAlt" layout="tall"></pf-aggregate-status-card>', $scope);
 
       // should have the images
       imageElements = angular.element(element).find('.card-pf-icon-image');
