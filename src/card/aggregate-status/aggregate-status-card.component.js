@@ -1,8 +1,8 @@
 /**
  * @ngdoc directive
- * @name patternfly.card.directive:pfAggregateStatusCard
- * @restrict A
- * @element ANY
+ * @name patternfly.card.component:pfAggregateStatusCard
+ * @restrict E
+ *
  * @param {object} status Status configuration information<br/>
  * <ul style='list-style-type: none'>
  * <li>.title         - the main title of the aggregate status card
@@ -38,7 +38,7 @@
  * @deprecated {boolean=} alt-layout Display the aggregate status card in a 'alternate tall' layout.  false (default) displays normal layout, true displays tall layout
  *
  * @description
- * Directive for easily displaying status information
+ * Component for easily displaying status information
  *
  * @example
  <example module="patternfly.card">
@@ -47,22 +47,22 @@
    <div ng-controller="CardDemoCtrl" style="display:inline-block;">
      <div class="col-md-10">
        <label>With Top Border</label>
-       <div pf-aggregate-status-card status="status" show-top-border="true"></div>
+       <pf-aggregate-status-card status="status" show-top-border="true"></pf-aggregate-status-card>
        <br/>
        <label>No Top Border</label>
-       <div pf-aggregate-status-card status="status"></div>
+       <pf-aggregate-status-card status="status"></pf-aggregate-status-card>
        <br/>
        <label>layout = "mini"</label>
-       <div pf-aggregate-status-card status="miniAggStatus" show-top-border="true" layout="mini"></div>
-       <div pf-aggregate-status-card status="miniAggStatus2" show-top-border="true" layout="mini"></div>
+       <pf-aggregate-status-card status="miniAggStatus" show-top-border="true" layout="mini"></pf-aggregate-status-card>
+       <pf-aggregate-status-card status="miniAggStatus2" show-top-border="true" layout="mini"></pf-aggregate-status-card>
        <br/>
        <label>layout = "tall"</label>
-       <div pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" layout="tall"></div>
+       <pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" layout="tall"></pf-aggregate-status-card>
        <br/>
        <label>Alternate Layout</label>
        <i>(depreciated, use layout = 'tall' instead)</i>
        </br></br>
-       <div pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" alt-layout="true"></div>
+       <pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" alt-layout="true"></pf-aggregate-status-card>
      </div>
    </div>
  </file>
@@ -130,21 +130,21 @@
  </example>
  */
 
-angular.module( 'patternfly.card' ).directive('pfAggregateStatusCard', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      status: '=',
-      showTopBorder: '@?',
-      altLayout: '@?',
-      layout: '@?'
-    },
-    templateUrl: 'card/aggregate-status/aggregate-status-card.html',
-    link: function (scope) {
-      scope.shouldShowTopBorder = (scope.showTopBorder === 'true');
-      scope.isAltLayout = (scope.altLayout === 'true' || scope.layout === 'tall');
-      scope.isMiniLayout = (scope.layout === 'mini');
-    }
-  };
+angular.module( 'patternfly.card' ).component('pfAggregateStatusCard', {
+  bindings: {
+    status: '=',
+    showTopBorder: '@?',
+    altLayout: '@?',
+    layout: '@?'
+  },
+  templateUrl: 'card/aggregate-status/aggregate-status-card.html',
+  controller: function () {
+    'use strict';
+    var ctrl = this;
+    ctrl.$onInit = function () {
+      ctrl.shouldShowTopBorder = (ctrl.showTopBorder === 'true');
+      ctrl.isAltLayout = (ctrl.altLayout === 'true' || ctrl.layout === 'tall');
+      ctrl.isMiniLayout = (ctrl.layout === 'mini');
+    };
+  }
 });
