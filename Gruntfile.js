@@ -54,13 +54,13 @@ module.exports = function (grunt) {
       },
       copy: {
         docdata: {
-          cwd: 'lib/patternfly/dist',
+          cwd: 'node_modules/patternfly/dist',
           src: ['fonts/*', 'img/*'],
           dest: 'docs',
           expand: true
         },
         fa: {
-          cwd: 'lib/patternfly/',
+          cwd: 'node_modules/patternfly/',
           src: ['components/font-awesome/**'],
           dest: 'docs',
           expand: true
@@ -125,21 +125,21 @@ module.exports = function (grunt) {
           dest: 'docs',
           image: 'misc/logo-alt.svg',
           scripts: [
-            'lib/moment/moment.js',
-            'lib/c3/c3.js',
-            'lib/d3/d3.js',
-            'lib/patternfly/dist/js/patternfly-settings.js',
-            'lib/angular/angular.js',
-            'lib/angular-sanitize/angular-sanitize.js',
-            'lib/angular-animate/angular-animate.js',
-            'lib/angular-bootstrap/ui-bootstrap-tpls.js',
+            'node_modules/moment/moment.js',
+            'node_modules/c3/c3.js',
+            'node_modules/d3/d3.js',
+            'node_modules/patternfly/dist/js/patternfly-settings.js',
+            'node_modules/angular/angular.js',
+            'node_modules/angular-sanitize/angular-sanitize.js',
+            'node_modules/angular-animate/angular-animate.js',
+            'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
             'misc/angular-bootstrap-prettify.js',
-            'lib/lodash/dist/lodash.min.js',
+            'node_modules/lodash/lodash.min.js',
             'dist/angular-patternfly.js',
-            'lib/angular-ui-router/release/angular-ui-router.min.js'],
+            'node_modules/angular-ui-router/release/angular-ui-router.min.js'],
           html5Mode: false,
           template: 'grunt-ngdocs-index.tmpl',
-          styles: ['lib/patternfly/dist/css/patternfly.css', 'lib/patternfly/dist/css/patternfly-additions.css',
+          styles: ['node_modules/patternfly/dist/css/patternfly.css', 'node_modules/patternfly/dist/css/patternfly-additions.css',
             'dist/styles/angular-patternfly.css', 'misc/ng-docs.css', 'misc/examples.css']
         },
 
