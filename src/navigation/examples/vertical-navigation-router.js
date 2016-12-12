@@ -1,6 +1,7 @@
 /**
  * @ngdoc directive
- * @name patternfly.navigation.directive:pfVerticalNavigation - Router
+ * @name patternfly.navigation.component:pfVerticalNavigation - Router
+ * @restrict E
  *
  * @description
  *   This example shows how to use pfVerticalNavigation with angular-ui-router's $states and uiSrefs.
@@ -38,7 +39,7 @@
       <label class="example-info-text">Exit the demo to return back to this page.</label>
     </div>
     <div id="verticalNavWithRouterLayout" class="layout-pf layout-pf-fixed faux-layout hidden" ng-controller="vertNavWithRouterController">
-      <div pf-vertical-navigation items="navigationItems" brand-alt="ANGULAR PATTERNFLY"
+      <pf-vertical-navigation items="navigationItems" brand-alt="ANGULAR PATTERNFLY"
           show-badges="true" pinnable-menus="true" update-active-items-on-click="true"
           navigate-callback="handleNavigateClickRouter">
         <div>
@@ -70,7 +71,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </pf-vertical-navigation>
       <div id="contentContainer" class="container-fluid container-cards-pf container-pf-nav-pf-vertical example-page-container">
         <ui-view>
           <!-- Content will be added here -->
