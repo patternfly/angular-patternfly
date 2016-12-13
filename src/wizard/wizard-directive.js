@@ -129,7 +129,7 @@
   <file name="summary.html">
   <div ng-controller="SummaryController">
     <pf-wizard-substep step-title="Summary" step-id="review-summary" step-priority="0" next-enabled="true" prev-enabled="true" ok-to-nav-away="true" wz-disabled="false" on-show="onShow">
-      <div pf-wizard-review-page shown="pageShown" wizard-data="data"></div>
+      <pf-wizard-review-page shown="pageShown" wizard-data="data"></pf-wizard-review-page>
     </pf-wizard-substep>
   </div>
   </file>
@@ -261,7 +261,7 @@
         if (angular.isUndefined(next)) {
           $scope.data = {};
         } else {
-          $scope.data = next.wizardData;
+          $scope.data = next.$ctrl.wizardData;
         }
       }
     }
