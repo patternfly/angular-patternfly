@@ -103,7 +103,7 @@
         </div>
       </div>
       <div class="col-md-12 card-view-container" ng-if="viewType == 'cardView'">
-        <div pf-card-view config="vm.listConfig" items="items">
+        <pf-card-view config="vm.listConfig" items="items">
           <div class="col-md-12">
             <span>{{item.name}}</span>
           </div>
@@ -113,7 +113,7 @@
           <div class="col-md-12">
             <span>{{item.birthMonth}}</span>
           </div>
-        </div>
+        </pf-card-view>
       </div>
       <div class="col-md-12">
         <label class="events-label">Current Filters: </label>

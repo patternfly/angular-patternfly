@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.views.directive:pfCardView
+ * @name patternfly.views.component:pfCardView
+ * @restrict E
  *
  * @description
- *   Directive for rendering cards in a view
+ *   Component for rendering cards in a view
  *   <br><br>
  *
  * @param {object} config configuration settings for the cards:<br/>
@@ -39,7 +40,7 @@
    </style>
    <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <div pf-card-view id="exampleCardView" config="config" items="items">
+       <pf-card-view id="exampleCardView" config="config" items="items">
          <div class="col-md-12">
            <span>{{item.name}}</span>
          </div>
@@ -49,7 +50,7 @@
          <div class="col-md-12">
            <span>{{item.city}}, {{item.state}}</span>
          </div>
-       </div>
+       </pf-card-view>
      </div>
      <hr class="col-md-12">
      <div class="col-md-12">
@@ -191,134 +192,123 @@
  </file>
  </example>
  */
-angular.module('patternfly.views').directive('pfCardView', function (pfUtils) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=?',
-      items: '=',
-      eventId: '@id'
-    },
-    transclude: true,
-    templateUrl: 'views/cardview/card-view.html',
-    controller: function ($scope) {
-      $scope.defaultConfig = {
-        selectItems: false,
-        multiSelect: false,
-        dblClick: false,
-        selectionMatchProp: 'uuid',
-        selectedItems: [],
-        checkDisabled: false,
-        showSelectBox: true,
-        onSelect: null,
-        onSelectionChange: null,
-        onCheckBoxChange: null,
-        onClick: null,
-        onDblClick: null
-      };
+angular.module('patternfly.views').component('pfCardView', {
+  bindings: {
+    config: '=?',
+    items: '=',
+    eventId: '@id'
+  },
+  transclude: true,
+  templateUrl: 'views/cardview/card-view.html',
+  controller: function (pfUtils) {
+    'use strict';
+    var ctrl = this;
+    ctrl.defaultConfig = {
+      selectItems: false,
+      multiSelect: false,
+      dblClick: false,
+      selectionMatchProp: 'uuid',
+      selectedItems: [],
+      checkDisabled: false,
+      showSelectBox: true,
+      onSelect: null,
+      onSelectionChange: null,
+      onCheckBoxChange: null,
+      onClick: null,
+      onDblClick: null
+    };
 
-      $scope.config = pfUtils.merge($scope.defaultConfig, $scope.config);
-      if ($scope.config.selectItems && $scope.config.showSelectBox) {
-        throw new Error('pfCardView - ' +
-        'Illegal use of pfCardView directive! ' +
-        'Cannot allow both select box and click selection in the same card view.');
-      }
-    },
-    link: function (scope, element, attrs) {
-      attrs.$observe('config', function () {
-        scope.config = pfUtils.merge(scope.defaultConfig, scope.config);
-        if (!scope.config.selectItems) {
-          scope.config.selectedItems = [];
-        }
-        if (!scope.config.multiSelect && scope.config.selectedItems && scope.config.selectedItems.length > 0) {
-          scope.config.selectedItems = [scope.config.selectedItems[0]];
-        }
-      });
+    ctrl.itemClick = function (e, item) {
+      var alreadySelected;
+      var selectionChanged = false;
+      var continueEvent = true;
 
-      scope.itemClick = function (e, item) {
-        var alreadySelected;
-        var selectionChanged = false;
-        var continueEvent = true;
-
-        // Ignore disabled item clicks completely
-        if (scope.checkDisabled(item)) {
-          return continueEvent;
-        }
-
-        if (scope.config && scope.config.selectItems && item) {
-          if (scope.config.multiSelect && !scope.config.dblClick) {
-
-            alreadySelected = _.find(scope.config.selectedItems, function (itemObj) {
-              return itemObj === item;
-            });
-
-            if (alreadySelected) {
-              // already selected so deselect
-              scope.config.selectedItems = _.without(scope.config.selectedItems, item);
-            } else {
-              // add the item to the selected items
-              scope.config.selectedItems.push(item);
-              selectionChanged = true;
-            }
-          } else {
-            if (scope.config.selectedItems[0] === item) {
-              if (!scope.config.dblClick) {
-                scope.config.selectedItems = [];
-                selectionChanged = true;
-              }
-              continueEvent = false;
-            } else {
-              scope.config.selectedItems = [item];
-              selectionChanged = true;
-            }
-          }
-
-          if (selectionChanged && scope.config.onSelect) {
-            scope.config.onSelect(item, e);
-          }
-          if (selectionChanged && scope.config.onSelectionChange) {
-            scope.config.onSelectionChange(scope.config.selectedItems, e);
-          }
-        }
-        if (scope.config.onClick) {
-          scope.config.onClick(item, e);
-        }
-
+      // Ignore disabled item clicks completely
+      if (ctrl.checkDisabled(item)) {
         return continueEvent;
-      };
+      }
 
-      scope.dblClick = function (e, item) {
-        if (scope.config.onDblClick) {
-          scope.config.onDblClick(item, e);
-        }
-      };
+      if (ctrl.config && ctrl.config.selectItems && item) {
+        if (ctrl.config.multiSelect && !ctrl.config.dblClick) {
 
-      scope.checkBoxChange = function (item) {
-        if (scope.config.onCheckBoxChange) {
-          scope.config.onCheckBoxChange(item);
-        }
-      };
+          alreadySelected = _.find(ctrl.config.selectedItems, function (itemObj) {
+            return itemObj === item;
+          });
 
-      scope.isSelected = function (item) {
-        var matchProp = scope.config.selectionMatchProp;
-        var selected = false;
-
-        if (scope.config.showSelectBox) {
-          selected = item.selected;
+          if (alreadySelected) {
+            // already selected so deselect
+            ctrl.config.selectedItems = _.without(ctrl.config.selectedItems, item);
+          } else {
+            // add the item to the selected items
+            ctrl.config.selectedItems.push(item);
+            selectionChanged = true;
+          }
         } else {
-          if (scope.config.selectedItems.length) {
-            return _.find(scope.config.selectedItems, function (itemObj) {
-              return itemObj[matchProp] === item[matchProp];
-            });
+          if (ctrl.config.selectedItems[0] === item) {
+            if (!ctrl.config.dblClick) {
+              ctrl.config.selectedItems = [];
+              selectionChanged = true;
+            }
+            continueEvent = false;
+          } else {
+            ctrl.config.selectedItems = [item];
+            selectionChanged = true;
           }
         }
-        return selected;
-      };
 
-      scope.checkDisabled = function (item) {
-        return scope.config.checkDisabled && scope.config.checkDisabled(item);
-      };
-    }
-  };
+        if (selectionChanged && ctrl.config.onSelect) {
+          ctrl.config.onSelect(item, e);
+        }
+        if (selectionChanged && ctrl.config.onSelectionChange) {
+          ctrl.config.onSelectionChange(ctrl.config.selectedItems, e);
+        }
+      }
+      if (ctrl.config.onClick) {
+        ctrl.config.onClick(item, e);
+      }
+
+      return continueEvent;
+    };
+
+    ctrl.dblClick = function (e, item) {
+      if (ctrl.config.onDblClick) {
+        ctrl.config.onDblClick(item, e);
+      }
+    };
+
+    ctrl.checkBoxChange = function (item) {
+      if (ctrl.config.onCheckBoxChange) {
+        ctrl.config.onCheckBoxChange(item);
+      }
+    };
+
+    ctrl.isSelected = function (item) {
+      var matchProp = ctrl.config.selectionMatchProp;
+      var selected = false;
+
+      if (ctrl.config.showSelectBox) {
+        selected = item.selected;
+      } else {
+        if (ctrl.config.selectedItems.length) {
+          return _.find(ctrl.config.selectedItems, function (itemObj) {
+            return itemObj[matchProp] === item[matchProp];
+          });
+        }
+      }
+      return selected;
+    };
+
+    ctrl.checkDisabled = function (item) {
+      return ctrl.config.checkDisabled && ctrl.config.checkDisabled(item);
+    };
+
+    ctrl.$onInit = function () {
+      ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      if (ctrl.config.selectItems && ctrl.config.showSelectBox) {
+        throw new Error('pfCardView - ' +
+          'Illegal use of pfCardView component! ' +
+          'Cannot allow both select box and click selection in the same card view.');
+      }
+    };
+  }
 });
