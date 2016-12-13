@@ -1,4 +1,4 @@
-describe('Directive:  pfCardView', function () {
+describe('Component:  pfCardView', function () {
   var $scope;
   var $compile;
   var element;
@@ -29,14 +29,15 @@ describe('Directive:  pfCardView', function () {
       {uuid: '5', name: 'Five', size: 6781425410, capacity: 7600000000}
     ];
     $scope.cardConfig = {
-      selectedItems: []
+      selectedItems: [],
+      showSelectBox: true
     };
 
-    var htmlTmp = '<div pf-card-view items="systemModel" config="cardConfig">' +
+    var htmlTmp = '<pf-card-view items="systemModel" config="cardConfig">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
       '<div class="nameLabel1">{{item.size}}</div>' +
       '<div class="nameLabel1">{{item.capacity}}</div>' +
-      '</div>';
+      '</pf-card-view>';
 
     compileHTML(htmlTmp, $scope);
   });
@@ -206,9 +207,9 @@ describe('Directive:  pfCardView', function () {
       showSelectBox: true
     };
 
-    var htmlTmp = '<div pf-card-view items="systemModel" config="badConfig">' +
+    var htmlTmp = '<pf-card-view items="systemModel" config="badConfig">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
-      '</div>';
+      '</pf-card-view>';
 
 
     try {

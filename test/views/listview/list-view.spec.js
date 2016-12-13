@@ -1,4 +1,4 @@
-describe('Directive:  pfDataList', function () {
+describe('Component:  pfDataList', function () {
   var $scope;
   var $compile;
   var element;
@@ -114,7 +114,7 @@ describe('Directive:  pfDataList', function () {
       }
     ];
 
-    var htmlTmp = '<div pf-list-view items="systemModel" ' +
+    var htmlTmp = '<pf-list-view items="systemModel" ' +
       '  config="listConfig" ' +
       '  action-buttons="actionButtons" ' +
       '  enable-button-for-item-fn="enableButtonForItemFn" ' +
@@ -123,7 +123,7 @@ describe('Directive:  pfDataList', function () {
       '  hide-menu-for-item-fn="hideMenuForItemFn" ' +
       '  update-menu-action-for-item-fn="updateActionForItemFn">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
-      '</div>';
+      '</pf-list-view>';
 
     compileHTML(htmlTmp, $scope);
   });
@@ -293,9 +293,9 @@ describe('Directive:  pfDataList', function () {
       showSelectBox: true
     };
 
-    var htmlTmp = '<div pf-list-view items="systemModel" config="badConfig">' +
+    var htmlTmp = '<pf-list-view items="systemModel" config="badConfig">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
-      '</div>';
+      '</pf-list-view>';
 
 
     try {
@@ -441,9 +441,9 @@ describe('Directive:  pfDataList', function () {
 
     expect(menuButtons.length).toBe(5);
 
-    var htmlTmp = '<div pf-list-view items="systemModel" config="listConfig">' +
+    var htmlTmp = '<pf-list-view items="systemModel" config="listConfig">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
-      '</div>';
+      '</pf-list-view>';
 
     compileHTML(htmlTmp, $scope);
 
@@ -458,12 +458,12 @@ describe('Directive:  pfDataList', function () {
     expect(actionArea.length).toBe(5);
 
     // Just menu actions
-    var htmlTmp = '<div pf-list-view items="systemModel" ' +
+    var htmlTmp = '<pf-list-view items="systemModel" ' +
       '  config="listConfig" ' +
       '  menu-actions="menuActions" ' +
       '  update-menu-action-for-item-fn="updateActionForItemFn">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
-      '</div>';
+      '</pf-list-view>';
 
     compileHTML(htmlTmp, $scope);
 
@@ -472,12 +472,12 @@ describe('Directive:  pfDataList', function () {
     expect(actionArea.length).toBe(5);
 
     // Just button actions
-    htmlTmp = '<div pf-list-view items="systemModel" ' +
+    htmlTmp = '<pf-list-view items="systemModel" ' +
       '  config="listConfig" ' +
       '  action-buttons="actionButtons" ' +
-      '  enable-button-for-item-fn="enableButtonForItemFn" ' +
+      '  enable-button-for-item-fn="enableButtonForItemFn">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
-      '</div>';
+      '</pf-list-view>';
 
     compileHTML(htmlTmp, $scope);
 
@@ -486,10 +486,10 @@ describe('Directive:  pfDataList', function () {
     expect(actionArea.length).toBe(5);
 
     // Neither button nor menu actions
-    htmlTmp = '<div pf-list-view items="systemModel" ' +
-      '  config="listConfig" ' +
+    htmlTmp = '<pf-list-view items="systemModel" ' +
+      '  config="listConfig">' +
       '<div class="nameLabel1">{{item.name}}</div>' +
-      '</div>';
+      '</pf-list-view >';
 
     compileHTML(htmlTmp, $scope);
 
@@ -517,7 +517,6 @@ describe('Directive:  pfDataList', function () {
   it('should allow expanding rows', function () {
     var items;
     $scope.listConfig.useExpandingRows = true;
-
     $scope.$digest();
 
     items = element.find('.list-view-pf-expand .fa-angle-right');
@@ -532,9 +531,9 @@ describe('Directive:  pfDataList', function () {
   it('should allow expanding rows to disable individual expansion', function () {
     $scope.systemModel[0].disableRowExpansion = true;
     $scope.listConfig.useExpandingRows = true;
-    var htmlTmp = '<div pf-list-view items="systemModel" ' +
+    var htmlTmp = '<pf-list-view items="systemModel" ' +
       '  config="listConfig">' +
-      '</div>';
+      '</pf-list-view>';
 
     compileHTML(htmlTmp, $scope);
 
