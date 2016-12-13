@@ -9,12 +9,12 @@
   * The basic structure should be:
   * <pre>
   * <div pf-wizard>
-  *   <div pf-wizardstep>
-  *     <div pf-wizardsubstep><!-- content here --></div>
-  *     <div pf-wizardsubstep><!-- content here --></div>
+  *   <div pf-wizard-step>
+  *     <pf-wizard-substep><!-- content here --></pf-wizard-substep>
+  *     <pf-wizard-substep><!-- content here --></pf-wizard-substep>
   *   </div>
-  *   <div pf-wizardstep><!-- additional configuration can be added here with substeps if desired --></div>
-  *   <div pf-wizardstep><!-- review steps and final command here --></div>
+  *   <div pf-wizard-step><!-- additional configuration can be added here with substeps if desired --></div>
+  *   <div pf-wizard-step><!-- review steps and final command here --></div>
   * </div>
   * </pre>
   *
@@ -56,7 +56,7 @@
       <div pf-wizard-step step-title="First Step" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
         <div ng-include="'detail-page.html'">
         </div>
-        <div pf-wizard-substep step-title="Details - Extra" next-enabled="true" step-id="details-extra" step-priority="1" show-review="true" show-review-details="true" review-template="review-second-template.html">
+        <pf-wizard-substep step-title="Details - Extra" next-enabled="true" step-id="details-extra" step-priority="1" show-review="true" show-review-details="true" review-template="review-second-template.html">
           <form class="form-horizontal">
             <div pf-form-group pf-label="Lorem" required>
               <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text" required/>
@@ -65,7 +65,7 @@
               <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
             </div>
           </form>
-        </div>
+        </pf-wizard-substep>
       </div>
       <div pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
         <form class="form-horizontal">
@@ -86,7 +86,7 @@
   </file>
   <file name="detail-page.html">
     <div ng-controller="DetailsGeneralController">
-       <div pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
+       <pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
          <form class="form-horizontal">
            <div pf-form-group pf-label="Name" required>
             <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
@@ -95,7 +95,7 @@
             <input id="new-description" name="description" ng-model="data.description" type="text" />
            </div>
          </form>
-      </div>
+      </pf-wizard-substep>
     </div>
   </file>
   <file name="review-template.html">
@@ -128,14 +128,14 @@
   </file>
   <file name="summary.html">
   <div ng-controller="SummaryController">
-    <div pf-wizard-substep step-title="Summary" step-id="review-summary" step-priority="0" next-enabled="true" prev-enabled="true" ok-to-nav-away="true" wz-disabled="false" on-show="onShow">
+    <pf-wizard-substep step-title="Summary" step-id="review-summary" step-priority="0" next-enabled="true" prev-enabled="true" ok-to-nav-away="true" wz-disabled="false" on-show="onShow">
       <div pf-wizard-review-page shown="pageShown" wizard-data="data"></div>
-    </div>
+    </pf-wizard-substep>
   </div>
   </file>
   <file name="deployment.html">
   <div ng-controller="DeploymentController">
-    <div pf-wizard-substep step-title="Deploy" step-id="review-progress" step-priority="1" next-enabled="true" prev-enabled="false" ok-to-nav-away="true" wz-disabled="false" on-show="onShow">
+    <pf-wizard-substep step-title="Deploy" step-id="review-progress" step-priority="1" next-enabled="true" prev-enabled="false" ok-to-nav-away="true" wz-disabled="false" on-show="onShow">
       <div class="wizard-pf-contents" ng-controller="DeploymentController">
         <div class="wizard-pf-process blank-slate-pf" ng-if="!deploymentComplete">
           <div class="spinner spinner-lg blank-slate-pf-icon"></div>
@@ -149,7 +149,7 @@
           <button type="button" class="btn btn-lg btn-primary">View Deployment</button>
         </div>
      </div>
-   </div>
+   </pf-wizard-substep>
   </div>
   </file>
   <file name="script.js">
