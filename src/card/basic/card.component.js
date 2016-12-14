@@ -1,8 +1,8 @@
 /**
  * @ngdoc directive
- * @name patternfly.card.directive:pfCard - Utilization
- * @restrict A
- * @element ANY
+ * @name patternfly.card.component:pfCard - Utilization
+ * @restrict E
+ *
  * @param {string} headTitle Title for the card
  * @param {string=} subTitle Sub-Title for the card
  * @param {boolean=} showTopBorder Show/Hide the blue top border. True shows top border, false (default) hides top border
@@ -27,7 +27,7 @@
  * <li>.callBackFn - user defined function to call when a filter is selected
  * </ul>
  * @description
- * Directive for easily displaying a card with html content
+ * Component for easily displaying a card with html content
  *
  * @example
  <example module="demo">
@@ -35,12 +35,12 @@
  <file name="index.html">
    <div ng-controller="ChartCtrl">
      <label class="label-title">Card With Multiple Utilization Bars</label>
-     <div pf-card head-title="System Resources" show-top-border="true" style="width: 65%">
+     <pf-card head-title="System Resources" show-top-border="true" style="width: 65%">
        <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
        <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></div>
        <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
        <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
-     </div>
+     </pf-card>
    </div>
  </file>
  <file name="script.js">
@@ -83,55 +83,53 @@
  </file>
  </example>
  */
-angular.module('patternfly.card').directive('pfCard', function () {
-  'use strict';
-
-  return {
-    restrict: 'A',
-    transclude: true,
-    templateUrl: 'card/basic/card.html',
-    scope: {
-      headTitle: '@',
-      subTitle: '@?',
-      showTopBorder: '@?',
-      showTitlesSeparator: '@?',
-      footer: '=?',
-      filter: '=?'
-    },
-    controller: function ($scope) {
-      if ($scope.filter && !$scope.currentFilter) {
-        if ($scope.filter.defaultFilter) {
-          $scope.currentFilter = $scope.filter.filters[$scope.filter.defaultFilter];
-        } else {
-          $scope.currentFilter = $scope.filter.filters[0];
-        }
+angular.module('patternfly.card').component('pfCard', {
+  transclude: true,
+  templateUrl: 'card/basic/card.html',
+  bindings: {
+    headTitle: '@',
+    subTitle: '@?',
+    showTopBorder: '@?',
+    showTitlesSeparator: '@?',
+    footer: '=?',
+    filter: '=?'
+  },
+  controller: function () {
+    'use strict';
+    var ctrl = this;
+    if (ctrl.filter && !ctrl.currentFilter) {
+      if (ctrl.filter.defaultFilter) {
+        ctrl.currentFilter = ctrl.filter.filters[ctrl.filter.defaultFilter];
+      } else {
+        ctrl.currentFilter = ctrl.filter.filters[0];
       }
-
-      $scope.footerCallBackFn = function () {
-        $scope.footerCallBackResult = $scope.footer.callBackFn();
-      };
-
-      $scope.filterCallBackFn = function (f) {
-        $scope.currentFilter = f;
-        if ($scope.filter.callBackFn) {
-          $scope.filterCallBackResult = $scope.filter.callBackFn(f);
-        }
-      };
-
-      $scope.showHeader = function () {
-        return ($scope.headTitle || $scope.showFilterInHeader());
-      };
-
-      $scope.showFilterInHeader = function () {
-        return ($scope.filter && $scope.filter.filters && $scope.filter.position && $scope.filter.position === 'header');
-      };
-
-      $scope.showFilterInFooter = function () {
-        return ($scope.filter && $scope.filter.filters && (!$scope.filter.position || $scope.filter.position === 'footer'));
-      };
-    },
-    link: function (scope) {
-      scope.shouldShowTitlesSeparator = (!scope.showTitlesSeparator || scope.showTitlesSeparator === 'true');
     }
-  };
+
+    ctrl.footerCallBackFn = function () {
+      ctrl.footerCallBackResult = ctrl.footer.callBackFn();
+    };
+
+    ctrl.filterCallBackFn = function (f) {
+      ctrl.currentFilter = f;
+      if (ctrl.filter.callBackFn) {
+        ctrl.filterCallBackResult = ctrl.filter.callBackFn(f);
+      }
+    };
+
+    ctrl.showHeader = function () {
+      return (ctrl.headTitle || ctrl.showFilterInHeader());
+    };
+
+    ctrl.showFilterInHeader = function () {
+      return (ctrl.filter && ctrl.filter.filters && ctrl.filter.position && ctrl.filter.position === 'header');
+    };
+
+    ctrl.showFilterInFooter = function () {
+      return (ctrl.filter && ctrl.filter.filters && (!ctrl.filter.position || ctrl.filter.position === 'footer'));
+    };
+
+    ctrl.$onInit = function () {
+      ctrl.shouldShowTitlesSeparator = (!ctrl.showTitlesSeparator || ctrl.showTitlesSeparator === 'true');
+    };
+  }
 });
