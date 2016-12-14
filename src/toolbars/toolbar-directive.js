@@ -83,7 +83,7 @@
         <label class="events-label">Valid Items: </label>
       </div>
       <div class="col-md-12 list-view-container" ng-if="viewType == 'listView'">
-        <div pf-list-view config="listConfig" items="items">
+        <pf-list-view config="listConfig" items="items">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
               {{item.name}}
@@ -100,10 +100,10 @@
               {{item.birthMonth}}
             </div>
           </div>
-        </div>
+        </pf-list-view>
       </div>
       <div class="col-md-12 card-view-container" ng-if="viewType == 'cardView'">
-        <div pf-card-view config="vm.listConfig" items="items">
+        <pf-card-view config="vm.listConfig" items="items">
           <div class="col-md-12">
             <span>{{item.name}}</span>
           </div>
@@ -113,7 +113,7 @@
           <div class="col-md-12">
             <span>{{item.birthMonth}}</span>
           </div>
-        </div>
+        </pf-card-view>
       </div>
       <div class="col-md-12">
         <label class="events-label">Current Filters: </label>
