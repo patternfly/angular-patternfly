@@ -542,7 +542,7 @@ angular.module('patternfly.views').component('pfListView', {
           }
         } else {
           if (ctrl.config.selectedItems[0] === item) {
-            if (!scope.config.dblClick) {
+            if (!ctrl.config.dblClick) {
               ctrl.config.selectedItems = [];
               selectionChanged = true;
             }
