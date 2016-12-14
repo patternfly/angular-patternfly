@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.navigation.directive:pfVerticalNavigation - Basic
+ * @name patternfly.navigation.component:pfVerticalNavigation - Basic
+ * @restrict E
  *
  * @description
- *   Directive for vertical navigation. This sets up the nav bar header with the collapse button (hamburger) and the
+ *   Component for vertical navigation. This sets up the nav bar header with the collapse button (hamburger) and the
  *   application brand image (or text) as well as the vertical navigation bar containing the navigation items. This
  *   directive supports primary, secondary, and tertiary navigation with options to allow pinning of the secondary and
  *   tertiary navigation menus as well as the option for persistent secondary menus.
@@ -49,7 +50,7 @@
     <label class="example-info-text">Exit the demo to return back to this page.</label>
   </div>
   <div id="verticalNavLayout" class="layout-pf layout-pf-fixed faux-layout hidden" ng-controller="vertNavController">
-    <div pf-vertical-navigation items="navigationItems" brand-alt="ANGULAR PATTERNFLY"
+    <pf-vertical-navigation items="navigationItems" brand-alt="ANGULAR PATTERNFLY"
          show-badges="true" pinnable-menus="true" update-active-items-on-click="true"
          navigate-callback="handleNavigateClick">
       <div>
@@ -81,7 +82,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </pf-vertical-navigation>
     <div id="contentContainer" class="container-fluid container-cards-pf container-pf-nav-pf-vertical example-page-container">
       <div id="includedContent" ng-include="'add_content.html'"></div>
     </div>
