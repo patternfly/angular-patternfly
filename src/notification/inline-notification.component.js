@@ -8,6 +8,7 @@
  * @param {expression=} pfNotificationMessage The main text message of the notification.
  * @param {expression=} pfNotificationHeader The header text of the notification.
  * @param {expression=} pfNotificationPersistent The notification won't disappear after delay timeout, but has to be closed manually with the close button.
+ * @param {expression=} pfNotificationRemove The function to remove the notification (called by the close button when clicked).
  *
  * @description
  * The main visual element of the notification message.

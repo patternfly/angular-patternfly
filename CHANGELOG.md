@@ -10,3 +10,7 @@ Enhancements
 
 Bug Fixes
 - Update layout for sort, filter, and toolbar to match patternfly markup
+
+
+Breaking Changes
+- pfInlineNotification - pfNotificationRemove function added which ties the click event of the close button to a user specified function.  Previously, this used to be hardcoded to use the Notifications service, this is now optional.
