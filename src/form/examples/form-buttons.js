@@ -1,6 +1,7 @@
 /**
  * @ngdoc directive
- * @name patternfly.form.directive:pfFormButtons
+ * @name patternfly.form.component:pfFormButtons
+ * @restrict E
  *
  * @description
  *   Encapsulates the standard structure and styling for create and cancel buttons
@@ -20,18 +21,18 @@
      <div ng-controller="FormButtonCtrl">
        <p>Saved?</p>
        <p>{{ status }}</p>
-       <form>
+       <form name="testForm">
          <div class="form-group>
            <label class="control-label col-sm-2">Input</label>
-           <input class="form-control col-sm-5" name="item" ng-model="input" type="text">
+           <input class="form-control col-sm-5" name="item" ng-model="input" type="text" required>
          </div>
-         <div pf-form-buttons pf-on-cancel="cancel()" pf-on-save="save(item)" pf-working="working"></div>
+         <pf-form-buttons pf-on-cancel="cancel()" pf-on-save="save(item)" pf-working="working"></pf-form-buttons>
        </form>
      </div>
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.form' ).controller( 'FormButtonCtrl', function( $scope, $timeout ) {
+     angular.module( 'patternfly.form' ).controller( 'FormButtonCtrl', function( $scope, $timeout, $element ) {
        $scope.status = 'Not yet Saved'
        $scope.working = false;
 
@@ -52,37 +53,3 @@
    </file>
  </example>
  */
-angular.module('patternfly.form').directive('pfFormButtons', function () {
-  'use strict';
-
-  return {
-    replace: true,
-    require: '^form',
-    templateUrl: 'form/form-buttons/form-buttons.html',
-    scope: {
-      pfHandleCancel: '&pfOnCancel',
-      pfHandleSave: '&pfOnSave',
-      pfWorking: '=',
-      pfButtonContainerClass: '@'
-    },
-    link: function (scope, iElement, iAttrs, controller) {
-      if (scope.pfWorking === undefined) {
-        scope.pfWorking = false;
-      }
-
-      scope.isInvalid = function () {
-        var invalid = controller.$invalid;
-
-        angular.forEach(controller, function (value) {
-          if (value && value.$error) {
-            if (value.$error.server) {
-              invalid = false;
-            }
-          }
-        });
-
-        return invalid;
-      };
-    }
-  };
-});
