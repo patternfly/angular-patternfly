@@ -17,21 +17,31 @@
  <example module="patternfly.form">
 
    <file name="index.html">
-     <form class="form-horizontal" ng-controller="FormDemoCtrl">
-
+     <div ng-controller="FormDemoCtrl">
        <p>Name: {{ item.name }}</p>
        <p>Description: {{ item.description }}</p>
-       <pf-form-group pf-label="Name" required>
-         <input id="name" name="name"
-                ng-model="item.name" type="text" required/>
-       </pf-form-group>
-
-       <pf-form-group pf-input-class="col-sm-9" pf-label="Description">
-         <textarea id="description" name="description" ng-model="item.description">
-           {{ item.description }}
-         </textarea>
-       </pf-form-group>
-     </form>
+       <form>
+         <pf-form-group pf-label="Name" required>
+           <input id="name" name="name" ng-model="item.name" type="text" required/>
+         </pf-form-group>
+         <pf-form-group pf-label="Description">
+           <textarea id="description" name="description" ng-model="item.description">
+             {{ item.description }}
+           </textarea>
+         </pf-form-group>
+       </form>
+       <p>Horizontal Form</p>
+       <form class="form-horizontal">
+         <pf-form-group pf-label="Name" required pf-label-class="col-sm-2" pf-input-class="col-sm-5">
+           <input id="name" name="name" ng-model="item.name" type="text" required/>
+         </pf-form-group>
+         <pf-form-group pf-label="Description" pf-label-class="col-sm-2" pf-input-class="col-sm-5">
+           <textarea id="description" name="description" ng-model="item.description">
+             {{ item.description }}
+           </textarea>
+         </pf-form-group>
+       </form>
+     </div>
    </file>
 
    <file name="script.js">

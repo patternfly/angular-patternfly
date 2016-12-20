@@ -19,19 +19,8 @@ angular.module('patternfly.form').component('pfFormGroup', {
     var ctrl = this;
 
     ctrl.$postLink = function () {
-      var input;
-      var type;
-
-      if (!ctrl.pfLabelClass) {
-        ctrl.pfLabelClass = 'col-sm-2';
-      }
-
-      if (!ctrl.pfInputClass) {
-        ctrl.pfInputClass = 'col-sm-5';
-      }
-
-      input = getInput($element);
-      type = input.attr('type');
+      var input = getInput($element);
+      var type = input.attr('type');
 
       if (['checkbox', 'radio', 'time'].indexOf(type) === -1) {
         input.addClass('form-control');
