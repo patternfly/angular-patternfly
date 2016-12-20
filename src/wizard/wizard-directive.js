@@ -9,12 +9,12 @@
   * The basic structure should be:
   * <pre>
   * <div pf-wizard>
-  *   <div pf-wizard-step>
+  *   <pf-wizard-step>
   *     <pf-wizard-substep><!-- content here --></pf-wizard-substep>
   *     <pf-wizard-substep><!-- content here --></pf-wizard-substep>
-  *   </div>
-  *   <div pf-wizard-step><!-- additional configuration can be added here with substeps if desired --></div>
-  *   <div pf-wizard-step><!-- review steps and final command here --></div>
+  *   </pf-wizard-step>
+  *   <pf-wizard-step><!-- additional configuration can be added here with substeps if desired --></pf-wizard-step>
+  *   <pf-wizard-step><!-- review steps and final command here --></pf-wizard-step>
   * </div>
   * </pre>
   *
@@ -53,7 +53,7 @@
     wizard-done="deployComplete || deployInProgress"
     content-height="'600px'"
     loading-secondary-information="secondaryLoadInformation">
-      <div pf-wizard-step step-title="First Step" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
+      <pf-wizard-step step-title="First Step" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
         <div ng-include="'detail-page.html'">
         </div>
         <pf-wizard-substep step-title="Details - Extra" next-enabled="true" step-id="details-extra" step-priority="1" show-review="true" show-review-details="true" review-template="review-second-template.html">
@@ -66,8 +66,8 @@
             </div>
           </form>
         </pf-wizard-substep>
-      </div>
-      <div pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
+      </pf-wizard-step>
+      <pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
         <form class="form-horizontal">
           <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
           <div pf-form-group pf-label="Lorem">
@@ -77,11 +77,11 @@
             <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
           </div>
         </form>
-      </div>
-      <div pf-wizard-step step-title="Review" substeps="true" step-id="review" step-priority="2">
+      </pf-wizard-step>
+      <pf-wizard-step step-title="Review" substeps="true" step-id="review" step-priority="2">
         <div ng-include="'summary.html'"></div>
         <div ng-include="'deployment.html'"></div>
-      </div>
+      </pf-wizard-step>
    </div>
   </file>
   <file name="detail-page.html">
@@ -517,6 +517,10 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
         if (step.allowClickNav) {
           $scope.goTo(step, true);
         }
+      };
+
+      this.setPageSelected = function (step) {
+        $scope.$emit('wizard:stepChanged', {step: step, index: stepIdx( step )});
       };
 
       this.addStep = function (step) {

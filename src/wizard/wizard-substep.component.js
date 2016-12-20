@@ -25,10 +25,10 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     stepTitle: '@',
     stepId: '@',
     stepPriority: '@',
-    nextEnabled: '=?',
-    prevEnabled: '=?',
-    okToNavAway: '=?',
-    allowClickNav: '=?',
+    nextEnabled: '<?',
+    prevEnabled: '<?',
+    okToNavAway: '<?',
+    allowClickNav: '<?',
     disabled: '@?wzDisabled',
     description: '@',
     wizardData: '=',
@@ -77,6 +77,24 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     ctrl.$onInit = function () {
       ctrl.title = ctrl.stepTitle;
       ctrl.step.addStep(ctrl);
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.nextEnabled) {
+        ctrl.step.nextEnabled = changesObj.nextEnabled.currentValue;
+      }
+
+      if (changesObj.prevEnabled) {
+        ctrl.step.prevEnabled = changesObj.prevEnabled.currentValue;
+      }
+
+      if (changesObj.okToNavAway) {
+        ctrl.step.okToNavAway = changesObj.okToNavAway.currentValue;
+      }
+
+      if (changesObj.allowClickNav) {
+        ctrl.step.allowClickNav = changesObj.allowClickNav.currentValue;
+      }
     };
   }
 });
