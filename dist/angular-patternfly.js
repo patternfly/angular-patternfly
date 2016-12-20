@@ -4506,6 +4506,8 @@ angular.module('patternfly.modals')
  *   <li>.tooltip      - (string) Tooltip to display for the badge
  *   <li>.badgeClass:  - (string) Additional class(es) to add to the badge container
  *   </ul>
+ * <li>.uiSref         - (string) Optional Angular UI Router state name. If specified, href must be not defined, and vice versa.
+ * <li>.uiSrefOptions  - (object) Optional object to be passed to Angular UI Router $state.go() function
  * </ul>
  * @param {function} navigateCallback function(item) Callback method invoked on a navigation item click (one with no submenus)
  * @param {function} itemClickCallback function(item) Callback method invoked on an item click
@@ -4604,7 +4606,8 @@ angular.module('patternfly.modals')
             {
               title: "Dashboard",
               iconClass: "fa fa-dashboard",
-              uiSref: "dashboard"
+              uiSref: "dashboard",
+              uiSrefOptions: { someKey: 'SomeValue' }
             },
             {
               title: "Dolor",
