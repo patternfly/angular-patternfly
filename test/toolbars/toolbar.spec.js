@@ -132,7 +132,7 @@ describe('Directive:  pfToolbar', function () {
       }
     };
 
-    var htmlTmp = '<div pf-toolbar config="config"></div>';
+    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
 
     compileHTML(htmlTmp, $scope);
   });
@@ -258,7 +258,7 @@ describe('Directive:  pfToolbar', function () {
       }
     };
 
-    var htmlTmp = '<div pf-toolbar config="config"></div>';
+    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
 
     compileHTML(htmlTmp, $scope);
 
@@ -461,7 +461,7 @@ describe('Directive:  pfToolbar', function () {
       }
     };
 
-    var htmlTmp = '<div pf-toolbar config="config"></div>';
+    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
 
     compileHTML(htmlTmp, $scope);
 
@@ -553,7 +553,7 @@ describe('Directive:  pfToolbar', function () {
       }
     };
 
-    var htmlTmp = '<div pf-toolbar config="config"></div>';
+    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
 
     compileHTML(htmlTmp, $scope);
 
@@ -570,7 +570,7 @@ describe('Directive:  pfToolbar', function () {
 
     $scope.config.actionsConfig.actionsInclude = true;
 
-    var includeHtml = '<div pf-toolbar config="config"><actions><button class="btn btn-default add-action" type="button">Add Action</button></actions></div>';
+    var includeHtml = '<pf-toolbar config="config"><actions><button class="btn btn-default add-action" type="button">Add Action</button></actions></pf-toolbar>';
     compileHTML(includeHtml, $scope);
 
     actionBar = element.find('.toolbar-actions');

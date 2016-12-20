@@ -1,9 +1,9 @@
 /**
  * @ngdoc directive
- * @name patternfly.filters.directive:pfFilter
+ * @name patternfly.filters.component:pfFilter
  *
  * @description
- *   Directive for a filter bar
+ *   Component for a filter bar
  *   <br><br>
  *
  * @param {object} config configuration settings for the filters:<br/>
@@ -26,7 +26,7 @@
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-filter id="exampleFilter" config="filterConfig"></div>
+        <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -168,45 +168,4 @@
     ]);
   </file>
 </example>
- */
-angular.module('patternfly.filters').directive('pfFilter', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '='
-    },
-    templateUrl: 'filters/filter.html',
-    controller: function ($scope) {
-      $scope.filterExists = function (filter) {
-        var foundFilter = _.find($scope.config.appliedFilters, {title: filter.title, value: filter.value});
-        return foundFilter !== undefined;
-      };
-
-      $scope.enforceSingleSelect = function (filter) {
-        $scope.config.appliedFilters = _.filter($scope.config.appliedFilters, {title: filter.title});
-      };
-
-      $scope.addFilter = function (field, value) {
-        var newFilter = {
-          id: field.id,
-          title: field.title,
-          type: field.filterType,
-          value: value
-        };
-        if (!$scope.filterExists(newFilter)) {
-
-          if (newFilter.type === 'select') {
-            $scope.enforceSingleSelect(newFilter);
-          }
-
-          $scope.config.appliedFilters.push(newFilter);
-
-          if ($scope.config.onFilterChange) {
-            $scope.config.onFilterChange($scope.config.appliedFilters);
-          }
-        }
-      };
-    }
-  };
-});
+*/
