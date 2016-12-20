@@ -1,21 +1,22 @@
 /**
   * @ngdoc directive
-  * @name patternfly.wizard.directive:pfWizard
+  * @name patternfly.wizard.component:pfWizard
+  * @restrict E
   *
   * @description
-  * Directive for rendering a Wizard modal.  Each wizard dynamically creates the step navigation both in the header and the left-hand side based on nested steps.
-  * Use the pf-wizardstep to define individual steps within a wizard and pf-wizardsubstep to define portions of pf-wizardsteps if so desired.  For instance, Step one can have two substeps - 1A and 1B when it is logical to group those together.
+  * Component for rendering a Wizard modal.  Each wizard dynamically creates the step navigation both in the header and the left-hand side based on nested steps.
+  * Use pf-wizard-step to define individual steps within a wizard and pf-wizard-substep to define portions of pf-wizard-steps if so desired.  For instance, Step one can have two substeps - 1A and 1B when it is logical to group those together.
   * <br /><br />
   * The basic structure should be:
   * <pre>
-  * <div pf-wizard>
+  * <pf-wizard>
   *   <pf-wizard-step>
   *     <pf-wizard-substep><!-- content here --></pf-wizard-substep>
   *     <pf-wizard-substep><!-- content here --></pf-wizard-substep>
   *   </pf-wizard-step>
   *   <pf-wizard-step><!-- additional configuration can be added here with substeps if desired --></pf-wizard-step>
   *   <pf-wizard-step><!-- review steps and final command here --></pf-wizard-step>
-  * </div>
+  * </pf-wizard>
   * </pre>
   *
   * @param {string} title The wizard title displayed in the header
@@ -34,6 +35,7 @@
   * @param {string=} loadingSecondaryInformation Secondary descriptive information to display when the wizard is loading
   * @param {string=} contentHeight The height the wizard content should be set to.  This defaults to 300px if the property is not supplied.
   * @param {boolean=} embedInPage Value that indicates wizard is embedded in a page (not a modal).  This moves the navigation buttons to the left hand side of the footer and removes the close button.
+  * @param {function(step, index)=} onStepChanged Called when the wizard step is changed, passes in the step and the step index of the step changed to
   *
   * @example
   <example module="patternfly.wizard" deps="patternfly.form">
@@ -43,7 +45,7 @@
     </div>
   </file>
   <file name="wizard-container.html">
-  <div pf-wizard title="Wizard Title"
+  <pf-wizard title="Wizard Title"
     wizard-ready="deployProviderReady"
     on-finish="finishedWizard()"
     on-cancel="cancelDeploymentWizard()"
@@ -52,7 +54,8 @@
     back-callback="backCallback"
     wizard-done="deployComplete || deployInProgress"
     content-height="'600px'"
-    loading-secondary-information="secondaryLoadInformation">
+    loading-secondary-information="secondaryLoadInformation"
+    on-step-changed="stepChanged(step, index)">
       <pf-wizard-step step-title="First Step" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
         <div ng-include="'detail-page.html'">
         </div>
@@ -82,7 +85,7 @@
         <div ng-include="'summary.html'"></div>
         <div ng-include="'deployment.html'"></div>
       </pf-wizard-step>
-   </div>
+   </pf-wizard>
   </file>
   <file name="detail-page.html">
     <div ng-controller="DetailsGeneralController">
@@ -195,7 +198,7 @@
       };
 
       var startDeploy = function () {
-        $timeout(function() { }, 2000);
+        $timeout(function() { }, 10000);
         $scope.deployInProgress = true;
       };
 
@@ -212,15 +215,15 @@
         return true;
       };
 
-      $scope.$on("wizard:stepChanged", function (e, parameters) {
-        if (parameters.step.stepId === 'review-summary') {
+      $scope.stepChanged = function (step, index) {
+        if (step.stepId === 'review-summary') {
           $scope.nextButtonTitle = "Deploy";
-        } else if (parameters.step.stepId === 'review-progress') {
+        } else if (step.stepId === 'review-progress') {
           $scope.nextButtonTitle = "Close";
         } else {
           $scope.nextButtonTitle = "Next >";
         }
-      });
+      };
 
       $scope.cancelDeploymentWizard = function () {
         $rootScope.$emit('wizard.done', 'cancel');
@@ -297,393 +300,323 @@
 </example>
 */
 
-angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
-  'use strict';
-  return {
-    restrict: 'A',
-    transclude: true,
-    scope: {
-      title: '@',
-      hideIndicators: '=?',
-      currentStep: '=?',
-      cancelTitle: '=?',
-      backTitle: '=?',
-      nextTitle: '=?',
-      backCallback: '=?',
-      nextCallback: '=?',
-      onFinish: '&',
-      onCancel: '&',
-      wizardReady: '=?',
-      wizardDone: '=?',
-      loadingWizardTitle: '=?',
-      loadingSecondaryInformation: '=?',
-      contentHeight: '=?',
-      embedInPage: '=?'
-    },
-    templateUrl: 'wizard/wizard.html',
-    controller: function ($scope, $timeout) {
-      var firstRun = true;
+angular.module('patternfly.wizard').component('pfWizard', {
+  transclude: true,
+  bindings: {
+    title: '@',
+    hideIndicators: '=?',
+    currentStep: '<?',
+    cancelTitle: '=?',
+    backTitle: '=?',
+    nextTitle: '=?',
+    backCallback: '=?',
+    nextCallback: '=?',
+    onFinish: '&',
+    onCancel: '&',
+    wizardReady: '=?',
+    wizardDone: '=?',
+    loadingWizardTitle: '=?',
+    loadingSecondaryInformation: '=?',
+    contentHeight: '=?',
+    embedInPage: '=?',
+    onStepChanged: '&?'
+  },
+  templateUrl: 'wizard/wizard.html',
+  controller: function ($timeout) {
+    'use strict';
+    var ctrl = this,
+      firstRun = true;
 
-      var stepIdx = function (step) {
-        var idx = 0;
-        var res = -1;
-        angular.forEach($scope.getEnabledSteps(), function (currStep) {
-          if (currStep === step) {
-            res = idx;
+    var stepIdx = function (step) {
+      var idx = 0;
+      var res = -1;
+      angular.forEach(ctrl.getEnabledSteps(), function (currStep) {
+        if (currStep === step) {
+          res = idx;
+        }
+        idx++;
+      });
+      return res;
+    };
+
+    var unselectAll = function () {
+      //traverse steps array and set each "selected" property to false
+      angular.forEach(ctrl.getEnabledSteps(), function (step) {
+        step.selected = false;
+      });
+      //set selectedStep variable to null
+      ctrl.selectedStep = null;
+    };
+
+    var stepByTitle = function (titleToFind) {
+      var foundStep = null;
+      angular.forEach(ctrl.getEnabledSteps(), function (step) {
+        if (step.title === titleToFind) {
+          foundStep = step;
+        }
+      });
+      return foundStep;
+    };
+
+    ctrl.steps = [];
+    ctrl.context = {};
+
+    if (angular.isUndefined(ctrl.wizardReady)) {
+      ctrl.wizardReady = true;
+    }
+
+    if (angular.isUndefined(ctrl.contentHeight)) {
+      ctrl.contentHeight = '300px';
+    }
+    ctrl.contentStyle = {
+      'height': ctrl.contentHeight,
+      'max-height': ctrl.contentHeight,
+      'overflow-y': 'auto'
+    };
+
+    if (!ctrl.cancelTitle) {
+      ctrl.cancelTitle = "Cancel";
+    }
+    if (!ctrl.backTitle) {
+      ctrl.backTitle = "< Back";
+    }
+    if (!ctrl.nextTitle) {
+      ctrl.nextTitle = "Next >";
+    }
+
+    ctrl.getEnabledSteps = function () {
+      return ctrl.steps.filter(function (step) {
+        return step.disabled !== 'true';
+      });
+    };
+
+    this.getReviewSteps = function () {
+      return ctrl.steps.filter(function (step) {
+        return !step.disabled &&
+          (!angular.isUndefined(step.reviewTemplate) || step.getReviewSteps().length > 0);
+      });
+    };
+
+    ctrl.currentStepNumber = function () {
+      //retrieve current step number
+      return stepIdx(ctrl.selectedStep) + 1;
+    };
+
+    ctrl.getStepNumber = function (step) {
+      return stepIdx(step) + 1;
+    };
+
+    ctrl.goTo = function (step, resetStepNav) {
+      if (ctrl.wizardDone || (ctrl.selectedStep && !ctrl.selectedStep.okToNavAway) || step === ctrl.selectedStep) {
+        return;
+      }
+
+      if (firstRun || (ctrl.getStepNumber(step) < ctrl.currentStepNumber() && ctrl.selectedStep.isPrevEnabled()) || ctrl.selectedStep.isNextEnabled()) {
+        unselectAll();
+
+        if (!firstRun && resetStepNav && step.substeps) {
+          step.resetNav();
+        }
+
+        ctrl.selectedStep = step;
+        step.selected = true;
+
+        $timeout(function () {
+          if (angular.isFunction(step.onShow)) {
+            step.onShow();
           }
-          idx++;
-        });
-        return res;
-      };
+        }, 100);
 
-      var unselectAll = function () {
-        //traverse steps array and set each "selected" property to false
-        angular.forEach($scope.getEnabledSteps(), function (step) {
-          step.selected = false;
-        });
-        //set selectedStep variable to null
-        $scope.selectedStep = null;
-      };
+        // Make sure current step is not undefined
+        ctrl.currentStep = step.title;
 
-      var watchSelectedStep = function () {
-        // Remove any previous watchers
-        if ($scope.nextStepEnabledWatcher) {
-          $scope.nextStepEnabledWatcher();
+        //emit event upwards with data on goTo() invocation
+        if (!step.substeps) {
+          ctrl.setPageSelected(step);
         }
-        if ($scope.nextStepTooltipWatcher) {
-          $scope.nextStepTooltipWatcher();
-        }
-        if ($scope.prevStepEnabledWatcher) {
-          $scope.prevStepEnabledWatcher();
-        }
-        if ($scope.prevStepTooltipWatcher) {
-          $scope.prevStepTooltipWatcher();
-        }
+        firstRun = false;
+      }
 
-        // Add watchers for the selected step
-        $scope.nextStepEnabledWatcher = $scope.$watch('selectedStep.nextEnabled', function (value) {
-          $scope.nextEnabled = value;
-        });
-        $scope.nextStepTooltipWatcher = $scope.$watch('selectedStep.nextTooltip', function (value) {
-          $scope.nextTooltip = value;
-        });
-        $scope.prevStepEnabledWatcher = $scope.$watch('selectedStep.prevEnabled', function (value) {
-          $scope.prevEnabled = value;
-        });
-        $scope.prevStepTooltipWatcher = $scope.$watch('selectedStep.prevTooltip', function (value) {
-          $scope.prevTooltip = value;
-        });
-      };
+      if (!ctrl.selectedStep.substeps) {
+        ctrl.firstStep =  stepIdx(ctrl.selectedStep) === 0;
+      } else {
+        ctrl.firstStep = stepIdx(ctrl.selectedStep) === 0 && ctrl.selectedStep.currentStepNumber() === 1;
+      }
+    };
 
-      var stepByTitle = function (titleToFind) {
-        var foundStep = null;
-        angular.forEach($scope.getEnabledSteps(), function (step) {
-          if (step.title === titleToFind) {
-            foundStep = step;
+    ctrl.stepClick = function (step) {
+      if (step.allowClickNav) {
+        ctrl.goTo(step, true);
+      }
+    };
+
+    ctrl.setPageSelected = function (step) {
+      if (angular.isFunction(ctrl.onStepChanged)) {
+        ctrl.onStepChanged({step: step, index: stepIdx(step)});
+      }
+    };
+
+    this.addStep = function (step) {
+      // Insert the step into step array
+      var insertBefore = _.find(ctrl.steps, function (nextStep) {
+        return nextStep.stepPriority > step.stepPriority;
+      });
+      if (insertBefore) {
+        ctrl.steps.splice(ctrl.steps.indexOf(insertBefore), 0, step);
+      } else {
+        ctrl.steps.push(step);
+      }
+
+      if (ctrl.wizardReady && (ctrl.getEnabledSteps().length > 0) && (step === ctrl.getEnabledSteps()[0])) {
+        ctrl.goTo(ctrl.getEnabledSteps()[0]);
+      }
+    };
+
+    ctrl.isWizardDone = function () {
+      return ctrl.wizardDone;
+    };
+
+    ctrl.updateSubStepNumber = function (value) {
+      ctrl.firstStep =  stepIdx(ctrl.selectedStep) === 0 && value === 0;
+    };
+
+    this.currentStepTitle = function () {
+      return ctrl.selectedStep.title;
+    };
+
+    this.currentStepDescription = function () {
+      return ctrl.selectedStep.description;
+    };
+
+    ctrl.currentStep = function () {
+      return ctrl.selectedStep;
+    };
+
+    ctrl.totalStepCount = function () {
+      return ctrl.getEnabledSteps().length;
+    };
+
+    // Allow access to any step
+    this.goToStep = function (step, resetStepNav) {
+      var enabledSteps = ctrl.getEnabledSteps();
+      var stepTo;
+
+      if (angular.isNumber(step)) {
+        stepTo = enabledSteps[step];
+      } else {
+        stepTo = stepByTitle(step);
+      }
+
+      ctrl.goTo(stepTo, resetStepNav);
+    };
+
+    // Method used for next button within step
+    this.next = function (callback) {
+      var enabledSteps = ctrl.getEnabledSteps();
+
+      // Save the step  you were on when next() was invoked
+      var index = stepIdx(ctrl.selectedStep);
+
+      if (ctrl.selectedStep.substeps) {
+        if (ctrl.selectedStep.next(callback)) {
+          return;
+        }
+      }
+
+      // Check if callback is a function
+      if (angular.isFunction(callback)) {
+        if (callback(ctrl.selectedStep)) {
+          if (index === enabledSteps.length - 1) {
+            this.finish();
+          } else {
+            // Go to the next step
+            if (enabledSteps[index + 1].substeps) {
+              enabledSteps[index + 1].resetNav();
+            }
           }
-        });
-        return foundStep;
-      };
-
-      $scope.steps = [];
-      $scope.context = {};
-      this.context = $scope.context;
-
-      if (angular.isUndefined($scope.wizardReady)) {
-        $scope.wizardReady = true;
+        } else {
+          return;
+        }
       }
 
-      if (angular.isUndefined($scope.contentHeight)) {
-        $scope.contentHeight = '300px';
-      }
-      this.contentHeight = $scope.contentHeight;
-      $scope.contentStyle = {
-        'height': $scope.contentHeight,
-        'max-height': $scope.contentHeight,
-        'overflow-y': 'auto'
-      };
-      this.contentStyle = $scope.contentStyle;
+      // Completed property set on ctrl which is used to add class/remove class from progress bar
+      ctrl.selectedStep.completed = true;
 
-      $scope.nextEnabled = false;
-      $scope.prevEnabled = false;
+      // Check to see if this is the last step.  If it is next behaves the same as finish()
+      if (index === enabledSteps.length - 1) {
+        this.finish();
+      } else {
+        // Go to the next step
+        ctrl.goTo(enabledSteps[index + 1]);
+      }
+    };
 
-      if (!$scope.cancelTitle) {
-        $scope.cancelTitle = "Cancel";
-      }
-      if (!$scope.backTitle) {
-        $scope.backTitle = "< Back";
-      }
-      if (!$scope.nextTitle) {
-        $scope.nextTitle = "Next >";
+    this.previous = function (callback) {
+      var index = stepIdx(ctrl.selectedStep);
+
+      if (ctrl.selectedStep.substeps) {
+        if (ctrl.selectedStep.previous(callback)) {
+          return;
+        }
       }
 
-      $scope.getEnabledSteps = function () {
-        return $scope.steps.filter(function (step) {
-          return step.disabled !== 'true';
-        });
-      };
+      // Check if callback is a function
+      if (angular.isFunction(callback)) {
+        if (callback(ctrl.selectedStep)) {
+          if (index === 0) {
+            throw new Error("Can't go back. It's already in step 0");
+          } else {
+            ctrl.goTo(ctrl.getEnabledSteps()[index - 1]);
+          }
+        }
+      }
+    };
 
-      this.getReviewSteps = function () {
-        return $scope.steps.filter(function (step) {
-          return !step.disabled &&
-            (!angular.isUndefined(step.reviewTemplate) || step.getReviewSteps().length > 0);
-        });
-      };
+    this.finish = function () {
+      if (ctrl.onFinish) {
+        if (ctrl.onFinish() !== false) {
+          this.reset();
+        }
+      }
+    };
 
-      $scope.currentStepNumber = function () {
-        //retrieve current step number
-        return stepIdx($scope.selectedStep) + 1;
-      };
+    this.cancel = function () {
+      if (ctrl.onCancel) {
+        if (ctrl.onCancel() !== false) {
+          this.reset();
+        }
+      }
+    };
 
-      $scope.getStepNumber = function (step) {
-        return stepIdx(step) + 1;
-      };
+    //reset
+    this.reset = function () {
+      //traverse steps array and set each "completed" property to false
+      angular.forEach(ctrl.getEnabledSteps(), function (step) {
+        step.completed = false;
+      });
+      //go to first step
+      this.goToStep(0);
+    };
 
-      //watching changes to currentStep
-      $scope.$watch('currentStep', function (step) {
+    ctrl.$onChanges = function (changesObj) {
+      var step;
+
+      if (changesObj.wizardReady && changesObj.wizardReady.currentValue) {
+        ctrl.goTo(ctrl.getEnabledSteps()[0]);
+      }
+
+      if (changesObj.currentStep) {
         //checking to make sure currentStep is truthy value
+        step = changesObj.currentStep.currentValue;
         if (!step) {
           return;
         }
 
         //setting stepTitle equal to current step title or default title
-        if ($scope.selectedStep && $scope.selectedStep.title !== $scope.currentStep) {
-          $scope.goTo(stepByTitle($scope.currentStep));
+        if (ctrl.selectedStep && ctrl.selectedStep.title !== step) {
+          ctrl.goTo(stepByTitle(step));
         }
-      });
-
-      //watching steps array length and editMode value, if edit module is undefined or null the nothing is done
-      //if edit mode is truthy, then all steps are marked as completed
-      $scope.$watch('[editMode, steps.length]', function () {
-        var editMode = $scope.editMode;
-        if (angular.isUndefined(editMode) || (editMode === null)) {
-          return;
-        }
-
-        if (editMode) {
-          angular.forEach($scope.getEnabledSteps(), function (step) {
-            step.completed = true;
-          });
-        } else {
-          angular.forEach($scope.getEnabledSteps(), function (step, stepIndex) {
-            if (stepIndex >= ($scope.currentStepNumber() - 1)) {
-              step.completed = false;
-            }
-          });
-        }
-      }, true);
-
-      $scope.goTo = function (step, resetStepNav) {
-        if ($scope.wizardDone || ($scope.selectedStep && !$scope.selectedStep.okToNavAway) || step === $scope.selectedStep) {
-          return;
-        }
-
-        if (firstRun || ($scope.getStepNumber(step) < $scope.currentStepNumber() && $scope.selectedStep.isPrevEnabled()) || $scope.selectedStep.isNextEnabled()) {
-          unselectAll();
-
-          if (!firstRun && resetStepNav && step.substeps) {
-            step.resetNav();
-          }
-
-          $scope.selectedStep = step;
-          step.selected = true;
-
-          $timeout(function () {
-            if (angular.isFunction(step.onShow)) {
-              step.onShow();
-            }
-          }, 100);
-
-          watchSelectedStep();
-
-          // Make sure current step is not undefined
-          $scope.currentStep = step.title;
-
-          //emit event upwards with data on goTo() invocation
-          if (!step.substeps) {
-            $scope.$emit('wizard:stepChanged', {step: step, index: stepIdx(step)});
-          }
-          firstRun = false;
-        }
-
-        if (!$scope.selectedStep.substeps) {
-          $scope.firstStep =  stepIdx($scope.selectedStep) === 0;
-        } else {
-          $scope.firstStep = stepIdx($scope.selectedStep) === 0 && $scope.selectedStep.currentStepNumber() === 1;
-        }
-      };
-
-      $scope.stepClick = function (step) {
-        if (step.allowClickNav) {
-          $scope.goTo(step, true);
-        }
-      };
-
-      this.setPageSelected = function (step) {
-        $scope.$emit('wizard:stepChanged', {step: step, index: stepIdx( step )});
-      };
-
-      this.addStep = function (step) {
-        // Insert the step into step array
-        var insertBefore = _.find($scope.steps, function (nextStep) {
-          return nextStep.stepPriority > step.stepPriority;
-        });
-        if (insertBefore) {
-          $scope.steps.splice($scope.steps.indexOf(insertBefore), 0, step);
-        } else {
-          $scope.steps.push(step);
-        }
-
-        if ($scope.wizardReady && ($scope.getEnabledSteps().length > 0) && (step === $scope.getEnabledSteps()[0])) {
-          $scope.goTo($scope.getEnabledSteps()[0]);
-        }
-      };
-
-      this.isWizardDone = function () {
-        return $scope.wizardDone;
-      };
-
-      this.updateSubStepNumber = function (value) {
-        $scope.firstStep =  stepIdx($scope.selectedStep) === 0 && value === 0;
-      };
-
-      this.currentStepTitle = function () {
-        return $scope.selectedStep.title;
-      };
-
-      this.currentStepDescription = function () {
-        return $scope.selectedStep.description;
-      };
-
-      this.currentStep = function () {
-        return $scope.selectedStep;
-      };
-
-      this.totalStepCount = function () {
-        return $scope.getEnabledSteps().length;
-      };
-
-      this.getEnabledSteps = function () {
-        return $scope.getEnabledSteps();
-      };
-
-      //Access to current step number from outside
-      this.currentStepNumber = function () {
-        return $scope.currentStepNumber();
-      };
-
-      this.getStepNumber = function (step) {
-        return $scope.getStepNumber(step);
-      };
-
-      // Allow access to any step
-      this.goTo = function (step, resetStepNav) {
-        var enabledSteps = $scope.getEnabledSteps();
-        var stepTo;
-
-        if (angular.isNumber(step)) {
-          stepTo = enabledSteps[step];
-        } else {
-          stepTo = stepByTitle(step);
-        }
-
-        $scope.goTo(stepTo, resetStepNav);
-      };
-
-      // Method used for next button within step
-      this.next = function (callback) {
-        var enabledSteps = $scope.getEnabledSteps();
-
-        // Save the step  you were on when next() was invoked
-        var index = stepIdx($scope.selectedStep);
-
-        if ($scope.selectedStep.substeps) {
-          if ($scope.selectedStep.next(callback)) {
-            return;
-          }
-        }
-
-        // Check if callback is a function
-        if (angular.isFunction(callback)) {
-          if (callback($scope.selectedStep)) {
-            if (index === enabledSteps.length - 1) {
-              this.finish();
-            } else {
-              // Go to the next step
-              if (enabledSteps[index + 1].substeps) {
-                enabledSteps[index + 1].resetNav();
-              }
-            }
-          } else {
-            return;
-          }
-        }
-
-        // Completed property set on scope which is used to add class/remove class from progress bar
-        $scope.selectedStep.completed = true;
-
-        // Check to see if this is the last step.  If it is next behaves the same as finish()
-        if (index === enabledSteps.length - 1) {
-          this.finish();
-        } else {
-          // Go to the next step
-          $scope.goTo(enabledSteps[index + 1]);
-        }
-      };
-
-      this.previous = function (callback) {
-        var index = stepIdx($scope.selectedStep);
-
-        if ($scope.selectedStep.substeps) {
-          if ($scope.selectedStep.previous(callback)) {
-            return;
-          }
-        }
-
-        // Check if callback is a function
-        if (angular.isFunction(callback)) {
-          if (callback($scope.selectedStep)) {
-            if (index === 0) {
-              throw new Error("Can't go back. It's already in step 0");
-            } else {
-              $scope.goTo($scope.getEnabledSteps()[index - 1]);
-            }
-          }
-        }
-      };
-
-      this.finish = function () {
-        if ($scope.onFinish) {
-          if ($scope.onFinish() !== false) {
-            this.reset();
-          }
-        }
-      };
-
-      this.cancel = function () {
-        if ($scope.onCancel) {
-          if ($scope.onCancel() !== false) {
-            this.reset();
-          }
-        }
-      };
-
-      //reset
-      this.reset = function () {
-        //traverse steps array and set each "completed" property to false
-        angular.forEach($scope.getEnabledSteps(), function (step) {
-          step.completed = false;
-        });
-        //go to first step
-        this.goTo(0);
-      };
-    },
-    link: function ($scope) {
-      $scope.$watch('wizardReady', function () {
-        if ($scope.wizardReady) {
-          $scope.goTo($scope.getEnabledSteps()[0]);
-        }
-      });
-    }
-  };
+      }
+    };
+  }
 });

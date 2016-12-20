@@ -34,13 +34,13 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
     stepId: '@',
     stepPriority: '@',
     substeps: '=?',
-    nextEnabled: '=?',
-    prevEnabled: '=?',
-    nextTooltip: '=?',
-    prevTooltip: '=?',
+    nextEnabled: '<?',
+    prevEnabled: '<?',
+    nextTooltip: '<?',
+    prevTooltip: '<?',
     disabled: '@?wzDisabled',
-    okToNavAway: '=?',
-    allowClickNav: '=?',
+    okToNavAway: '<?',
+    allowClickNav: '<?',
     description: '@',
     wizardData: '=',
     onShow: '=?',
@@ -310,6 +310,16 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
       ctrl.contentStyle = ctrl.wizard.contentStyle;
       ctrl.wizard.addStep(ctrl);
       ctrl.pageNumber = ctrl.wizard.getStepNumber(ctrl);
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.nextTooltip) {
+        ctrl.wizard.nextTooltip = changesObj.nextTooltip.currentValue;
+      }
+
+      if (changesObj.prevTooltip) {
+        ctrl.wizard.prevTooltip = changesObj.prevTooltip.currentValue;
+      }
     };
   }
 });
