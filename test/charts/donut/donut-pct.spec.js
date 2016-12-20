@@ -29,18 +29,18 @@ describe('Directive: pfDonutPctChart', function() {
   var compileDonut = function (markup, scope) {
     var el = $compile(angular.element(markup))(scope);
     scope.$apply();
-    isoScope = el.isolateScope();
+    isoScope = el.controller('pfDonutPctChart');
     return el;
   };
 
   it("should trigger error threshold", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data"></pf-donut-pct-chart>', $scope);
 
     expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#cc0000');  //red
   });
 
   it("should trigger warning threshold", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data"></pf-donut-pct-chart>', $scope);
 
     $scope.data.used = 850;
     $scope.$digest();
@@ -48,7 +48,7 @@ describe('Directive: pfDonutPctChart', function() {
   });
 
   it("should trigger ok threshold", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data"></pf-donut-pct-chart>', $scope);
 
     $scope.data.used = 550;
     $scope.$digest();
@@ -60,19 +60,19 @@ describe('Directive: pfDonutPctChart', function() {
       'units': 'MHz'
     };
 
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data"></pf-donut-pct-chart>', $scope);
 
     expect(isoScope.statusDonutColor(isoScope).pattern[0]).toBe('#0088ce');  //blue
   });
 
   it("should show 'used' center label by default", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data"></pf-donut-pct-chart>', $scope);
 
     expect(isoScope.getCenterLabelText(isoScope).smText).toContain('Used');
   });
 
   it("should show 'available' center label", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></pf-donut-pct-chart>', $scope);
 
     $scope.cntrLabel = 'available';
     $scope.$digest();
@@ -80,7 +80,7 @@ describe('Directive: pfDonutPctChart', function() {
   });
 
   it("should show 'percent' center label", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></pf-donut-pct-chart>', $scope);
 
     $scope.cntrLabel = 'percent';
     $scope.$digest();
@@ -88,7 +88,7 @@ describe('Directive: pfDonutPctChart', function() {
   });
 
   it("should show no center label", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></pf-donut-pct-chart>', $scope);
 
     $scope.cntrLabel = 'none';
     $scope.$digest();
@@ -97,20 +97,24 @@ describe('Directive: pfDonutPctChart', function() {
   });
 
   it("should show 'used' center label", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></pf-donut-pct-chart>', $scope);
 
     $scope.cntrLabel = 'used';
     $scope.$digest();
     expect(isoScope.getCenterLabelText(isoScope).smText).toContain('Used');
   });
 
+
   it("should use center label funtion", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data"></pf-donut-pct-chart>', $scope);
 
     $scope.config.centerLabelFn = function () {
       return '<tspan dy="0" x="0" class="donut-title-big-pf">' + $scope.data.available + '</tspan>' +
         '<tspan dy="20" x="0" class="donut-title-small-pf">Free</tspan>';
     };
+
+    // hack to trigger component $onChanges
+    $scope.config = angular.copy($scope.config);
 
     $scope.$digest();
     expect(isoScope.getCenterLabelText(isoScope).bigText).toContain('50');
@@ -119,7 +123,7 @@ describe('Directive: pfDonutPctChart', function() {
   });
 
   it("should show empty chart when the dataAvailable is set to false", function() {
-    element = compileDonut('<div pf-donut-pct-chart config="config" data="data"></div>', $scope);
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data"></pf-donut-pct-chart>', $scope);
     var emptyChart = element.find('.empty-chart-content');
     expect(emptyChart.length).toBe(0);
 
