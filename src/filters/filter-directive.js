@@ -184,7 +184,7 @@ angular.module('patternfly.filters').directive('pfFilter', function () {
       };
 
       $scope.enforceSingleSelect = function (filter) {
-        _.remove($scope.config.appliedFilters, {title: filter.title});
+        $scope.config.appliedFilters = _.filter($scope.config.appliedFilters, {title: filter.title});
       };
 
       $scope.addFilter = function (field, value) {

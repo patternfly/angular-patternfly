@@ -10,11 +10,14 @@ env:
     - TRIGGER_REPO_BRANCH: "master"
 
 before_install:
-  - 'git checkout -B $TRAVIS_BRANCH' # Reconcile detached HEAD
-  - 'npm install -g bower grunt-cli'
+  - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
+  - npm install -g bower grunt-cli
+  - npm install patternfly-eng-release
+
+install: true
 
 script:
-  - sh -x ./scripts/build.sh
+  - sh -x ./node_modules/patternfly-eng-release/scripts/_build.sh -a
 
 after_success:
   - ./scripts/publish-ghpages.sh -t docs
