@@ -1,6 +1,9 @@
 angular.module('patternfly.filters').component('pfFilter', {
   bindings: {
-    config: '='
+    fields: '=',
+    appliedFilters: '<',
+    resultsCount: '@',
+    onFilterChange: '<'
   },
   templateUrl: 'filters/filter.html',
   controller: function () {
@@ -10,20 +13,29 @@ angular.module('patternfly.filters').component('pfFilter', {
 
     ctrl.$onInit = function () {
 
+      if (angular.isUndefined(ctrl.appliedFilters)) {
+        ctrl.appliedFilters = [];
+      }
+
+      if (angular.isUndefined(ctrl.resultsCount)) {
+        ctrl.resultsCount = 0;
+      }
+
       angular.extend(ctrl,
         {
-          addFilter: addFilter
+          addFilter: addFilter,
+          resultsFilterChange: resultsFilterChange
         }
       );
     };
 
     function filterExists (filter) {
-      var foundFilter = _.find(ctrl.config.appliedFilters, {title: filter.title, value: filter.value});
+      var foundFilter = _.find(ctrl.appliedFilters, {title: filter.title, value: filter.value});
       return foundFilter !== undefined;
     }
 
     function enforceSingleSelect (filter) {
-      _.remove(ctrl.config.appliedFilters, {title: filter.title});
+      _.remove(ctrl.appliedFilters, {title: filter.title});
     }
 
     function addFilter (field, value) {
@@ -39,11 +51,18 @@ angular.module('patternfly.filters').component('pfFilter', {
           enforceSingleSelect(newFilter);
         }
 
-        ctrl.config.appliedFilters.push(newFilter);
+        ctrl.appliedFilters.push(newFilter);
 
-        if (ctrl.config.onFilterChange) {
-          ctrl.config.onFilterChange(ctrl.config.appliedFilters);
+        if (angular.isFunction(ctrl.onFilterChange)) {
+          ctrl.onFilterChange(ctrl.appliedFilters);
         }
+      }
+    }
+
+    function resultsFilterChange (filters) {
+      ctrl.appliedFilters = filters;
+      if (angular.isFunction(ctrl.onFilterChange)) {
+        ctrl.onFilterChange(ctrl.appliedFilters);
       }
     }
   }

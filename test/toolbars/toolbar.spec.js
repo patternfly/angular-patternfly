@@ -4,6 +4,10 @@ describe('Directive:  pfToolbar', function () {
   var element;
   var $pfViewUtils;
   var performedAction;
+  var htmlTmp;
+  var sortChangeNotify = false;
+  var sortChosenField;
+  var sortChosenDir;
 
   // load the controller's module
   beforeEach(function () {
@@ -32,107 +36,139 @@ describe('Directive:  pfToolbar', function () {
       performedAction = action;
     };
 
-    $scope.config = {
-      viewsConfig: {
-        views: [$pfViewUtils.getDashboardView(), $pfViewUtils.getListView(), $pfViewUtils.getCardView(), $pfViewUtils.getTableView(), $pfViewUtils.getTopologyView()]
+    $scope.contentViews = [$pfViewUtils.getDashboardView(), $pfViewUtils.getListView(), $pfViewUtils.getCardView(), $pfViewUtils.getTableView(), $pfViewUtils.getTopologyView()];
+    $scope.sortFields = [
+      {
+        id: 'name',
+        title:  'Name',
+        sortType: 'alpha'
       },
-      sortConfig: {
-        fields: [
-          {
-            id: 'name',
-            title:  'Name',
-            sortType: 'alpha'
-          },
-          {
-            id: 'age',
-            title:  'Age',
-            sortType: 'numeric'
-          },
-          {
-            id: 'address',
-            title:  'Address',
-            sortType: 'alpha'
-          }
-        ]
+      {
+        id: 'age',
+        title:  'Age',
+        sortType: 'numeric'
       },
-      filterConfig: {
-        fields: [
-          {
-            id: 'name',
-            title:  'Name',
-            placeholder: 'Filter by Name',
-            filterType: 'text'
-          },
-          {
-            id: 'address',
-            title:  'Address',
-            placeholder: 'Filter by Address',
-            filterType: 'text'
-          },
-          {
-            id: 'birthMonth',
-            title:  'Birth Month',
-            placeholder: 'Filter by Birth Month',
-            filterType: 'select',
-            filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-          }
-        ],
-        resultsCount: 5,
-        appliedFilters: []
-      },
-      actionsConfig: {
-        primaryActions: [
-          {
-            name: 'Action 1',
-            title: 'Do the first thing',
-            actionFn: performAction
-          },
-          {
-            name: 'Action 2',
-            title: 'Do something else',
-            actionFn: performAction
-          }
-        ],
-        moreActions: [
-          {
-            name: 'Action',
-            title: 'Perform an action',
-            actionFn: performAction
-          },
-          {
-            name: 'Another Action',
-            title: 'Do something else',
-            actionFn: performAction
-          },
-          {
-            name: 'Disabled Action',
-            title: 'Unavailable action',
-            actionFn: performAction,
-            isDisabled: true
-          },
-          {
-            name: 'Something Else',
-            title: '',
-            actionFn: performAction
-          },
-          {
-            isSeparator: true
-          },
-          {
-            name: 'Grouped Action 1',
-            title: 'Do something',
-            actionFn: performAction
-          },
-          {
-            name: 'Grouped Action 2',
-            title: 'Do something similar',
-            actionFn: performAction
-          }
-        ]
+      {
+        id: 'address',
+        title:  'Address',
+        sortType: 'alpha'
       }
+    ];
+    $scope.filterFields = [
+      {
+        id: 'name',
+        title:  'Name',
+        placeholder: 'Filter by Name',
+        filterType: 'text'
+      },
+      {
+        id: 'address',
+        title:  'Address',
+        placeholder: 'Filter by Address',
+        filterType: 'text'
+      },
+      {
+        id: 'birthMonth',
+        title:  'Birth Month',
+        placeholder: 'Filter by Birth Month',
+        filterType: 'select',
+        filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      }
+    ];
+    $scope.resultsCount = 5;
+    $scope.appliedFilters = [];
+    $scope.primaryActions = [
+      {
+        name: 'Action 1',
+        title: 'Do the first thing',
+        actionFn: performAction
+      },
+      {
+        name: 'Action 2',
+        title: 'Do something else',
+        actionFn: performAction
+      }
+    ];
+    $scope.moreActions = [
+      {
+        name: 'Action',
+        title: 'Perform an action',
+        actionFn: performAction
+      },
+      {
+        name: 'Another Action',
+        title: 'Do something else',
+        actionFn: performAction
+      },
+      {
+        name: 'Disabled Action',
+        title: 'Unavailable action',
+        actionFn: performAction,
+        isDisabled: true
+      },
+      {
+        name: 'Something Else',
+        title: '',
+        actionFn: performAction
+      },
+      {
+        isSeparator: true
+      },
+      {
+        name: 'Grouped Action 1',
+        title: 'Do something',
+        actionFn: performAction
+      },
+      {
+        name: 'Grouped Action 2',
+        title: 'Do something similar',
+        actionFn: performAction
+      }
+    ];
+
+    $scope.onSortChange = function (sortField, isAscending) {
+      sortChangeNotify = true;
+      sortChosenField = sortField;
+      sortChosenDir = isAscending;
     };
 
-    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
+
+    $scope.currentView = $scope.contentViews[0].id;
+    $scope.onViewSelect = function(viewId) {
+      $scope.currentView = viewId;
+    };
+/*
+    <pf-toolbar id="exampleToolbar"
+    filter-fields="filterFields"
+    applied-filters="appliedFilters"
+    results-count="{{resultsCount}}"
+    on-filter-change="onFilterChange"
+    sort-fields="sortFields"
+    current-sort-field="currentSortId"
+    is-sort-ascending="sortAscending"
+    on-sort-change="onSortChange"
+    views="views"
+    current-view="currentView"
+    on-view-select="onViewSelect"
+    primary-actions="primaryActions"
+    more-actions="moreActions"
+    actions-include="actionsInclude">
+
+*/
+
+    htmlTmp = '' +
+      '<pf-toolbar filter-fields="filterFields"' +
+      '            applied-filters="appliedFilters"' +
+      '            results-count="{{resultsCount}}"' +
+      '            sort-fields="sortFields"' +
+      '            on-sort-change="onSortChange"' +
+      '            views="contentViews"' +
+      '            current-view="currentView"' +
+      '            on-view-select="onViewSelect"' +
+      '            primary-actions="primaryActions"' +
+      '            more-actions="moreActions"' +
+      '            actions-include="actionsInclude"' +
+      '</pf-toolbar>';
 
     compileHTML(htmlTmp, $scope);
   });
@@ -147,7 +183,7 @@ describe('Directive:  pfToolbar', function () {
     expect(results.length).toBe(1);
     expect(results.html()).toBe("5 Results");
 
-    $scope.config.filterConfig.resultsCount = 10;
+    $scope.resultsCount = 10;
 
     $scope.$digest();
 
@@ -161,7 +197,7 @@ describe('Directive:  pfToolbar', function () {
     expect(activeFilters.length).toBe(0);
     expect(element.find('.clear-filters').length).toBe(0);
 
-    $scope.config.filterConfig.appliedFilters = [
+    $scope.appliedFilters = [
       {
         id: 'address',
         title: 'Address',
@@ -189,7 +225,7 @@ describe('Directive:  pfToolbar', function () {
     expect(filterSelect.length).toBe(1);
 
     var items = filterSelect.find('li');
-    expect(items.length).toBe($scope.config.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
+    expect(items.length).toBe($scope.filterFields[2].filterValues.length + 1); // +1 for the null value
   });
 
   it ('should clear a filter when the close button is clicked', function () {
@@ -198,7 +234,7 @@ describe('Directive:  pfToolbar', function () {
     closeButtons = element.find('.pficon-close');
     expect(closeButtons.length).toBe(0);
 
-    $scope.config.filterConfig.appliedFilters = [
+    $scope.appliedFilters = [
       {
         id: 'address',
         title: 'Address',
@@ -223,7 +259,7 @@ describe('Directive:  pfToolbar', function () {
     expect(activeFilters.length).toBe(0);
     expect(clearButtons.length).toBe(0);
 
-    $scope.config.filterConfig.appliedFilters = [
+    $scope.appliedFilters = [
       {
         id: 'address',
         title: 'Address',
@@ -248,19 +284,12 @@ describe('Directive:  pfToolbar', function () {
     expect(clearButtons.length).toBe(0);
   });
 
-  it ('should not show filters when a filter config is not supplied', function () {
+  it ('should not show filters when filter fields are not supplied', function () {
     var filter = element.find('.filter-pf');
     expect(filter.length).toBe(2);
 
-    $scope.config = {
-      viewsConfig: {
-        views: [$pfViewUtils.getListView(), $pfViewUtils.getCardView()]
-      }
-    };
-
-    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
-
-    compileHTML(htmlTmp, $scope);
+    $scope.filterFields = undefined;
+    $scope.$digest();
 
     filter = element.find('.filter-pf');
     expect(filter.length).toBe(0);
@@ -279,58 +308,50 @@ describe('Directive:  pfToolbar', function () {
 
   it ('should show the currently selected view', function () {
     var viewSelector = element.find('.toolbar-pf-view-selector');
-    var active = element.find('.active');
+    var activeDashboard = element.find('.active .fa.fa-dashboard');
+    var activeList = element.find('.active .fa.fa-th-list');
 
     expect(viewSelector.length).toBe(1);
-    expect(active.length).toBe(0);
+    expect(activeDashboard.length).toBe(1);
+    expect(activeList.length).toBe(0);
 
-    $scope.config.viewsConfig.currentView = $scope.config.viewsConfig.views[0].id;
+    $scope.currentView = $scope.contentViews[1].id;
     $scope.$apply();
 
-    active = element.find('.active');
-    expect(active.length).toBe(1);
+    activeDashboard = element.find('.active .fa.fa-dashboard');
+    activeList = element.find('.active .fa.fa-th-list');
+
+    expect(activeDashboard.length).toBe(0);
+    expect(activeList.length).toBe(1);
   });
 
   it ('should update the currently selected view when a view selector clicked', function () {
     var viewSelector = element.find('.toolbar-pf-view-selector');
-    var active = element.find('.active');
+    var activeDashboard = element.find('.active .fa.fa-dashboard');
+    var activeList = element.find('.active .fa.fa-th-list');
     var listSelector = element.find('.toolbar-pf-view-selector .btn-link');
 
     expect(viewSelector.length).toBe(1);
-    expect(active.length).toBe(0);
+    expect(activeDashboard.length).toBe(1);
+    expect(activeList.length).toBe(0);
     expect(listSelector.length).toBe(5);
 
-    eventFire(listSelector[0], 'click');
+    eventFire(listSelector[1], 'click');
     $scope.$apply();
 
-    active = element.find('.active');
-    expect(active.length).toBe(1);
-  });
+    activeDashboard = element.find('.active .fa.fa-dashboard');
+    activeList = element.find('.active .fa.fa-th-list');
 
-  it ('should call the callback function when a view selector clicked', function () {
-    var listSelector = element.find('.toolbar-pf-view-selector .btn-link');
-    var functionCalled = false;
-
-    var onViewSelect = function () {
-      functionCalled = true;
-    };
-
-    $scope.config.viewsConfig.onViewSelect = onViewSelect;
-    expect(functionCalled).toBeFalsy();
-    expect(listSelector.length).toBe(5);
-
-    eventFire(listSelector[0], 'click');
-    $scope.$apply();
-
-    expect(functionCalled).toBeTruthy();
+    expect(activeDashboard.length).toBe(0);
+    expect(activeList.length).toBe(1);
   });
 
   it ('should not show view selectors when no viewsConfig is supplied', function () {
     var viewSelector = element.find('.toolbar-pf-view-selector');
     expect(viewSelector.length).toBe(1);
 
-    $scope.config.viewsConfig = undefined;
-    $scope.$digest();
+    $scope.contentViews = undefined;
+    $scope.$apply();
 
     viewSelector = element.find('.toolbar-pf-view-selector');
     expect(viewSelector.length).toBe(0);
@@ -403,65 +424,36 @@ describe('Directive:  pfToolbar', function () {
   });
 
   it ('should notify when a new sort field is chosen', function() {
-    var notified = false;
-    var chosenField = '';
-    var chosenDir = '';
     var fields = element.find('.sort-pf .sort-field');
-
-    var watchForNotify = function (sortField, isAscending) {
-      notified = true;
-      chosenField = sortField;
-      chosenDir = isAscending;
-    };
-
-    $scope.config.sortConfig.onSortChange = watchForNotify;
-
 
     expect(fields.length).toBe(3);
 
     eventFire(fields[2], 'click');
     $scope.$digest();
 
-    expect(notified).toBeTruthy();
-    expect(chosenField).toBe($scope.config.sortConfig.fields[2]);
-    expect(chosenDir).toBeTruthy();
+    expect(sortChangeNotify).toBeTruthy();
+    expect(sortChosenField).toBe($scope.sortFields[2].id);
+    expect(sortChosenDir).toBeTruthy();
   });
 
   it ('should notify when the sort direction changes', function() {
-    var notified = false;
-    var chosenField = '';
-    var chosenDir = '';
     var sortButton = element.find('.sort-pf .btn.btn-link');
-
-    var watchForNotify = function (sortField, isAscending) {
-      notified = true;
-      chosenField = sortField;
-      chosenDir = isAscending;
-    };
-
-    $scope.config.sortConfig.onSortChange = watchForNotify;
-
     expect(sortButton.length).toBe(1);
 
     eventFire(sortButton[0], 'click');
     $scope.$digest();
 
-    expect(notified).toBeTruthy();
-    expect(chosenField).toBe($scope.config.sortConfig.fields[0]);
-    expect(chosenDir).toBeFalsy();
+    expect(sortChangeNotify).toBeTruthy();
+    expect(sortChosenField).toBe($scope.sortFields[0].id);
+    expect(sortChosenDir).toBeFalsy();
   });
 
-  it ('should not show sort components when a sort config is not supplied', function () {
+  it ('should not show sort components when sort fields are not supplied', function () {
     var filter = element.find('.sort-pf');
     expect(filter.length).toBe(1);
 
-    $scope.config = {
-      viewsConfig: {
-        views: [$pfViewUtils.getListView(), $pfViewUtils.getCardView()]
-      }
-    };
-
-    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
+    $scope.sortFields = undefined;
+    $scope.$digest();
 
     compileHTML(htmlTmp, $scope);
 
@@ -493,7 +485,7 @@ describe('Directive:  pfToolbar', function () {
     var menus = element.find('.fa-ellipsis-v');
     expect(menus.length).toBe(1);
 
-    $scope.config.actionsConfig.moreActions = undefined;
+    $scope.moreActions = undefined;
     $scope.$digest();
 
     menus = element.find('.toolbar-pf-actions .fa-ellipsis-v');
@@ -534,7 +526,7 @@ describe('Directive:  pfToolbar', function () {
     expect(performedAction.name).toBe('Action 2');
 
     performedAction = undefined;
-    $scope.config.actionsConfig.primaryActions[1].isDisabled = true;
+    $scope.primaryActions[1].isDisabled = true;
     $scope.$digest();
 
     eventFire(primaryActions[1], 'click');
@@ -543,19 +535,14 @@ describe('Directive:  pfToolbar', function () {
     expect(performedAction).toBe(undefined);
   });
 
-  it ('should not show action components when an action config is not supplied', function () {
+  it ('should not show action components when actions not supplied', function () {
     var filter = element.find('.toolbar-actions');
     expect(filter.length).toBe(1);
 
-    $scope.config = {
-      viewsConfig: {
-        views: [$pfViewUtils.getListView(), $pfViewUtils.getCardView()]
-      }
-    };
+    $scope.primaryActions = undefined;
+    $scope.moreActions = undefined;
 
-    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
-
-    compileHTML(htmlTmp, $scope);
+    $scope.$digest();
 
     filter = element.find('.toolbar-actions');
     expect(filter.length).toBe(0);
@@ -568,10 +555,25 @@ describe('Directive:  pfToolbar', function () {
     var includeActions = actionBar.find('.toolbar-pf-include-actions');
     expect(includeActions.length).toBe(0);
 
-    $scope.config.actionsConfig.actionsInclude = true;
+    $scope.actionsInclude = true;
+    var htmlTmp = '' +
+      '<pf-toolbar filter-fields="filterFields"' +
+      '            applied-filters="appliedFilters"' +
+      '            results-count="{{resultsCount}}"' +
+      '            sort-fields="sortFields"' +
+      '            on-sort-change="onSortChange"' +
+      '            views="contentViews"' +
+      '            current-view="currentView"' +
+      '            on-view-select="onViewSelect"' +
+      '            primary-actions="primaryActions"' +
+      '            more-actions="moreActions"' +
+      '            actions-include="actionsInclude"' +
+      '  <actions><button class="btn btn-default add-action" type="button">Add Action</button></actions>' +
+      '</pf-toolbar>';
 
-    var includeHtml = '<pf-toolbar config="config"><actions><button class="btn btn-default add-action" type="button">Add Action</button></actions></pf-toolbar>';
-    compileHTML(includeHtml, $scope);
+    compileHTML(htmlTmp, $scope);
+
+    $scope.$digest();
 
     actionBar = element.find('.toolbar-actions');
     expect(actionBar.length).toBe(1);

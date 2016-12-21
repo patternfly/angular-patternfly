@@ -7,25 +7,22 @@
  *   Sort component
  *   <br><br>
  *
- * @param {object} config configuration settings for the sort:<br/>
- * <ul style='list-style-type: none'>
- * <li>.fields          - (Array) List of sortable fields containing:
+ * @param {array} fields List of sortable fields containing:<br/>
  * <ul style='list-style-type: none'>
  * <li>.id          - (String) Unique Id for the sort field
  * <li>.title       - (String) The title to display for the sort field
  * <li>.sortType    - (String) The sort type, 'alpha' or 'numeric'
  * </ul>
- * <li>.currentField   - (Object) Currently selected field
- * <li>.isAscending - (boolean) Current sort direction is ascending. True for ascending, False for descending
- * <li>.onSortChange - ( function(sortId, sortDirection ) Function to call when the current sort params change
- * </ul>
+ * @param {String} currentField - Id of the currently selected field
+ * @param {boolean} isAscending - Current sort direction is ascending. True for ascending, False for descending
+ * @param {function} onSortChange - ( function(sortId, sortDirection ) Function to call when the current sort params change
  *
  * @example
 <example module="patternfly.sort">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <pf-sort id="exampleSort" config="sortConfig"></pf-sort>
+        <pf-sort id="exampleSort" fields="sortFields" on-sort-change="sortChange"></pf-sort>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -100,47 +97,47 @@
           }
         ];
 
-        var compareFn = function(item1, item2) {
-          var compValue = 0;
-          if ($scope.sortConfig.currentField.id === 'name') {
-            compValue = item1.name.localeCompare(item2.name);
-          } else if ($scope.sortConfig.currentField.id === 'count') {
-              compValue = item1.count - item2.count;
-          } else if ($scope.sortConfig.currentField.id === 'description') {
-            compValue = item1.description.localeCompare(item2.description);
-          }
+        $scope.sortChange = function (sortId, isAscending) {
 
-          if (!$scope.sortConfig.isAscending) {
-            compValue = compValue * -1;
-          }
-
-          return compValue;
-        };
-
-        var sortChange = function (sortId, isAscending) {
           $scope.items.sort(compareFn);
+
+          function compareFn (item1, item2) {
+            var compValue = 0;
+            if (sortId === 'name') {
+              compValue = item1.name.localeCompare(item2.name);
+            } else if (sortId === 'count') {
+                compValue = item1.count - item2.count;
+            } else if (sortId === 'description') {
+              compValue = item1.description.localeCompare(item2.description);
+            }
+
+            if (!isAscending) {
+              compValue = compValue * -1;
+            }
+
+            return compValue;
+          };
         };
 
-        $scope.sortConfig = {
-          fields: [
-            {
-              id: 'name',
-              title:  'Name',
-              sortType: 'alpha'
-            },
-            {
-              id: 'count',
-              title:  'Count',
-              sortType: 'numeric'
-            },
-            {
-              id: 'description',
-              title:  'Description',
-              sortType: 'alpha'
-            }
-          ],
-          onSortChange: sortChange
-        };
+        $scope.sortFields = [
+          {
+            id: 'name',
+            title:  'Name',
+            sortType: 'alpha'
+          },
+          {
+            id: 'count',
+            title:  'Count',
+            sortType: 'numeric'
+          },
+          {
+            id: 'description',
+            title:  'Description',
+            sortType: 'alpha'
+          }
+        ];
+
+        $scope.sortChange('name', true);
       }
     ]);
   </file>

@@ -1,80 +1,77 @@
 angular.module('patternfly.sort').component('pfSort', {
   bindings: {
-    config: '='
+    fields: '=',
+    currentSortId: '<?',
+    isAscending: '<?',
+    onSortChange: '<?'
+
   },
   templateUrl: 'sort/sort.html',
-  controller: function ($scope) {
+  controller: function ($timeout) {
     'use strict';
 
     var ctrl = this;
 
     ctrl.$onInit = function () {
+
+      if (angular.isUndefined(ctrl.currentSortId)) {
+        ctrl.currentSortId = ctrl.fields[0].id;
+      }
+
+      if (angular.isUndefined(ctrl.isAscending)) {
+        ctrl.isAscending = true;
+      }
+
       angular.extend(ctrl, {
+        currentField: getCurrentField(),
         selectField: selectField,
         changeDirection: changeDirection,
         getSortIconClass: getSortIconClass
       });
-
-      setupConfig();
-
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
-        setupConfig();
-      }, true);
-    };
+    function getCurrentField () {
+      var found = undefined;
 
-    function setupConfig () {
-      var updated = false;
-
-      if (ctrl.config.fields === undefined) {
-        ctrl.config.fields = [];
-      }
-
-      if (ctrl.config.fields.length > 0) {
-        if (ctrl.config.currentField === undefined) {
-          ctrl.config.currentField = ctrl.config.fields[0];
-          updated = true;
+      angular.forEach(ctrl.fields, function (nextField) {
+        if (nextField.id === ctrl.currentSortId) {
+          found = nextField;
         }
-        if (ctrl.config.isAscending === undefined) {
-          ctrl.config.isAscending = true;
-          updated = true;
-        }
-      }
+      });
 
-      if (updated === true && ctrl.config.onSortChange) {
-        ctrl.config.onSortChange(ctrl.config.currentField, ctrl.config.isAscending);
+      return found;
+    }
+
+    function notifySortChange () {
+      if (angular.isFunction(ctrl.onSortChange)) {
+        ctrl.onSortChange(ctrl.currentSortId, ctrl.isAscending);
       }
     }
 
     function selectField (field) {
-      ctrl.config.currentField = field;
+      ctrl.currentField = field;
+      ctrl.currentSortId = field.id;
 
-      if (ctrl.config.onSortChange) {
-        ctrl.config.onSortChange(ctrl.config.currentField, ctrl.config.isAscending);
-      }
+      notifySortChange();
     }
 
     function changeDirection () {
-      ctrl.config.isAscending = !ctrl.config.isAscending;
+      ctrl.isAscending = !ctrl.isAscending;
 
-      if (ctrl.config.onSortChange) {
-        ctrl.config.onSortChange(ctrl.config.currentField, ctrl.config.isAscending);
-      }
+      notifySortChange();
     }
 
     function getSortIconClass () {
       var iconClass;
 
-      if (ctrl.config.currentField.sortType === 'numeric') {
-        if (ctrl.config.isAscending) {
+      if (ctrl.currentField.sortType === 'numeric') {
+        if (ctrl.isAscending) {
           iconClass = 'fa fa-sort-numeric-asc';
         } else {
           iconClass = 'fa fa-sort-numeric-desc';
         }
       } else {
-        if (ctrl.config.isAscending) {
+        if (ctrl.isAscending) {
           iconClass = 'fa fa-sort-alpha-asc';
         } else {
           iconClass = 'fa fa-sort-alpha-desc';

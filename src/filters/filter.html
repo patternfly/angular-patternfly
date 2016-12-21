@@ -1,4 +1,4 @@
 <div class="filter-pf">
-  <pf-filter-fields config="$ctrl.config" add-filter-fn="$ctrl.addFilter"></pf-filter-fields>
-  <pf-filter-results config="$ctrl.config"></pf-filter-results>
+  <pf-filter-fields fields="$ctrl.fields" add-filter-fn="$ctrl.addFilter"></pf-filter-fields>
+  <pf-filter-results applied-filters="$ctrl.appliedFilters" results-count="{{$ctrl.resultsCount}}" on-filter-change="$ctrl.resultsFilterChange"></pf-filter-results>
 </div>
