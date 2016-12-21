@@ -13,10 +13,16 @@ angular.module('patternfly.form').component('pfFormGroup', {
   transclude: true,
   templateUrl: 'form/form-group/form-group.html',
 
-  controller: function ($scope, $element) {
+  controller: function ($element) {
     'use strict';
 
     var ctrl = this;
+
+    ctrl.$onInit = function () {
+      angular.extend(ctrl, {
+        hasErrors: hasErrors
+      });
+    };
 
     ctrl.$postLink = function () {
       var input = getInput($element);
@@ -39,9 +45,9 @@ angular.module('patternfly.form').component('pfFormGroup', {
       }
     };
 
-    ctrl.hasErrors = function () {
+    function hasErrors () {
       return ctrl.form[ctrl.pfField] && ctrl.form[ctrl.pfField].$invalid && ctrl.form[ctrl.pfField].$dirty;
-    };
+    }
 
     function getInput (element) {
       // table is used for bootstrap3 date/time pickers

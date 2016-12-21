@@ -1,6 +1,7 @@
 /**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormGroup
+ * @restrict E
  *
  * @description
  *  Encapsulates the structure and styling for a label + input used within a

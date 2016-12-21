@@ -15,11 +15,17 @@ angular.module('patternfly.form').component('pfFormButtons', {
 
     var ctrl = this;
 
-    if (ctrl.pfWorking === undefined) {
-      ctrl.pfWorking = false;
-    }
+    ctrl.$onInit = function () {
+      if (ctrl.pfWorking === undefined) {
+        ctrl.pfWorking = false;
+      }
 
-    ctrl.isInvalid = function () {
+      angular.extend(ctrl, {
+        isInvalid: isInvalid
+      });
+    };
+
+    function isInvalid () {
       var invalid = ctrl.form.$invalid;
 
       if (ctrl.form && ctrl.form.name && ctrl.form.name.$error) {
@@ -29,6 +35,6 @@ angular.module('patternfly.form').component('pfFormButtons', {
       }
 
       return invalid;
-    };
+    }
   }
 });
