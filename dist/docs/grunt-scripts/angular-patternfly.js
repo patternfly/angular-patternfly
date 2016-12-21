@@ -3693,10 +3693,11 @@ angular.module('patternfly.form').directive('pfRemainingCharsCount', ["$timeout"
 }]);
 ;/**
  * @ngdoc directive
- * @name patternfly.modals.directive:pfAboutModal
+ * @name patternfly.modals.component:pfAboutModal
+ * @restrict E
  *
  * @description
- * Directive for rendering modal windows.
+ * Component for rendering modal windows.
  *
  * @param {string=} additionalInfo Text explaining the version or copyright
  * @param {string=} copyright Product copyright information
@@ -3716,8 +3717,8 @@ angular.module('patternfly.form').directive('pfRemainingCharsCount', ["$timeout"
    <file name="index.html">
      <div ng-controller="ModalCtrl">
        <button ng-click="open()" class="btn btn-default">Launch About Modal</button>
-       <div pf-about-modal is-open="isOpen" on-close="onClose()" additional-info="additionalInfo"
-            product-info="productInfo" title="title" copyright="copyright" img-alt="imgAlt" img-src="imgSrc"></div>
+       <pf-about-modal is-open="isOpen" on-close="onClose()" additional-info="additionalInfo"
+            product-info="productInfo" title="title" copyright="copyright" img-alt="imgAlt" img-src="imgSrc"></pf-about-modal>
      </div>
    </file>
    <file name="script.js">
@@ -3754,85 +3755,112 @@ angular.module('patternfly.modals')
     }
   };
 }])
+.component('pfModalContent', {
+  templateUrl: 'about-modal-template.html',
+  bindings: {
+    resolve: '<',
+    close: '&',
+    dismiss: '&'
+  },
+  controller: function () {
+    'use strict';
+    var $ctrl = this;
 
-.directive('pfAboutModal', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      additionalInfo: '=?',
-      copyright: '=?',
-      close: "&onClose",
-      imgAlt: '=?',
-      imgSrc: '=?',
-      isOpen: '=?',
-      productInfo: '=',
-      title: '=?'
-    },
-    templateUrl: 'modals/about-modal.html',
-    transclude: true,
-    controller: ['$scope', '$uibModal', '$transclude', function ($scope, $uibModal, $transclude) {
-      if ($scope.isOpen === undefined) {
-        $scope.isOpen = false;
-      }
+    $ctrl.$onInit = function () {
+      $ctrl.additionalInfo = $ctrl.resolve.additionalInfo;
+      $ctrl.copyright = $ctrl.resolve.copyright;
+      $ctrl.imgAlt = $ctrl.resolve.imgAlt;
+      $ctrl.imgSrc = $ctrl.resolve.imgSrc;
+      $ctrl.isOpen = $ctrl.resolve.isOpen;
+      $ctrl.productInfo = $ctrl.resolve.productInfo;
+      $ctrl.title = $ctrl.resolve.title;
+      $ctrl.template = $ctrl.resolve.content;
+    };
+  }
+})
+.component('pfAboutModal', {
+  bindings: {
+    additionalInfo: '=?',
+    copyright: '=?',
+    close: "&onClose",
+    imgAlt: '=?',
+    imgSrc: '=?',
+    isOpen: '<?',
+    productInfo: '=',
+    title: '=?'
+  },
+  templateUrl: 'modals/about-modal.html',
+  transclude: true,
+  controller: ["$uibModal", "$transclude", function ($uibModal, $transclude) { //$uibModal, $transclude, $window
+    'use strict';
+    var ctrl = this;
 
-      // The ui-bootstrap modal only supports either template or templateUrl as a way to specify the content.
-      // When the content is retrieved, it is compiled and linked against the provided scope by the $uibModal service.
-      // Unfortunately, there is no way to provide transclusion there.
-      //
-      // The solution below embeds a placeholder directive (i.e., pfAboutModalTransclude) to append the transcluded DOM.
-      // The transcluded DOM is from a different location than the modal, so it needs to be handed over to the
-      // placeholder directive. Thus, we're passing the actual DOM, not the parsed HTML.
-      $scope.openModal = function () {
-        $uibModal.open({
-          controller: ['$scope', '$uibModalInstance', 'content', function ($scope, $uibModalInstance, content) {
-            $scope.template = content;
-            $scope.close = function () {
-              $uibModalInstance.close();
-            };
-            $scope.$watch(
-              function () {
-                return $scope.isOpen;
-              },
-              function (newValue) {
-                if (newValue === false) {
-                  $uibModalInstance.close();
-                }
-              }
-            );
-          }],
-          resolve: {
-            content: function () {
-              var transcludedContent;
-              $transclude(function (clone) {
-                transcludedContent = clone;
-              });
-              return transcludedContent;
-            }
+    // The ui-bootstrap modal only supports either template or templateUrl as a way to specify the content.
+    // When the content is retrieved, it is compiled and linked against the provided scope by the $uibModal service.
+    // Unfortunately, there is no way to provide transclusion there.
+    //
+    // The solution below embeds a placeholder directive (i.e., pfAboutModalTransclude) to append the transcluded DOM.
+    // The transcluded DOM is from a different location than the modal, so it needs to be handed over to the
+    // placeholder directive. Thus, we're passing the actual DOM, not the parsed HTML.
+    ctrl.openModal = function () {
+      //$window.console.log('hi mom');
+      $uibModal.open({
+        component: 'pfModalContent',
+        resolve: {
+          content: function () {
+            var transcludedContent;
+            $transclude(function (clone) {
+              transcludedContent = clone;
+            });
+            return transcludedContent;
           },
-          scope: $scope,
-          templateUrl: "about-modal-template.html"
-        })
-        .result.then(
-          function () {
-            $scope.close(); // closed
+          additionalInfo: function () {
+            return ctrl.additionalInfo;
           },
-          function () {
-            $scope.close(); // dismissed
+          copyright: function () {
+            return ctrl.copyright;
+          },
+          close: function () {
+            return ctrl.close;
+          },
+          imgAlt: function () {
+            return ctrl.imgAlt;
+          },
+          imgSrc: function () {
+            return ctrl.imgSrc;
+          },
+          isOpen: function () {
+            return ctrl.isOpen;
+          },
+          productInfo: function () {
+            return ctrl.productInfo;
+          },
+          title: function () {
+            return ctrl.title;
           }
-        );
-      };
-    }],
-    link: function (scope, element, attrs) {
-      // watching isOpen attribute to dispay modal when needed
-      var isOpenListener = scope.$watch('isOpen', function (newVal, oldVal) {
-        if (newVal === true) {
-          scope.openModal();
         }
-      });
-      scope.$on('$destroy', isOpenListener);
-    }
-  };
+      })
+        .result.then(
+        function () {
+          ctrl.close(); // closed
+        },
+        function () {
+          ctrl.close(); // dismissed
+        }
+      );
+    };
+    ctrl.$onInit = function () {
+      if (ctrl.isOpen === undefined) {
+        ctrl.isOpen = false;
+      }
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.isOpen && changesObj.isOpen.currentValue === true) {
+        ctrl.openModal();
+      }
+    };
+  }]
 });
 ;/**
  * @ngdoc directive
@@ -10113,23 +10141,23 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
   $templateCache.put('modals/about-modal.html',
     "<script type=text/ng-template id=about-modal-template.html><div class=\"about-modal-pf\">\n" +
     "    <div class=\"modal-header\">\n" +
-    "      <button type=\"button\" class=\"close\" ng-click=\"close()\" aria-hidden=\"true\">\n" +
+    "      <button type=\"button\" class=\"close\" ng-click=\"$ctrl.close()\" aria-hidden=\"true\">\n" +
     "        <span class=\"pficon pficon-close\"></span>\n" +
     "      </button>\n" +
     "    </div>\n" +
     "    <div class=\"modal-body\">\n" +
-    "      <h1 ng-if=\"title\">{{title}}</h1>\n" +
-    "      <div ng-if=\"productInfo && productInfo.length > 0\" class=\"product-versions-pf\">\n" +
+    "      <h1 ng-if=\"$ctrl.title\">{{$ctrl.title}}</h1>\n" +
+    "      <div ng-if=\"$ctrl.productInfo && $ctrl.productInfo.length > 0\" class=\"product-versions-pf\">\n" +
     "        <ul class=\"list-unstyled\">\n" +
-    "          <li ng-repeat=\"info in productInfo\"><strong>{{info.name}}</strong> {{info.value}}</li>\n" +
+    "          <li ng-repeat=\"info in $ctrl.productInfo\"><strong>{{info.name}}</strong> {{info.value}}</li>\n" +
     "        </ul>\n" +
     "      </div>\n" +
-    "      <div pf-about-modal-transclude=\"template\" class=\"product-versions-pf\"></div>\n" +
-    "      <div ng-if=\"additionalInfo\" class=\"product-versions-pf\">{{additionalInfo}}</div>\n" +
-    "      <div ng-if=\"copyright\" class=\"trademark-pf\">{{copyright}}</div>\n" +
+    "      <div pf-about-modal-transclude=\"$ctrl.template\" class=\"product-versions-pf\"></div>\n" +
+    "      <div ng-if=\"$ctrl.additionalInfo\" class=\"product-versions-pf\">{{$ctrl.additionalInfo}}</div>\n" +
+    "      <div ng-if=\"$ctrl.copyright\" class=\"trademark-pf\">{{$ctrl.copyright}}</div>\n" +
     "    </div>\n" +
     "    <div class=\"modal-footer\">\n" +
-    "      <img ng-if=\"imgSrc\" ng-src=\"{{imgSrc}}\" alt=\"{{imgAlt}}\"/>\n" +
+    "      <img ng-if=\"$ctrl.imgSrc\" ng-src=\"{{$ctrl.imgSrc}}\" alt=\"{{$ctrl.imgAlt}}\"/>\n" +
     "    </div>\n" +
     "  </div></script>"
   );
