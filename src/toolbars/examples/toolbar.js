@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.toolbars.directive:pfToolbar
+ * @name patternfly.toolbars.componenet:pfToolbar
+ * @restrict E
  *
  * @description
- *   Directive for standard toolbar. Includes filtering and view selection capabilities
+ *   Standard toolbar component. Includes filtering and view selection capabilities
  *   <br><br>
  *
  * @param {object} config configuration settings for the toolbar:<br/>
@@ -49,7 +50,7 @@
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-toolbar id="exampleToolbar" config="toolbarConfig">
+        <pf-toolbar id="exampleToolbar" config="toolbarConfig">
          <actions>
            <span class="dropdown primary-action" uib-dropdown>
              <button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type="button">
@@ -76,7 +77,7 @@
              Add Action
            </button>
          </actions>
-        </div>
+        </pf-toolbar>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -405,71 +406,3 @@
   </file>
 </example>
  */
-angular.module('patternfly.toolbars').directive('pfToolbar', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '='
-    },
-    replace: true,
-    transclude: {
-      'actions': '?'
-    },
-    templateUrl: 'toolbars/toolbar.html',
-    controller: function ($scope) {
-      $scope.viewSelected = function (viewId) {
-        $scope.config.viewsConfig.currentView = viewId;
-        if ($scope.config.viewsConfig.onViewSelect && !$scope.checkViewDisabled(viewId)) {
-          $scope.config.viewsConfig.onViewSelect(viewId);
-        }
-      };
-
-      $scope.isViewSelected = function (viewId) {
-        return $scope.config.viewsConfig && ($scope.config.viewsConfig.currentView === viewId);
-      };
-
-      $scope.checkViewDisabled = function (view) {
-        return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
-      };
-
-      $scope.filterExists = function (filter) {
-        var foundFilter = _.find($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
-        return foundFilter !== undefined;
-      };
-
-      $scope.addFilter = function (field, value) {
-        var newFilter = {
-          id: field.id,
-          title: field.title,
-          value: value
-        };
-        if (!$scope.filterExists(newFilter)) {
-          $scope.config.filterConfig.appliedFilters.push(newFilter);
-
-          if ($scope.config.filterConfig.onFilterChange) {
-            $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
-          }
-        }
-      };
-
-      $scope.handleAction = function (action) {
-        if (action && action.actionFn && (action.isDisabled !== true)) {
-          action.actionFn(action);
-        }
-      };
-    },
-
-    link: function (scope, element, attrs) {
-      scope.$watch('config', function () {
-        if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
-          scope.config.viewsConfig.viewsList = angular.copy(scope.config.viewsConfig.views);
-
-          if (!scope.config.viewsConfig.currentView) {
-            scope.config.viewsConfig.currentView = scope.config.viewsConfig.viewsList[0];
-          }
-        }
-      }, true);
-    }
-  };
-});
