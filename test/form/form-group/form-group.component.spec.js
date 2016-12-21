@@ -13,14 +13,14 @@ describe('Directive: pfFormGroup', function() {
 
   beforeEach(function() {
     element = '<form name="testForm">' +
-                '<div pf-form-group pf-label="Name" required>' +
+                '<pf-form-group pf-label="Name" required>' +
                     '<input id="name" ' +
                            'name="name" ' +
                            'ng-model="fake.name" ' +
                            'type="text" ' +
                            'tabindex="1" ' +
                            'required/>' +
-                '</div>' +
+                '</pf-form-group>' +
              '</form>';
 
     $scope.fake = {name: ''};
