@@ -87,9 +87,6 @@
     template: '<div id=""></div>',
     controller: function ($timeout, $log) {
       var ctrl = this;
-      ctrl.$onInit = function () {
-        $log.info("C3 $onInit");
-      };
       ctrl.$onChanges = function (changesObj) {
         var chart;
         var chartData;
@@ -99,7 +96,7 @@
             chartData = ctrl.config;
             if (chartData) {
               chartData.bindto = '#' + ctrl.id;
-              $log.info("--> C3.generate: ");
+              $log.info("--> C3.generate: " + chartData.bindto);
               chart = c3.generate(chartData);
               ctrl.getChartCallback({$event: {chart: chart}});
             }

@@ -182,7 +182,6 @@
        $scope.labelDynamic = "used";
 
        $scope.thresholdChanged = function(threshold) {
-          console.log("threshold changed: " + threshold);
           $scope.threshLabel = threshold;
        };
 
@@ -200,8 +199,6 @@
 
          // hack to get $onChanges to trigger
          $scope.dataDynamic = angular.copy($scope.dataDynamic);
-
-         console.log("interval: " + $scope.dataDynamic.used + " " + $scope.labelDynamic);
        }, 1000);
 
        $scope.configNoThresh = {
@@ -304,12 +301,11 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
     onThresholdChange: '&'
   },
   templateUrl: 'charts/donut/donut-pct-chart.html',
-  controller: function (pfUtils, $element, $timeout, $log) {
+  controller: function (pfUtils, $element, $timeout) {
     'use strict';
     var ctrl = this;
 
     ctrl.$onInit = function () {
-      $log.info("$onInit");
       ctrl.donutChartId = 'donutChart';
       if (ctrl.config.chartId) {
         ctrl.donutChartId = ctrl.config.chartId + ctrl.donutChartId;
@@ -435,8 +431,6 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
         return;
       }
 
-      $log.info("    setupDonutChartTitle");
-
       //donutChartTitle = d3.select($element[0]).select('text.c3-chart-arcs-title');
       donutChartTitle = d3.select(ctrl.chart.element).select('text.c3-chart-arcs-title');
       if (!donutChartTitle) {
@@ -456,25 +450,20 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
     };
 
     ctrl.setChart = function (chart) {
-      $log.info("setChart");
       ctrl.chart = chart;
       ctrl.setupDonutChartTitle();
     };
 
     ctrl.$onChanges = function (changesObj) {
-      $log.info("$onChanges");
       if (changesObj.config || changesObj.data) {
-        $log.info("  config or data");
         ctrl.updateAll();
       }
       if (changesObj.chartHeight) {
-        $log.info("  chartHeight");
         ctrl.config.size.height = changesObj.chartHeight.currentValue;
         // will trigger pfC3Chart to generate new chart
         ctrl.config = angular.copy(ctrl.config);
       }
       if (changesObj.centerLabel) {
-        $log.info("  centerLabel");
         ctrl.setupDonutChartTitle();
       }
     };

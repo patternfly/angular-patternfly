@@ -1,5 +1,5 @@
 <span>
   <pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id="{{$ctrl.donutChartId}}" config="$ctrl.config"
                get-chart-callback="$ctrl.setChart($event.chart)"></pf-c3-chart>
-  <div pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height="chartHeight"></div>
+  <div pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height="$ctrl.chartHeight"></div>
 </span>
