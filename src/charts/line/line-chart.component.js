@@ -112,8 +112,6 @@
          $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
          $scope.data.yData0.push(Math.round(Math.random() * 100));
          $scope.data.yData1.push(Math.round(Math.random() * 100));
-         // trigger $onChange since it doesn't deep watch
-         $scope.data = angular.copy($scope.data);
        };
      });
    </file>
@@ -130,9 +128,12 @@ angular.module('patternfly.charts').component('pfLineChart', {
   templateUrl: 'charts/line/line-chart.html',
   controller: function (pfUtils) {
     'use strict';
-    var ctrl = this;
+    var ctrl = this, prevChartData;
 
     ctrl.updateAll = function () {
+      // Need to deep watch changes in chart data
+      prevChartData = angular.copy(ctrl.chartData);
+
       // Create an ID for the chart based on the chartId in the config if given
       if (ctrl.lineChartId === undefined) {
         ctrl.lineChartId = 'lineChart';
@@ -217,6 +218,13 @@ angular.module('patternfly.charts').component('pfLineChart', {
 
     ctrl.$onChanges = function (changesObj) {
       ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData
+      if (!angular.equals(ctrl.chartData, prevChartData)) {
+        ctrl.updateAll();
+      }
     };
   }
 });

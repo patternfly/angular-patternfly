@@ -196,9 +196,6 @@
          } else {
            $scope.labelDynamic = "percent";
          }
-
-         // hack to get $onChanges to trigger
-         $scope.dataDynamic = angular.copy($scope.dataDynamic);
        }, 1000);
 
        $scope.configNoThresh = {
@@ -303,7 +300,7 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
   templateUrl: 'charts/donut/donut-pct-chart.html',
   controller: function (pfUtils, $element, $timeout) {
     'use strict';
-    var ctrl = this;
+    var ctrl = this, prevData;
 
     ctrl.$onInit = function () {
       ctrl.donutChartId = 'donutChart';
@@ -416,6 +413,9 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
     };
 
     ctrl.updateAll = function () {
+      // Need to deep watch changes in chart data
+      prevData = angular.copy(ctrl.data);
+
       ctrl.config = pfUtils.merge(patternfly.c3ChartDefaults().getDefaultDonutConfig(), ctrl.config);
       ctrl.updateAvailable();
       ctrl.config.data = pfUtils.merge(ctrl.config.data, ctrl.getDonutData());
@@ -431,7 +431,6 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
         return;
       }
 
-      //donutChartTitle = d3.select($element[0]).select('text.c3-chart-arcs-title');
       donutChartTitle = d3.select(ctrl.chart.element).select('text.c3-chart-arcs-title');
       if (!donutChartTitle) {
         return;
@@ -460,11 +459,16 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
       }
       if (changesObj.chartHeight) {
         ctrl.config.size.height = changesObj.chartHeight.currentValue;
-        // will trigger pfC3Chart to generate new chart
-        ctrl.config = angular.copy(ctrl.config);
       }
       if (changesObj.centerLabel) {
         ctrl.setupDonutChartTitle();
+      }
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on data
+      if (!angular.equals(ctrl.data, prevData)) {
+        ctrl.updateAll();
       }
     };
   }
