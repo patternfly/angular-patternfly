@@ -1,21 +1,21 @@
 {
   "name": "angular-patternfly",
-  "version": "3.16.0",
+  "version": "3.17.0",
   "dependencies": {
     "angular": {
-      "version": "1.5.9",
+      "version": "1.5.10",
       "from": "angular@>=1.3.0 <1.6.0",
-      "resolved": "https://registry.npmjs.org/angular/-/angular-1.5.9.tgz"
+      "resolved": "https://registry.npmjs.org/angular/-/angular-1.5.10.tgz"
     },
     "angular-animate": {
-      "version": "1.5.9",
+      "version": "1.5.10",
       "from": "angular-animate@>=1.3.0 <1.6.0",
-      "resolved": "https://registry.npmjs.org/angular-animate/-/angular-animate-1.5.9.tgz"
+      "resolved": "https://registry.npmjs.org/angular-animate/-/angular-animate-1.5.10.tgz"
     },
     "angular-sanitize": {
-      "version": "1.5.9",
+      "version": "1.5.10",
       "from": "angular-sanitize@>=1.3.0 <1.6.0",
-      "resolved": "https://registry.npmjs.org/angular-sanitize/-/angular-sanitize-1.5.9.tgz"
+      "resolved": "https://registry.npmjs.org/angular-sanitize/-/angular-sanitize-1.5.10.tgz"
     },
     "angular-ui-bootstrap": {
       "version": "0.14.3",
@@ -28,9 +28,9 @@
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz"
     },
     "patternfly": {
-      "version": "3.16.0",
-      "from": "patternfly@>=3.16.0 <3.17.0",
-      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-3.16.0.tgz",
+      "version": "3.17.0",
+      "from": "patternfly@>=3.17.0 <3.18.0",
+      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-3.17.0.tgz",
       "dependencies": {
         "bootstrap": {
           "version": "3.3.7",
