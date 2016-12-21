@@ -1,6 +1,7 @@
 /**
  * @ngdoc directive
  * @name patternfly.toolbars.componenet:pfToolbar
+ * @restrict E
  *
  * @description
  *   Standard toolbar component. Includes filtering and view selection capabilities

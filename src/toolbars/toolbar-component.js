@@ -53,6 +53,10 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
       return foundFilter !== undefined;
     }
 
+    function enforceSingleSelect (filter) {
+      _.remove(ctrl.config.appliedFilters, {title: filter.title});
+    }
+
     function addFilter (field, value) {
       var newFilter = {
         id: field.id,
@@ -60,6 +64,9 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
         value: value
       };
       if (!filterExists(newFilter)) {
+        if (newFilter.type === 'select') {
+          enforceSingleSelect(newFilter);
+        }
         ctrl.config.filterConfig.appliedFilters.push(newFilter);
 
         if (ctrl.config.filterConfig.onFilterChange) {

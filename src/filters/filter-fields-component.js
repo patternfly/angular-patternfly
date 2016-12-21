@@ -1,6 +1,7 @@
 /**
  * @ngdoc directive
  * @name patternfly.filters.component:pfFilterFields
+ * @restrict E
  *
  * @description
  *   Directive for the filter bar's filter entry components
