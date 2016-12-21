@@ -1,4 +1,4 @@
-describe('Directive: pfFormButtons', function() {
+describe('Component: pfFormButtons', function() {
   var $scope, $compile, element, button;
 
   beforeEach(module(
@@ -14,11 +14,11 @@ describe('Directive: pfFormButtons', function() {
   beforeEach(function() {
     element = '<form name="testForm">' +
                 '<input name="name" ng-model="fake.name" required>' +
-                '<div pf-form-buttons ' +
+                '<pf-form-buttons ' +
                     'pf-on-cancel="transitionTo(\'product.index\')" ' +
                     'pf-on-save="save(product)" ' +
                     'pf-working="working"> ' +
-               '</div>' +
+               '</pf-form-buttons>' +
              '</form>';
 
     element = $compile(element)($scope);

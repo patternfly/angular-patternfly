@@ -2957,10 +2957,11 @@ angular.module('patternfly.charts').directive('pfUtilizationTrendChart', functio
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.filters.directive:pfFilter
+ * @name patternfly.filters.component:pfFilter
+ * @restrict E
  *
  * @description
- *   Directive for a filter bar
+ *   Component for a filter bar
  *   <br><br>
  *
  * @param {object} config configuration settings for the filters:<br/>
@@ -2983,7 +2984,7 @@ angular.module('patternfly.charts').directive('pfUtilizationTrendChart', functio
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-filter id="exampleFilter" config="filterConfig"></div>
+        <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -3125,51 +3126,61 @@ angular.module('patternfly.charts').directive('pfUtilizationTrendChart', functio
     ]);
   </file>
 </example>
- */
-angular.module('patternfly.filters').directive('pfFilter', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '='
-    },
-    templateUrl: 'filters/filter.html',
-    controller: ["$scope", function ($scope) {
-      $scope.filterExists = function (filter) {
-        var foundFilter = _.find($scope.config.appliedFilters, {title: filter.title, value: filter.value});
-        return foundFilter !== undefined;
-      };
+*/
+;angular.module('patternfly.filters').component('pfFilter', {
+  bindings: {
+    config: '='
+  },
+  templateUrl: 'filters/filter.html',
+  controller: function () {
+    'use strict';
 
-      $scope.enforceSingleSelect = function (filter) {
-        $scope.config.appliedFilters = _.filter($scope.config.appliedFilters, {title: filter.title});
-      };
+    var ctrl = this;
 
-      $scope.addFilter = function (field, value) {
-        var newFilter = {
-          id: field.id,
-          title: field.title,
-          type: field.filterType,
-          value: value
-        };
-        if (!$scope.filterExists(newFilter)) {
+    ctrl.$onInit = function () {
 
-          if (newFilter.type === 'select') {
-            $scope.enforceSingleSelect(newFilter);
-          }
-
-          $scope.config.appliedFilters.push(newFilter);
-
-          if ($scope.config.onFilterChange) {
-            $scope.config.onFilterChange($scope.config.appliedFilters);
-          }
+      angular.extend(ctrl,
+        {
+          addFilter: addFilter
         }
+      );
+    };
+
+    function filterExists (filter) {
+      var foundFilter = _.find(ctrl.config.appliedFilters, {title: filter.title, value: filter.value});
+      return foundFilter !== undefined;
+    }
+
+    function enforceSingleSelect (filter) {
+      _.remove(ctrl.config.appliedFilters, {title: filter.title});
+    }
+
+    function addFilter (field, value) {
+      var newFilter = {
+        id: field.id,
+        title: field.title,
+        type: field.filterType,
+        value: value
       };
-    }]
-  };
+      if (!filterExists(newFilter)) {
+
+        if (newFilter.type === 'select') {
+          enforceSingleSelect(newFilter);
+        }
+
+        ctrl.config.appliedFilters.push(newFilter);
+
+        if (ctrl.config.onFilterChange) {
+          ctrl.config.onFilterChange(ctrl.config.appliedFilters);
+        }
+      }
+    }
+  }
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.filters.directive:pfFilterFields
+ * @name patternfly.filters.component:pfFilterFields
+ * @restrict E
  *
  * @description
  *   Directive for the filter bar's filter entry components
@@ -3189,63 +3200,72 @@ angular.module('patternfly.filters').directive('pfFilter', function () {
  * </ul>
  *
  */
-angular.module('patternfly.filters').directive('pfFilterFields', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      addFilterFn: '='
-    },
-    templateUrl: 'filters/filter-fields.html',
-    controller: ["$scope", function ($scope) {
-      $scope.setupConfig = function () {
-        if ($scope.fields === undefined) {
-          $scope.fields = [];
-        }
-        if (!$scope.currentField) {
-          $scope.currentField = $scope.config.fields[0];
-          $scope.config.currentValue = null;
-        }
+angular.module('patternfly.filters').component('pfFilterFields', {
+  bindings: {
+    config: '=',
+    addFilterFn: '<'
+  },
+  templateUrl: 'filters/filter-fields.html',
+  controller: ["$scope", function ($scope) {
+    'use strict';
 
-        if ($scope.config.currentValue === undefined) {
-          $scope.config.currentValue = null;
-        }
-      };
+    var ctrl = this;
 
+    ctrl.$onInit = function () {
+      angular.extend(ctrl, {
+        selectField: selectField,
+        selectValue: selectValue,
+        onValueKeyPress: onValueKeyPress
+      });
+    };
+
+    ctrl.$postLink = function () {
       $scope.$watch('config', function () {
-        $scope.setupConfig();
+        setupConfig();
       }, true);
-    }],
+    };
 
-    link: function (scope, element, attrs) {
-      scope.selectField = function (item) {
-        scope.currentField = item;
-        scope.config.currentValue = null;
-      };
-
-      scope.selectValue = function (filterValue) {
-        if (angular.isDefined(filterValue)) {
-          scope.addFilterFn(scope.currentField, filterValue);
-          scope.config.currentValue = null;
-        }
-      };
-
-      scope.onValueKeyPress = function (keyEvent) {
-        if (keyEvent.which === 13) {
-          scope.addFilterFn(scope.currentField, scope.config.currentValue);
-          scope.config.currentValue = undefined;
-        }
-      };
+    function selectField (item) {
+      ctrl.currentField = item;
+      ctrl.config.currentValue = null;
     }
-  };
+
+    function selectValue (filterValue) {
+      if (angular.isDefined(filterValue)) {
+        ctrl.addFilterFn(scope.currentField, filterValue);
+        ctrl.config.currentValue = null;
+      }
+    }
+
+    function onValueKeyPress (keyEvent) {
+      if (keyEvent.which === 13) {
+        ctrl.addFilterFn(ctrl.currentField, ctrl.config.currentValue);
+        ctrl.config.currentValue = undefined;
+      }
+    }
+
+    function setupConfig () {
+      if (ctrl.fields === undefined) {
+        ctrl.fields = [];
+      }
+      if (!ctrl.currentField) {
+        ctrl.currentField = ctrl.config.fields[0];
+        ctrl.config.currentValue = null;
+      }
+
+      if (ctrl.config.currentValue === undefined) {
+        ctrl.config.currentValue = null;
+      }
+    }
+  }]
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.filters.directive:pfFilterResults
+ * @name patternfly.filters.component:pfFilterResults
+ * @restrict E
  *
  * @description
- *   Directive for the filter results components
+ *   Component for the filter results
  *   <br><br>
  *
  * @param {object} config configuration settings for the filter results:<br/>
@@ -3264,56 +3284,65 @@ angular.module('patternfly.filters').directive('pfFilterFields', function () {
  * </ul>
  *
  */
-angular.module('patternfly.filters').directive('pfFilterResults', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '='
-    },
-    templateUrl: 'filters/filter-results.html',
-    controller: ["$scope", function ($scope) {
-      $scope.setupConfig = function () {
-        if (!$scope.config.appliedFilters) {
-          $scope.config.appliedFilters = [];
-        }
-        if ($scope.config.resultsCount === undefined) {
-          $scope.config.resultsCount = 0;
-        }
-      };
+angular.module('patternfly.filters').component('pfFilterResults', {
+  bindings: {
+    config: '='
+  },
+  templateUrl: 'filters/filter-results.html',
+  controller: ["$scope", function ($scope) {
+    'use strict';
 
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+      angular.extend(ctrl, {
+        clearFilter: clearFilter,
+        clearAllFilters: clearAllFilters
+      });
+    };
+
+    ctrl.$postLink = function () {
       $scope.$watch('config', function () {
-        $scope.setupConfig();
+        setupConfig();
       }, true);
-    }],
-    link: function (scope, element, attrs) {
-      scope.clearFilter = function (item) {
-        var newFilters = [];
-        scope.config.appliedFilters.forEach(function (filter) {
-          if (item.title !== filter.title || item.value !== filter.value) {
-            newFilters.push(filter);
-          }
-        });
-        scope.config.appliedFilters = newFilters;
+    };
 
-        if (scope.config.onFilterChange) {
-          scope.config.onFilterChange(scope.config.appliedFilters);
-        }
-      };
-
-      scope.clearAllFilters = function () {
-        scope.config.appliedFilters = [];
-
-        if (scope.config.onFilterChange) {
-          scope.config.onFilterChange(scope.config.appliedFilters);
-        }
-      };
+    function setupConfig () {
+      if (!ctrl.config.appliedFilters) {
+        ctrl.config.appliedFilters = [];
+      }
+      if (ctrl.config.resultsCount === undefined) {
+        ctrl.config.resultsCount = 0;
+      }
     }
-  };
+
+    function clearFilter (item) {
+      var newFilters = [];
+      ctrl.config.appliedFilters.forEach(function (filter) {
+        if (item.title !== filter.title || item.value !== filter.value) {
+          newFilters.push(filter);
+        }
+      });
+      ctrl.config.appliedFilters = newFilters;
+
+      if (ctrl.config.onFilterChange) {
+        ctrl.config.onFilterChange(ctrl.config.appliedFilters);
+      }
+    }
+
+    function clearAllFilters () {
+      ctrl.config.appliedFilters = [];
+
+      if (ctrl.config.onFilterChange) {
+        ctrl.config.onFilterChange(ctrl.config.appliedFilters);
+      }
+    }
+  }]
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.form.directive:pfFormButtons
+ * @name patternfly.form.component:pfFormButtons
+ * @restrict E
  *
  * @description
  *   Encapsulates the standard structure and styling for create and cancel buttons
@@ -3333,18 +3362,18 @@ angular.module('patternfly.filters').directive('pfFilterResults', function () {
      <div ng-controller="FormButtonCtrl">
        <p>Saved?</p>
        <p>{{ status }}</p>
-       <form>
+       <form name="testForm">
          <div class="form-group>
            <label class="control-label col-sm-2">Input</label>
-           <input class="form-control col-sm-5" name="item" ng-model="input" type="text">
+           <input class="form-control col-sm-5" name="item" ng-model="input" type="text" required>
          </div>
-         <div pf-form-buttons pf-on-cancel="cancel()" pf-on-save="save(item)" pf-working="working"></div>
+         <pf-form-buttons pf-on-cancel="cancel()" pf-on-save="save(item)" pf-working="working"></pf-form-buttons>
        </form>
      </div>
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.form' ).controller( 'FormButtonCtrl', function( $scope, $timeout ) {
+     angular.module( 'patternfly.form' ).controller( 'FormButtonCtrl', function( $scope, $timeout, $element ) {
        $scope.status = 'Not yet Saved'
        $scope.working = false;
 
@@ -3365,43 +3394,10 @@ angular.module('patternfly.filters').directive('pfFilterResults', function () {
    </file>
  </example>
  */
-angular.module('patternfly.form').directive('pfFormButtons', function () {
-  'use strict';
-
-  return {
-    replace: true,
-    require: '^form',
-    templateUrl: 'form/form-buttons/form-buttons.html',
-    scope: {
-      pfHandleCancel: '&pfOnCancel',
-      pfHandleSave: '&pfOnSave',
-      pfWorking: '=',
-      pfButtonContainerClass: '@'
-    },
-    link: function (scope, iElement, iAttrs, controller) {
-      if (scope.pfWorking === undefined) {
-        scope.pfWorking = false;
-      }
-
-      scope.isInvalid = function () {
-        var invalid = controller.$invalid;
-
-        angular.forEach(controller, function (value) {
-          if (value && value.$error) {
-            if (value.$error.server) {
-              invalid = false;
-            }
-          }
-        });
-
-        return invalid;
-      };
-    }
-  };
-});
 ;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfFormGroup
+ * @restrict E
  *
  * @description
  *  Encapsulates the structure and styling for a label + input used within a
@@ -3418,21 +3414,31 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
  <example module="patternfly.form">
 
    <file name="index.html">
-     <form class="form-horizontal" ng-controller="FormDemoCtrl">
-
+     <div ng-controller="FormDemoCtrl">
        <p>Name: {{ item.name }}</p>
        <p>Description: {{ item.description }}</p>
-       <div pf-form-group pf-label="Name" required>
-         <input id="name" name="name"
-                ng-model="item.name" type="text" required/>
-       </div>
-
-       <div pf-form-group pf-input-class="col-sm-9" pf-label="Description">
-         <textarea id="description" name="description" ng-model="item.description">
-           {{ item.description }}
-         </textarea>
-       </div>
-     </form>
+       <form>
+         <pf-form-group pf-label="Name" required>
+           <input id="name" name="name" ng-model="item.name" type="text" required/>
+         </pf-form-group>
+         <pf-form-group pf-label="Description">
+           <textarea id="description" name="description" ng-model="item.description">
+             {{ item.description }}
+           </textarea>
+         </pf-form-group>
+       </form>
+       <p>Horizontal Form</p>
+       <form class="form-horizontal">
+         <pf-form-group pf-label="Name" required pf-label-class="col-sm-2" pf-input-class="col-sm-5">
+           <input id="name" name="name" ng-model="item.name" type="text" required/>
+         </pf-form-group>
+         <pf-form-group pf-label="Description" pf-label-class="col-sm-2" pf-input-class="col-sm-5">
+           <textarea id="description" name="description" ng-model="item.description">
+             {{ item.description }}
+           </textarea>
+         </pf-form-group>
+       </form>
+     </div>
    </file>
 
    <file name="script.js">
@@ -3444,75 +3450,7 @@ angular.module('patternfly.form').directive('pfFormButtons', function () {
      });
    </file>
  </example>
- */
-angular.module('patternfly.form').directive('pfFormGroup', function () {
-  'use strict';
-
-  function getInput (element) {
-    // table is used for bootstrap3 date/time pickers
-    var input = element.find('table');
-
-    if (input.length === 0) {
-      input = element.find('input');
-
-      if (input.length === 0) {
-        input = element.find('select');
-
-        if (input.length === 0) {
-          input = element.find('textarea');
-        }
-      }
-    }
-    return input;
-  }
-
-  return {
-    transclude: true,
-    replace: true,
-    require: '^form',
-    templateUrl: 'form/form-group/form-group.html',
-    scope: {
-      'pfLabel': '@',
-      'pfField': '@',
-      'pfLabelClass': '@',
-      'pfInputClass': '@'
-    },
-    link: function (scope, iElement, iAttrs, controller) {
-      var input = getInput(iElement),
-        type = input.attr('type'),
-        field;
-
-      if (!iAttrs.pfLabelClass) {
-        iAttrs.pfLabelClass = 'col-sm-2';
-      }
-
-      if (!iAttrs.pfInputClass) {
-        iAttrs.pfInputClass = 'col-sm-5';
-      }
-
-      if (!scope.pfField) {
-        scope.pfField = input.attr('id');
-      }
-      field = scope.pfField;
-
-      if (['checkbox', 'radio', 'time'].indexOf(type) === -1) {
-        input.addClass('form-control');
-      }
-
-      if (input.attr('required')) {
-        iElement.addClass('required');
-      }
-
-      if (controller[field]) {
-        scope.error = controller[field].$error;
-      }
-
-      scope.hasErrors = function () {
-        return controller[field] && controller[field].$invalid && controller[field].$dirty;
-      };
-    }
-  };
-});
+*/
 ;/**
  * @ngdoc directive
  * @name patternfly.form.directive:pfRemainingCharsCount
@@ -3636,8 +3574,117 @@ angular.module('patternfly.form').directive('pfFormGroup', function () {
    </file>
  </example>
 */
+;angular.module('patternfly.form').component('pfFormButtons', {
 
-angular.module('patternfly.form').directive('pfRemainingCharsCount', ["$timeout", function ($timeout) {
+  bindings: {
+    pfHandleCancel: '&pfOnCancel',
+    pfHandleSave: '&pfOnSave',
+    pfWorking: '=',
+    pfButtonContainerClass: '@'
+  },
+  require: {
+    form: '^form'
+  },
+  templateUrl: 'form/form-buttons/form-buttons.html',
+  controller: function () {
+    'use strict';
+
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+      if (ctrl.pfWorking === undefined) {
+        ctrl.pfWorking = false;
+      }
+
+      angular.extend(ctrl, {
+        isInvalid: isInvalid
+      });
+    };
+
+    function isInvalid () {
+      var invalid = ctrl.form.$invalid;
+
+      if (ctrl.form && ctrl.form.name && ctrl.form.name.$error) {
+        if (ctrl.form.name.$error.server) {
+          invalid = false;
+        }
+      }
+
+      return invalid;
+    }
+  }
+});
+;angular.module('patternfly.form').component('pfFormGroup', {
+
+  bindings: {
+    pfLabel: '@',
+    pfField: '@',
+    pfLabelClass: '@',
+    pfInputClass: '@'
+
+  },
+  require: {
+    form: '^form'
+  },
+  transclude: true,
+  templateUrl: 'form/form-group/form-group.html',
+
+  controller: ["$element", function ($element) {
+    'use strict';
+
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+      angular.extend(ctrl, {
+        hasErrors: hasErrors
+      });
+    };
+
+    ctrl.$postLink = function () {
+      var input = getInput($element);
+      var type = input.attr('type');
+
+      if (['checkbox', 'radio', 'time'].indexOf(type) === -1) {
+        input.addClass('form-control');
+      }
+
+      if (!ctrl.pfField) {
+        ctrl.pfField = input.attr('id');
+      }
+
+      if (input.attr('required')) {
+        $element.addClass('required');
+      }
+
+      if (ctrl.form[ctrl.pfField]) {
+        ctrl.error = ctrl.form[ctrl.pfField].$error;
+      }
+    };
+
+    function hasErrors () {
+      return ctrl.form[ctrl.pfField] && ctrl.form[ctrl.pfField].$invalid && ctrl.form[ctrl.pfField].$dirty;
+    }
+
+    function getInput (element) {
+      // table is used for bootstrap3 date/time pickers
+      var input = element.find('table');
+
+      if (input.length === 0) {
+        input = element.find('input');
+
+        if (input.length === 0) {
+          input = element.find('select');
+
+          if (input.length === 0) {
+            input = element.find('textarea');
+          }
+        }
+      }
+      return input;
+    }
+  }]
+});
+;angular.module('patternfly.form').directive('pfRemainingCharsCount', ["$timeout", function ($timeout) {
   'use strict';
   return {
     restrict: 'A',
@@ -6585,10 +6632,11 @@ angular.module( 'patternfly.notification' ).directive('pfToastNotification', fun
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.sort.directive:pfSort
+ * @name patternfly.sort.component:pfSort
+ * @restrict E
  *
  * @description
- *   Directive for a  sort component
+ *   Sort component
  *   <br><br>
  *
  * @param {object} config configuration settings for the sort:<br/>
@@ -6609,7 +6657,7 @@ angular.module( 'patternfly.notification' ).directive('pfToastNotification', fun
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-sort id="exampleSort" config="sortConfig"></div>
+        <pf-sort id="exampleSort" config="sortConfig"></pf-sort>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -6730,91 +6778,100 @@ angular.module( 'patternfly.notification' ).directive('pfToastNotification', fun
   </file>
 </example>
  */
-angular.module('patternfly.sort').directive('pfSort', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '='
-    },
-    templateUrl: 'sort/sort.html',
-    controller: ["$scope", function ($scope) {
+;angular.module('patternfly.sort').component('pfSort', {
+  bindings: {
+    config: '='
+  },
+  templateUrl: 'sort/sort.html',
+  controller: ["$scope", function ($scope) {
+    'use strict';
 
-      $scope.setupConfig = function () {
-        var updated = false;
+    var ctrl = this;
 
-        if ($scope.config.fields === undefined) {
-          $scope.config.fields = [];
-        }
+    ctrl.$onInit = function () {
+      angular.extend(ctrl, {
+        selectField: selectField,
+        changeDirection: changeDirection,
+        getSortIconClass: getSortIconClass
+      });
 
-        if ($scope.config.fields.length > 0) {
-          if ($scope.config.currentField === undefined) {
-            $scope.config.currentField = $scope.config.fields[0];
-            updated = true;
-          }
-          if ($scope.config.isAscending === undefined) {
-            $scope.config.isAscending = true;
-            updated = true;
-          }
-        }
+      setupConfig();
 
-        if (updated === true && $scope.config.onSortChange) {
-          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
-        }
-      };
+    };
 
-      $scope.selectField = function (field) {
-        $scope.config.currentField = field;
-
-        if ($scope.config.onSortChange) {
-          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
-        }
-      };
-
-      $scope.changeDirection = function () {
-        $scope.config.isAscending = !$scope.config.isAscending;
-
-        if ($scope.config.onSortChange) {
-          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
-        }
-      };
-
-      $scope.getSortIconClass = function () {
-        var iconClass;
-
-        if ($scope.config.currentField.sortType === 'numeric') {
-          if ($scope.config.isAscending) {
-            iconClass = 'fa fa-sort-numeric-asc';
-          } else {
-            iconClass = 'fa fa-sort-numeric-desc';
-          }
-        } else {
-          if ($scope.config.isAscending) {
-            iconClass = 'fa fa-sort-alpha-asc';
-          } else {
-            iconClass = 'fa fa-sort-alpha-desc';
-          }
-        }
-
-        return iconClass;
-      };
-
-      $scope.setupConfig();
-    }],
-
-    link: function (scope, element, attrs) {
-      scope.$watch('config', function () {
-        scope.setupConfig();
+    ctrl.$postLink = function () {
+      $scope.$watch('config', function () {
+        setupConfig();
       }, true);
+    };
+
+    function setupConfig () {
+      var updated = false;
+
+      if (ctrl.config.fields === undefined) {
+        ctrl.config.fields = [];
+      }
+
+      if (ctrl.config.fields.length > 0) {
+        if (ctrl.config.currentField === undefined) {
+          ctrl.config.currentField = ctrl.config.fields[0];
+          updated = true;
+        }
+        if (ctrl.config.isAscending === undefined) {
+          ctrl.config.isAscending = true;
+          updated = true;
+        }
+      }
+
+      if (updated === true && ctrl.config.onSortChange) {
+        ctrl.config.onSortChange(ctrl.config.currentField, ctrl.config.isAscending);
+      }
     }
-  };
+
+    function selectField (field) {
+      ctrl.config.currentField = field;
+
+      if (ctrl.config.onSortChange) {
+        ctrl.config.onSortChange(ctrl.config.currentField, ctrl.config.isAscending);
+      }
+    }
+
+    function changeDirection () {
+      ctrl.config.isAscending = !ctrl.config.isAscending;
+
+      if (ctrl.config.onSortChange) {
+        ctrl.config.onSortChange(ctrl.config.currentField, ctrl.config.isAscending);
+      }
+    }
+
+    function getSortIconClass () {
+      var iconClass;
+
+      if (ctrl.config.currentField.sortType === 'numeric') {
+        if (ctrl.config.isAscending) {
+          iconClass = 'fa fa-sort-numeric-asc';
+        } else {
+          iconClass = 'fa fa-sort-numeric-desc';
+        }
+      } else {
+        if (ctrl.config.isAscending) {
+          iconClass = 'fa fa-sort-alpha-asc';
+        } else {
+          iconClass = 'fa fa-sort-alpha-desc';
+        }
+      }
+
+      return iconClass;
+    }
+  }]
 });
 ;/**
  * @ngdoc directive
- * @name patternfly.toolbars.directive:pfToolbar
+ * @name patternfly.toolbars.componenet:pfToolbar
+ * @restrict E
  *
  * @description
- *   Directive for standard toolbar. Includes filtering and view selection capabilities
+ *   Standard toolbar component. Includes filtering and view selection capabilities
  *   <br><br>
  *
  * @param {object} config configuration settings for the toolbar:<br/>
@@ -6860,7 +6917,7 @@ angular.module('patternfly.sort').directive('pfSort', function () {
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-toolbar id="exampleToolbar" config="toolbarConfig">
+        <pf-toolbar id="exampleToolbar" config="toolbarConfig">
          <actions>
            <span class="dropdown primary-action" uib-dropdown>
              <button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type="button">
@@ -6887,7 +6944,7 @@ angular.module('patternfly.sort').directive('pfSort', function () {
              Add Action
            </button>
          </actions>
-        </div>
+        </pf-toolbar>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -7216,73 +7273,89 @@ angular.module('patternfly.sort').directive('pfSort', function () {
   </file>
 </example>
  */
-angular.module('patternfly.toolbars').directive('pfToolbar', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '='
-    },
-    replace: true,
-    transclude: {
-      'actions': '?'
-    },
-    templateUrl: 'toolbars/toolbar.html',
-    controller: ["$scope", function ($scope) {
-      $scope.viewSelected = function (viewId) {
-        $scope.config.viewsConfig.currentView = viewId;
-        if ($scope.config.viewsConfig.onViewSelect && !$scope.checkViewDisabled(viewId)) {
-          $scope.config.viewsConfig.onViewSelect(viewId);
-        }
-      };
+;angular.module('patternfly.toolbars').component('pfToolbar', {
+  bindings: {
+    config: '='
+  },
+  transclude: {
+    'actions': '?'
+  },
+  templateUrl: 'toolbars/toolbar.html',
+  controller: ["$scope", function ($scope) {
+    'use strict';
 
-      $scope.isViewSelected = function (viewId) {
-        return $scope.config.viewsConfig && ($scope.config.viewsConfig.currentView === viewId);
-      };
+    var ctrl = this;
 
-      $scope.checkViewDisabled = function (view) {
-        return $scope.config.viewsConfig.checkViewDisabled && $scope.config.viewsConfig.checkViewDisabled(view);
-      };
+    ctrl.$onInit = function () {
+      angular.extend(ctrl, {
+        viewSelected: viewSelected,
+        isViewSelected: isViewSelected,
+        checkViewDisabled: checkViewDisabled,
+        addFilter: addFilter,
+        handleAction: handleAction
+      });
+    };
 
-      $scope.filterExists = function (filter) {
-        var foundFilter = _.find($scope.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
-        return foundFilter !== undefined;
-      };
+    ctrl.$postLink = function () {
+      $scope.$watch('config', function () {
+        if (ctrl.config && ctrl.config.viewsConfig && ctrl.config.viewsConfig.views) {
+          ctrl.config.viewsConfig.viewsList = angular.copy(ctrl.config.viewsConfig.views);
 
-      $scope.addFilter = function (field, value) {
-        var newFilter = {
-          id: field.id,
-          title: field.title,
-          value: value
-        };
-        if (!$scope.filterExists(newFilter)) {
-          $scope.config.filterConfig.appliedFilters.push(newFilter);
-
-          if ($scope.config.filterConfig.onFilterChange) {
-            $scope.config.filterConfig.onFilterChange($scope.config.filterConfig.appliedFilters);
-          }
-        }
-      };
-
-      $scope.handleAction = function (action) {
-        if (action && action.actionFn && (action.isDisabled !== true)) {
-          action.actionFn(action);
-        }
-      };
-    }],
-
-    link: function (scope, element, attrs) {
-      scope.$watch('config', function () {
-        if (scope.config && scope.config.viewsConfig && scope.config.viewsConfig.views) {
-          scope.config.viewsConfig.viewsList = angular.copy(scope.config.viewsConfig.views);
-
-          if (!scope.config.viewsConfig.currentView) {
-            scope.config.viewsConfig.currentView = scope.config.viewsConfig.viewsList[0];
+          if (!ctrl.config.viewsConfig.currentView) {
+            ctrl.config.viewsConfig.currentView = ctrl.config.viewsConfig.viewsList[0];
           }
         }
       }, true);
+    };
+
+    function viewSelected (viewId) {
+      ctrl.config.viewsConfig.currentView = viewId;
+      if (ctrl.config.viewsConfig.onViewSelect && !ctrl.checkViewDisabled(viewId)) {
+        ctrl.config.viewsConfig.onViewSelect(viewId);
+      }
     }
-  };
+
+    function isViewSelected (viewId) {
+      return ctrl.config.viewsConfig && (ctrl.config.viewsConfig.currentView === viewId);
+    }
+
+    function checkViewDisabled (view) {
+      return ctrl.config.viewsConfig.checkViewDisabled && ctrl.config.viewsConfig.checkViewDisabled(view);
+    }
+
+    function filterExists (filter) {
+      var foundFilter = _.find(ctrl.config.filterConfig.appliedFilters, {title: filter.title, value: filter.value});
+      return foundFilter !== undefined;
+    }
+
+    function enforceSingleSelect (filter) {
+      _.remove(ctrl.config.appliedFilters, {title: filter.title});
+    }
+
+    function addFilter (field, value) {
+      var newFilter = {
+        id: field.id,
+        title: field.title,
+        value: value
+      };
+      if (!filterExists(newFilter)) {
+        if (newFilter.type === 'select') {
+          enforceSingleSelect(newFilter);
+        }
+        ctrl.config.filterConfig.appliedFilters.push(newFilter);
+
+        if (ctrl.config.filterConfig.onFilterChange) {
+          ctrl.config.filterConfig.onFilterChange(ctrl.config.filterConfig.appliedFilters);
+        }
+      }
+    }
+
+    function handleAction (action) {
+      if (action && action.actionFn && (action.isDisabled !== true)) {
+        action.actionFn(action);
+      }
+    }
+  }]
 });
 ;/**
  * @ngdoc directive
@@ -10108,17 +10181,17 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
   'use strict';
 
   $templateCache.put('filters/filter-fields.html',
-    "<div class=\"filter-pf filter-fields\"><div class=\"input-group form-group\"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class=\"btn btn-default filter-fields\" uib-tooltip=\"Filter by\" tooltip-placement=top>{{currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"currentField.filterType !== 'select'\"><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress=\"onValueKeyPress($event)\"></div><div ng-if=\"currentField.filterType === 'select'\"><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\"><span class=\"filter-option pull-left\">{{config.currentValue || currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=currentField.placeholder ng-class=\"{'selected': filterValue === '' || filterValue === null || filterValue === undefined}\"><a role=menuitem tabindex=-1 ng-click=selectValue()>{{currentField.placeholder}}</a></li><li ng-repeat=\"filterValue in currentField.filterValues\" ng-class=\"{'selected': filterValue === config.currentValue}\"><a role=menuitem tabindex=-1 ng-click=selectValue(filterValue)>{{filterValue}}</a></li></ul></div></div></div></div>"
+    "<div class=\"filter-pf filter-fields\"><div class=\"input-group form-group\"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class=\"btn btn-default filter-fields\" uib-tooltip=\"Filter by\" tooltip-placement=top>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in $ctrl.config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"$ctrl.currentField.filterType !== 'select'\"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.config.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress=\"$ctrl.onValueKeyPress($event)\"></div><div ng-if=\"$ctrl.currentField.filterType === 'select'\"><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\"><span class=\"filter-option pull-left\">{{$ctrl.config.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat=\"filterValue in $ctrl.currentField.filterValues\" ng-class=\"{'selected': filterValue === $ctrl.config.currentValue}\"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue}}</a></li></ul></div></div></div></div>"
   );
 
 
   $templateCache.put('filters/filter-results.html',
-    "<div class=filter-pf><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{config.resultsCount}} Results</h5><p ng-if=\"config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a><span class=\"pficon pficon-close\" ng-click=clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=clearAllFilters() ng-if=\"config.appliedFilters.length > 0\">Clear All Filters</a></p></div><!-- /col --></div><!-- /row --></div>"
+    "<div class=filter-pf><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{$ctrl.config.resultsCount}} Results</h5><p ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a><span class=\"pficon pficon-close\" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p></div><!-- /col --></div><!-- /row --></div>"
   );
 
 
   $templateCache.put('filters/filter.html',
-    "<div class=filter-pf><div pf-filter-fields config=config add-filter-fn=addFilter></div><div pf-filter-results config=config></div></div>"
+    "<div class=filter-pf><pf-filter-fields config=$ctrl.config add-filter-fn=$ctrl.addFilter></pf-filter-fields><pf-filter-results config=$ctrl.config></pf-filter-results></div>"
   );
 
 }]);
@@ -10126,12 +10199,12 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
   'use strict';
 
   $templateCache.put('form/form-buttons/form-buttons.html',
-    "<div class=form-group><div class=\"{{ pfButtonContainerClass }}\"><div class=\"control-group buttons\"><button class=\"btn btn-default\" type=button ng-click=pfHandleCancel() ng-disabled=pfWorking translate>Cancel</button> <button class=\"btn btn-primary\" ng-click=\"pfHandleSave(); pfWorking = true\" ng-disabled=\"isInvalid() || pfWorking\"><i class=\"icon-spinner icon-spin\" ng-show=pfWorking></i> <span ng-show=pfWorking translate>Saving...</span> <span ng-hide=pfWorking translate>Save</span></button></div></div></div>"
+    "<div class=form-group><div class={{$ctrl.pfButtonContainerClass}}><div class=\"control-group buttons\"><button class=\"btn btn-default\" type=button ng-click=$ctrl.pfHandleCancel() ng-disabled=$ctrl.pfWorking translate>Cancel</button> <button class=\"btn btn-primary\" ng-click=\"$ctrl.pfHandleSave(); $ctrl.pfWorking = true\" ng-disabled=\"$ctrl.isInvalid() || $ctrl.pfWorking\"><i class=\"icon-spinner icon-spin\" ng-show=$ctrl.pfWorking></i> <span ng-show=$ctrl.pfWorking translate>Saving...</span> <span ng-hide=$ctrl.pfWorking translate>Save</span></button></div></div></div>"
   );
 
 
   $templateCache.put('form/form-group/form-group.html',
-    "<div class=form-group ng-class=\"{ 'has-error' : hasErrors() }\"><label for=\"{{ pfField }}\" class=\"control-label {{ pfLabelClass }}\">{{ pfLabel }}</label><div class=\"{{ pfInputClass }}\"><span ng-transclude></span> <span class=help-block ng-show=error.messages><ul><li ng-repeat=\"message in error.messages\">{{ message }}</li></ul></span></div></div>"
+    "<div class=form-group ng-class=\"{ 'has-error' : $ctrl.hasErrors() }\"><label for=\"{{ $ctrl.pfField }}\" class=\"control-label {{ $ctrl.pfLabelClass }}\">{{ $ctrl.pfLabel }}</label><div class=\"{{ $ctrl.pfInputClass }}\"><span ng-transclude></span> <span class=help-block ng-show=$ctrl.error.messages><ul><li ng-repeat=\"message in $ctrl.error.messages\">{{ message }}</li></ul></span></div></div>"
   );
 
 }]);
@@ -10229,7 +10302,7 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
   'use strict';
 
   $templateCache.put('sort/sort.html',
-    "<div class=sort-pf><div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class=\"btn btn-default\">{{config.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in config.fields\" ng-class=\"{'selected': item === config.currentField}\"><a href=javascript:void(0); class=sort-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><button class=\"btn btn-link\" type=button ng-click=changeDirection()><span class=sort-direction ng-class=getSortIconClass()></span></button></div>"
+    "<div class=sort-pf><div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class=\"btn btn-default\">{{$ctrl.config.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in $ctrl.config.fields\" ng-class=\"{'selected': item === $ctrl.config.currentField}\"><a href=javascript:void(0); class=sort-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><button class=\"btn btn-link\" type=button ng-click=$ctrl.changeDirection()><span class=sort-direction ng-class=$ctrl.getSortIconClass()></span></button></div>"
   );
 
 }]);
@@ -10237,10 +10310,10 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
   'use strict';
 
   $templateCache.put('toolbars/toolbar.html',
-    "<div class=container-fluid><div class=\"row toolbar-pf\"><div class=col-sm-12><form class=toolbar-pf-actions ng-class=\"{'no-filter-results': !config.filterConfig}\"><div class=\"form-group toolbar-apf-filter\"><div pf-filter-fields id={{filterDomId}}_fields config=config.filterConfig ng-if=config.filterConfig add-filter-fn=addFilter></div></div><div class=form-group><div pf-sort id={{sortDomId}} config=config.sortConfig ng-if=config.sortConfig></div></div><div class=\"form-group toolbar-actions\" ng-if=\"config.actionsConfig &&\n" +
-    "                   ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||\n" +
-    "                    (config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0) ||\n" +
-    "                    config.actionsConfig.actionsInclude)\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in config.actionsConfig.primaryActions\" title={{action.title}} ng-click=handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div ng-if=config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div uib-dropdown class=dropdown-kebab-pf ng-if=\"config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id={{filterDomId}}_kebab><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat=\"action in config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=toolbar-pf-action-right><div class=\"form-group toolbar-pf-view-selector\" ng-if=\"config.viewsConfig && config.viewsConfig.views\"><button ng-repeat=\"view in config.viewsConfig.viewsList\" class=\"btn btn-link\" ng-class=\"{'active': isViewSelected(view.id), 'disabled': checkViewDisabled(view)}\" title={{view.title}} ng-click=viewSelected(view.id)><i class={{view.iconClass}}></i></button></div></div></form><div pf-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->"
+    "<div class=container-fluid><div class=\"row toolbar-pf\"><div class=col-sm-12><form class=toolbar-pf-actions ng-class=\"{'no-filter-results': !$ctrl.config.filterConfig}\"><div class=\"form-group toolbar-apf-filter\"><pf-filter-fields config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig add-filter-fn=$ctrl.addFilter></pf-filter-fields></div><div class=form-group><pf-sort config=$ctrl.config.sortConfig ng-if=$ctrl.config.sortConfig></pf-sort></div><div class=\"form-group toolbar-actions\" ng-if=\"$ctrl.config.actionsConfig &&\n" +
+    "                   (($ctrl.config.actionsConfig.primaryActions && $ctrl.config.actionsConfig.primaryActions.length > 0) ||\n" +
+    "                    ($ctrl.config.actionsConfig.moreActions && $ctrl.config.actionsConfig.moreActions.length > 0) ||\n" +
+    "                    $ctrl.config.actionsConfig.actionsInclude)\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in $ctrl.config.actionsConfig.primaryActions\" title={{action.title}} ng-click=$ctrl.handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div ng-if=$ctrl.config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div uib-dropdown class=dropdown-kebab-pf ng-if=\"$ctrl.config.actionsConfig.moreActions && $ctrl.config.actionsConfig.moreActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat=\"action in $ctrl.config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=$ctrl.handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=toolbar-pf-action-right><div class=\"form-group toolbar-pf-view-selector\" ng-if=\"$ctrl.config.viewsConfig && $ctrl.config.viewsConfig.views\"><button ng-repeat=\"view in $ctrl.config.viewsConfig.viewsList\" class=\"btn btn-link\" ng-class=\"{'active': $ctrl.isViewSelected(view.id), 'disabled': $ctrl.checkViewDisabled(view)}\" title={{view.title}} ng-click=$ctrl.viewSelected(view.id)><i class={{view.iconClass}}></i></button></div></div></form><pf-filter-results config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig></pf-filter-results></div></div></div>"
   );
 
 }]);

@@ -122,39 +122,39 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "patternfly.filters.directive:pfFilter",
+      "id": "patternfly.filters.component:pfFilter",
       "shortName": "pfFilter",
       "type": "directive",
       "moduleName": "patternfly.filters",
-      "shortDescription": "Directive for a filter bar",
-      "keywords": "$scope address allitems angular api apple applied appliedfilters applyfilters april august bar bedrock birth birthmonth boulevard box call cfme-row-column changes cincinatti class col-md-12 col-md-2 col-md-3 col-md-7 comparisons config configuration controller current currently december dinosaur directive display east elm entered events-label example-container examplefilter false february field fields filter filterable filterchange filterconfig filters filterstext filtertype filtervalues flintstone foreach frank fred function green html input item items january john js judy july june length list list-style-type livingston main march match matches matchesfilter matchesfilters module month ng-controller ng-repeat norfolk november null number october ohio onfilterchange optional pat patternfly pennsylvania pf-filter pittsburgh placeholder push resultscount return returned row rows script second select september settings single smith street style text thomas title true type unique valid values var viewctrl virginia washingstone york"
+      "shortDescription": "Component for a filter bar",
+      "keywords": "$scope address allitems angular api apple applied appliedfilters applyfilters april august bar bedrock birth birthmonth boulevard box call cfme-row-column changes cincinatti class col-md-12 col-md-2 col-md-3 col-md-7 comparisons component config configuration controller current currently december dinosaur directive display east elm entered events-label example-container examplefilter false february field fields filter filterable filterchange filterconfig filters filterstext filtertype filtervalues flintstone foreach frank fred function green html input item items january john js judy july june length list list-style-type livingston main march match matches matchesfilter matchesfilters module month ng-controller ng-repeat norfolk november null number october ohio onfilterchange optional pat patternfly pennsylvania pittsburgh placeholder push resultscount return returned row rows script second select september settings single smith street style text thomas title true type unique valid values var viewctrl virginia washingstone york"
     },
     {
       "section": "api",
-      "id": "patternfly.filters.directive:pfFilterFields",
+      "id": "patternfly.filters.component:pfFilterFields",
       "shortName": "pfFilterFields",
       "type": "directive",
       "moduleName": "patternfly.filters",
       "shortDescription": "Directive for the filter bar&#39;s filter entry components",
-      "keywords": "api applied appliedfilters bar box comparisons components config configuration currently directive display entered entry field fields filter filterable filters filtertype filtervalues html input list list-style-type optional patternfly placeholder select settings style text title type unique valid values"
+      "keywords": "api applied appliedfilters bar box comparisons component components config configuration currently directive display entered entry field fields filter filterable filters filtertype filtervalues html input list list-style-type optional patternfly placeholder select settings style text title type unique valid values"
     },
     {
       "section": "api",
-      "id": "patternfly.filters.directive:pfFilterResults",
+      "id": "patternfly.filters.component:pfFilterResults",
       "shortName": "pfFilterResults",
       "type": "directive",
       "moduleName": "patternfly.filters",
-      "shortDescription": "Directive for the filter results components",
-      "keywords": "api applied appliedfilters box call changes comparisons components config configuration current currently directive display entered field fields filter filterable filters filtertype filtervalues function html input list list-style-type number onfilterchange optional patternfly placeholder resultscount returned select settings style text title type unique valid values"
+      "shortDescription": "Component for the filter results",
+      "keywords": "api applied appliedfilters box call changes comparisons component config configuration current currently directive display entered field fields filter filterable filters filtertype filtervalues function html input list list-style-type number onfilterchange optional patternfly placeholder resultscount returned select settings style text title type unique valid values"
     },
     {
       "section": "api",
-      "id": "patternfly.form.directive:pfFormButtons",
+      "id": "patternfly.form.component:pfFormButtons",
       "shortName": "pfFormButtons",
       "type": "directive",
       "moduleName": "patternfly.form",
       "shortDescription": "Encapsulates the standard structure and styling for create and cancel buttons",
-      "keywords": "$scope $timeout angular api button buttons call cancel cancelled class clicks col-sm-2 col-sm-5 container control-label controller create creates directive encapsulates false form form-control form-group formbuttonctrl function html input item js model module ng-controller ng-model null patternfly pf-form-buttons pf-on-cancel pf-on-save pf-working pfbuttonclass pfhandlecancel pfhandlesave pfworking save saved scope script standard status store structure styling text true type user working"
+      "keywords": "$element $scope $timeout angular api button buttons call cancel cancelled class clicks col-sm-2 col-sm-5 component container control-label controller create creates directive encapsulates false form form-control form-group formbuttonctrl function html input item js model module ng-controller ng-model null patternfly pf-on-cancel pf-on-save pf-working pfbuttonclass pfhandlecancel pfhandlesave pfworking required save saved scope script standard status store structure styling testform text true type user working"
     },
     {
       "section": "api",
@@ -163,7 +163,7 @@ NG_DOCS={
       "type": "directive",
       "moduleName": "patternfly.form",
       "shortDescription": "Encapsulates the structure and styling for a label + input used within a",
-      "keywords": "$scope angular api based bootstrap3 class col-sm-2 col-sm-5 col-sm-9 controller creates default description directive doh donuts duff element encapsulates field form form-horizontal formdemoctrl function homer html input item js label module ng-controller ng-model patternfly pf-form-group pf-input-class pf-label pffieldid pfinputclass pflabel pflabelclass required scope script simpson structure styling text type"
+      "keywords": "$scope angular api based bootstrap3 class col-sm-2 col-sm-5 controller creates default description directive doh donuts duff element encapsulates field form form-horizontal formdemoctrl function homer html input item js label module ng-controller ng-model patternfly pf-input-class pf-label pf-label-class pffieldid pfinputclass pflabel pflabelclass required scope script simpson structure styling text type"
     },
     {
       "section": "api",
@@ -257,21 +257,21 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "patternfly.sort.directive:pfSort",
+      "id": "patternfly.sort.component:pfSort",
       "shortName": "pfSort",
       "type": "directive",
       "moduleName": "patternfly.sort",
-      "shortDescription": "Directive for a  sort component",
-      "keywords": "$scope alpha alright angular api ascending beautiful call cfme-row-column change cheap class col-md-12 col-md-3 comparefn component compvalue config configuration controller count current currentfield currently descending description direction directive display events-label example-container examplesort excellent false fantastic field fields forever function good horrible html isascending item item1 item2 items js lasts list list-style-type localecompare module ng-controller ng-repeat nice numeric onsortchange params patternfly pf-sort return row script selected settings sort sortable sortchange sortconfig sortdirection sorttype stuff style title true type unique var viewctrl"
+      "shortDescription": "Sort component",
+      "keywords": "$scope alpha alright angular api ascending beautiful call cfme-row-column change cheap class col-md-12 col-md-3 comparefn component compvalue config configuration controller count current currentfield currently descending description direction directive display events-label example-container examplesort excellent false fantastic field fields forever function good horrible html isascending item item1 item2 items js lasts list list-style-type localecompare module ng-controller ng-repeat nice numeric onsortchange params patternfly return row script selected settings sort sortable sortchange sortconfig sortdirection sorttype stuff style title true type unique var viewctrl"
     },
     {
       "section": "api",
-      "id": "patternfly.toolbars.directive:pfToolbar",
+      "id": "patternfly.toolbars.componenet:pfToolbar",
       "shortName": "pfToolbar",
       "type": "directive",
       "moduleName": "patternfly.toolbars",
-      "shortDescription": "Directive for standard toolbar. Includes filtering and view selection capabilities",
-      "keywords": "$scope action actionfn actions actions-label actionsconfig actionsinclude actionstext add address age allitems alpha angular api apple appliedfilters applyfilters april august bedrock birth birthmonth boulevard btn btn-default button buttons call capabilities card-view-container cardview caret checkdisabled cincinatti class col-md-12 comparefn comparisons compvalue config configuration controller currentfield currently currentview custom december dinosaur directive disable disabled display displayed doadd dropdown dropdown-menu dropdown-toggle east elm events-label example-container exampletoolbar fa fa-plus false february fields filter filterchange filterconfig filtering filters filterstext filtertype filtervalues flintstone foreach frank fred function getcardview getlistview green grouped html icon iconclass includes invoke isascending isdisabled isseparator item item1 item2 items january john js judy july june length list list-group-item-heading list-group-item-text list-style-type list-view-container list-view-pf-additional-info list-view-pf-additional-info-item list-view-pf-description listconfig listview livingston localecompare main march match matches matchesfilter matchesfilters menu menuitem module month monthvals moreactions ng-click ng-controller ng-if norfolk november null numeric october ohio onfilterchange onsortchange onviewselect option optional options optionselected parseint pat patternfly pennsylvania perform performaction pf-toolbar pfsimplefilter pfsort pfviewutils pittsburgh placehodler placeholder primary primary-action primaryactions pulldown push resultscount return role row rows script second secondary secondary-action select selected selection selectionmatchprop selector separator september set settings smith sort sortchange sortconfig sorttype standard street style text thing thomas title toolbar toolbarconfig toolbars tooltip transclude true type uib-dropdown uib-dropdown-toggle unavailable undefined unique var view viewctrl viewid views viewsconfig viewselected viewtype virginia vm washingstone york"
+      "shortDescription": "Standard toolbar component. Includes filtering and view selection capabilities",
+      "keywords": "$scope action actionfn actions actions-label actionsconfig actionsinclude actionstext add address age allitems alpha angular api apple appliedfilters applyfilters april august bedrock birth birthmonth boulevard btn btn-default button buttons call capabilities card-view-container cardview caret checkdisabled cincinatti class col-md-12 comparefn comparisons componenet component compvalue config configuration controller currentfield currently currentview custom december dinosaur directive disable disabled display displayed doadd dropdown dropdown-menu dropdown-toggle east elm events-label example-container exampletoolbar fa fa-plus false february fields filter filterchange filterconfig filtering filters filterstext filtertype filtervalues flintstone foreach frank fred function getcardview getlistview green grouped html icon iconclass includes invoke isascending isdisabled isseparator item item1 item2 items january john js judy july june length list list-group-item-heading list-group-item-text list-style-type list-view-container list-view-pf-additional-info list-view-pf-additional-info-item list-view-pf-description listconfig listview livingston localecompare main march match matches matchesfilter matchesfilters menu menuitem module month monthvals moreactions ng-click ng-controller ng-if norfolk november null numeric october ohio onfilterchange onsortchange onviewselect option optional options optionselected parseint pat patternfly pennsylvania perform performaction pfsimplefilter pfsort pfviewutils pittsburgh placehodler placeholder primary primary-action primaryactions pulldown push resultscount return role row rows script second secondary secondary-action select selected selection selectionmatchprop selector separator september set settings smith sort sortchange sortconfig sorttype standard street style text thing thomas title toolbar toolbarconfig toolbars tooltip transclude true type uib-dropdown uib-dropdown-toggle unavailable undefined unique var view viewctrl viewid views viewsconfig viewselected viewtype virginia vm washingstone york"
     },
     {
       "section": "api",

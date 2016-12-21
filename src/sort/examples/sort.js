@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.sort.directive:pfSort
+ * @name patternfly.sort.component:pfSort
+ * @restrict E
  *
  * @description
- *   Directive for a  sort component
+ *   Sort component
  *   <br><br>
  *
  * @param {object} config configuration settings for the sort:<br/>
@@ -24,7 +25,7 @@
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <div pf-sort id="exampleSort" config="sortConfig"></div>
+        <pf-sort id="exampleSort" config="sortConfig"></pf-sort>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -145,82 +146,3 @@
   </file>
 </example>
  */
-angular.module('patternfly.sort').directive('pfSort', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '='
-    },
-    templateUrl: 'sort/sort.html',
-    controller: function ($scope) {
-
-      $scope.setupConfig = function () {
-        var updated = false;
-
-        if ($scope.config.fields === undefined) {
-          $scope.config.fields = [];
-        }
-
-        if ($scope.config.fields.length > 0) {
-          if ($scope.config.currentField === undefined) {
-            $scope.config.currentField = $scope.config.fields[0];
-            updated = true;
-          }
-          if ($scope.config.isAscending === undefined) {
-            $scope.config.isAscending = true;
-            updated = true;
-          }
-        }
-
-        if (updated === true && $scope.config.onSortChange) {
-          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
-        }
-      };
-
-      $scope.selectField = function (field) {
-        $scope.config.currentField = field;
-
-        if ($scope.config.onSortChange) {
-          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
-        }
-      };
-
-      $scope.changeDirection = function () {
-        $scope.config.isAscending = !$scope.config.isAscending;
-
-        if ($scope.config.onSortChange) {
-          $scope.config.onSortChange($scope.config.currentField, $scope.config.isAscending);
-        }
-      };
-
-      $scope.getSortIconClass = function () {
-        var iconClass;
-
-        if ($scope.config.currentField.sortType === 'numeric') {
-          if ($scope.config.isAscending) {
-            iconClass = 'fa fa-sort-numeric-asc';
-          } else {
-            iconClass = 'fa fa-sort-numeric-desc';
-          }
-        } else {
-          if ($scope.config.isAscending) {
-            iconClass = 'fa fa-sort-alpha-asc';
-          } else {
-            iconClass = 'fa fa-sort-alpha-desc';
-          }
-        }
-
-        return iconClass;
-      };
-
-      $scope.setupConfig();
-    },
-
-    link: function (scope, element, attrs) {
-      scope.$watch('config', function () {
-        scope.setupConfig();
-      }, true);
-    }
-  };
-});
