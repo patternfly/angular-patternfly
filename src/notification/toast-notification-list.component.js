@@ -1,10 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.notification.directive:pfToastNotificationList
- * @restrict A
+ * @name patternfly.notification.component:pfToastNotificationList
+ * @restrict E
  * @scope
  *
- * @param {Array} notifications The list of current notifcations to display. Each notification should have the following (see pfToastNotification):
+ * @param {Array} notifications The list of current notifications to display. Each notification should have the following (see pfToastNotification):
  *           <ul style='list-style-type: none'>
  *             <li>.type - (String) The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'
  *             <li>.header - (String) The header to display for the notification (optional)
@@ -25,14 +25,14 @@
  * @param {function} updateViewing (function(boolean, data)) Function to invoke when user is viewing/not-viewing (hovering on) a toast notification
  *
  * @description
- * Using this directive displayes a list of toast notifications
+ * Using this component displayes a list of toast notifications
  *
  * @example
  <example module="patternfly.notification">
 
    <file name="index.html">
      <div ng-controller="ToastNotificationListDemoCtrl" >
-       <div pf-toast-notification-list notifications="notifications" show-close="showClose" close-callback="handleClose" update-viewing="updateViewing"></div>
+       <pf-toast-notification-list notifications="notifications" show-close="showClose" close-callback="handleClose" update-viewing="updateViewing"></pf-toast-notification-list>
        <div class="row example-container">
          <div class="col-md-12">
            <form class="form-horizontal">
@@ -201,29 +201,27 @@
 
  </example>
  */
-angular.module('patternfly.notification').directive('pfToastNotificationList', function () {
-  'use strict';
+angular.module('patternfly.notification').component('pfToastNotificationList', {
+  bindings: {
+    notifications: '=',
+    showClose: '=?',
+    closeCallback: '=?',
+    updateViewing: '=?'
+  },
+  templateUrl: 'notification/toast-notification-list.html',
+  controller: function () {
+    'use strict';
+    var ctrl = this;
 
-  return {
-    restrict: 'A',
-    scope: {
-      notifications: '=',
-      showClose: '=?',
-      closeCallback: '=?',
-      updateViewing: '=?'
-    },
-    templateUrl: 'notification/toast-notification-list.html',
-    controller: function ($scope) {
-      $scope.handleClose = function (notification) {
-        if (angular.isFunction($scope.closeCallback)) {
-          $scope.closeCallback(notification);
-        }
-      };
-      $scope.handleViewingChange = function (isViewing, notification) {
-        if (angular.isFunction($scope.updateViewing)) {
-          $scope.updateViewing(isViewing, notification);
-        }
-      };
-    }
-  };
+    ctrl.handleClose = function (notification) {
+      if (angular.isFunction(ctrl.closeCallback)) {
+        ctrl.closeCallback(notification);
+      }
+    };
+    ctrl.handleViewingChange = function (isViewing, notification) {
+      if (angular.isFunction(ctrl.updateViewing)) {
+        ctrl.updateViewing(isViewing, notification);
+      }
+    };
+  }
 });
