@@ -257,6 +257,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.select.component:pfSelect",
+      "shortName": "pfSelect",
+      "type": "directive",
+      "moduleName": "patternfly.select",
+      "shortDescription": "The pfSelect component provides a wrapper for the angular ui bootstrap dropdown container allowing for use of ng-model and ng-options",
+      "keywords": "$scope allowing angular angularjs ape api apple apples attribute banana bananas beer binding bootstrap cat chicken class coffee col-sm-10 col-sm-2 component container control-label controller directive display-field dog drink drinks dropdown dynamically elements empty-value florida form-group form-horizontal fresh fruit fruits function generate great html https js list macintosh mandatory model module ng-controller ng-model ng-options ngmodel ngmodelcontroller ngoptions nodrink nopet options orange oranges org patternfly pet pets pfselect pies preferred script select selectdemoctrl selected tea title ui water wine wrapper"
+    },
+    {
+      "section": "api",
       "id": "patternfly.sort.component:pfSort",
       "shortName": "pfSort",
       "type": "directive",

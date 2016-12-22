@@ -68,6 +68,7 @@ angular.module('patternfly', [
   'patternfly.modals',
   'patternfly.navigation',
   'patternfly.notification',
+  'patternfly.select',
   'patternfly.sort',
   'patternfly.toolbars',
   'patternfly.utils',
@@ -76,6 +77,14 @@ angular.module('patternfly', [
   'patternfly.wizard'
 ]);
 
+;/**
+ * @name  patternfly card
+ *
+ * @description
+ *   Select module for patternfly.
+ *
+ */
+angular.module('patternfly.select', ['ui.bootstrap']);
 ;/**
  * @name  patternfly card
  *
@@ -6632,6 +6641,114 @@ angular.module( 'patternfly.notification' ).directive('pfToastNotification', fun
 });
 ;/**
  * @ngdoc directive
+ * @name patternfly.select.component:pfSelect
+ * @restrict E
+ *
+ * @param {string} ngModel Model binding using the {@link https://docs.angularjs.org/api/ng/type/ngModel.NgModelController/ NgModelController} is mandatory.
+ * @param {string=} ngOptions The `{@link https://docs.angularjs.org/api/ng/directive/select/ ngOptions}` attribute can be used to dynamically generate a list of `<option>` elements
+ *
+ * @description
+ * The pfSelect component provides a wrapper for the angular ui bootstrap dropdown container allowing for use of ng-model and ng-options
+ *
+ * @example
+ <example module="patternfly.select">
+ <file name="index.html">
+   <div ng-controller="SelectDemoCtrl">
+     <form class="form-horizontal">
+       <div class="form-group">
+         <label class="col-sm-2 control-label">Preferred pet:</label>
+         <div class="col-sm-10">
+           <pf-select selected="pet" empty-value="{{noPet}}" options="pets"></pf-select>
+         </div>
+       </div>
+       <div class="form-group">
+         <label class="col-sm-2 control-label">Preferred fruit:</label>
+         <div class="col-sm-10">
+           <pf-select selected="fruit" options="fruits" display-field="title"></pf-select>
+         </div>
+       </div>
+       <div class="form-group">
+         <label class="col-sm-2 control-label">Preferred drink:</label>
+         <div class="col-sm-10">
+           <pf-select selected="drink" empty-value="{{noDrink}}" options="drinks" display-field="name"></pf-select>
+         </div>
+       </div>
+     </form>
+     <p>Your preferred pet is {{pet || noPet}}.</p>
+     <p>Your preferred drink is {{fruit.name}}.</p>
+     <p>Your preferred drink is {{drink ? drink.name : noDrink}}.</p>
+   </div>
+   </file>
+ <file name="script.js">
+   angular.module( 'patternfly.select' ).controller( 'SelectDemoCtrl', function( $scope ) {
+         $scope.pets = ['Dog', 'Cat', 'Chicken'];
+         $scope.noPet = "No pet selected";
+
+         $scope.fruits = [
+           { id: 1, name:'orange', title: 'Oranges - fresh from Florida'},
+           { id: 2, name:'apple', title: 'Apples - Macintosh, great for pies.'},
+           { id: 3, name:'banana', title: 'Bananas - you will go ape for them!' }
+         ];
+         $scope.fruit = $scope.fruits[0];
+
+         $scope.drinks = [
+           { id: 1, name:'tea'},
+           { id: 2, name:'coffee'},
+           { id: 3, name:'water'},
+           { id: 4, name:'wine'},
+           { id: 5, name:'beer'}
+         ];
+         $scope.drink = $scope.drinks[0];
+         $scope.noDrink = "No drink selected";
+       });
+   </file>
+ </example>
+ */
+;angular.module('patternfly.select').component('pfSelect', {
+
+  bindings: {
+    selected: '=',
+    options: '<',
+    displayField: '@',
+    emptyValue: '@',
+    onSelect: '<'
+  },
+  templateUrl: 'select/select.html',
+  controller: function () {
+    'use strict';
+
+    var ctrl = this;
+
+    ctrl.$onInit = function () {
+      angular.extend(ctrl, {
+        showEmpty: angular.isDefined(ctrl.emptyValue),
+        getDisplayValue: getDisplayValue,
+        selectItem: selectItem
+      });
+    };
+
+    function getDisplayValue (item) {
+      var value;
+
+      if (item !== ctrl.emptyValue && angular.isString(ctrl.displayField)) {
+        value = item[ctrl.displayField];
+      } else {
+        value = item;
+      }
+
+      return value;
+    }
+
+    function selectItem (item) {
+      ctrl.selected = item;
+      if (angular.isFunction(ctrl.onSelect)) {
+        ctrl.onSelect(item);
+      }
+    }
+  }
+});
+;/**
+ * @ngdoc directive
  * @name patternfly.sort.component:pfSort
  * @restrict E
  *
@@ -10173,6 +10290,14 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
   $templateCache.put('notification/toast-notification.html',
     "<div class=\"toast-pf alert alert-{{notificationType}}\" ng-class=\"{'alert-dismissable': showCloseButton}\" ng-mouseenter=handleEnter() ng-mouseleave=handleLeave()><div uib-dropdown class=\"pull-right dropdown-kebab-pf\" ng-if=\"menuActions && menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=dropdown-menu-right aria-labelledby=dropdownKebabRight><li ng-repeat=\"menuAction in menuActions\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': menuAction.isSeparator === true, 'disabled': menuAction.isDisabled === true}\"><a ng-if=\"menuAction.isSeparator !== true\" class=secondary-action title={{menuAction.title}} ng-click=handleMenuAction(menuAction)>{{menuAction.name}}</a></li></ul></div><button ng-if=showCloseButton type=button class=close aria-hidden=true ng-click=handleClose()><span class=\"pficon pficon-close\"></span></button><div class=\"pull-right toast-pf-action\" ng-if=actionTitle><a ng-click=handleAction()>{{actionTitle}}</a></div><span class=\"pficon pficon-ok\" ng-if=\"notificationType === 'success'\"></span> <span class=\"pficon pficon-info\" ng-if=\"notificationType === 'info'\"></span> <span class=\"pficon pficon-error-circle-o\" ng-if=\"notificationType === 'danger'\"></span> <span class=\"pficon pficon-warning-triangle-o\" ng-if=\"notificationType === 'warning'\"></span> <span ng-if=header><strong>{{header}}</strong> {{message}}</span> <span ng-if=!header>{{message}}</span></div>"
+  );
+
+}]);
+;angular.module('patternfly.select').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('select/select.html',
+    "<div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class=\"btn btn-default\">{{$ctrl.getDisplayValue($ctrl.selected || $ctrl.emptyValue)}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-if=$ctrl.emptyValue ng-class=\"{'selected': !$ctrl.selected}\"><a href=javascript:void(0); role=menuitem tabindex=-1 ng-click=$ctrl.selectItem()>{{$ctrl.emptyValue}}</a></li><li ng-repeat=\"item in $ctrl.options\" ng-class=\"{'selected': item === $ctrl.selected}\"><a href=javascript:void(0); role=menuitem tabindex=-1 ng-click=$ctrl.selectItem(item)>{{$ctrl.getDisplayValue(item)}}</a></li></ul></div>"
   );
 
 }]);
