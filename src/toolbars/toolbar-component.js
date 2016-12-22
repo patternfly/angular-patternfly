@@ -6,10 +6,11 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
     'actions': '?'
   },
   templateUrl: 'toolbars/toolbar.html',
-  controller: function ($scope) {
+  controller: function () {
     'use strict';
 
     var ctrl = this;
+    var prevConfig;
 
     ctrl.$onInit = function () {
       angular.extend(ctrl, {
@@ -21,17 +22,28 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
       });
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
-        if (ctrl.config && ctrl.config.viewsConfig && ctrl.config.viewsConfig.views) {
-          ctrl.config.viewsConfig.viewsList = angular.copy(ctrl.config.viewsConfig.views);
-
-          if (!ctrl.config.viewsConfig.currentView) {
-            ctrl.config.viewsConfig.currentView = ctrl.config.viewsConfig.viewsList[0];
-          }
-        }
-      }, true);
+    ctrl.$onChanges = function () {
+      setupConfig ();
     };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
+        setupConfig();
+      }
+    };
+
+    function setupConfig () {
+      prevConfig = ctrl.config;
+
+      if (ctrl.config && ctrl.config.viewsConfig && ctrl.config.viewsConfig.views) {
+        ctrl.config.viewsConfig.viewsList = angular.copy(ctrl.config.viewsConfig.views);
+
+        if (!ctrl.config.viewsConfig.currentView) {
+          ctrl.config.viewsConfig.currentView = ctrl.config.viewsConfig.viewsList[0];
+        }
+      }
+    }
 
     function viewSelected (viewId) {
       ctrl.config.viewsConfig.currentView = viewId;
