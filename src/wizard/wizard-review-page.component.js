@@ -23,22 +23,8 @@ angular.module('patternfly.wizard').component('pfWizardReviewPage', {
     'use strict';
     var ctrl = this;
 
-    ctrl.toggleShowReviewDetails = function (step) {
-      if (step.showReviewDetails === true) {
-        step.showReviewDetails = false;
-      } else {
-        step.showReviewDetails = true;
-      }
-    };
-    ctrl.getSubStepNumber = function (step, substep) {
-      return step.getStepDisplayNumber(substep);
-    };
-    ctrl.getReviewSubSteps = function (reviewStep) {
-      return reviewStep.getReviewSteps();
-    };
-    ctrl.reviewSteps = [];
-    ctrl.updateReviewSteps = function () {
-      ctrl.reviewSteps = ctrl.wizard.getReviewSteps();
+    ctrl.$onInit = function () {
+      ctrl.reviewSteps = [];
     };
 
     ctrl.$onChanges = function (changesObj) {
@@ -47,6 +33,26 @@ angular.module('patternfly.wizard').component('pfWizardReviewPage', {
           ctrl.updateReviewSteps();
         }
       }
+    };
+
+    ctrl.toggleShowReviewDetails = function (step) {
+      if (step.showReviewDetails === true) {
+        step.showReviewDetails = false;
+      } else {
+        step.showReviewDetails = true;
+      }
+    };
+
+    ctrl.getSubStepNumber = function (step, substep) {
+      return step.getStepDisplayNumber(substep);
+    };
+
+    ctrl.getReviewSubSteps = function (reviewStep) {
+      return reviewStep.getReviewSteps();
+    };
+
+    ctrl.updateReviewSteps = function () {
+      ctrl.reviewSteps = ctrl.wizard.getReviewSteps();
     };
   }
 });

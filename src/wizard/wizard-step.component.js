@@ -52,8 +52,8 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
   controller: function ($timeout) {
     'use strict';
 
-    var firstRun = true,
-      ctrl = this;
+    var ctrl = this,
+      firstRun;
 
     var stepIdx = function (step) {
       var idx = 0;
@@ -86,32 +86,59 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
       return foundStep;
     };
 
-    ctrl.steps = [];
-    ctrl.context = {};
+    ctrl.$onInit = function () {
+      firstRun = true;
+      ctrl.steps = [];
+      ctrl.context = {};
+      ctrl.title =  ctrl.stepTitle;
+      ctrl.contentStyle = ctrl.wizard.contentStyle;
+      ctrl.wizard.addStep(ctrl);
+      ctrl.pageNumber = ctrl.wizard.getStepNumber(ctrl);
 
-    if (angular.isUndefined(ctrl.nextEnabled)) {
-      ctrl.nextEnabled = true;
-    }
-    if (angular.isUndefined(ctrl.prevEnabled)) {
-      ctrl.prevEnabled = true;
-    }
-    if (angular.isUndefined(ctrl.showReview)) {
-      ctrl.showReview = false;
-    }
-    if (angular.isUndefined(ctrl.showReviewDetails)) {
-      ctrl.showReviewDetails = false;
-    }
-    if (angular.isUndefined(ctrl.stepPriority)) {
-      ctrl.stepPriority = 999;
-    } else {
-      ctrl.stepPriority = parseInt(ctrl.stepPriority);
-    }
-    if (angular.isUndefined(ctrl.okToNavAway)) {
-      ctrl.okToNavAway = true;
-    }
-    if (angular.isUndefined(ctrl.allowClickNav)) {
-      ctrl.allowClickNav = true;
-    }
+      if (angular.isUndefined(ctrl.nextEnabled)) {
+        ctrl.nextEnabled = true;
+      }
+      if (angular.isUndefined(ctrl.prevEnabled)) {
+        ctrl.prevEnabled = true;
+      }
+      if (angular.isUndefined(ctrl.showReview)) {
+        ctrl.showReview = false;
+      }
+      if (angular.isUndefined(ctrl.showReviewDetails)) {
+        ctrl.showReviewDetails = false;
+      }
+      if (angular.isUndefined(ctrl.stepPriority)) {
+        ctrl.stepPriority = 999;
+      } else {
+        ctrl.stepPriority = parseInt(ctrl.stepPriority);
+      }
+      if (angular.isUndefined(ctrl.okToNavAway)) {
+        ctrl.okToNavAway = true;
+      }
+      if (angular.isUndefined(ctrl.allowClickNav)) {
+        ctrl.allowClickNav = true;
+      }
+
+      if (ctrl.substeps && !ctrl.onShow) {
+        ctrl.onShow = function () {
+          $timeout(function () {
+            if (!ctrl.selectedStep) {
+              ctrl.goTo(ctrl.getEnabledSteps()[0]);
+            }
+          }, 10);
+        };
+      }
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.nextTooltip) {
+        ctrl.wizard.nextTooltip = changesObj.nextTooltip.currentValue;
+      }
+
+      if (changesObj.prevTooltip) {
+        ctrl.wizard.prevTooltip = changesObj.prevTooltip.currentValue;
+      }
+    };
 
     ctrl.getEnabledSteps = function () {
       return ctrl.steps.filter(function (step) {
@@ -204,7 +231,7 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
       }
     };
 
-    this.addStep = function (step) {
+    ctrl.addStep = function (step) {
       // Insert the step into step array
       var insertBefore = _.find(ctrl.steps, function (nextStep) {
         return nextStep.stepPriority > step.stepPriority;
@@ -216,34 +243,20 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
       }
     };
 
-    this.currentStepTitle = function () {
+    ctrl.currentStepTitle = function () {
       return ctrl.selectedStep.stepTitle;
     };
 
-    this.currentStepDescription = function () {
+    ctrl.currentStepDescription = function () {
       return ctrl.selectedStep.description;
     };
 
-    this.currentStep = function () {
+    ctrl.currentStep = function () {
       return ctrl.selectedStep;
     };
 
-    this.totalStepCount = function () {
+    ctrl.totalStepCount = function () {
       return ctrl.getEnabledSteps().length;
-    };
-
-    // Allow access to any step
-    this._goTo = function (step) {
-      var enabledSteps = ctrl.getEnabledSteps();
-      var stepTo;
-
-      if (angular.isNumber(step)) {
-        stepTo = enabledSteps[step];
-      } else {
-        stepTo = stepByTitle(step);
-      }
-
-      ctrl.goTo(stepTo);
     };
 
     // Method used for next button within step
@@ -291,35 +304,7 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
           }
         }
       }
-
       return goPrev;
-    };
-
-    if (ctrl.substeps && !ctrl.onShow) {
-      ctrl.onShow = function () {
-        $timeout(function () {
-          if (!ctrl.selectedStep) {
-            ctrl.goTo(ctrl.getEnabledSteps()[0]);
-          }
-        }, 10);
-      };
-    }
-
-    ctrl.$onInit = function () {
-      ctrl.title =  ctrl.stepTitle;
-      ctrl.contentStyle = ctrl.wizard.contentStyle;
-      ctrl.wizard.addStep(ctrl);
-      ctrl.pageNumber = ctrl.wizard.getStepNumber(ctrl);
-    };
-
-    ctrl.$onChanges = function (changesObj) {
-      if (changesObj.nextTooltip) {
-        ctrl.wizard.nextTooltip = changesObj.nextTooltip.currentValue;
-      }
-
-      if (changesObj.prevTooltip) {
-        ctrl.wizard.prevTooltip = changesObj.prevTooltip.currentValue;
-      }
     };
   }
 });

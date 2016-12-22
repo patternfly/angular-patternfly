@@ -325,7 +325,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   controller: function ($timeout) {
     'use strict';
     var ctrl = this,
-      firstRun = true;
+      firstRun;
 
     var stepIdx = function (step) {
       var idx = 0;
@@ -358,31 +358,55 @@ angular.module('patternfly.wizard').component('pfWizard', {
       return foundStep;
     };
 
-    ctrl.steps = [];
-    ctrl.context = {};
+    ctrl.$onInit = function () {
+      firstRun = true;
+      ctrl.steps = [];
+      ctrl.context = {};
 
-    if (angular.isUndefined(ctrl.wizardReady)) {
-      ctrl.wizardReady = true;
-    }
+      if (angular.isUndefined(ctrl.wizardReady)) {
+        ctrl.wizardReady = true;
+      }
 
-    if (angular.isUndefined(ctrl.contentHeight)) {
-      ctrl.contentHeight = '300px';
-    }
-    ctrl.contentStyle = {
-      'height': ctrl.contentHeight,
-      'max-height': ctrl.contentHeight,
-      'overflow-y': 'auto'
+      if (angular.isUndefined(ctrl.contentHeight)) {
+        ctrl.contentHeight = '300px';
+      }
+      ctrl.contentStyle = {
+        'height': ctrl.contentHeight,
+        'max-height': ctrl.contentHeight,
+        'overflow-y': 'auto'
+      };
+
+      if (!ctrl.cancelTitle) {
+        ctrl.cancelTitle = "Cancel";
+      }
+      if (!ctrl.backTitle) {
+        ctrl.backTitle = "< Back";
+      }
+      if (!ctrl.nextTitle) {
+        ctrl.nextTitle = "Next >";
+      }
     };
 
-    if (!ctrl.cancelTitle) {
-      ctrl.cancelTitle = "Cancel";
-    }
-    if (!ctrl.backTitle) {
-      ctrl.backTitle = "< Back";
-    }
-    if (!ctrl.nextTitle) {
-      ctrl.nextTitle = "Next >";
-    }
+    ctrl.$onChanges = function (changesObj) {
+      var step;
+
+      if (changesObj.wizardReady && changesObj.wizardReady.currentValue) {
+        ctrl.goTo(ctrl.getEnabledSteps()[0]);
+      }
+
+      if (changesObj.currentStep) {
+        //checking to make sure currentStep is truthy value
+        step = changesObj.currentStep.currentValue;
+        if (!step) {
+          return;
+        }
+
+        //setting stepTitle equal to current step title or default title
+        if (ctrl.selectedStep && ctrl.selectedStep.title !== step) {
+          ctrl.goTo(stepByTitle(step));
+        }
+      }
+    };
 
     ctrl.getEnabledSteps = function () {
       return ctrl.steps.filter(function (step) {
@@ -390,7 +414,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
       });
     };
 
-    this.getReviewSteps = function () {
+    ctrl.getReviewSteps = function () {
       return ctrl.steps.filter(function (step) {
         return !step.disabled &&
           (!angular.isUndefined(step.reviewTemplate) || step.getReviewSteps().length > 0);
@@ -456,7 +480,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
       }
     };
 
-    this.addStep = function (step) {
+    ctrl.addStep = function (step) {
       // Insert the step into step array
       var insertBefore = _.find(ctrl.steps, function (nextStep) {
         return nextStep.stepPriority > step.stepPriority;
@@ -480,11 +504,11 @@ angular.module('patternfly.wizard').component('pfWizard', {
       ctrl.firstStep =  stepIdx(ctrl.selectedStep) === 0 && value === 0;
     };
 
-    this.currentStepTitle = function () {
+    ctrl.currentStepTitle = function () {
       return ctrl.selectedStep.title;
     };
 
-    this.currentStepDescription = function () {
+    ctrl.currentStepDescription = function () {
       return ctrl.selectedStep.description;
     };
 
@@ -497,7 +521,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
     };
 
     // Allow access to any step
-    this.goToStep = function (step, resetStepNav) {
+    ctrl.goToStep = function (step, resetStepNav) {
       var enabledSteps = ctrl.getEnabledSteps();
       var stepTo;
 
@@ -511,7 +535,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
     };
 
     // Method used for next button within step
-    this.next = function (callback) {
+    ctrl.next = function (callback) {
       var enabledSteps = ctrl.getEnabledSteps();
 
       // Save the step  you were on when next() was invoked
@@ -527,7 +551,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
       if (angular.isFunction(callback)) {
         if (callback(ctrl.selectedStep)) {
           if (index === enabledSteps.length - 1) {
-            this.finish();
+            ctrl.finish();
           } else {
             // Go to the next step
             if (enabledSteps[index + 1].substeps) {
@@ -544,14 +568,14 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
       // Check to see if this is the last step.  If it is next behaves the same as finish()
       if (index === enabledSteps.length - 1) {
-        this.finish();
+        ctrl.finish();
       } else {
         // Go to the next step
         ctrl.goTo(enabledSteps[index + 1]);
       }
     };
 
-    this.previous = function (callback) {
+    ctrl.previous = function (callback) {
       var index = stepIdx(ctrl.selectedStep);
 
       if (ctrl.selectedStep.substeps) {
@@ -572,51 +596,30 @@ angular.module('patternfly.wizard').component('pfWizard', {
       }
     };
 
-    this.finish = function () {
+    ctrl.finish = function () {
       if (ctrl.onFinish) {
         if (ctrl.onFinish() !== false) {
-          this.reset();
+          ctrl.reset();
         }
       }
     };
 
-    this.cancel = function () {
+    ctrl.cancel = function () {
       if (ctrl.onCancel) {
         if (ctrl.onCancel() !== false) {
-          this.reset();
+          ctrl.reset();
         }
       }
     };
 
     //reset
-    this.reset = function () {
+    ctrl.reset = function () {
       //traverse steps array and set each "completed" property to false
       angular.forEach(ctrl.getEnabledSteps(), function (step) {
         step.completed = false;
       });
       //go to first step
-      this.goToStep(0);
-    };
-
-    ctrl.$onChanges = function (changesObj) {
-      var step;
-
-      if (changesObj.wizardReady && changesObj.wizardReady.currentValue) {
-        ctrl.goTo(ctrl.getEnabledSteps()[0]);
-      }
-
-      if (changesObj.currentStep) {
-        //checking to make sure currentStep is truthy value
-        step = changesObj.currentStep.currentValue;
-        if (!step) {
-          return;
-        }
-
-        //setting stepTitle equal to current step title or default title
-        if (ctrl.selectedStep && ctrl.selectedStep.title !== step) {
-          ctrl.goTo(stepByTitle(step));
-        }
-      }
+      ctrl.goToStep(0);
     };
   }
 });

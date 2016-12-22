@@ -44,37 +44,28 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     'use strict';
     var ctrl = this;
 
-    if (angular.isUndefined(ctrl.nextEnabled)) {
-      ctrl.nextEnabled = true;
-    }
-    if (angular.isUndefined(ctrl.prevEnabled)) {
-      ctrl.prevEnabled = true;
-    }
-    if (angular.isUndefined(ctrl.showReviewDetails)) {
-      ctrl.showReviewDetails = false;
-    }
-    if (angular.isUndefined(ctrl.stepPriority)) {
-      ctrl.stepPriority = 999;
-    } else {
-      ctrl.stepPriority = parseInt(ctrl.stepPriority);
-    }
-    if (angular.isUndefined(ctrl.okToNavAway)) {
-      ctrl.okToNavAway = true;
-    }
-    if (angular.isUndefined(ctrl.allowClickNav)) {
-      ctrl.allowClickNav = true;
-    }
-
-    ctrl.isPrevEnabled = function () {
-      var enabled = angular.isUndefined(ctrl.prevEnabled) || ctrl.prevEnabled;
-      if (ctrl.substeps) {
-        angular.forEach(ctrl.getEnabledSteps(), function (step) {
-          enabled = enabled && step.prevEnabled;
-        });
-      }
-      return enabled;
-    };
     ctrl.$onInit = function () {
+      if (angular.isUndefined(ctrl.nextEnabled)) {
+        ctrl.nextEnabled = true;
+      }
+      if (angular.isUndefined(ctrl.prevEnabled)) {
+        ctrl.prevEnabled = true;
+      }
+      if (angular.isUndefined(ctrl.showReviewDetails)) {
+        ctrl.showReviewDetails = false;
+      }
+      if (angular.isUndefined(ctrl.stepPriority)) {
+        ctrl.stepPriority = 999;
+      } else {
+        ctrl.stepPriority = parseInt(ctrl.stepPriority);
+      }
+      if (angular.isUndefined(ctrl.okToNavAway)) {
+        ctrl.okToNavAway = true;
+      }
+      if (angular.isUndefined(ctrl.allowClickNav)) {
+        ctrl.allowClickNav = true;
+      }
+
       ctrl.title = ctrl.stepTitle;
       ctrl.step.addStep(ctrl);
     };
@@ -95,6 +86,16 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
       if (changesObj.allowClickNav) {
         ctrl.step.allowClickNav = changesObj.allowClickNav.currentValue;
       }
+    };
+
+    ctrl.isPrevEnabled = function () {
+      var enabled = angular.isUndefined(ctrl.prevEnabled) || ctrl.prevEnabled;
+      if (ctrl.substeps) {
+        angular.forEach(ctrl.getEnabledSteps(), function (step) {
+          enabled = enabled && step.prevEnabled;
+        });
+      }
+      return enabled;
     };
   }
 });
