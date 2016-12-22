@@ -1,13 +1,14 @@
 /**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfTrendsChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a trend chart. The trend chart combines overall data with a
+ *   Component for rendering a trend chart. The trend chart combines overall data with a
  *   pfSparklineChart.
  *   <br><br>
  *   See http://c3js.org/reference.html for a full list of C3 chart options.<br>
- *   See also: {@link patternfly.charts.directive:pfSparklineChart}
+ *   See also: {@link patternfly.charts.component:pfSparklineChart}
  *
  * @param {object} config configuration settings for the trends chart:<br/>
  * <ul style='list-style-type: none'>
@@ -36,8 +37,8 @@
  <file name="index.html">
    <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <div pf-trends-chart config="config" chart-data="data"
-            show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+       <pf-trends-chart config="config" chart-data="data"
+            show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></pf-trends-chart>
      </div>
      <hr class="col-md-12">
      <div class="col-md-12">
@@ -212,54 +213,65 @@
  </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfTrendsChart', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      chartData: '=',
-      chartHeight: '=?',
-      showXAxis: '=?',
-      showYAxis: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/trends/trends-chart.html',
-    controller: function ($scope) {
-      var SMALL = 30, LARGE = 60;
+angular.module('patternfly.charts').component('pfTrendsChart', {
+  bindings: {
+    config: '<',
+    chartData: '<',
+    chartHeight: '<?',
+    showXAxis: '<?',
+    showYAxis: '<?'
+  },
+  templateUrl: 'charts/trends/trends-chart.html',
+  controller: function (pfUtils) {
+    'use strict';
+    var ctrl = this, prevChartData, prevConfig;
+    var SMALL = 30, LARGE = 60;
 
-      $scope.getPercentageValue = function () {
-        var pctValue = 0;
+    ctrl.updateAll = function () {
+      // Need to deep watch changes
+      prevChartData = angular.copy(ctrl.chartData);
+      prevConfig = angular.copy(ctrl.config);
 
-        if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
-          pctValue = Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
-        }
-        return pctValue;
-      };
-      $scope.getLatestValue = function () {
-        var latestValue = 0;
-        if ($scope.chartData.yData && $scope.chartData.yData.length > 0) {
-          latestValue = $scope.chartData.yData[$scope.chartData.yData.length - 1];
-        }
-        return latestValue;
-      };
-      $scope.getChartHeight = function () {
-        var retValue = LARGE;
-        if ($scope.chartHeight) {
-          retValue = $scope.chartHeight;
-        } else if ($scope.config.layout === 'small') {
-          retValue = SMALL;
-        }
-        return retValue;
-      };
-    },
-    link: function (scope) {
-      scope.$watch('config', function () {
-        scope.showLargeCardLayout = (!scope.config.layout || scope.config.layout === 'large');
-        scope.showSmallCardLayout = (scope.config.layout === 'small');
-        scope.showActualValue = (!scope.config.valueType || scope.config.valueType === 'actual');
-        scope.showPercentageValue = (scope.config.valueType === 'percentage');
-      }, true);
-    }
-  };
+      ctrl.showLargeCardLayout = (!ctrl.config.layout || ctrl.config.layout === 'large');
+      ctrl.showSmallCardLayout = (ctrl.config.layout === 'small');
+      ctrl.showActualValue = (!ctrl.config.valueType || ctrl.config.valueType === 'actual');
+      ctrl.showPercentageValue = (ctrl.config.valueType === 'percentage');
+    };
+
+    ctrl.getPercentageValue = function () {
+      var pctValue = 0;
+
+      if (ctrl.chartData.dataAvailable !== false && ctrl.chartData.total > 0) {
+        pctValue = Math.round(ctrl.getLatestValue() / ctrl.chartData.total * 100.0);
+      }
+      return pctValue;
+    };
+    ctrl.getLatestValue = function () {
+      var latestValue = 0;
+      if (ctrl.chartData.yData && ctrl.chartData.yData.length > 0) {
+        latestValue = ctrl.chartData.yData[ctrl.chartData.yData.length - 1];
+      }
+      return latestValue;
+    };
+    ctrl.getChartHeight = function () {
+      var retValue = LARGE;
+      if (ctrl.chartHeight) {
+        retValue = ctrl.chartHeight;
+      } else if (ctrl.config.layout === 'small') {
+        retValue = SMALL;
+      }
+      return retValue;
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData and config
+      if (!angular.equals(ctrl.chartData, prevChartData) || !angular.equals(ctrl.config, prevConfig)) {
+        ctrl.updateAll();
+      }
+    };
+  }
 });
