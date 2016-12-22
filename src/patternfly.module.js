@@ -12,6 +12,7 @@ angular.module('patternfly', [
   'patternfly.modals',
   'patternfly.navigation',
   'patternfly.notification',
+  'patternfly.select',
   'patternfly.sort',
   'patternfly.toolbars',
   'patternfly.utils',
