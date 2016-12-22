@@ -18,7 +18,7 @@
  <example module="patternfly.charts">
    <file name="index.html">
      <div ng-controller="ChartCtrl">
-        <pf-c3-chart id="chartId" config="chartConfig" get-chart-callback="getChart($event.chart)"></pf-c3-chart>
+        <pf-c3-chart id="chartId" config="chartConfig" get-chart-callback="getChart"></pf-c3-chart>
 
         <form role="form" style="width:300px">
           Total = {{total}}, Used = {{used}}, Available = {{available}}
@@ -80,7 +80,7 @@
     bindings: {
       id: '@?',
       config: '<',
-      getChartCallback: '&'
+      getChartCallback: '<'
     },
     template: '<div id=""></div>',
     controller: function ($timeout, $log) {
@@ -101,7 +101,7 @@
             chartData.bindto = '#' + ctrl.id;
             $log.info("    -> C3 chart generatd: " + chartData.bindto);
             chart = c3.generate(chartData);
-            ctrl.getChartCallback({$event: {chart: chart}});
+            ctrl.getChartCallback(chart);
             prevConfig = angular.copy(ctrl.config);
           }
         });
