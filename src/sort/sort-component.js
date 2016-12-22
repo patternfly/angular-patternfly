@@ -31,7 +31,7 @@ angular.module('patternfly.sort').component('pfSort', {
     function setupConfig () {
       var updated = false;
 
-      prevConfig = ctrl.config;
+      prevConfig = angular.copy(ctrl.config);
 
       if (ctrl.config.fields === undefined) {
         ctrl.config.fields = [];

@@ -34,7 +34,7 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
     };
 
     function setupConfig () {
-      prevConfig = ctrl.config;
+      prevConfig = angular.copy(ctrl.config);
 
       if (ctrl.config && ctrl.config.viewsConfig && ctrl.config.viewsConfig.views) {
         ctrl.config.viewsConfig.viewsList = angular.copy(ctrl.config.viewsConfig.views);

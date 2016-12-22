@@ -53,7 +53,7 @@ angular.module('patternfly.filters').component('pfFilterResults', {
     };
 
     function setupConfig () {
-      prevConfig = ctrl.config;
+      prevConfig = angular.copy(ctrl.config);
 
       if (!ctrl.config.appliedFilters) {
         ctrl.config.appliedFilters = [];

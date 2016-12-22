@@ -72,12 +72,21 @@ angular.module('patternfly.filters').component('pfFilterFields', {
     }
 
     function setupConfig () {
-      prevConfig = ctrl.config;
+      var fieldFound = false;
+
+      prevConfig = angular.copy(ctrl.config);
 
       if (ctrl.config.fields === undefined) {
         ctrl.config.fields = [];
       }
-      if (!ctrl.currentField || ctrl.config.fields.indexOf((ctrl.currentField) === -1)) {
+
+      if (ctrl.currentField) {
+        fieldFound = _.find(ctrl.config.fields, function (nextField) {
+          return nextField.id === ctrl.currentField.id;
+        });
+      }
+
+      if (!fieldFound) {
         ctrl.currentField = ctrl.config.fields[0];
         ctrl.currentValue = null;
       }
