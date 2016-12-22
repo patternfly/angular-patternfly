@@ -193,6 +193,11 @@ module.exports = function (grunt) {
           src: ['modals/**/*.html'],
           dest: 'templates/modals.js'
         },
+        'patternfly.select': {
+          cwd: 'src/',
+          src: ['select/**/*.html'],
+          dest: 'templates/select.js'
+        },
         'patternfly.sort': {
           cwd: 'src/',
           src: ['sort/**/*.html'],
