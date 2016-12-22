@@ -1,4 +1,4 @@
-describe('Directive:  pfWizard', function () {
+describe('Component:  pfWizard', function () {
   var $scope,
       $rootScope,
       $compile,
