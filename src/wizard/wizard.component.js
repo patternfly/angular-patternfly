@@ -61,24 +61,24 @@
         </div>
         <pf-wizard-substep step-title="Details - Extra" next-enabled="true" step-id="details-extra" step-priority="1" show-review="true" show-review-details="true" review-template="review-second-template.html">
           <form class="form-horizontal">
-            <div pf-form-group pf-label="Lorem" required>
+            <pf-form-group pf-label="Lorem" required>
               <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text" required/>
-            </div>
-            <div pf-form-group pf-label="Ipsum">
+            </pf-form-group>
+            <pf-form-group pf-label="Ipsum">
               <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
-            </div>
+            </pf-form-group>
           </form>
         </pf-wizard-substep>
       </pf-wizard-step>
       <pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
         <form class="form-horizontal">
           <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
-          <div pf-form-group pf-label="Lorem">
+          <pf-form-group pf-label="Lorem">
             <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
-          </div>
-          <div pf-form-group pf-label="Ipsum">
+          </pf-form-group>
+          <pf-form-group pf-label="Ipsum">
             <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
-          </div>
+          </pf-form-group>
         </form>
       </pf-wizard-step>
       <pf-wizard-step step-title="Review" substeps="true" step-id="review" step-priority="2">
@@ -91,12 +91,12 @@
     <div ng-controller="DetailsGeneralController">
        <pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
          <form class="form-horizontal">
-           <div pf-form-group pf-label="Name" required>
-            <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
-           </div>
-           <div pf-form-group pf-label="Description">
-            <input id="new-description" name="description" ng-model="data.description" type="text" />
-           </div>
+           <pf-form-group pf-label="Name" required>
+              <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
+           </pf-form-group>
+           <pf-form-group pf-label="Description">
+             <input id="new-description" name="description" ng-model="data.description" type="text" />
+           </pf-form-group>
          </form>
       </pf-wizard-substep>
     </div>
