@@ -36,14 +36,14 @@
    <div ng-controller="ChartCtrl">
      <label class="label-title">Card With Single Trend</label>
      <pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
-       <div pf-trends-chart config="configSingle" chart-data="dataSingle"></div>
+       <pf-trends-chart config="configSingle" chart-data="dataSingle"></pf-trends-chart>
      </pf-card>
      <label class="label-title">Card with Multiple Trends</label>
      <pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
           show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
-       <div pf-trends-chart config="configVirtual" chart-data="dataVirtual"></div>
-       <div pf-trends-chart config="configPhysical" chart-data="dataPhysical"></div>
-       <div pf-trends-chart config="configMemory" chart-data="dataMemory"></div>
+       <pf-trends-chart config="configVirtual" chart-data="dataVirtual"></pf-trends-chart>
+       <pf-trends-chart config="configPhysical" chart-data="dataPhysical"></pf-trends-chart>
+       <pf-trends-chart config="configMemory" chart-data="dataMemory"></pf-trends-chart>
      </pf-card>
     </div>
    </div>
