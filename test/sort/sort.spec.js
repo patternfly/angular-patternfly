@@ -1,6 +1,7 @@
 describe('Directive:  pfSort', function () {
   var $scope;
   var $compile;
+  var $timeout;
   var element;
 
   // load the controller's module
@@ -8,9 +9,10 @@ describe('Directive:  pfSort', function () {
     module('patternfly.sort', 'sort/sort.html');
   });
 
-  beforeEach(inject(function (_$compile_, _$rootScope_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
+    $timeout = _$timeout_;
   }));
 
   var compileHTML = function (markup, scope) {
@@ -21,27 +23,25 @@ describe('Directive:  pfSort', function () {
   };
 
   beforeEach(function () {
-    $scope.sortConfig = {
-      fields: [
-        {
-          id: 'name',
-          title:  'Name',
-          sortType: 'alpha'
-        },
-        {
-          id: 'count',
-          title:  'Count',
-          sortType: 'numeric'
-        },
-        {
-          id: 'description',
-          title:  'Description',
-          sortType: 'alpha'
-        }
-      ]
-    };
+    $scope.fields = [
+      {
+        id: 'name',
+        title:  'Name',
+        sortType: 'alpha'
+      },
+      {
+        id: 'count',
+        title:  'Count',
+        sortType: 'numeric'
+      },
+      {
+        id: 'description',
+        title:  'Description',
+        sortType: 'alpha'
+      }
+    ];
 
-    var htmlTmp = '<pf-sort config="sortConfig"></pf-sort>';
+    var htmlTmp = '<pf-sort fields="fields"></pf-sort>';
 
     compileHTML(htmlTmp, $scope);
   });
@@ -114,56 +114,64 @@ describe('Directive:  pfSort', function () {
 
   it ('should notify when a new sort field is chosen', function() {
     var notified = false;
-    var chosenField = '';
+    var chosenId = '';
     var chosenDir = '';
-    var fields = element.find('.sort-pf .sort-field');
 
-    var watchForNotify = function (sortField, isAscending) {
+    $scope.watchForNotify = function (sortId, isAscending) {
       notified = true;
-      chosenField = sortField;
+      chosenId = sortId;
       chosenDir = isAscending;
     };
 
-    $scope.sortConfig.onSortChange = watchForNotify;
+    var htmlTmp = '<pf-sort fields="fields" on-sort-change="watchForNotify" current-sort-id="currentSortId" is-ascending="isAscending"></pf-sort>';
+    compileHTML(htmlTmp, $scope);
 
-
+    var fields = element.find('.sort-pf .sort-field');
     expect(fields.length).toBe(3);
 
     eventFire(fields[2], 'click');
     $scope.$digest();
+    $timeout.flush();
 
     expect(notified).toBeTruthy();
-    expect(chosenField).toBe($scope.sortConfig.fields[2]);
+    expect(chosenId).toBe($scope.fields[2].id);
     expect(chosenDir).toBeTruthy();
   });
 
   it ('should notify when the sort direction changes', function() {
     var notified = false;
-    var chosenField = '';
+    var chosenId = '';
     var chosenDir = '';
-    var sortButton = element.find('.sort-pf .btn.btn-link');
 
-    var watchForNotify = function (sortField, isAscending) {
+    $scope.watchForNotify = function (sortId, isAscending) {
       notified = true;
-      chosenField = sortField;
+      chosenId = sortId;
       chosenDir = isAscending;
     };
 
-    $scope.sortConfig.onSortChange = watchForNotify;
+    var htmlTmp = '<pf-sort fields="fields" on-sort-change="watchForNotify" current-sort-id="currentSortId" is-ascending="isAscending"></pf-sort>';
+    compileHTML(htmlTmp, $scope);
+
+    var sortButton = element.find('.sort-pf .btn.btn-link');
 
     expect(sortButton.length).toBe(1);
 
     eventFire(sortButton[0], 'click');
     $scope.$digest();
+    $timeout.flush();
 
     expect(notified).toBeTruthy();
-    expect(chosenField).toBe($scope.sortConfig.fields[0]);
+    expect(chosenId).toBe($scope.fields[0].id);
     expect(chosenDir).toBeFalsy();
   });
+
   it ('should return appropriate icons for current sort type and direction', function () {
-    $scope.sortConfig.currentField = $scope.sortConfig.fields[0];
-    $scope.sortConfig.isAscending = true;
-    $scope.$digest();
+    $scope.currentSortId = $scope.fields[0].id;
+    $scope.isAscending = true;
+
+    var htmlTmp = '<pf-sort fields="fields" current-sort-id="currentSortId" is-ascending="isAscending"></pf-sort>';
+    compileHTML(htmlTmp, $scope);
+
     var alphaSortAsc = element.find('.fa.fa-sort-alpha-asc');
     var alphaSortDesc = element.find('.fa.fa-sort-alpha-desc');
     var numericSortAsc = element.find('.fa.fa-sort-numeric-asc');
@@ -173,9 +181,11 @@ describe('Directive:  pfSort', function () {
     expect(numericSortAsc.length).toBe(0);
     expect(numericSortDesc.length).toBe(0);
 
-    $scope.sortConfig.currentField = $scope.sortConfig.fields[0];
-    $scope.sortConfig.isAscending = false;
-    $scope.$digest();
+    $scope.currentSortId = $scope.fields[0].id;
+    $scope.isAscending = false;
+    var htmlTmp = '<pf-sort fields="fields" current-sort-id="currentSortId" is-ascending="isAscending"></pf-sort>';
+    compileHTML(htmlTmp, $scope);
+
     alphaSortAsc = element.find('.fa.fa-sort-alpha-asc');
     alphaSortDesc = element.find('.fa.fa-sort-alpha-desc');
     numericSortAsc = element.find('.fa.fa-sort-numeric-asc');
@@ -185,9 +195,10 @@ describe('Directive:  pfSort', function () {
     expect(numericSortAsc.length).toBe(0);
     expect(numericSortDesc.length).toBe(0);
 
-    $scope.sortConfig.currentField = $scope.sortConfig.fields[1];
-    $scope.sortConfig.isAscending = true;
-    $scope.$digest();
+    $scope.currentSortId = $scope.fields[1].id;
+    $scope.isAscending = true;
+    var htmlTmp = '<pf-sort fields="fields" current-sort-id="currentSortId" is-ascending="isAscending"></pf-sort>';
+    compileHTML(htmlTmp, $scope);
     alphaSortAsc = element.find('.fa.fa-sort-alpha-asc');
     alphaSortDesc = element.find('.fa.fa-sort-alpha-desc');
     numericSortAsc = element.find('.fa.fa-sort-numeric-asc');
@@ -197,9 +208,10 @@ describe('Directive:  pfSort', function () {
     expect(numericSortAsc.length).toBe(1);
     expect(numericSortDesc.length).toBe(0);
 
-    $scope.sortConfig.currentField = $scope.sortConfig.fields[1];
-    $scope.sortConfig.isAscending = false;
-    $scope.$digest();
+    $scope.currentSortId = $scope.fields[1].id;
+    $scope.isAscending = false;
+    var htmlTmp = '<pf-sort fields="fields" current-sort-id="currentSortId" is-ascending="isAscending"></pf-sort>';
+    compileHTML(htmlTmp, $scope);
     alphaSortAsc = element.find('.fa.fa-sort-alpha-asc');
     alphaSortDesc = element.find('.fa.fa-sort-alpha-desc');
     numericSortAsc = element.find('.fa.fa-sort-numeric-asc');

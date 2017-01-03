@@ -4,53 +4,74 @@
  * @restrict E
  *
  * @description
- *   Standard toolbar component. Includes filtering and view selection capabilities
+ *   Standard toolbar component. Includes filtering, sorting, actions, and view selection capabilities
  *   <br><br>
  *
- * @param {object} config configuration settings for the toolbar:<br/>
- *   <ul style='list-style-type: none'>
- *     <li>.filterConfig  - (Object) Optional filter config. If undefined, no filtering capabilities are shown.
- *                          See pfSimpleFilter for filter config options.
- *     <li>.sortConfig  - (Object) Optional sort config. If undefined, no sort capabilities are shown.
- *                          See pfSort for sort config options.
- *     <li>.viewsConfig  - (Object) Optional configuration settings for view type selection
- *       <ul style='list-style-type: none'>
- *         <li>.views       - (Array) List of available views for selection. See pfViewUtils for standard available views
- *           <ul style='list-style-type: none'>
- *             <li>.id - (String) Unique id for the view, used for comparisons
- *             <li>.title - (String) Optional title, uses as a tooltip for the view selector
- *             <li>.iconClass - (String) Icon class to use for the view selector
- *           </ul>
- *         <li>.onViewSelect - ( function(view) ) Function to call when a view is selected
- *         <li>.currentView - the id of the currently selected view
- *       </ul>
- *     <li>.actionsConfig  - (Object) Optional configuration settings for toolbar actions
- *       <ul style='list-style-type: none'>
- *         <li>.primaryActions  - (Array) List of primary actions to display on the toolbar
- *           <ul style='list-style-type: none'>
- *             <li>.name - (String) The name of the action, displayed on the button
- *             <li>.title - (String) Optional title, used for the tooltip
- *             <li>.actionFn - (function(action)) Function to invoke when the action selected
- *             <li>.isDisabled - (Boolean) set to true to disable the action
- *           </ul>
- *         <li>.moreActions  - (Array) List of secondary actions to display on the toolbar action pulldown menu
- *           <ul style='list-style-type: none'>
- *             <li>.name - (String) The name of the action, displayed on the button
- *             <li>.title - (String) Optional title, used for the tooltip
- *             <li>.actionFn - (function(action)) Function to invoke when the action selected
- *             <li>.isDisabled - (Boolean) set to true to disable the action
- *             <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
- *           </ul>
- *         <li>.actionsInclude  - (Boolean) set to true if using the actions transclude to add custom action buttons (only available if using Angular 1.5 or later)
- *       </ul>
- *   </ul>
+ * @param {array} filterFields List of filterable fields containing:
+ * <ul style='list-style-type: none'>
+ * <li>.id          - (String) Optional unique Id for the filter field, useful for comparisons
+ * <li>.title       - (String) The title to display for the filter field
+ * <li>.placeholder - (String) Text to display when no filter value has been entered
+ * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a single select box)
+ * <li>.filterValues - (Array) List of valid select values used when filterType is 'select'
+ * </ul>
+ * @param {array} appliedFilters List of the currently applied filters
+ * @param {int} resultsCount The number of results returned after the current applied filters have been applied
+ * @param {function} onFilterChange function(array of filters) ) Function to call when the applied filters list changes
+ * @param {array} sortFields List of sortable fields containing:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.id          - (String) Unique Id for the sort field
+ * <li>.title       - (String) The title to display for the sort field
+ * <li>.sortType    - (String) The sort type, 'alpha' or 'numeric'
+ * </ul>
+ * @param {String} currentSortField - Id of the currently selected field
+ * @param {boolean} isSortAscending - Current sort direction is ascending. True for ascending, False for descending
+ * @param {function} onSortChange - ( function(sortId, sortDirection ) Function to call when the current sort params change
+ * @param {array} views List of available views for selection. See pfViewUtils for standard available views
+ * <ul style='list-style-type: none'>
+ *   <li>.id - (String) Unique id for the view, used for comparisons
+ *   <li>.title - (String) Optional title, uses as a tooltip for the view selector
+ *   <li>.iconClass - (String) Icon class to use for the view selector
+ * </ul>
+ * @param {string} currentView - the id of the currently selected view
+ * @param {function} onViewSelect  function(view) ) Function to call when a view is selected
+ * @param {array} primaryActions List of primary actions to display on the toolbar
+ * <ul style='list-style-type: none'>
+ *   <li>.name - (String) The name of the action, displayed on the button
+ *   <li>.title - (String) Optional title, used for the tooltip
+ *   <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *   <li>.isDisabled - (Boolean) set to true to disable the action
+ * </ul>
+ * @param {array} moreActions List of secondary actions to display on the toolbar action pulldown menu
+ * <ul style='list-style-type: none'>
+ *   <li>.name - (String) The name of the action, displayed on the button
+ *   <li>.title - (String) Optional title, used for the tooltip
+ *   <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *   <li>.isDisabled - (Boolean) set to true to disable the action
+ *   <li>.isSeparator - (Boolean) set to true if this is a placehodler for a separator rather than an action
+ * </ul>
+ * @param {boolean} actionsInclude  set to true if using the actions transclude to add custom action buttons (only available if using Angular 1.5 or later)
  *
  * @example
 <example module="patternfly.toolbars">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <pf-toolbar id="exampleToolbar" config="toolbarConfig">
+        <pf-toolbar id="exampleToolbar"
+                    filter-fields="filterFields"
+                    applied-filters="appliedFilters"
+                    results-count="{{resultsCount}}"
+                    on-filter-change="onFilterChange"
+                    sort-fields="sortFields"
+                    current-sort-field="currentSortId"
+                    is-sort-ascending="sortAscending"
+                    on-sort-change="onSortChange"
+                    views="views"
+                    current-view="currentView"
+                    on-view-select="onViewSelect"
+                    primary-actions="primaryActions"
+                    more-actions="moreActions"
+                    actions-include="actionsInclude">
          <actions>
            <span class="dropdown primary-action" uib-dropdown>
              <button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type="button">
@@ -83,7 +104,7 @@
       <div class="col-md-12">
         <label class="events-label">Valid Items: </label>
       </div>
-      <div class="col-md-12 list-view-container" ng-if="viewType == 'listView'">
+      <div class="col-md-12 list-view-container" ng-if="currentView == 'listView'">
         <pf-list-view config="listConfig" items="items">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
@@ -103,7 +124,7 @@
           </div>
         </pf-list-view>
       </div>
-      <div class="col-md-12 card-view-container" ng-if="viewType == 'cardView'">
+      <div class="col-md-12 card-view-container" ng-if="currentView == 'cardView'">
         <pf-card-view config="vm.listConfig" items="items">
           <div class="col-md-12">
             <span>{{item.name}}</span>
@@ -134,41 +155,27 @@
   <file name="script.js">
   angular.module('patternfly.toolbars').controller('ViewCtrl', ['$scope', 'pfViewUtils',
     function ($scope, pfViewUtils) {
-      $scope.filtersText = '';
 
-      $scope.allItems = [
-        {
-          name: "Fred Flintstone",
-          age: 57,
-          address: "20 Dinosaur Way, Bedrock, Washingstone",
-          birthMonth: 'February'
-        },
-        {
-          name: "John Smith",
-          age: 23,
-          address: "415 East Main Street, Norfolk, Virginia",
-          birthMonth: 'October'
-        },
-        {
-          name: "Frank Livingston",
-          age: 71,
-          address: "234 Elm Street, Pittsburgh, Pennsylvania",
-          birthMonth: 'March'
-        },
-        {
-          name: "Judy Green",
-          age: 21,
-          address: "2 Apple Boulevard, Cincinatti, Ohio",
-          birthMonth: 'December'
-        },
-        {
-          name: "Pat Thomas",
-          age: 19,
-          address: "50 Second Street, New York, New York",
-          birthMonth: 'February'
-        }
-      ];
-      $scope.items = $scope.allItems;
+      angular.extend($scope, {
+        filtersText: '',
+        filterFields: getFilterFields(),
+        appliedFilters: [],
+        resultsCount: 0,
+        onFilterChange: onFilterChange,
+        sortFields: getSortFields(),
+        currentSortId: 'name',
+        isAscending: true,
+        onSortChange: onSortChange,
+        views: getViews(),
+        currentView: pfViewUtils.getListView().id,
+        onViewSelect: onViewSelect,
+        primaryActions: getPrimaryActions(),
+        moreActions: getMoreActions(),
+        actionsInclude: true,
+      });
+      $scope.currentSortId = $scope.sortFields[0].id;
+
+      initializeListItems();
 
       var matchesFilter = function (item, filter) {
         var match = true;
@@ -197,7 +204,7 @@
         return matches;
       };
 
-      var applyFilters = function (filters) {
+      function applyFilters (filters) {
         $scope.items = [];
         if (filters && filters.length > 0) {
           $scope.allItems.forEach(function (item) {
@@ -208,19 +215,26 @@
         } else {
           $scope.items = $scope.allItems;
         }
-      };
+      }
 
-      var filterChange = function (filters) {
-      $scope.filtersText = "";
-        filters.forEach(function (filter) {
+      function applyCurrentFilters () {
+        $scope.filtersText = "";
+        $scope.appliedFilters.forEach(function (filter) {
           $scope.filtersText += filter.title + " : " + filter.value + "\n";
         });
-        applyFilters(filters);
-        $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
-      };
 
-      $scope.filterConfig = {
-        fields: [
+        applyFilters($scope.appliedFilters);
+
+        $scope.resultsCount = $scope.items.length;
+      }
+
+      function onFilterChange (filters) {
+        $scope.appliedFilters = filters;
+        applyCurrentFilters();
+      }
+
+      function getFilterFields () {
+        return [
           {
             id: 'name',
             title:  'Name',
@@ -246,22 +260,8 @@
             filterType: 'select',
             filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
           }
-        ],
-        resultsCount: $scope.items.length,
-        appliedFilters: [],
-        onFilterChange: filterChange
-      };
-
-      var viewSelected = function(viewId) {
-        $scope.viewType = viewId
-      };
-
-      $scope.viewsConfig = {
-        views: [pfViewUtils.getListView(), pfViewUtils.getCardView()],
-        onViewSelect: viewSelected
-      };
-      $scope.viewsConfig.currentView = $scope.viewsConfig.views[0].id;
-      $scope.viewType = $scope.viewsConfig.currentView;
+        ];
+      }
 
       var monthVals = {
         'January': 1,
@@ -279,29 +279,32 @@
       };
       var compareFn = function(item1, item2) {
         var compValue = 0;
-        if ($scope.sortConfig.currentField.id === 'name') {
+        if ($scope.currentSortId === 'name') {
           compValue = item1.name.localeCompare(item2.name);
-        } else if ($scope.sortConfig.currentField.id === 'age') {
+        } else if ($scope.currentSortId === 'age') {
             compValue = item1.age - item2.age;
-        } else if ($scope.sortConfig.currentField.id === 'address') {
+        } else if ($scope.currentSortId === 'address') {
           compValue = item1.address.localeCompare(item2.address);
-        } else if ($scope.sortConfig.currentField.id === 'birthMonth') {
+        } else if ($scope.currentSortId === 'birthMonth') {
           compValue = monthVals[item1.birthMonth] - monthVals[item2.birthMonth];
         }
 
-        if (!$scope.sortConfig.isAscending) {
+        if (!$scope.isAscending) {
           compValue = compValue * -1;
         }
 
         return compValue;
       };
 
-      var sortChange = function (sortId, isAscending) {
+      function onSortChange (sortId, isAscending) {
+      console.log("Sort: " + sortId + " ascending: " + isAscending);
+        $scope.currentSortId = sortId;
+        $scope.isAscending = isAscending;
         $scope.items.sort(compareFn);
-      };
+      }
 
-      $scope.sortConfig = {
-        fields: [
+      function getSortFields () {
+        return [
           {
             id: 'name',
             title:  'Name',
@@ -322,17 +325,24 @@
             title:  'Birth Month',
             sortType: 'alpha'
           }
-        ],
-        onSortChange: sortChange
+        ];
+      }
+
+      function onViewSelect (viewId) {
+        $scope.currentView = viewId
+      }
+
+      function getViews () {
+        return [pfViewUtils.getListView(), pfViewUtils.getCardView()];
       };
 
       $scope.actionsText = "";
-      var performAction = function (action) {
+      function performAction (action) {
         $scope.actionsText = action.name + "\n" + $scope.actionsText;
       };
 
-      $scope.actionsConfig = {
-        primaryActions: [
+      function getPrimaryActions () {
+        return [
           {
             name: 'Action 1',
             title: 'Do the first thing',
@@ -343,8 +353,11 @@
             title: 'Do something else',
             actionFn: performAction
           }
-        ],
-        moreActions: [
+        ];
+      }
+
+      function getMoreActions () {
+        return [
           {
             name: 'Action',
             title: 'Perform an action',
@@ -379,21 +392,53 @@
             title: 'Do something similar',
             actionFn: performAction
           }
-        ],
-        actionsInclude: true
-      };
+        ];
+      }
 
-      $scope.toolbarConfig = {
-        viewsConfig: $scope.viewsConfig,
-        filterConfig: $scope.filterConfig,
-        sortConfig: $scope.sortConfig,
-        actionsConfig: $scope.actionsConfig
-      };
+      function initializeListItems () {
+        $scope.listConfig = {
+          selectionMatchProp: 'name',
+          checkDisabled: false
+        };
+        $scope.allItems = getAllItems();
 
-      $scope.listConfig = {
-        selectionMatchProp: 'name',
-        checkDisabled: false
-      };
+        applyCurrentFilters();
+      }
+
+      function getAllItems () {
+        return [
+          {
+            name: "Fred Flintstone",
+            age: 57,
+            address: "20 Dinosaur Way, Bedrock, Washingstone",
+            birthMonth: 'February'
+          },
+          {
+            name: "John Smith",
+            age: 23,
+            address: "415 East Main Street, Norfolk, Virginia",
+            birthMonth: 'October'
+          },
+          {
+            name: "Frank Livingston",
+            age: 71,
+            address: "234 Elm Street, Pittsburgh, Pennsylvania",
+            birthMonth: 'March'
+          },
+          {
+            name: "Judy Green",
+            age: 21,
+            address: "2 Apple Boulevard, Cincinatti, Ohio",
+            birthMonth: 'December'
+          },
+          {
+            name: "Pat Thomas",
+            age: 19,
+            address: "50 Second Street, New York, New York",
+            birthMonth: 'February'
+          }
+        ];
+       };
 
       $scope.doAdd = function () {
         $scope.actionsText = "Add Action\n" + $scope.actionsText;

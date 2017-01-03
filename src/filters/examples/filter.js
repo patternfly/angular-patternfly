@@ -7,9 +7,7 @@
  *   Component for a filter bar
  *   <br><br>
  *
- * @param {object} config configuration settings for the filters:<br/>
- * <ul style='list-style-type: none'>
- * <li>.fields          - (Array) List of filterable fields containing:
+ * @param {array} fields List of filterable fields containing:
  * <ul style='list-style-type: none'>
  * <li>.id          - (String) Optional unique Id for the filter field, useful for comparisons
  * <li>.title       - (String) The title to display for the filter field
@@ -17,9 +15,9 @@
  * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a single select box)
  * <li>.filterValues - (Array) List of valid select values used when filterType is 'select'
  * </ul>
- * <li>.appliedFilters - (Array) List of the currently applied filters
- * <li>.resultsCount   - (int) The number of results returned after the current applied filters have been applied
- * <li>.onFilterChange - ( function(array of filters) ) Function to call when the applied filters list changes
+ * @param {array} appliedFilters List of the currently applied filters
+ * @param {int} resultsCount The number of results returned after the current applied filters have been applied
+ * @param {function} onFilterChange function(array of filters) ) Function to call when the applied filters list changes
  * </ul>
  *
  * @example
@@ -27,7 +25,12 @@
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
+        <pf-filter id="exampleFilter"
+                   fields="fields"
+                   applied-filters="appliedFilters"
+                   results-count="{{resultsCount}}"
+                   on-filter-change="onFilterChange">
+        </pf-filter>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -128,7 +131,7 @@
           } else {
             $scope.items = $scope.allItems;
           }
-          $scope.filterConfig.resultsCount = $scope.items.length;
+          $scope.resultsCount = $scope.items.length;
         };
 
         var filterChange = function (filters) {
@@ -139,32 +142,30 @@
           applyFilters(filters);
         };
 
-        $scope.filterConfig = {
-          fields: [
-            {
-              id: 'name',
-              title:  'Name',
-              placeholder: 'Filter by Name',
-              filterType: 'text'
-            },
-            {
-              id: 'address',
-              title:  'Address',
-              placeholder: 'Filter by Address',
-              filterType: 'text'
-            },
-            {
-              id: 'birthMonth',
-              title:  'Birth Month',
-              placeholder: 'Filter by Birth Month',
-              filterType: 'select',
-              filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-            }
-          ],
-          resultsCount: $scope.items.length,
-          appliedFilters: [],
-          onFilterChange: filterChange
-        };
+        $scope.fields = [
+          {
+            id: 'name',
+            title:  'Name',
+            placeholder: 'Filter by Name',
+            filterType: 'text'
+          },
+          {
+            id: 'address',
+            title:  'Address',
+            placeholder: 'Filter by Address',
+            filterType: 'text'
+          },
+          {
+            id: 'birthMonth',
+            title:  'Birth Month',
+            placeholder: 'Filter by Birth Month',
+            filterType: 'select',
+            filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+          }
+        ];
+        $scope.resultsCount = $scope.items.length;
+        $scope.appliedFilters = [];
+        $scope.onFilterChange = filterChange;
       }
     ]);
   </file>

@@ -21,33 +21,31 @@ describe('Directive:  pfFilter', function () {
   };
 
   beforeEach(function () {
-    $scope.filterConfig = {
-      fields: [
-        {
-          id: 'name',
-          title:  'Name',
-          placeholder: 'Filter by Name',
-          filterType: 'text'
-        },
-        {
-          id: 'address',
-          title:  'Address',
-          placeholder: 'Filter by Address',
-          filterType: 'text'
-        },
-        {
-          id: 'birthMonth',
-          title:  'Birth Month',
-          placeholder: 'Filter by Birth Month',
-          filterType: 'select',
-          filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        }
-      ],
-      resultsCount: 5,
-      appliedFilters: []
-    };
+    $scope.fields = [
+      {
+        id: 'name',
+        title:  'Name',
+        placeholder: 'Filter by Name',
+        filterType: 'text'
+      },
+      {
+        id: 'address',
+        title:  'Address',
+        placeholder: 'Filter by Address',
+        filterType: 'text'
+      },
+      {
+        id: 'birthMonth',
+        title:  'Birth Month',
+        placeholder: 'Filter by Birth Month',
+        filterType: 'select',
+        filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      }
+    ];
+    $scope.resultsCount = 5;
+    $scope.appliedFilters = [];
 
-    var htmlTmp = '<pf-filter config="filterConfig"></pf-filter>';
+    var htmlTmp = '<pf-filter fields="fields" results-count="{{resultsCount}}" applied-filters="appliedFilters" ></pf-filter>';
 
     compileHTML(htmlTmp, $scope);
   });
@@ -62,7 +60,7 @@ describe('Directive:  pfFilter', function () {
     expect(results.length).toBe(1);
     expect(results.html()).toBe("5 Results");
 
-    $scope.filterConfig.resultsCount = 10;
+    $scope.resultsCount = 10;
 
     $scope.$digest();
 
@@ -76,7 +74,7 @@ describe('Directive:  pfFilter', function () {
     expect(activeFilters.length).toBe(0);
     expect(element.find('.clear-filters').length).toBe(0);
 
-    $scope.filterConfig.appliedFilters = [
+    $scope.appliedFilters = [
       {
         id: 'address',
         title: 'Address',
@@ -101,7 +99,7 @@ describe('Directive:  pfFilter', function () {
     expect(filterSelect.length).toBe(1);
 
     var items = filterSelect.find('li');
-    expect(items.length).toBe($scope.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
+    expect(items.length).toBe($scope.fields[2].filterValues.length + 1); // +1 for the null value
   });
 
   it ('should clear a filter when the close button is clicked', function () {
@@ -110,7 +108,7 @@ describe('Directive:  pfFilter', function () {
     closeButtons = element.find('.pficon-close');
     expect(closeButtons.length).toBe(0);
 
-    $scope.filterConfig.appliedFilters = [
+    $scope.appliedFilters = [
       {
         id: 'address',
         title: 'Address',
@@ -135,7 +133,7 @@ describe('Directive:  pfFilter', function () {
     expect(activeFilters.length).toBe(0);
     expect(clearButtons.length).toBe(0);
 
-    $scope.filterConfig.appliedFilters = [
+    $scope.appliedFilters = [
       {
         id: 'address',
         title: 'Address',
