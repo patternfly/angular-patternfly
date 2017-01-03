@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.notification.directive:pfNotificationDrawer
+ * @name patternfly.notification.component:pfNotificationDrawer
+ * @restrict E
  *
  * @description
- *   Directive for rendering a notification drawer. This provides a common mechanism to handle how the notification
+ *   Component for rendering a notification drawer. This provides a common mechanism to handle how the notification
  *   drawer should look and behave without mandating the look of the notification group heading or notification body.
  *   <br><br>
  *   An array of notification groups must be passed to create each group in the drawer. Each notification
@@ -47,11 +48,11 @@
      </div>
      <div class="layout-pf-fixed">
        <div class="navbar-pf-vertical">
-         <div pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer" allow-expand="true"
+         <pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer" allow-expand="true"
               action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"
               heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
               notification-footer-include="notification-footer.html" custom-scope="customScope">
-         </div>
+         </pf-notification-drawer>
        </div>
      </div>
      <div class="col-md-12">
@@ -69,7 +70,7 @@
    {{notificationGroup.subHeading}}
  </file>
  <file name="notification-footer.html">
-   <a class="btn btn-link btn-block" role="button" ng-click="customScope.clearAll(notificationGroup)">
+   <a class="btn btn-link btn-block" role="button" ng-click="$ctrl.customScope.clearAll(notificationGroup)">
      <span class="pficon pficon-close"></span>
      <span> Clear All</span>
    </a>
@@ -84,15 +85,15 @@
          <li ng-repeat="action in notification.actions"
              role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
              ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
-           <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="customScope.handleAction(notification, action)">
+           <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="$ctrl.customScope.handleAction(notification, action)">
              {{action.name}}
            </a>
          </li>
        </ul>
      </div>
-     <span ng-if="notification.status" class="{{'pull-left ' + customScope.getNotficationStatusIconClass(notification)}}" ng-click="customScope.markRead(notification)"></span>
-     <span class="drawer-pf-notification-message" ng-click="customScope.markRead(notification)">{{notification.message}}</span>
-     <div class="drawer-pf-notification-info" ng-click="customScope.markRead(notification)">
+     <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}" ng-click="$ctrl.customScope.markRead(notification)"></span>
+     <span class="drawer-pf-notification-message" ng-click="$ctrl.customScope.markRead(notification)">{{notification.message}}</span>
+     <div class="drawer-pf-notification-info" ng-click="$ctrl.customScope.markRead(notification)">
        <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
        <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
      </div>
@@ -100,7 +101,7 @@
    <div ng-if="drawerExpanded" class="container-fluid">
      <div class="row">
        <div class="col-sm-6">
-         <span class="pull-left {{customScope.getNotficationStatusIconClass(notification)}}"></span>
+         <span class="pull-left {{$ctrl.customScope.getNotficationStatusIconClass(notification)}}"></span>
          <span class="drawer-pf-notification-message notification-message"
                tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip-placement="bottom" tooltip="{{notification.message}}">
                {{notification.message}}
@@ -119,7 +120,7 @@
              <li ng-repeat="action in notification.actions"
                  role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
                  ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
-               <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="customScope.handleAction(notification, action)">
+               <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="$ctrl.customScope.handleAction(notification, action)">
                  {{action.name}}
                </a>
              </li>
@@ -471,36 +472,52 @@
  </file>
 </example>
 */
-angular.module('patternfly.notification').directive('pfNotificationDrawer', function ($window, $timeout) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      drawerHidden: '=?',
-      allowExpand: '=?',
-      drawerExpanded: '=?',
-      drawerTitle: '@',
-      notificationGroups: '=',
-      actionButtonTitle: '@',
-      actionButtonCallback: '=?',
-      titleInclude: '@',
-      headingInclude: '@',
-      subheadingInclude: '@',
-      notificationBodyInclude: '@',
-      notificationFooterInclude: '@',
-      customScope: '=?'
-    },
-    templateUrl: 'notification/notification-drawer.html',
-    controller: function ($scope) {
-      if (!$scope.allowExpand || angular.isUndefined($scope.drawerExpanded)) {
-        $scope.drawerExpanded = false;
-      }
-    },
-    link: function (scope, element) {
+angular.module('patternfly.notification').component('pfNotificationDrawer', {
+  bindings: {
+    drawerHidden: '<?',
+    allowExpand: '=?',
+    drawerExpanded: '=?',
+    drawerTitle: '@',
+    notificationGroups: '<',
+    actionButtonTitle: '@',
+    actionButtonCallback: '=?',
+    titleInclude: '@',
+    headingInclude: '@',
+    subheadingInclude: '@',
+    notificationBodyInclude: '@',
+    notificationFooterInclude: '@',
+    customScope: '=?'
+  },
+  templateUrl: 'notification/notification-drawer.html',
+  controller: function ($window, $timeout, $element) {
+    'use strict';
+    var ctrl = this;
 
-      scope.$watch('notificationGroups', function () {
-        var openFound = false;
-        scope.notificationGroups.forEach(function (group) {
+    ctrl.toggleCollapse = function (selectedGroup) {
+      if (selectedGroup.open) {
+        selectedGroup.open = false;
+      } else {
+        ctrl.notificationGroups.forEach(function (group) {
+          group.open = false;
+        });
+        selectedGroup.open = true;
+      }
+    };
+
+    ctrl.toggleExpandDrawer = function () {
+      ctrl.drawerExpanded = !ctrl.drawerExpanded;
+    };
+
+    ctrl.$onInit = function () {
+      if (!ctrl.allowExpand || angular.isUndefined(ctrl.drawerExpanded)) {
+        ctrl.drawerExpanded = false;
+      }
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      var openFound = false;
+      if (changesObj.notificationGroups) {
+        changesObj.notificationGroups.currentValue.forEach(function (group) {
           if (group.open) {
             if (openFound) {
               group.open = false;
@@ -509,35 +526,22 @@ angular.module('patternfly.notification').directive('pfNotificationDrawer', func
             }
           }
         });
-      });
+      }
 
-      scope.$watch('drawerHidden', function () {
+      if (changesObj.drawerHidden) {
         $timeout(function () {
           angular.element($window).triggerHandler('resize');
         }, 100);
-      });
-
-      scope.toggleCollapse = function (selectedGroup) {
-        if (selectedGroup.open) {
-          selectedGroup.open = false;
-        } else {
-          scope.notificationGroups.forEach(function (group) {
-            group.open = false;
-          });
-          selectedGroup.open = true;
-        }
-      };
-
-      scope.toggleExpandDrawer = function () {
-        scope.drawerExpanded = !scope.drawerExpanded;
-      };
-
-      if (scope.groupHeight) {
-        element.find('.panel-group').css("height", scope.groupHeight);
       }
-      if (scope.groupClass) {
-        element.find('.panel-group').addClass(scope.groupClass);
+    };
+
+    ctrl.$postLink = function () {
+      if (ctrl.groupHeight) {
+        $element.find('.panel-group').css("height", ctrl.groupHeight);
       }
-    }
-  };
+      if (ctrl.groupClass) {
+        $element.find('.panel-group').addClass(ctrl.groupClass);
+      }
+    };
+  }
 });
