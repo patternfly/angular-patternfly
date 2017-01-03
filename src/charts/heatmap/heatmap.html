@@ -4,6 +4,6 @@
     <svg class="heatmap-pf-svg"></svg>
   </div>
   <pf-empty-chart ng-if="$ctrl.chartDataAvailable === false" chart-height="$ctrl.height"></pf-empty-chart>
-  <!--div ng-if="!$ctrl.loadingDone" class="spinner spinner-lg loading"></div-->
+  <div ng-if="!$ctrl.loadingDone" class="spinner spinner-lg loading"></div>
   <pf-heatmap-legend ng-if="$ctrl.showLegend" legend="$ctrl.legendLabels" legend-colors="$ctrl.heatmapColorPattern"></pf-heatmap-legend>
 </div>

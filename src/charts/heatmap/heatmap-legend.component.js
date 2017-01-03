@@ -1,6 +1,6 @@
 angular.module('patternfly.charts').component('pfHeatmapLegend', {
   bindings: {
-    legend: '=?',
+    legend: '<?',
     legendColors: '<?'
   },
   templateUrl: 'charts/heatmap/heatmap-legend.html',
@@ -12,6 +12,10 @@ angular.module('patternfly.charts').component('pfHeatmapLegend', {
     var legendLabelDefaults = ['< 70%', '70-80%', '80-90%', '> 90%'];
 
     ctrl.$onInit = function () {
+      ctrl.updateAll();
+    };
+
+    ctrl.updateAll = function () {
       var items = [];
       var index;
 
@@ -29,6 +33,15 @@ angular.module('patternfly.charts').component('pfHeatmapLegend', {
         });
       }
       ctrl.legendItems = items;
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.legend && !changesObj.legend.isFirstChange()) {
+        ctrl.updateAll();
+      }
+      if (changesObj.legendColors && !changesObj.legendColors.isFirstChange()) {
+        ctrl.updateAll();
+      }
     };
   }
 });

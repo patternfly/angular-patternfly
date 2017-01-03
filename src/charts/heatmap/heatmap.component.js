@@ -378,19 +378,16 @@ angular.module('patternfly.charts').component('pfHeatmap', {
 
     ctrl.$onChanges = function (changesObj) {
       if (changesObj.chartDataAvailable && !changesObj.chartDataAvailable.isFirstChange()) {
-        if (ctrl.chartDataAvailable === false) {
-          ctrl.loadingDone = true;
-        }
         setStyles();
       } else {
         ctrl.updateAll();
+        ctrl.loadingDone = true;
       }
     };
 
     ctrl.$doCheck = function () {
       // do a deep compare on chartData and config
       if (!angular.equals(ctrl.data, prevData)) {
-        ctrl.loadingDone = true;
         setStyles();
         if (ctrl.chartDataAvailable !== false) {
           setSizes();

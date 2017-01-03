@@ -78,19 +78,16 @@
 
   angular.module('patternfly.charts').component('pfC3Chart', {
     bindings: {
-      id: '@?',
       config: '<',
       getChartCallback: '<'
     },
     template: '<div id=""></div>',
-    controller: function ($timeout, $log) {
+    controller: function ($timeout, $attrs) {
       var ctrl = this, prevConfig;
 
       ctrl.generateChart = function () {
         var chart;
         var chartData;
-
-        $log.info("  C3 generateChart");
 
         // Need to deep watch changes in chart config
         prevConfig = angular.copy(ctrl.config);
@@ -98,8 +95,7 @@
         $timeout(function () {
           chartData = ctrl.config;
           if (chartData) {
-            chartData.bindto = '#' + ctrl.id;
-            $log.info("    -> C3 chart generatd: " + chartData.bindto);
+            chartData.bindto = '#' + $attrs.id;
             chart = c3.generate(chartData);
             ctrl.getChartCallback(chart);
             prevConfig = angular.copy(ctrl.config);
@@ -108,10 +104,8 @@
       };
 
       ctrl.$doCheck = function () {
-        $log.info("  C3 $doCheck");
         // do a deep compare on config
         if (!angular.equals(ctrl.config, prevConfig)) {
-          $log.info("    C3 prev != config!");
           ctrl.generateChart();
         }
       };
