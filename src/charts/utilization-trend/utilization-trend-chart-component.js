@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfUtilizationTrendChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a utilization trend chart. The utilization trend chart combines overall
+ *   Component for rendering a utilization trend chart. The utilization trend chart combines overall
  *   data with a pfDonutPctChart and a pfSparklineChart. Add the options for the pfDonutChart via
  *   the donutConfig parameter. Add the options for the pfSparklineChart via the sparklineConfig
  *   parameter.
@@ -45,13 +46,13 @@
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
-         <div pf-utilization-trend-chart config="config"
+         <pf-utilization-trend-chart config="config"
               chart-data="data" center-label="centerLabel"
               donut-config="donutConfig" sparkline-config="sparklineConfig"
               sparkline-chart-height="custChartHeight"
               show-sparkline-x-axis="custShowXAxis"
               show-sparkline-y-axis="custShowYAxis">
-         </div>
+         </pf-utilization-trend-chart>
        </div>
        <hr class="col-md-12">
        <div class="col-md-12">
@@ -181,50 +182,60 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfUtilizationTrendChart', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      chartData: '=',
-      config: '=',
-      centerLabel: '=?',
-      donutConfig: '=',
-      sparklineConfig: '=',
-      sparklineChartHeight: '=?',
-      showSparklineXAxis: '=?',
-      showSparklineYAxis: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/utilization-trend/utilization-trend-chart.html',
-    controller: ['$scope',
-      function ($scope) {
-        if ($scope.centerLabel === undefined) {
-          $scope.centerLabel = 'used';
+angular.module('patternfly.charts').component('pfUtilizationTrendChart', {
+  bindings: {
+    chartData: '<',
+    config: '<',
+    centerLabel: '<?',
+    donutConfig: '<',
+    sparklineConfig: '<',
+    sparklineChartHeight: '<?',
+    showSparklineXAxis: '<?',
+    showSparklineYAxis: '<?'
+  },
+  templateUrl: 'charts/utilization-trend/utilization-trend-chart.html',
+  controller: function (pfUtils) {
+    'use strict';
+    var ctrl = this, prevChartData, prevConfig;
 
-        }
-        if ($scope.donutConfig.units === undefined) {
-          $scope.donutConfig.units = $scope.config.units;
-        }
-        if ($scope.chartData.available === undefined) {
-          $scope.chartData.available = $scope.chartData.total - $scope.chartData.used;
-        }
-        $scope.config.units = $scope.config.units || $scope.units;
+    ctrl.updateAll = function () {
+      // Need to deep watch changes
+      prevChartData = angular.copy(ctrl.chartData);
+      prevConfig = angular.copy(ctrl.config);
+
+      if (ctrl.centerLabel === undefined) {
+        ctrl.centerLabel = 'used';
+
       }
-    ],
-    link: function (scope, element) {
-      var setupCurrentValues = function () {
-        if (scope.centerLabel === 'available') {
-          scope.currentValue = scope.chartData.used;
-          scope.currentText = 'Used';
-        } else {
-          scope.currentValue = scope.chartData.total - scope.chartData.used;
-          scope.currentText = 'Available';
-        }
-      };
-      scope.$watchGroup(['centerLabel', 'chartData.used', 'chartData.available', 'chartData.total'], function () {
-        setupCurrentValues();
-      });
-    }
-  };
+
+      if (ctrl.donutConfig.units === undefined) {
+        ctrl.donutConfig.units = ctrl.config.units;
+      }
+
+      if (ctrl.chartData.available === undefined) {
+        ctrl.chartData.available = ctrl.chartData.total - ctrl.chartData.used;
+      }
+
+      ctrl.config.units = ctrl.config.units || ctrl.units;
+
+      if (ctrl.centerLabel === 'available') {
+        ctrl.currentValue = ctrl.chartData.used;
+        ctrl.currentText = 'Used';
+      } else {
+        ctrl.currentValue = ctrl.chartData.total - ctrl.chartData.used;
+        ctrl.currentText = 'Available';
+      }
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData and config
+      if (!angular.equals(ctrl.chartData, prevChartData) || !angular.equals(ctrl.config, prevConfig)) {
+        ctrl.updateAll();
+      }
+    };
+  }
 });

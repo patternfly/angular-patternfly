@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfUtilizationBarChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a utilization bar chart
+ *   Component for rendering a utilization bar chart
  *   There are three possible fill colors for Used Percentage, dependent on whether or not there are thresholds:<br/>
  *   <ul>
  *   <li>When no thresholds exist, or if the used percentage has not surpassed any thresholds, the indicator is blue.
@@ -46,19 +47,18 @@
      <div ng-controller="ChartCtrl">
 
        <label class="label-title">Default Layout, no Thresholds</label>
-       <div pf-utilization-bar-chart chart-data=data1 chart-title=title1
-       units=units1></div>
+       <pf-utilization-bar-chart chart-data=data1 chart-title=title1 units=units1></pf-utilization-bar-chart>
        <br>
        <label class="label-title">Inline Layouts with Error, Warning, and Ok Thresholds</label>
-       <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60">../utilization-trend/utilization-trend-chart-directive.js</div>
-       <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
+       <pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60">../utilization-trend/utilization-trend-chart-directive.js</pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
        <br>
        <label class="label-title">layout='inline', footer-label-format='percent', and custom chart-footer labels</label>
-       <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline footer-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
+       <pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline footer-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
        <div class="row">
          <div class="col-md-6">
            <form role="form"">
@@ -129,44 +129,54 @@
  </example>
 */
 
-angular.module('patternfly.charts').directive('pfUtilizationBarChart', function ($timeout) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      chartData: '=',
-      chartTitle: '=',
-      chartFooter: '=',
-      units: '=',
-      thresholdError: '=?',
-      thresholdWarning: '=?',
-      footerLabelFormat: '@?',
-      layout: '=?'
-    },
+angular.module('patternfly.charts').component('pfUtilizationBarChart', {
+  bindings: {
+    chartData: '=',
+    chartTitle: '=',
+    chartFooter: '=',
+    units: '=',
+    thresholdError: '=?',
+    thresholdWarning: '=?',
+    footerLabelFormat: '@?',
+    layout: '=?'
+  },
 
-    templateUrl: 'charts/utilization-bar/utilization-bar-chart.html',
-    link: function (scope) {
-      scope.$watch('chartData', function (newVal, oldVal) {
-        if (typeof(newVal) !== 'undefined') {
-          //Calculate the percentage used
-          scope.chartData.percentageUsed = Math.round(100 * (scope.chartData.used / scope.chartData.total));
+  templateUrl: 'charts/utilization-bar/utilization-bar-chart.html',
+  controller: function ($timeout) {
+    'use strict';
+    var ctrl = this, prevChartData, prevLayout;
 
-          if (scope.thresholdError || scope.thresholdWarning) {
-            scope.isError = (scope.chartData.percentageUsed >= scope.thresholdError);
-            scope.isWarn  = (scope.chartData.percentageUsed >= scope.thresholdWarning &&
-                             scope.chartData.percentageUsed < scope.thresholdError);
-            scope.isOk    = (scope.chartData.percentageUsed < scope.thresholdWarning);
-          }
+    ctrl.updateAll = function () {
+      // Need to deep watch changes
+      prevChartData = angular.copy(ctrl.chartData);
+      prevLayout = angular.copy(ctrl.layout);
 
-          //Animate in the chart load.
-          scope.animate = true;
-          $timeout(function () {
-            scope.animate = false;
-          }, 0);
-        }
-      });
+      //Calculate the percentage used
+      ctrl.chartData.percentageUsed = Math.round(100 * (ctrl.chartData.used / ctrl.chartData.total));
 
+      if (ctrl.thresholdError || ctrl.thresholdWarning) {
+        ctrl.isError = (ctrl.chartData.percentageUsed >= ctrl.thresholdError);
+        ctrl.isWarn  = (ctrl.chartData.percentageUsed >= ctrl.thresholdWarning &&
+                         ctrl.chartData.percentageUsed < ctrl.thresholdError);
+        ctrl.isOk    = (ctrl.chartData.percentageUsed < ctrl.thresholdWarning);
+      }
 
-    }
-  };
+      //Animate in the chart load.
+      ctrl.animate = true;
+      $timeout(function () {
+        ctrl.animate = false;
+      }, 0);
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData and layout
+      if (!angular.equals(ctrl.chartData, prevChartData) || !angular.equals(ctrl.layout, prevLayout)) {
+        ctrl.updateAll();
+      }
+    };
+  }
 });
