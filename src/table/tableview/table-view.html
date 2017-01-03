@@ -1,0 +1,12 @@
+<table datatable="ng" dt-options="$ctrl.dtOptions" class="row-border hover">
+  <thead>
+  <tr>
+    <th ng-repeat="colHeader in $ctrl.colHeaders">{{$ctrl.colHeader.title}}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="item in $ctrl.items">
+    <td  ng-repeat="propValue in item">{{ propValue }}</td>
+  </tr>
+  </tbody>
+</table>
