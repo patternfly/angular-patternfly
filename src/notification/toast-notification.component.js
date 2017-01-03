@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.notification.directive:pfToastNotification
+ * @name patternfly.notification.component:pfToastNotification
  * @restrict E
  * @scope
  *
@@ -36,11 +36,11 @@
    <file name="index.html">
      <div ng-controller="ToastNotificationDemoCtrl" class="row example-container">
        <div class="col-md-12">
-         <div pf-toast-notification notification-type="{{type}}" header="{{header}}" message="{{message}}"
+         <pf-toast-notification notification-type="{{type}}" header="{{header}}" message="{{message}}"
               show-close="{{showClose}}" close-callback="closeCallback"
               action-title="{{primaryAction}}" action-callback="handleAction"
               menu-actions="menuActions">
-         </div>
+         </pf-toast-notification>
 
          <form class="form-horizontal">
            <div class="form-group">
@@ -176,69 +176,78 @@
 
  </example>
  */
-angular.module( 'patternfly.notification' ).directive('pfToastNotification', function () {
-  'use strict';
+angular.module( 'patternfly.notification' ).component('pfToastNotification', {
+  bindings: {
+    'notificationType': '@',
+    'message': '@',
+    'header': '@',
+    'showClose': '@',
+    'closeCallback': '=?',
+    'actionTitle': '@',
+    'actionCallback': '=?',
+    'menuActions': '<?',
+    'updateViewing': '=?',
+    'data': '=?'
+  },
+  templateUrl: 'notification/toast-notification.html',
+  controller: function () {
+    'use strict';
+    var ctrl = this,
+      _showClose;
 
-  return {
-    scope: {
-      'notificationType': '@',
-      'message': '@',
-      'header': '@',
-      'showClose': '@',
-      'closeCallback': '=?',
-      'actionTitle': '@',
-      'actionCallback': '=?',
-      'menuActions': '=?',
-      'updateViewing': '=?',
-      'data': '=?'
-    },
-    restrict: 'A',
-    templateUrl: 'notification/toast-notification.html',
-    controller: function ($scope) {
-      $scope.notificationType = $scope.notificationType || 'info';
+    Object.defineProperty(ctrl, 'showClose', {
+      get: function () {
+        return _showClose;
+      },
+      set: function (value) {
+        _showClose = value;
+        ctrl.updateShowClose();
+      }
+    });
 
-      $scope.updateShowClose = function () {
-        $scope.showCloseButton = ($scope.showClose === 'true') && (angular.isUndefined($scope.menuActions) || $scope.menuActions.length < 1);
-      };
+    ctrl.notificationType = ctrl.notificationType || 'info';
 
-      $scope.handleClose = function () {
-        if (angular.isFunction($scope.closeCallback)) {
-          $scope.closeCallback($scope.data);
-        }
-      };
+    ctrl.updateShowClose = function () {
+      ctrl.showCloseButton = (ctrl.showClose === 'true') && (angular.isUndefined(ctrl.menuActions) || ctrl.menuActions.length < 1);
+    };
 
-      $scope.handleAction = function () {
-        if (angular.isFunction($scope.actionCallback)) {
-          $scope.actionCallback($scope.data);
-        }
-      };
+    ctrl.handleClose = function () {
+      if (angular.isFunction(ctrl.closeCallback)) {
+        ctrl.closeCallback(ctrl.data);
+      }
+    };
 
-      $scope.handleMenuAction = function (menuAction) {
-        if (menuAction && angular.isFunction(menuAction.actionFn) && (menuAction.isDisabled !== true)) {
-          menuAction.actionFn(menuAction, $scope.data);
-        }
-      };
+    ctrl.handleAction = function () {
+      if (angular.isFunction(ctrl.actionCallback)) {
+        ctrl.actionCallback(ctrl.data);
+      }
+    };
 
-      $scope.handleEnter = function () {
-        if (angular.isFunction($scope.updateViewing)) {
-          $scope.updateViewing(true, $scope.data);
-        }
-      };
-      $scope.handleLeave = function () {
-        if (angular.isFunction($scope.updateViewing)) {
-          $scope.updateViewing(false, $scope.data);
-        }
-      };
+    ctrl.handleMenuAction = function (menuAction) {
+      if (menuAction && angular.isFunction(menuAction.actionFn) && (menuAction.isDisabled !== true)) {
+        menuAction.actionFn(menuAction, ctrl.data);
+      }
+    };
 
-      $scope.updateShowClose ();
-    },
-    link: function (scope) {
-      scope.$watch('showClose', function () {
-        scope.updateShowClose();
-      });
-      scope.$watch('menuActions', function () {
-        scope.updateShowClose();
-      });
-    }
-  };
+    ctrl.handleEnter = function () {
+      if (angular.isFunction(ctrl.updateViewing)) {
+        ctrl.updateViewing(true, ctrl.data);
+      }
+    };
+    ctrl.handleLeave = function () {
+      if (angular.isFunction(ctrl.updateViewing)) {
+        ctrl.updateViewing(false, ctrl.data);
+      }
+    };
+
+    ctrl.$onInit = function () {
+      ctrl.updateShowClose();
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.menuActions) {
+        ctrl.updateShowClose();
+      }
+    };
+  }
 });
