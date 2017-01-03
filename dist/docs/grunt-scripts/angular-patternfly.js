@@ -373,10 +373,10 @@ angular.module( 'patternfly.card' ).component('pfAggregateStatusCard', {
    <div ng-controller="ChartCtrl">
      <label class="label-title">Card With Multiple Utilization Bars</label>
      <pf-card head-title="System Resources" show-top-border="true" style="width: 65%">
-       <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
+       <pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data4 chart-title=title4 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
      </pf-card>
    </div>
  </file>
@@ -589,14 +589,14 @@ angular.module('patternfly.card').component('pfCard', {
    <div ng-controller="ChartCtrl">
      <label class="label-title">Card With Single Trend</label>
      <pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
-       <div pf-trends-chart config="configSingle" chart-data="dataSingle"></div>
+       <pf-trends-chart config="configSingle" chart-data="dataSingle"></pf-trends-chart>
      </pf-card>
      <label class="label-title">Card with Multiple Trends</label>
      <pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
           show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
-       <div pf-trends-chart config="configVirtual" chart-data="dataVirtual"></div>
-       <div pf-trends-chart config="configPhysical" chart-data="dataPhysical"></div>
-       <div pf-trends-chart config="configMemory" chart-data="dataMemory"></div>
+       <pf-trends-chart config="configVirtual" chart-data="dataVirtual"></pf-trends-chart>
+       <pf-trends-chart config="configPhysical" chart-data="dataPhysical"></pf-trends-chart>
+       <pf-trends-chart config="configMemory" chart-data="dataMemory"></pf-trends-chart>
      </pf-card>
     </div>
    </div>
@@ -721,10 +721,11 @@ angular.module('patternfly.card').component('pfCard', {
 })();
 ;/**
  * @ngdoc directive
- * @name patternfly.charts.directive:pfC3Chart
+ * @name patternfly.charts.component:pfC3Chart
+ * @restrict E
  *
  * @description
- *   Directive for wrapping c3 library
+ *   Component for wrapping c3 library
  *
  *   Note: The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
  *   In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application.
@@ -733,13 +734,12 @@ angular.module('patternfly.card').component('pfCard', {
  * @param {string} id the ID of the container that the chart should bind to
  * @param {expression} config the c3 configuration options for the chart
  * @param {function (chart))=} getChartCallback the callback user function to be called once the chart is generated, containing the c3 chart object
- *
  * @example
 
  <example module="patternfly.charts">
    <file name="index.html">
      <div ng-controller="ChartCtrl">
-        <div pf-c3-chart id="chartId" config="chartConfig" get-chart-callback="getChart"></div>
+        <pf-c3-chart id="chartId" config="chartConfig" get-chart-callback="getChart"></pf-c3-chart>
 
         <form role="form" style="width:300px">
           Total = {{total}}, Used = {{used}}, Available = {{available}}
@@ -785,6 +785,7 @@ angular.module('patternfly.card').component('pfCard', {
        }
 
        $scope.submitform = function (val) {
+         console.log("submitform");
          $scope.used = val;
          $scope.updateAvailable();
          $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
@@ -796,41 +797,49 @@ angular.module('patternfly.card').component('pfCard', {
 (function () {
   'use strict';
 
-  angular.module('patternfly.charts').directive('pfC3Chart', ["$timeout", function ($timeout) {
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=',
-        getChartCallback: '='
-      },
-      template: '<div id=""></div>',
-      replace: true,
-      link: function (scope, element, attrs) {
-        scope.$watch('config', function () {
-          $timeout(function () {
-            // store the chart object
-            var chart;
-            //generate c3 chart data
-            var chartData = scope.config;
-            if (chartData) {
-              chartData.bindto = '#' + attrs.id;
-              chart = c3.generate(chartData);
-              if (scope.getChartCallback) {
-                scope.getChartCallback(chart);
-              }
-            }
-          });
-        }, true);
-      }
-    };
-  }]);
+  angular.module('patternfly.charts').component('pfC3Chart', {
+    bindings: {
+      config: '<',
+      getChartCallback: '<'
+    },
+    template: '<div id=""></div>',
+    controller: ["$timeout", "$attrs", function ($timeout, $attrs) {
+      var ctrl = this, prevConfig;
+
+      ctrl.generateChart = function () {
+        var chart;
+        var chartData;
+
+        // Need to deep watch changes in chart config
+        prevConfig = angular.copy(ctrl.config);
+
+        $timeout(function () {
+          chartData = ctrl.config;
+          if (chartData) {
+            chartData.bindto = '#' + $attrs.id;
+            chart = c3.generate(chartData);
+            ctrl.getChartCallback(chart);
+            prevConfig = angular.copy(ctrl.config);
+          }
+        });
+      };
+
+      ctrl.$doCheck = function () {
+        // do a deep compare on config
+        if (!angular.equals(ctrl.config, prevConfig)) {
+          ctrl.generateChart();
+        }
+      };
+    }]
+  });
 }());
 ;/**
  * @ngdoc directive
- * @name patternfly.charts.directive:pfDonutPctChart
+ * @name patternfly.charts.component:pfDonutPctChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a percentage used donut/radial chart.  The Used Percentage fill starts at 12 o’clock and
+ *   Component for rendering a percentage used donut/radial chart.  The Used Percentage fill starts at 12 o’clock and
  *   moves clockwise.  Whatever portion of the donut not Used, will be represented as Available, and rendered as a
  *   gray fill.
  *   There are three possible fill colors for Used Percentage, dependent on whether or not there are thresholds:<br/>
@@ -871,6 +880,14 @@ angular.module('patternfly.card').component('pfCard', {
  * </ul>
  *
  * @param {int=} chartHeight height of the donut chart
+ * @param {function (threshold)} on-threshold-change user defined function to handle when thresolds change <br/>
+ * <strong>'threshold' Values:</strong>
+ * <ul style='list-style-type: none'>
+ * <li> 'ok'      - when ok threshold is set
+ * <li> 'warning' - when warning threshold is set
+ * <li> 'error'   - when error threshold is set
+ * </ul>
+
 
  * @example
  <example module="patternfly.charts">
@@ -880,19 +897,21 @@ angular.module('patternfly.card').component('pfCard', {
          <div class="row">
            <div class="col-md-3 text-center">
              <label>Error Threshold</label>
-             <div pf-donut-pct-chart config="configErr" data="dataErr"></div>
+             <pf-donut-pct-chart config="configErr" data="dataErr" chart="chartErr"></pf-donut-pct-chart>
            </div>
            <div class="col-md-3 text-center"">
              <label>Warning Threshold</label>
-             <div pf-donut-pct-chart config="configWarn" data="dataWarn"></div>
+             <pf-donut-pct-chart config="configWarn" data="dataWarn"></pf-donut-pct-chart>
            </div>
            <div class="col-md-3 text-center"">
-             <label>Ok</label>
-             <div pf-donut-pct-chart config="configOk" data="dataOk"></div>
+             <label class="camelcase">{{threshLabel}} Threshold</label>
+             <pf-donut-pct-chart config="configDynamic" data="dataDynamic" center-label="labelDynamic"
+                                 on-threshold-change="thresholdChanged(threshold)">
+             </pf-donut-pct-chart>
            </div>
            <div class="col-md-3 text-center"">
              <label>No Threshold</label>
-             <div pf-donut-pct-chart config="configNoThresh" data="dataNoThresh"></div>
+             <pf-donut-pct-chart config="configNoThresh" data="dataNoThresh"></pf-donut-pct-chart>
            </div>
          </div>
 
@@ -904,19 +923,19 @@ angular.module('patternfly.card').component('pfCard', {
 
          <div class="row">
            <div class="col-md-3 text-center">
-             <div pf-donut-pct-chart config="usedConfig" data="usedData" center-label="usedLabel"></div>
+             <pf-donut-pct-chart config="usedConfig" data="usedData" center-label="usedLabel"></pf-donut-pct-chart>
              <label>center-label = 'used'</label>
            </div>
            <div class="col-md-3 text-center">
-             <div pf-donut-pct-chart config="availConfig" data="availData" center-label="availLabel"></div>
+             <pf-donut-pct-chart config="availConfig" data="availData" center-label="availLabel"></pf-donut-pct-chart>
              <label>center-label = 'available'</label>
            </div>
            <div class="col-md-3 text-center">
-             <div pf-donut-pct-chart config="pctConfig" data="pctData" center-label="pctLabel"></div>
+             <pf-donut-pct-chart config="pctConfig" data="pctData" center-label="pctLabel"></pf-donut-pct-chart>
              <label>center-label = 'percent'</label>
            </div>
            <div class="col-md-3 text-center">
-             <div pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></div>
+             <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></pf-donut-pct-chart>
              <label>center-label = ' none'</label>
            </div>
          </div>
@@ -931,7 +950,7 @@ angular.module('patternfly.card').component('pfCard', {
            <div class="col-md-12 text-center">
              <label>Custom Tooltip, Legend, Click handling, and Center Label</label><br>
              <label><strong>Click on Donut Arc!</strong></label>
-             <div pf-donut-pct-chart config="custConfig" chart-height="custChartHeight" data="custData"></div>
+             <pf-donut-pct-chart config="custConfig" chart-height="custChartHeight" data="custData"></pf-donut-pct-chart>
            </div>
          </div>
          <div class="row">
@@ -949,7 +968,7 @@ angular.module('patternfly.card').component('pfCard', {
                <div class="form-group">
                  <label>Chart Height</label>
                  </br>
-                 <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"></input>
+                 <input style="height:25px; width:60px;" type="number" ng-model="custChartHeight"/>
                </div>
              </form>
            </div>
@@ -959,7 +978,7 @@ angular.module('patternfly.card').component('pfCard', {
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope ) {
+     angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope, $interval ) {
        $scope.configErr = {
          'chartId': 'chartErr',
          'units': 'GB',
@@ -970,6 +989,8 @@ angular.module('patternfly.card').component('pfCard', {
          'used': '950',
          'total': '1000'
        };
+
+       $scope.ChartErr = {};
 
        $scope.configWarn = {
          'chartId': 'chartWarn',
@@ -982,16 +1003,35 @@ angular.module('patternfly.card').component('pfCard', {
          'total': '1000'
        };
 
-       $scope.configOk = {
+       $scope.configDynamic = {
          'chartId': 'chartOk',
          'units': 'GB',
          'thresholds':{'warning':'60','error':'90'}
        };
 
-       $scope.dataOk = {
+       $scope.dataDynamic = {
          'used': '550',
          'total': '1000'
        };
+
+       $scope.labelDynamic = "used";
+
+       $scope.thresholdChanged = function(threshold) {
+          $scope.threshLabel = threshold;
+       };
+
+       $interval(function () {
+         $scope.dataDynamic.used = Number($scope.dataDynamic.used) + 40;
+         if ($scope.dataDynamic.used > 1000) {
+           $scope.dataDynamic.used = 10;
+         }
+
+         if ($scope.dataDynamic.used < 500) {
+           $scope.labelDynamic = "used";
+         } else {
+           $scope.labelDynamic = "percent";
+         }
+       }, 1000);
 
        $scope.configNoThresh = {
          'chartId': 'chartNoThresh',
@@ -1084,182 +1124,190 @@ angular.module('patternfly.card').component('pfCard', {
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfDonutPctChart', ["pfUtils", "$timeout", function (pfUtils, $timeout) {
-  'use strict';
+angular.module('patternfly.charts').component('pfDonutPctChart', {
+  bindings: {
+    config: '<',
+    data: '<',
+    chartHeight: '<?',
+    centerLabel: '<?',
+    onThresholdChange: '&'
+  },
+  templateUrl: 'charts/donut/donut-pct-chart.html',
+  controller: ["pfUtils", "$element", "$timeout", function (pfUtils, $element, $timeout) {
+    'use strict';
+    var ctrl = this, prevData;
 
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      data: '=',
-      chartHeight: '=?',
-      centerLabel: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/donut/donut-pct-chart.html',
-    controller: ['$scope',
-      function ($scope) {
-        var donutTooltip;
-
-        $scope.donutChartId = 'donutChart';
-        if ($scope.config.chartId) {
-          $scope.donutChartId = $scope.config.chartId + $scope.donutChartId;
-        }
-
-        $scope.updateAvailable = function () {
-          $scope.data.available = $scope.data.total - $scope.data.used;
-        };
-
-        if ($scope.data.available === undefined) {
-          $scope.updateAvailable();
-        }
-
-        $scope.getStatusColor = function (used, thresholds) {
-          var color = pfUtils.colorPalette.blue;
-
-          if (thresholds) {
-            color = pfUtils.colorPalette.green;
-            if (used >= thresholds.error) {
-              color = pfUtils.colorPalette.red;
-            } else if (used >= thresholds.warning) {
-              color = pfUtils.colorPalette.orange;
-            }
-          }
-
-          return color;
-        };
-
-        $scope.statusDonutColor = function (scope) {
-          var color, percentUsed;
-
-          color = { pattern: [] };
-          percentUsed = scope.data.used / scope.data.total * 100.0;
-          color.pattern[0] = $scope.getStatusColor(percentUsed, scope.config.thresholds);
-          color.pattern[1] = pfUtils.colorPalette.black300;
-          return color;
-        };
-
-        donutTooltip = function (scope) {
-          return {
-            contents: function (d) {
-              var tooltipHtml;
-
-              if (scope.config.tooltipFn) {
-                tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
-                                scope.config.tooltipFn(d) +
-                             '</span>';
-              } else {
-                tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
-                          Math.round(d[0].ratio * 100) + '%' + ' ' + $scope.config.units + ' ' + d[0].name +
-                       '</span>';
-              }
-
-              return tooltipHtml;
-            }
-          };
-        };
-
-        $scope.getDonutData = function (scope) {
-          return {
-            columns: [
-              ['Used', scope.data.used],
-              ['Available', scope.data.available]
-            ],
-            type: 'donut',
-            donut: {
-              label: {
-                show: false
-              }
-            },
-            groups: [
-              ['used', 'available']
-            ],
-            order: null
-          };
-        };
-
-        $scope.getCenterLabelText = function () {
-          var centerLabelText;
-
-          // default to 'used' info.
-          centerLabelText = { bigText: $scope.data.used,
-                              smText:  $scope.config.units + ' Used' };
-
-          if ($scope.config.centerLabelFn) {
-            centerLabelText.bigText = $scope.config.centerLabelFn();
-            centerLabelText.smText = '';
-          } else if ($scope.centerLabel === 'none') {
-            centerLabelText.bigText = '';
-            centerLabelText.smText = '';
-          } else if ($scope.centerLabel === 'available') {
-            centerLabelText.bigText = $scope.data.available;
-            centerLabelText.smText = $scope.config.units + ' Available';
-          } else if ($scope.centerLabel === 'percent') {
-            centerLabelText.bigText = Math.round($scope.data.used / $scope.data.total * 100.0) + '%';
-            centerLabelText.smText = 'of ' + $scope.data.total + ' ' + $scope.config.units;
-          }
-
-          return centerLabelText;
-        };
-
-
-        $scope.updateAll = function (scope) {
-          $scope.updateAvailable();
-          $scope.config.data = pfUtils.merge($scope.config.data, $scope.getDonutData($scope));
-          $scope.config.color = $scope.statusDonutColor($scope);
-          $scope.config.tooltip = donutTooltip(scope);
-          $scope.config.data.onclick = $scope.config.onClickFn;
-        };
-
-        $scope.config = pfUtils.merge(patternfly.c3ChartDefaults().getDefaultDonutConfig(), $scope.config);
-        $scope.updateAll($scope);
-
-
+    ctrl.$onInit = function () {
+      ctrl.donutChartId = 'donutChart';
+      if (ctrl.config.chartId) {
+        ctrl.donutChartId = ctrl.config.chartId + ctrl.donutChartId;
       }
-    ],
-    link: function (scope, element) {
-      var setupDonutChartTitle = function () {
-        $timeout(function () {
-          var donutChartTitle, centerLabelText;
 
-          donutChartTitle = d3.select(element[0]).select('text.c3-chart-arcs-title');
-          if (!donutChartTitle) {
-            return;
-          }
+      ctrl.updateAll();
+    };
 
-          centerLabelText = scope.getCenterLabelText();
+    ctrl.updateAvailable = function () {
+      ctrl.data.available = ctrl.data.total - ctrl.data.used;
+    };
 
-          // Remove any existing title.
-          donutChartTitle.selectAll('*').remove();
-          if (centerLabelText.bigText && !centerLabelText.smText) {
-            donutChartTitle.text(centerLabelText.bigText);
-          } else {
-            donutChartTitle.insert('tspan').text(centerLabelText.bigText).classed('donut-title-big-pf', true).attr('dy', 0).attr('x', 0);
-            donutChartTitle.insert('tspan').text(centerLabelText.smText).classed('donut-title-small-pf', true).attr('dy', 20).attr('x', 0);
-          }
-        }, 300);
-      };
+    ctrl.getStatusColor = function (used, thresholds) {
+      var threshold = "none";
+      var color = pfUtils.colorPalette.blue;
 
-      scope.$watch('config', function () {
-        scope.updateAll(scope);
-        setupDonutChartTitle();
-      }, true);
-      scope.$watch('chartHeight', function () {
-        if (scope.chartHeight) {
-          scope.config.size.height = scope.chartHeight;
+      if (thresholds) {
+        threshold = "ok";
+        color = pfUtils.colorPalette.green;
+        if (used >= thresholds.error) {
+          threshold = "error";
+          color = pfUtils.colorPalette.red;
+        } else if (used >= thresholds.warning) {
+          threshold = "warning";
+          color = pfUtils.colorPalette.orange;
         }
-      });
-      scope.$watch('data', function () {
-        scope.updateAll(scope);
-        setupDonutChartTitle();
-      }, true);
+      }
 
-      scope.$watch('centerLabel', function () {
-        setupDonutChartTitle();
-      });
-    }
-  };
-}]);
+      if (!ctrl.threshold || ctrl.threshold !== threshold) {
+        ctrl.threshold = threshold;
+        ctrl.onThresholdChange({ threshold: ctrl.threshold });
+      }
+
+      return color;
+    };
+
+    ctrl.statusDonutColor = function () {
+      var color, percentUsed;
+
+      color = { pattern: [] };
+      percentUsed = ctrl.data.used / ctrl.data.total * 100.0;
+      color.pattern[0] = ctrl.getStatusColor(percentUsed, ctrl.config.thresholds);
+      color.pattern[1] = pfUtils.colorPalette.black300;
+      return color;
+    };
+
+    ctrl.donutTooltip = function () {
+      return {
+        contents: function (d) {
+          var tooltipHtml;
+
+          if (ctrl.config.tooltipFn) {
+            tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                              ctrl.config.tooltipFn(d) +
+                         '</span>';
+          } else {
+            tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                      Math.round(d[0].ratio * 100) + '%' + ' ' + ctrl.config.units + ' ' + d[0].name +
+                   '</span>';
+          }
+
+          return tooltipHtml;
+        }
+      };
+    };
+
+    ctrl.getDonutData = function () {
+      return {
+        columns: [
+          ['Used', ctrl.data.used],
+          ['Available', ctrl.data.available]
+        ],
+        type: 'donut',
+        donut: {
+          label: {
+            show: false
+          }
+        },
+        groups: [
+          ['used', 'available']
+        ],
+        order: null
+      };
+    };
+
+    ctrl.getCenterLabelText = function () {
+      var centerLabelText;
+
+      // default to 'used' info.
+      centerLabelText = { bigText: ctrl.data.used,
+                          smText:  ctrl.config.units + ' Used' };
+
+      if (ctrl.config.centerLabelFn) {
+        centerLabelText.bigText = ctrl.config.centerLabelFn();
+        centerLabelText.smText = '';
+      } else if (ctrl.centerLabel === 'none') {
+        centerLabelText.bigText = '';
+        centerLabelText.smText = '';
+      } else if (ctrl.centerLabel === 'available') {
+        centerLabelText.bigText = ctrl.data.available;
+        centerLabelText.smText = ctrl.config.units + ' Available';
+      } else if (ctrl.centerLabel === 'percent') {
+        centerLabelText.bigText = Math.round(ctrl.data.used / ctrl.data.total * 100.0) + '%';
+        centerLabelText.smText = 'of ' + ctrl.data.total + ' ' + ctrl.config.units;
+      }
+
+      return centerLabelText;
+    };
+
+    ctrl.updateAll = function () {
+      // Need to deep watch changes in chart data
+      prevData = angular.copy(ctrl.data);
+
+      ctrl.config = pfUtils.merge(patternfly.c3ChartDefaults().getDefaultDonutConfig(), ctrl.config);
+      ctrl.updateAvailable();
+      ctrl.config.data = pfUtils.merge(ctrl.config.data, ctrl.getDonutData());
+      ctrl.config.color = ctrl.statusDonutColor(ctrl);
+      ctrl.config.tooltip = ctrl.donutTooltip();
+      ctrl.config.data.onclick = ctrl.config.onClickFn;
+    };
+
+    ctrl.setupDonutChartTitle = function () {
+      var donutChartTitle, centerLabelText;
+
+      if (angular.isUndefined(ctrl.chart)) {
+        return;
+      }
+
+      donutChartTitle = d3.select(ctrl.chart.element).select('text.c3-chart-arcs-title');
+      if (!donutChartTitle) {
+        return;
+      }
+
+      centerLabelText = ctrl.getCenterLabelText();
+
+      // Remove any existing title.
+      donutChartTitle.selectAll('*').remove();
+      if (centerLabelText.bigText && !centerLabelText.smText) {
+        donutChartTitle.text(centerLabelText.bigText);
+      } else {
+        donutChartTitle.insert('tspan').text(centerLabelText.bigText).classed('donut-title-big-pf', true).attr('dy', 0).attr('x', 0);
+        donutChartTitle.insert('tspan').text(centerLabelText.smText).classed('donut-title-small-pf', true).attr('dy', 20).attr('x', 0);
+      }
+    };
+
+    ctrl.setChart = function (chart) {
+      ctrl.chart = chart;
+      ctrl.setupDonutChartTitle();
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.config || changesObj.data) {
+        ctrl.updateAll();
+      }
+      if (changesObj.chartHeight) {
+        ctrl.config.size.height = changesObj.chartHeight.currentValue;
+      }
+      if (changesObj.centerLabel) {
+        ctrl.setupDonutChartTitle();
+      }
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on data
+      if (!angular.equals(ctrl.data, prevData)) {
+        ctrl.updateAll();
+      }
+    };
+  }]
+});
 ;/**
  *
  * @description
@@ -1268,75 +1316,86 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', ["pfUtils", "$t
  *
  * @param {string=} chartHeight height of the chart (no units) - default: 40
  */
-angular.module('patternfly.charts').directive('pfEmptyChart', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      chartHeight: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/empty-chart.html',
-    controller: ["$scope", function ($scope) {
-      $scope.setSizeStyles = function () {
-        var height = $scope.chartHeight || 40;
-        var topPadding = Math.min(Math.round((height - 40) / 2), 20);
-        $scope.sizeStyles = {
-          height: height + 'px',
-          'padding-top': topPadding + 'px'
-        };
-      };
-      $scope.setSizeStyles();
-    }],
-    link: function (scope) {
-      scope.$watch('chartHeight', function () {
-        scope.setSizeStyles();
-      });
-    }
-  };
-});
-;angular.module('patternfly.charts').directive('pfHeatmapLegend',
-  function () {
+angular.module('patternfly.charts').component('pfEmptyChart', {
+  bindings: {
+    chartHeight: '<?'
+  },
+  templateUrl: 'charts/empty-chart.html',
+  controller: function () {
     'use strict';
-    return {
-      restrict: 'A',
-      scope: {
-        legend: '=?',
-        legendColors: '=?'
-      },
-      templateUrl: 'charts/heatmap/heatmap-legend.html',
-      controller: ["$scope", function ($scope) {
-        var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
-        var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
+    var ctrl = this;
 
-        //Allow overriding of defaults
-        if (!$scope.legendColors) {
-          $scope.legendColors = heatmapColorPatternDefaults;
-        }
-        if (!$scope.legend) {
-          $scope.legend = legendLabelDefaults;
-        }
-      }],
-      link: function ($scope) {
-        var items = [];
-        var index;
-        for (index = $scope.legend.length - 1; index >= 0; index--) {
-          items.push({
-            text: $scope.legend[index],
-            color: $scope.legendColors[index]
-          });
-        }
-        $scope.legendItems = items;
+    ctrl.setSizeStyles = function () {
+      var height = ctrl.chartHeight || 40;
+      var topPadding = Math.min(Math.round((height - 40) / 2), 20);
+      ctrl.sizeStyles = {
+        height: height + 'px',
+        'padding-top': topPadding + 'px'
+      };
+    };
+    ctrl.setSizeStyles();
+
+    ctrl.$onChanges =  function (changesObj) {
+      if (changesObj.chartHeight) {
+        ctrl.setSizeStyles();
       }
     };
   }
-);
+});
+;angular.module('patternfly.charts').component('pfHeatmapLegend', {
+  bindings: {
+    legend: '<?',
+    legendColors: '<?'
+  },
+  templateUrl: 'charts/heatmap/heatmap-legend.html',
+  controller: function () {
+    'use strict';
+    var ctrl = this;
+
+    var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
+    var legendLabelDefaults = ['< 70%', '70-80%', '80-90%', '> 90%'];
+
+    ctrl.$onInit = function () {
+      ctrl.updateAll();
+    };
+
+    ctrl.updateAll = function () {
+      var items = [];
+      var index;
+
+      //Allow overriding of defaults
+      if (!ctrl.legendColors) {
+        ctrl.legendColors = heatmapColorPatternDefaults;
+      }
+      if (!ctrl.legend) {
+        ctrl.legend = legendLabelDefaults;
+      }
+      for (index = ctrl.legend.length - 1; index >= 0; index--) {
+        items.push({
+          text: ctrl.legend[index],
+          color: ctrl.legendColors[index]
+        });
+      }
+      ctrl.legendItems = items;
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.legend && !changesObj.legend.isFirstChange()) {
+        ctrl.updateAll();
+      }
+      if (changesObj.legendColors && !changesObj.legendColors.isFirstChange()) {
+        ctrl.updateAll();
+      }
+    };
+  }
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfHeatMap
+ * @restrict E
  *
  * @description
- *   Directive for rendering a heatmap chart.
+ *   Component for rendering a heatmap chart.
  *
  * @param {object} data data for the chart:<br/>
  * <ul style='list-style-type: none'>
@@ -1365,18 +1424,18 @@ angular.module('patternfly.charts').directive('pfEmptyChart', function () {
      <div ng-controller="ChartCtrl">
        <div class="row">
          <div class="col-md-5 example-heatmap-container">
-           <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
-                show-legend="showLegends"></div>
+           <pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
+                show-legend="showLegends"></pf-heatmap>
          </div>
          <div class="col-md-3 example-heatmap-container">
-           <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
+           <pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
                 show-legend="showLegends" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
                 heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
-                click-action="clickAction"></div>
+                click-action="clickAction"></pf-heatmap>
          </div>
          <div class="col-md-3 example-heatmap-container">
-           <div pf-heatmap id="id" chart-title="titleSmall" data="data" chart-data-available="dataAvailable"
-                show-legend="showLegends" max-block-size="15" range-tooltips="rangeTooltips"></div>
+           <pf-heatmap id="id" chart-title="titleSmall" data="data" chart-data-available="dataAvailable"
+                show-legend="showLegends" max-block-size="15" range-tooltips="rangeTooltips"></pf-heatmap>
            </div>
        </div>
        <div class="row">
@@ -1475,262 +1534,273 @@ angular.module('patternfly.charts').directive('pfEmptyChart', function () {
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window", function ($compile, $window) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      data: '=',
-      chartDataAvailable: '=?',
-      height: '=?',
-      chartTitle: '=?',
-      showLegend: '=?',
-      legendLabels: '=?',
-      maxBlockSize: '@',
-      minBlockSize: '@',
-      blockPadding: '@',
-      thresholds: '=?',
-      heatmapColorPattern: '=?',
-      clickAction: '=?',
-      rangeOnHover: '=?',
-      rangeHoverSize: '@',
-      rangeTooltips: '=?'
-    },
-    templateUrl: 'charts/heatmap/heatmap.html',
-    controller: ["$scope", function ($scope) {
-      var thresholdDefaults = [0.7, 0.8, 0.9];
-      var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
-      var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
-      var rangeTooltipDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
-      var heightDefault = 200;
+angular.module('patternfly.charts').component('pfHeatmap', {
+  bindings: {
+    data: '<',
+    chartDataAvailable: '<?',
+    height: '<?',
+    chartTitle: '<?',
+    showLegend: '<?',
+    legendLabels: '<?',
+    maxBlockSize: '@',
+    minBlockSize: '@',
+    blockPadding: '@',
+    thresholds: '<?',
+    heatmapColorPattern: '<?',
+    clickAction: '<?',
+    rangeOnHover: '<?',
+    rangeHoverSize: '@',
+    rangeTooltips: '<?'
+  },
+  templateUrl: 'charts/heatmap/heatmap.html',
+  controller: ["$element", "$window", "$compile", "$scope", "$timeout", function ($element, $window, $compile, $scope, $timeout) {
+    'use strict';
+    var ctrl = this, prevData;
 
-      //Allow overriding of defaults
-      if ($scope.maxBlockSize === undefined || isNaN($scope.maxBlockSize)) {
-        $scope.maxSize = 64;
-      } else {
-        $scope.maxSize = parseInt($scope.maxBlockSize);
-        if ($scope.maxSize < 5) {
-          $scope.maxSize = 5;
-        } else if ($scope.maxSize > 50) {
-          $scope.maxSize = 50;
-        }
-      }
+    var containerWidth, containerHeight, blockSize, numberOfRows;
 
-      if ($scope.minBlockSize === undefined || isNaN($scope.minBlockSize)) {
-        $scope.minSize = 2;
-      } else {
-        $scope.minSize = parseInt($scope.minBlockSize);
-      }
+    var thresholdDefaults = [0.7, 0.8, 0.9];
+    var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
+    var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
+    var rangeTooltipDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
+    var heightDefault = 200;
 
-      if ($scope.blockPadding === undefined || isNaN($scope.blockPadding)) {
-        $scope.padding = 2;
-      } else {
-        $scope.padding = parseInt($scope.blockPadding);
-      }
-
-      if ($scope.rangeHoverSize === undefined || isNaN($scope.rangeHoverSize)) {
-        $scope.rangeHoverSize = 15;
-      } else {
-        $scope.rangeHoverSize = parseInt($scope.rangeHoverSize);
-      }
-
-      $scope.rangeOnHover = ($scope.rangeOnHover === undefined || $scope.rangeOnHover) ? true : false;
-
-      if (!$scope.rangeTooltips) {
-        $scope.rangeTooltips = rangeTooltipDefaults;
-      }
-
-      if (!$scope.thresholds) {
-        $scope.thresholds = thresholdDefaults;
-      }
-
-      if (!$scope.heatmapColorPattern) {
-        $scope.heatmapColorPattern = heatmapColorPatternDefaults;
-      }
-
-      if (!$scope.legendLabels) {
-        $scope.legendLabels = legendLabelDefaults;
-      }
-      $scope.height = $scope.height || heightDefault;
-      $scope.showLegend = $scope.showLegend || ($scope.showLegend === undefined);
-      $scope.loadingDone = false;
-    }],
-    link: function (scope, element, attrs) {
-      var thisComponent = element[0].querySelector('.heatmap-pf-svg');
-      var containerWidth, containerHeight, blockSize, numberOfRows;
-
-      var setStyles = function () {
-        scope.containerStyles = {
-          height: scope.height + 'px',
-          display: scope.chartDataAvailable === false ? 'none' : 'block'
-        };
+    var setStyles = function () {
+      ctrl.containerStyles = {
+        height: ctrl.height + 'px',
+        display: ctrl.chartDataAvailable === false ? 'none' : 'block'
       };
+    };
 
-      var setSizes = function () {
-        var parentContainer = element[0].querySelector('.heatmap-container');
-        containerWidth = parentContainer.clientWidth;
-        containerHeight = parentContainer.clientHeight;
-        blockSize = determineBlockSize();
+    var setSizes = function () {
+      var parentContainer = $element[0].querySelector('.heatmap-container');
+      containerWidth = parentContainer.clientWidth;
+      containerHeight = parentContainer.clientHeight;
+      blockSize = determineBlockSize();
 
-        if ((blockSize - scope.padding) > scope.maxSize) {
-          blockSize = scope.padding + scope.maxSize;
+      if ((blockSize - ctrl.padding) > ctrl.maxSize) {
+        blockSize = ctrl.padding + ctrl.maxSize;
 
-          // Attempt to square off the area, check if square fits
-          numberOfRows = Math.ceil(Math.sqrt(scope.data.length));
-          if (blockSize * numberOfRows > containerWidth ||
-              blockSize * numberOfRows > containerHeight) {
-            numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
-          }
-        } else if ((blockSize - scope.padding) < scope.minSize) {
-          blockSize = scope.padding + scope.minSize;
-
-          // Attempt to square off the area, check if square fits
-          numberOfRows = Math.ceil(Math.sqrt(scope.data.length));
-          if (blockSize * numberOfRows > containerWidth ||
-              blockSize * numberOfRows > containerHeight) {
-            numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
-          }
-        } else {
+        // Attempt to square off the area, check if square fits
+        numberOfRows = Math.ceil(Math.sqrt(ctrl.data.length));
+        if (blockSize * numberOfRows > containerWidth ||
+          blockSize * numberOfRows > containerHeight) {
           numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
         }
+      } else if ((blockSize - ctrl.padding) < ctrl.minSize) {
+        blockSize = ctrl.padding + ctrl.minSize;
+
+        // Attempt to square off the area, check if square fits
+        numberOfRows = Math.ceil(Math.sqrt(ctrl.data.length));
+        if (blockSize * numberOfRows > containerWidth ||
+          blockSize * numberOfRows > containerHeight) {
+          numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+        }
+      } else {
+        numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+      }
+    };
+
+    var determineBlockSize = function () {
+      var x = containerWidth;
+      var y = containerHeight;
+      var n = ctrl.data ? ctrl.data.length : 0;
+      var px = Math.ceil(Math.sqrt(n * x / y));
+      var py = Math.ceil(Math.sqrt(n * y / x));
+      var sx, sy;
+
+      if (Math.floor(px * y / x) * px < n) {
+        sx = y / Math.ceil(px * y / x);
+      } else {
+        sx = x / px;
+      }
+
+      if (Math.floor(py * x / y) * py < n) {
+        sy = x / Math.ceil(x * py / y);
+      } else {
+        sy = y / py;
+      }
+      return Math.max(sx, sy);
+    };
+
+    var redraw = function () {
+      var data = ctrl.data;
+      var color = d3.scale.threshold().domain(ctrl.thresholds).range(ctrl.heatmapColorPattern);
+      var rangeTooltip = d3.scale.threshold().domain(ctrl.thresholds).range(ctrl.rangeTooltips);
+      var blocks;
+      var fillSize = blockSize - ctrl.padding;
+      var highlightBlock = function (block, active) {
+        block.style('fill-opacity', active ? 1 : 0.4);
+      };
+      var highlightBlockColor = function (block, fillColor) {
+        // Get fill color from given block
+        var blockColor = color(block.map(function (d) {
+          return d[0].__data__.value;
+        }));
+        // If given color matches, apply highlight
+        if (blockColor === fillColor) {
+          block.style('fill-opacity', 1);
+        }
       };
 
-      var determineBlockSize = function () {
-        var x = containerWidth;
-        var y = containerHeight;
-        var n = scope.data ? scope.data.length : 0;
-        var px = Math.ceil(Math.sqrt(n * x / y));
-        var py = Math.ceil(Math.sqrt(n * y / x));
-        var sx, sy;
-
-        if (Math.floor(px * y / x) * px < n) {
-          sx = y / Math.ceil(px * y / x);
-        } else {
-          sx = x / px;
+      var svg = window.d3.select(ctrl.thisComponent);
+      svg.selectAll('*').remove();
+      blocks = svg.selectAll('rect').data(data).enter().append('rect');
+      blocks.attr('x', function (d, i) {
+        return Math.floor(i / numberOfRows) * blockSize;
+      }).attr('y', function (d, i) {
+        return i % numberOfRows * blockSize;
+      }).attr('width', fillSize).attr('height', fillSize).style('fill', function (d) {
+        return color(d.value);
+      }).attr('uib-tooltip-html', function (d, i) { //tooltip-html is throwing an exception
+        if (ctrl.rangeOnHover && fillSize <= ctrl.rangeHoverSize) {
+          return '"' + rangeTooltip(d.value) + '"';
         }
+        return "'" + d.tooltip + "'";
+      }).attr('tooltip-append-to-body', function (d, i) {
+        return true;
+      }).attr('tooltip-animation', function (d, i) {
+        return false;
+      });
 
-        if (Math.floor(py * x / y) * py < n) {
-          sy = x / Math.ceil(x * py / y);
-        } else {
-          sy = y / py;
-        }
-        return Math.max(sx, sy);
-      };
-
-      var redraw = function () {
-        var data = scope.data;
-        var color = d3.scale.threshold().domain(scope.thresholds).range(scope.heatmapColorPattern);
-        var rangeTooltip = d3.scale.threshold().domain(scope.thresholds).range(scope.rangeTooltips);
-        var blocks;
-        var fillSize = blockSize - scope.padding;
-        var highlightBlock = function (block, active) {
-          block.style('fill-opacity', active ? 1 : 0.4);
-        };
-        var highlightBlockColor = function (block, fillColor) {
-          // Get fill color from given block
-          var blockColor = color(block.map(function (d) {
+      //Adding events
+      blocks.on('mouseover', function () {
+        var fillColor;
+        blocks.call(highlightBlock, false);
+        if (ctrl.rangeOnHover && fillSize <= ctrl.rangeHoverSize) {
+          // Get fill color for current block
+          fillColor = color(d3.select(this).map(function (d) {
             return d[0].__data__.value;
           }));
-          // If given color matches, apply highlight
-          if (blockColor === fillColor) {
-            block.style('fill-opacity', 1);
-          }
-        };
-
-        var svg = window.d3.select(thisComponent);
-        svg.selectAll('*').remove();
-        blocks = svg.selectAll('rect').data(data).enter().append('rect');
-        blocks.attr('x', function (d, i) {
-          return Math.floor(i / numberOfRows) * blockSize;
-        }).attr('y', function (d, i) {
-          return i % numberOfRows * blockSize;
-        }).attr('width', fillSize).attr('height', fillSize).style('fill', function (d) {
-          return color(d.value);
-        }).attr('uib-tooltip-html', function (d, i) { //tooltip-html is throwing an exception
-          if (scope.rangeOnHover && fillSize <= scope.rangeHoverSize) {
-            return '"' + rangeTooltip(d.value) + '"';
-          }
-          return "'" + d.tooltip + "'";
-        }).attr('tooltip-append-to-body', function (d, i) {
-          return true;
-        }).attr('tooltip-animation', function (d, i) {
-          return false;
-        });
-
-        //Adding events
-        blocks.on('mouseover', function () {
-          var fillColor;
-          blocks.call(highlightBlock, false);
-          if (scope.rangeOnHover && fillSize <= scope.rangeHoverSize) {
-            // Get fill color for current block
-            fillColor = color(d3.select(this).map(function (d) {
-              return d[0].__data__.value;
-            }));
-            // Highlight all blocks matching fill color
-            blocks[0].forEach(function (block) {
-              highlightBlockColor(d3.select(block), fillColor);
-            });
-          } else {
-            d3.select(this).call(highlightBlock, true);
-          }
-        });
-        blocks.on('click', function (d) {
-          if (scope.clickAction) {
-            scope.clickAction(d);
-          }
-        });
-
-        //Compiles the tooltips
-        angular.forEach(angular.element(blocks), function (block) {
-          var el = angular.element(block);
-          $compile(el)(scope);
-        });
-
-        svg.on('mouseleave', function () {
-          blocks.call(highlightBlock, true);
-        });
-      };
-
-      scope.$watch('data', function (newVal, oldVal) {
-        if (typeof(newVal) !== 'undefined') {
-          scope.loadingDone = true;
-          setStyles();
-          if (scope.chartDataAvailable !== false) {
-            setSizes();
-            redraw();
-          }
+          // Highlight all blocks matching fill color
+          blocks[0].forEach(function (block) {
+            highlightBlockColor(d3.select(block), fillColor);
+          });
+        } else {
+          d3.select(this).call(highlightBlock, true);
         }
       });
-      scope.$watch('chartDataAvailable', function () {
-        if (scope.chartDataAvailable === false) {
-          scope.loadingDone = true;
+      blocks.on('click', function (d) {
+        if (ctrl.clickAction) {
+          ctrl.clickAction(d);
         }
-        setStyles();
       });
+
+      //Compiles the tooltips
+      angular.forEach(angular.element(blocks), function (block) {
+        var el = angular.element(block);
+        // TODO: get heatmap tooltips to work without using $compile or $scope
+        $compile(el)($scope);
+      });
+
+      svg.on('mouseleave', function () {
+        blocks.call(highlightBlock, true);
+      });
+    };
+
+    ctrl.updateAll = function () {
+      // Need to deep watch changes in chart data
+      prevData = angular.copy(ctrl.data);
+
+      //Allow overriding of defaults
+      if (ctrl.maxBlockSize === undefined || isNaN(ctrl.maxBlockSize)) {
+        ctrl.maxSize = 64;
+      } else {
+        ctrl.maxSize = parseInt(ctrl.maxBlockSize);
+        if (ctrl.maxSize < 5) {
+          ctrl.maxSize = 5;
+        } else if (ctrl.maxSize > 50) {
+          ctrl.maxSize = 50;
+        }
+      }
+
+      if (ctrl.minBlockSize === undefined || isNaN(ctrl.minBlockSize)) {
+        ctrl.minSize = 2;
+      } else {
+        ctrl.minSize = parseInt(ctrl.minBlockSize);
+      }
+
+      if (ctrl.blockPadding === undefined || isNaN(ctrl.blockPadding)) {
+        ctrl.padding = 2;
+      } else {
+        ctrl.padding = parseInt(ctrl.blockPadding);
+      }
+
+      if (ctrl.rangeHoverSize === undefined || isNaN(ctrl.rangeHoverSize)) {
+        ctrl.rangeHoverSize = 15;
+      } else {
+        ctrl.rangeHoverSize = parseInt(ctrl.rangeHoverSize);
+      }
+
+      ctrl.rangeOnHover = (ctrl.rangeOnHover === undefined || ctrl.rangeOnHover) ? true : false;
+
+      if (!ctrl.rangeTooltips) {
+        ctrl.rangeTooltips = rangeTooltipDefaults;
+      }
+
+      if (!ctrl.thresholds) {
+        ctrl.thresholds = thresholdDefaults;
+      }
+
+      if (!ctrl.heatmapColorPattern) {
+        ctrl.heatmapColorPattern = heatmapColorPatternDefaults;
+      }
+
+      if (!ctrl.legendLabels) {
+        ctrl.legendLabels = legendLabelDefaults;
+      }
+      ctrl.height = ctrl.height || heightDefault;
+      ctrl.showLegend = ctrl.showLegend || (ctrl.showLegend === undefined);
+      ctrl.loadingDone = false;
 
       angular.element($window).bind('resize', function () {
         setSizes();
         redraw();
       });
 
-      scope.$watch(
-        function () {
-          return [element[0].offsetWidth, element[0].offsetHeight].join('x');
-        },
-        function (value) {
+      ctrl.thisComponent = $element[0].querySelector('.heatmap-pf-svg');
+
+      $timeout(function () {
+        setStyles();
+        setSizes();
+        redraw();
+      });
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.chartDataAvailable && !changesObj.chartDataAvailable.isFirstChange()) {
+        setStyles();
+      } else {
+        ctrl.updateAll();
+        ctrl.loadingDone = true;
+      }
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData and config
+      if (!angular.equals(ctrl.data, prevData)) {
+        setStyles();
+        if (ctrl.chartDataAvailable !== false) {
           setSizes();
           redraw();
         }
-      );
-    }
-  };
-}]);
+      }
+    };
+
+    ctrl.$postLink = function () {
+      setStyles();
+      setSizes();
+      redraw();
+    };
+  }]
+});
 ;/**
  * @ngdoc directive
- * @name patternfly.charts.directive:pfLineChart
+ * @name patternfly.charts.component:pfLineChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a line chart.
+ *   Component for rendering a line chart.
  *   <br><br>
  *   See http://c3js.org/reference.html for a full list of C3 chart options.
  *
@@ -1766,7 +1836,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
-         <div pf-line-chart config="config" chart-data="data" set-area-chart="custAreaChart" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+         <pf-line-chart config="config" chart-data="data" set-area-chart="custAreaChart" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></pf-line-chart>
        </div>
        <hr class="col-md-12">
        <div class="col-md-12">
@@ -1843,127 +1913,124 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfLineChart', ["pfUtils", function (pfUtils) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      chartData: '=',
-      showXAxis: '=?',
-      showYAxis: '=?',
-      setAreaChart: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/line/line-chart.html',
-    controller: ['$scope',
-      function ($scope) {
+angular.module('patternfly.charts').component('pfLineChart', {
+  bindings: {
+    config: '<',
+    chartData: '<',
+    showXAxis: '<?',
+    showYAxis: '<?',
+    setAreaChart: '<?'
+  },
+  templateUrl: 'charts/line/line-chart.html',
+  controller: ["pfUtils", function (pfUtils) {
+    'use strict';
+    var ctrl = this, prevChartData;
 
-        // Create an ID for the chart based on the chartId in the config if given
-        $scope.lineChartId = 'lineChart';
-        if ($scope.config.chartId) {
-          $scope.lineChartId = $scope.config.chartId + $scope.lineChartId;
+    ctrl.updateAll = function () {
+      // Need to deep watch changes in chart data
+      prevChartData = angular.copy(ctrl.chartData);
+
+      // Create an ID for the chart based on the chartId in the config if given
+      if (ctrl.lineChartId === undefined) {
+        ctrl.lineChartId = 'lineChart';
+        if (ctrl.config.chartId) {
+          ctrl.lineChartId = ctrl.config.chartId + ctrl.lineChartId;
         }
-
-        /*
-         * Convert the config data to C3 Data
-         */
-        $scope.getLineData = function (chartData) {
-          var lineData  = {
-            type: $scope.setAreaChart ? "area" : "line"
-          };
-
-          if (chartData && chartData.dataAvailable !== false && chartData.xData) {
-            lineData.x = chartData.xData[0];
-            // Convert the chartData dictionary into a C3 columns data arrays
-            lineData.columns = Object.keys (chartData).map (function (key) {
-              return chartData[key];
-            });
-          }
-
-          return lineData;
-        };
-
-        /*
-         * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
-         *   1) in the config, setting showAxis to true will show both axes
-         *   2) in the attributes showXAxis and showYAxis will override the config if set
-         *
-         * By default only line and the tick marks are shown, no labels. This is a line and should be used
-         * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
-         */
-
-        if ($scope.showXAxis === undefined) {
-          $scope.showXAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-        }
-
-        if ($scope.showYAxis === undefined) {
-          $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-        }
-
-        $scope.defaultConfig = patternfly.c3ChartDefaults().getDefaultLineConfig();
-        $scope.defaultConfig.axis = {
-          x: {
-            show: $scope.showXAxis === true,
-            type: 'timeseries',
-            tick: {
-              format: function () {
-                return '';
-              }
-            }
-          },
-          y: {
-            show: $scope.showYAxis === true,
-            tick: {
-              format: function () {
-                return '';
-              }
-            }
-          }
-        };
-
-        /*
-         * Setup Chart type option. Default is Line Chart.
-         */
-        if ($scope.setAreaChart === undefined) {
-          $scope.setAreaChart = ($scope.config.setAreaChart !== undefined) && $scope.config.setAreaChart;
-        }
-
-        // Convert the given data to C3 chart format
-        $scope.config.data = pfUtils.merge($scope.config.data, $scope.getLineData($scope.chartData));
-
-        // Override defaults with callers specifications
-        $scope.defaultConfig = pfUtils.merge($scope.defaultConfig, $scope.config);
       }
-    ],
 
-    link: function (scope) {
-      scope.$watch('config', function () {
-        scope.config.data = pfUtils.merge(scope.config.data, scope.getLineData(scope.chartData));
-        scope.chartConfig = pfUtils.merge(scope.defaultConfig, scope.config);
-      }, true);
-      scope.$watch('showXAxis', function () {
-        scope.chartConfig.axis.x.show = scope.showXAxis === true;
-      });
-      scope.$watch('showYAxis', function () {
-        scope.chartConfig.axis.y.show = scope.showYAxis === true;
-      });
-      scope.$watch('setAreaChart', function () {
-        scope.chartConfig.data.type = scope.setAreaChart ? "area" : "line";
-      });
-      scope.$watch('chartData', function () {
-        scope.chartConfig.data = pfUtils.merge(scope.chartConfig.data, scope.getLineData(scope.chartData));
-      }, true);
-    }
-  };
-}]
-);
+      /*
+       * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
+       *   1) in the config, setting showAxis to true will show both axes
+       *   2) in the attributes showXAxis and showYAxis will override the config if set
+       *
+       * By default only line and the tick marks are shown, no labels. This is a line and should be used
+       * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
+       */
+
+      if (ctrl.showXAxis === undefined) {
+        ctrl.showXAxis = (ctrl.config.showAxis !== undefined) && ctrl.config.showAxis;
+      }
+
+      if (ctrl.showYAxis === undefined) {
+        ctrl.showYAxis = (ctrl.config.showAxis !== undefined) && ctrl.config.showAxis;
+      }
+
+      ctrl.defaultConfig = patternfly.c3ChartDefaults().getDefaultLineConfig();
+      ctrl.defaultConfig.axis = {
+        x: {
+          show: ctrl.showXAxis === true,
+          type: 'timeseries',
+          tick: {
+            format: function () {
+              return '';
+            }
+          }
+        },
+        y: {
+          show: ctrl.showYAxis === true,
+          tick: {
+            format: function () {
+              return '';
+            }
+          }
+        }
+      };
+
+      /*
+       * Setup Chart type option. Default is Line Chart.
+       */
+      if (ctrl.setAreaChart === undefined) {
+        ctrl.setAreaChart = (ctrl.config.setAreaChart !== undefined) && ctrl.config.setAreaChart;
+      }
+
+      // Convert the given data to C3 chart format
+      ctrl.config.data = pfUtils.merge(ctrl.config.data, ctrl.getLineData(ctrl.chartData));
+
+      // Override defaults with callers specifications
+      ctrl.defaultConfig = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+
+      // Will trigger c3 chart generation
+      ctrl.chartConfig = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+    };
+
+    /*
+     * Convert the config data to C3 Data
+     */
+    ctrl.getLineData = function (chartData) {
+      var lineData = {
+        type: ctrl.setAreaChart ? "area" : "line"
+      };
+
+      if (chartData && chartData.dataAvailable !== false && chartData.xData) {
+        lineData.x = chartData.xData[0];
+        // Convert the chartData dictionary into a C3 columns data arrays
+        lineData.columns = Object.keys(chartData).map(function (key) {
+          return chartData[key];
+        });
+      }
+
+      return lineData;
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData
+      if (!angular.equals(ctrl.chartData, prevChartData)) {
+        ctrl.updateAll();
+      }
+    };
+  }]
+});
 ;/**
  * @ngdoc directive
- * @name patternfly.charts.directive:pfSparklineChart
+ * @name patternfly.charts.component:pfSparklineChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a sparkline chart.
+ *   Component for rendering a sparkline chart.
  *   <br><br>
  *   See http://c3js.org/reference.html for a full list of C3 chart options.
  *
@@ -2005,7 +2072,7 @@ angular.module('patternfly.charts').directive('pfLineChart', ["pfUtils", functio
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
-         <div pf-sparkline-chart config="config" chart-data="data" chart-height="custChartHeight" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+         <pf-sparkline-chart config="config" chart-data="data" chart-height="custChartHeight" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></pf-sparkline-chart>
        </div>
        <hr class="col-md-12">
        <div class="col-md-12">
@@ -2103,210 +2170,202 @@ angular.module('patternfly.charts').directive('pfLineChart', ["pfUtils", functio
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", function (pfUtils) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      chartData: '=',
-      chartHeight: '=?',
-      showXAxis: '=?',
-      showYAxis: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/sparkline/sparkline-chart.html',
-    controller: ['$scope',
-      function ($scope) {
+angular.module('patternfly.charts').component('pfSparklineChart', {
+  bindings: {
+    config: '<',
+    chartData: '<',
+    chartHeight: '<?',
+    showXAxis: '<?',
+    showYAxis: '<?'
+  },
+  templateUrl: 'charts/sparkline/sparkline-chart.html',
+  controller: ["pfUtils", function (pfUtils) {
+    'use strict';
+    var ctrl = this, prevChartData;
 
-        // Create an ID for the chart based on the chartId in the config if given
-        $scope.sparklineChartId = 'sparklineChart';
-        if ($scope.config.chartId) {
-          $scope.sparklineChartId = $scope.config.chartId + $scope.sparklineChartId;
+    ctrl.updateAll = function () {
+      // Need to deep watch changes in chart data
+      prevChartData = angular.copy(ctrl.chartData);
+
+      // Create an ID for the chart based on the chartId in the config if given
+      if (ctrl.sparklineChartId === undefined) {
+        ctrl.sparklineChartId = 'sparklineChart';
+        if (ctrl.config.chartId) {
+          ctrl.sparklineChartId = ctrl.config.chartId + ctrl.sparklineChartId;
         }
-
-        /*
-         * Convert the config data to C3 Data
-         */
-        $scope.getSparklineData = function (chartData) {
-          var sparklineData  = {
-            type: 'area'
-          };
-
-          if (chartData && chartData.dataAvailable !== false && chartData.xData && chartData.yData) {
-            sparklineData.x = chartData.xData[0];
-            sparklineData.columns = [
-              chartData.xData,
-              chartData.yData
-            ];
-          }
-
-          return sparklineData;
-        };
-
-        $scope.getTooltipTableHTML = function (tipRows) {
-          return '<div class="module-triangle-bottom">' +
-            '  <table class="c3-tooltip">' +
-            '    <tbody>' +
-            tipRows +
-            '    </tbody>' +
-            '  </table>' +
-            '</div>';
-        };
-
-        $scope.sparklineTooltip = function () {
-          return {
-            contents: function (d) {
-              var tipRows;
-              var percentUsed = 0;
-
-              if ($scope.config.tooltipFn) {
-                tipRows = $scope.config.tooltipFn(d);
-              } else {
-                switch ($scope.config.tooltipType) {
-                case 'usagePerDay':
-                  if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
-                    percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
-                  }
-                  tipRows =
-                    '<tr>' +
-                    '  <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '  <td class="name">' + percentUsed + '%:' + '</td>' +
-                    '  <td class="value text-nowrap">' + d[0].value + ' ' +  ($scope.config.units ? $scope.config.units + ' ' : '') + d[0].name + '</td>' +
-                    '</tr>';
-                  break;
-                case 'valuePerDay':
-                  tipRows =
-                    '<tr>' +
-                    '  <td class="value">' +  d[0].x.toLocaleDateString() + '</td>' +
-                    '  <td class="value text-nowrap">' +  d[0].value + ' ' + d[0].name + '</td>' +
-                    '</tr>';
-                  break;
-                case 'percentage':
-                  percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
-                  tipRows =
-                    '<tr>' +
-                    '  <td class="name">' + percentUsed + '%' + '</td>' +
-                    '</tr>';
-                  break;
-                default:
-                  tipRows = patternfly.c3ChartDefaults().getDefaultSparklineTooltip().contents(d);
-                }
-              }
-              return $scope.getTooltipTableHTML(tipRows);
-            },
-            position: function (data, width, height, element) {
-              var center;
-              var top;
-              var chartBox;
-              var graphOffsetX;
-              var x;
-
-              try {
-                center = parseInt(element.getAttribute('x'));
-                top = parseInt(element.getAttribute('y'));
-                chartBox = document.querySelector('#' + $scope.sparklineChartId).getBoundingClientRect();
-                graphOffsetX = document.querySelector('#' + $scope.sparklineChartId + ' g.c3-axis-y').getBoundingClientRect().right;
-                x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
-
-                return {
-                  top: top - height,
-                  left: Math.min(x, chartBox.width - width)
-                };
-              } catch (e) {
-              }
-            }
-          };
-        };
-
-        /*
-         * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
-         *   1) in the config, setting showAxis to true will show both axes
-         *   2) in the attributes showXAxis and showYAxis will override the config if set
-         *
-         * By default only line and the tick marks are shown, no labels. This is a sparkline and should be used
-         * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
-         */
-
-        if ($scope.showXAxis === undefined) {
-          $scope.showXAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-        }
-
-        if ($scope.showYAxis === undefined) {
-          $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-        }
-
-        $scope.defaultConfig = patternfly.c3ChartDefaults().getDefaultSparklineConfig();
-        $scope.defaultConfig.axis = {
-          x: {
-            show: $scope.showXAxis === true,
-            type: 'timeseries',
-            tick: {
-              format: function () {
-                return '';
-              }
-            }
-          },
-          y: {
-            show: $scope.showYAxis === true,
-            tick: {
-              format: function () {
-                return '';
-              }
-            }
-          }
-        };
-
-        // Setup the default configuration
-        $scope.defaultConfig.tooltip = $scope.sparklineTooltip();
-        if ($scope.chartHeight) {
-          $scope.defaultConfig.size.height = $scope.chartHeight;
-        }
-        $scope.defaultConfig.units = '';
-
-        // Convert the given data to C3 chart format
-        $scope.config.data = pfUtils.merge($scope.config.data, $scope.getSparklineData($scope.chartData));
-
-        // Override defaults with callers specifications
-        $scope.chartConfig = pfUtils.merge($scope.defaultConfig, $scope.config);
       }
-    ],
 
-    link: function (scope) {
-      scope.$watch('config', function () {
-        scope.config.data = pfUtils.merge(scope.config.data, scope.getSparklineData(scope.chartData));
-        scope.chartConfig = pfUtils.merge(scope.defaultConfig, scope.config);
-      }, true);
-      scope.$watch('chartHeight', function () {
-        if (scope.chartHeight) {
-          scope.chartConfig.size.height = scope.chartHeight;
+      /*
+       * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
+       *   1) in the config, setting showAxis to true will show both axes
+       *   2) in the attributes showXAxis and showYAxis will override the config if set
+       *
+       * By default only line and the tick marks are shown, no labels. This is a sparkline and should be used
+       * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
+       */
+
+      if (ctrl.showXAxis === undefined) {
+        ctrl.showXAxis = (ctrl.config.showAxis !== undefined) && ctrl.config.showAxis;
+      }
+
+      if (ctrl.showYAxis === undefined) {
+        ctrl.showYAxis = (ctrl.config.showAxis !== undefined) && ctrl.config.showAxis;
+      }
+
+      ctrl.defaultConfig = patternfly.c3ChartDefaults().getDefaultSparklineConfig();
+      ctrl.defaultConfig.axis = {
+        x: {
+          show: ctrl.showXAxis === true,
+          type: 'timeseries',
+          tick: {
+            format: function () {
+              return '';
+            }
+          }
+        },
+        y: {
+          show: ctrl.showYAxis === true,
+          tick: {
+            format: function () {
+              return '';
+            }
+          }
         }
-      });
-      scope.$watch('showXAxis', function () {
-        scope.chartConfig.axis.x.show = scope.showXAxis === true;
-      });
-      scope.$watch('showYAxis', function () {
-        scope.chartConfig.axis.y.show = scope.showYAxis === true;
-      });
-      scope.$watch('chartData', function () {
-        scope.chartConfig.data = pfUtils.merge(scope.chartConfig.data, scope.getSparklineData(scope.chartData));
-      }, true);
-    }
-  };
-}]
-);
+      };
+
+      // Setup the default configuration
+      ctrl.defaultConfig.tooltip = ctrl.sparklineTooltip();
+      if (ctrl.chartHeight) {
+        ctrl.defaultConfig.size.height = ctrl.chartHeight;
+      }
+      ctrl.defaultConfig.units = '';
+
+      // Convert the given data to C3 chart format
+      ctrl.config.data = pfUtils.merge(ctrl.config.data, ctrl.getSparklineData(ctrl.chartData));
+
+      // Override defaults with callers specifications
+      ctrl.chartConfig = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+    };
+
+    /*
+     * Convert the config data to C3 Data
+     */
+    ctrl.getSparklineData = function (chartData) {
+      var sparklineData  = {
+        type: 'area'
+      };
+
+      if (chartData && chartData.dataAvailable !== false && chartData.xData && chartData.yData) {
+        sparklineData.x = chartData.xData[0];
+        sparklineData.columns = [
+          chartData.xData,
+          chartData.yData
+        ];
+      }
+
+      return sparklineData;
+    };
+
+    ctrl.getTooltipTableHTML = function (tipRows) {
+      return '<div class="module-triangle-bottom">' +
+        '  <table class="c3-tooltip">' +
+        '    <tbody>' +
+        tipRows +
+        '    </tbody>' +
+        '  </table>' +
+        '</div>';
+    };
+
+    ctrl.sparklineTooltip = function () {
+      return {
+        contents: function (d) {
+          var tipRows;
+          var percentUsed = 0;
+
+          if (ctrl.config.tooltipFn) {
+            tipRows = ctrl.config.tooltipFn(d);
+          } else {
+            switch (ctrl.config.tooltipType) {
+            case 'usagePerDay':
+              if (ctrl.chartData.dataAvailable !== false && ctrl.chartData.total > 0) {
+                percentUsed = Math.round(d[0].value / ctrl.chartData.total * 100.0);
+              }
+              tipRows =
+                '<tr>' +
+                '  <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +
+                '</tr>' +
+                '<tr>' +
+                '  <td class="name">' + percentUsed + '%:' + '</td>' +
+                '  <td class="value text-nowrap">' + d[0].value + ' ' +  (ctrl.config.units ? ctrl.config.units + ' ' : '') + d[0].name + '</td>' +
+                '</tr>';
+              break;
+            case 'valuePerDay':
+              tipRows =
+                '<tr>' +
+                '  <td class="value">' +  d[0].x.toLocaleDateString() + '</td>' +
+                '  <td class="value text-nowrap">' +  d[0].value + ' ' + d[0].name + '</td>' +
+                '</tr>';
+              break;
+            case 'percentage':
+              percentUsed = Math.round(d[0].value / ctrl.chartData.total * 100.0);
+              tipRows =
+                '<tr>' +
+                '  <td class="name">' + percentUsed + '%' + '</td>' +
+                '</tr>';
+              break;
+            default:
+              tipRows = patternfly.c3ChartDefaults().getDefaultSparklineTooltip().contents(d);
+            }
+          }
+          return ctrl.getTooltipTableHTML(tipRows);
+        },
+        position: function (data, width, height, element) {
+          var center;
+          var top;
+          var chartBox;
+          var graphOffsetX;
+          var x;
+
+          try {
+            center = parseInt(element.getAttribute('x'));
+            top = parseInt(element.getAttribute('y'));
+            chartBox = document.querySelector('#' + ctrl.sparklineChartId).getBoundingClientRect();
+            graphOffsetX = document.querySelector('#' + ctrl.sparklineChartId + ' g.c3-axis-y').getBoundingClientRect().right;
+            x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
+
+            return {
+              top: top - height,
+              left: Math.min(x, chartBox.width - width)
+            };
+          } catch (e) {
+          }
+        }
+      };
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData
+      if (!angular.equals(ctrl.chartData, prevChartData)) {
+        ctrl.updateAll();
+      }
+    };
+  }]
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfTrendsChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a trend chart. The trend chart combines overall data with a
+ *   Component for rendering a trend chart. The trend chart combines overall data with a
  *   pfSparklineChart.
  *   <br><br>
  *   See http://c3js.org/reference.html for a full list of C3 chart options.<br>
- *   See also: {@link patternfly.charts.directive:pfSparklineChart}
+ *   See also: {@link patternfly.charts.component:pfSparklineChart}
  *
  * @param {object} config configuration settings for the trends chart:<br/>
  * <ul style='list-style-type: none'>
@@ -2335,8 +2394,8 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
  <file name="index.html">
    <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <div pf-trends-chart config="config" chart-data="data"
-            show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+       <pf-trends-chart config="config" chart-data="data"
+            show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></pf-trends-chart>
      </div>
      <hr class="col-md-12">
      <div class="col-md-12">
@@ -2511,63 +2570,75 @@ angular.module('patternfly.charts').directive('pfSparklineChart', ["pfUtils", fu
  </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfTrendsChart', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      chartData: '=',
-      chartHeight: '=?',
-      showXAxis: '=?',
-      showYAxis: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/trends/trends-chart.html',
-    controller: ["$scope", function ($scope) {
-      var SMALL = 30, LARGE = 60;
+angular.module('patternfly.charts').component('pfTrendsChart', {
+  bindings: {
+    config: '<',
+    chartData: '<',
+    chartHeight: '<?',
+    showXAxis: '<?',
+    showYAxis: '<?'
+  },
+  templateUrl: 'charts/trends/trends-chart.html',
+  controller: ["pfUtils", function (pfUtils) {
+    'use strict';
+    var ctrl = this, prevChartData, prevConfig;
+    var SMALL = 30, LARGE = 60;
 
-      $scope.getPercentageValue = function () {
-        var pctValue = 0;
+    ctrl.updateAll = function () {
+      // Need to deep watch changes
+      prevChartData = angular.copy(ctrl.chartData);
+      prevConfig = angular.copy(ctrl.config);
 
-        if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
-          pctValue = Math.round($scope.getLatestValue() / $scope.chartData.total * 100.0);
-        }
-        return pctValue;
-      };
-      $scope.getLatestValue = function () {
-        var latestValue = 0;
-        if ($scope.chartData.yData && $scope.chartData.yData.length > 0) {
-          latestValue = $scope.chartData.yData[$scope.chartData.yData.length - 1];
-        }
-        return latestValue;
-      };
-      $scope.getChartHeight = function () {
-        var retValue = LARGE;
-        if ($scope.chartHeight) {
-          retValue = $scope.chartHeight;
-        } else if ($scope.config.layout === 'small') {
-          retValue = SMALL;
-        }
-        return retValue;
-      };
-    }],
-    link: function (scope) {
-      scope.$watch('config', function () {
-        scope.showLargeCardLayout = (!scope.config.layout || scope.config.layout === 'large');
-        scope.showSmallCardLayout = (scope.config.layout === 'small');
-        scope.showActualValue = (!scope.config.valueType || scope.config.valueType === 'actual');
-        scope.showPercentageValue = (scope.config.valueType === 'percentage');
-      }, true);
-    }
-  };
+      ctrl.showLargeCardLayout = (!ctrl.config.layout || ctrl.config.layout === 'large');
+      ctrl.showSmallCardLayout = (ctrl.config.layout === 'small');
+      ctrl.showActualValue = (!ctrl.config.valueType || ctrl.config.valueType === 'actual');
+      ctrl.showPercentageValue = (ctrl.config.valueType === 'percentage');
+    };
+
+    ctrl.getPercentageValue = function () {
+      var pctValue = 0;
+
+      if (ctrl.chartData.dataAvailable !== false && ctrl.chartData.total > 0) {
+        pctValue = Math.round(ctrl.getLatestValue() / ctrl.chartData.total * 100.0);
+      }
+      return pctValue;
+    };
+    ctrl.getLatestValue = function () {
+      var latestValue = 0;
+      if (ctrl.chartData.yData && ctrl.chartData.yData.length > 0) {
+        latestValue = ctrl.chartData.yData[ctrl.chartData.yData.length - 1];
+      }
+      return latestValue;
+    };
+    ctrl.getChartHeight = function () {
+      var retValue = LARGE;
+      if (ctrl.chartHeight) {
+        retValue = ctrl.chartHeight;
+      } else if (ctrl.config.layout === 'small') {
+        retValue = SMALL;
+      }
+      return retValue;
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData and config
+      if (!angular.equals(ctrl.chartData, prevChartData) || !angular.equals(ctrl.config, prevConfig)) {
+        ctrl.updateAll();
+      }
+    };
+  }]
 });
 ;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfUtilizationBarChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a utilization bar chart
+ *   Component for rendering a utilization bar chart
  *   There are three possible fill colors for Used Percentage, dependent on whether or not there are thresholds:<br/>
  *   <ul>
  *   <li>When no thresholds exist, or if the used percentage has not surpassed any thresholds, the indicator is blue.
@@ -2610,19 +2681,18 @@ angular.module('patternfly.charts').directive('pfTrendsChart', function () {
      <div ng-controller="ChartCtrl">
 
        <label class="label-title">Default Layout, no Thresholds</label>
-       <div pf-utilization-bar-chart chart-data=data1 chart-title=title1
-       units=units1></div>
+       <pf-utilization-bar-chart chart-data=data1 chart-title=title1 units=units1></pf-utilization-bar-chart>
        <br>
        <label class="label-title">Inline Layouts with Error, Warning, and Ok Thresholds</label>
-       <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60">../utilization-trend/utilization-trend-chart-directive.js</div>
-       <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></div>
+       <pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60">../utilization-trend/utilization-trend-chart-directive.js</pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
        <br>
        <label class="label-title">layout='inline', footer-label-format='percent', and custom chart-footer labels</label>
-       <div pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline footer-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></div>
-       <div pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></div>
+       <pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline footer-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
+       <pf-utilization-bar-chart chart-data=data5 chart-title=title5 chart-footer=footer2 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
        <div class="row">
          <div class="col-md-6">
            <form role="form"">
@@ -2693,53 +2763,64 @@ angular.module('patternfly.charts').directive('pfTrendsChart', function () {
  </example>
 */
 
-angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeout", function ($timeout) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      chartData: '=',
-      chartTitle: '=',
-      chartFooter: '=',
-      units: '=',
-      thresholdError: '=?',
-      thresholdWarning: '=?',
-      footerLabelFormat: '@?',
-      layout: '=?'
-    },
+angular.module('patternfly.charts').component('pfUtilizationBarChart', {
+  bindings: {
+    chartData: '=',
+    chartTitle: '=',
+    chartFooter: '=',
+    units: '=',
+    thresholdError: '=?',
+    thresholdWarning: '=?',
+    footerLabelFormat: '@?',
+    layout: '=?'
+  },
 
-    templateUrl: 'charts/utilization-bar/utilization-bar-chart.html',
-    link: function (scope) {
-      scope.$watch('chartData', function (newVal, oldVal) {
-        if (typeof(newVal) !== 'undefined') {
-          //Calculate the percentage used
-          scope.chartData.percentageUsed = Math.round(100 * (scope.chartData.used / scope.chartData.total));
+  templateUrl: 'charts/utilization-bar/utilization-bar-chart.html',
+  controller: ["$timeout", function ($timeout) {
+    'use strict';
+    var ctrl = this, prevChartData, prevLayout;
 
-          if (scope.thresholdError || scope.thresholdWarning) {
-            scope.isError = (scope.chartData.percentageUsed >= scope.thresholdError);
-            scope.isWarn  = (scope.chartData.percentageUsed >= scope.thresholdWarning &&
-                             scope.chartData.percentageUsed < scope.thresholdError);
-            scope.isOk    = (scope.chartData.percentageUsed < scope.thresholdWarning);
-          }
+    ctrl.updateAll = function () {
+      // Need to deep watch changes
+      prevChartData = angular.copy(ctrl.chartData);
+      prevLayout = angular.copy(ctrl.layout);
 
-          //Animate in the chart load.
-          scope.animate = true;
-          $timeout(function () {
-            scope.animate = false;
-          }, 0);
-        }
-      });
+      //Calculate the percentage used
+      ctrl.chartData.percentageUsed = Math.round(100 * (ctrl.chartData.used / ctrl.chartData.total));
 
+      if (ctrl.thresholdError || ctrl.thresholdWarning) {
+        ctrl.isError = (ctrl.chartData.percentageUsed >= ctrl.thresholdError);
+        ctrl.isWarn  = (ctrl.chartData.percentageUsed >= ctrl.thresholdWarning &&
+                         ctrl.chartData.percentageUsed < ctrl.thresholdError);
+        ctrl.isOk    = (ctrl.chartData.percentageUsed < ctrl.thresholdWarning);
+      }
 
-    }
-  };
-}]);
+      //Animate in the chart load.
+      ctrl.animate = true;
+      $timeout(function () {
+        ctrl.animate = false;
+      }, 0);
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData and layout
+      if (!angular.equals(ctrl.chartData, prevChartData) || !angular.equals(ctrl.layout, prevLayout)) {
+        ctrl.updateAll();
+      }
+    };
+  }]
+});
 ;/**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfUtilizationTrendChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a utilization trend chart. The utilization trend chart combines overall
+ *   Component for rendering a utilization trend chart. The utilization trend chart combines overall
  *   data with a pfDonutPctChart and a pfSparklineChart. Add the options for the pfDonutChart via
  *   the donutConfig parameter. Add the options for the pfSparklineChart via the sparklineConfig
  *   parameter.
@@ -2781,13 +2862,13 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
-         <div pf-utilization-trend-chart config="config"
+         <pf-utilization-trend-chart config="config"
               chart-data="data" center-label="centerLabel"
               donut-config="donutConfig" sparkline-config="sparklineConfig"
               sparkline-chart-height="custChartHeight"
               show-sparkline-x-axis="custShowXAxis"
               show-sparkline-y-axis="custShowYAxis">
-         </div>
+         </pf-utilization-trend-chart>
        </div>
        <hr class="col-md-12">
        <div class="col-md-12">
@@ -2917,52 +2998,62 @@ angular.module('patternfly.charts').directive('pfUtilizationBarChart', ["$timeou
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfUtilizationTrendChart', function () {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      chartData: '=',
-      config: '=',
-      centerLabel: '=?',
-      donutConfig: '=',
-      sparklineConfig: '=',
-      sparklineChartHeight: '=?',
-      showSparklineXAxis: '=?',
-      showSparklineYAxis: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/utilization-trend/utilization-trend-chart.html',
-    controller: ['$scope',
-      function ($scope) {
-        if ($scope.centerLabel === undefined) {
-          $scope.centerLabel = 'used';
+angular.module('patternfly.charts').component('pfUtilizationTrendChart', {
+  bindings: {
+    chartData: '<',
+    config: '<',
+    centerLabel: '<?',
+    donutConfig: '<',
+    sparklineConfig: '<',
+    sparklineChartHeight: '<?',
+    showSparklineXAxis: '<?',
+    showSparklineYAxis: '<?'
+  },
+  templateUrl: 'charts/utilization-trend/utilization-trend-chart.html',
+  controller: ["pfUtils", function (pfUtils) {
+    'use strict';
+    var ctrl = this, prevChartData, prevConfig;
 
-        }
-        if ($scope.donutConfig.units === undefined) {
-          $scope.donutConfig.units = $scope.config.units;
-        }
-        if ($scope.chartData.available === undefined) {
-          $scope.chartData.available = $scope.chartData.total - $scope.chartData.used;
-        }
-        $scope.config.units = $scope.config.units || $scope.units;
+    ctrl.updateAll = function () {
+      // Need to deep watch changes
+      prevChartData = angular.copy(ctrl.chartData);
+      prevConfig = angular.copy(ctrl.config);
+
+      if (ctrl.centerLabel === undefined) {
+        ctrl.centerLabel = 'used';
+
       }
-    ],
-    link: function (scope, element) {
-      var setupCurrentValues = function () {
-        if (scope.centerLabel === 'available') {
-          scope.currentValue = scope.chartData.used;
-          scope.currentText = 'Used';
-        } else {
-          scope.currentValue = scope.chartData.total - scope.chartData.used;
-          scope.currentText = 'Available';
-        }
-      };
-      scope.$watchGroup(['centerLabel', 'chartData.used', 'chartData.available', 'chartData.total'], function () {
-        setupCurrentValues();
-      });
-    }
-  };
+
+      if (ctrl.donutConfig.units === undefined) {
+        ctrl.donutConfig.units = ctrl.config.units;
+      }
+
+      if (ctrl.chartData.available === undefined) {
+        ctrl.chartData.available = ctrl.chartData.total - ctrl.chartData.used;
+      }
+
+      ctrl.config.units = ctrl.config.units || ctrl.units;
+
+      if (ctrl.centerLabel === 'available') {
+        ctrl.currentValue = ctrl.chartData.used;
+        ctrl.currentText = 'Used';
+      } else {
+        ctrl.currentValue = ctrl.chartData.total - ctrl.chartData.used;
+        ctrl.currentText = 'Available';
+      }
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData and config
+      if (!angular.equals(ctrl.chartData, prevChartData) || !angular.equals(ctrl.config, prevConfig)) {
+        ctrl.updateAll();
+      }
+    };
+  }]
 });
 ;/**
  * @ngdoc directive
@@ -10182,48 +10273,48 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('charts/donut/donut-pct-chart.html',
-    "<span><div pf-c3-chart ng-if=\"data.dataAvailable !== false\" id={{donutChartId}} config=config></div><div pf-empty-chart ng-if=\"data.dataAvailable === false\" chart-height=chartHeight></div></span>"
+    "<span><pf-c3-chart ng-if=\"$ctrl.data.dataAvailable !== false\" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if=\"$ctrl.data.dataAvailable === false\" chart-height=$ctrl.chartHeight></pf-empty-chart></span>"
   );
 
 
   $templateCache.put('charts/empty-chart.html',
-    "<div class=empty-chart-content ng-style=sizeStyles><span class=\"pficon pficon-info\"></span> <span>No data available</span></div>"
+    "<div class=empty-chart-content ng-style=$ctrl.sizeStyles><span class=\"pficon pficon-info\"></span> <span>No data available</span></div>"
   );
 
 
   $templateCache.put('charts/heatmap/heatmap-legend.html',
-    "<ul class=heatmap-pf-legend-container><li ng-repeat=\"item in legendItems\" class=heatmap-pf-legend-items><span class=legend-pf-color-box ng-style=\"{background: item.color}\"></span> <span class=legend-pf-text>{{item.text}}</span></li></ul>"
+    "<ul class=heatmap-pf-legend-container><li ng-repeat=\"item in $ctrl.legendItems\" class=heatmap-pf-legend-items><span class=legend-pf-color-box ng-style=\"{background: item.color}\"></span> <span class=legend-pf-text>{{item.text}}</span></li></ul>"
   );
 
 
   $templateCache.put('charts/heatmap/heatmap.html',
-    "<div class=heatmap-pf-container><h3>{{chartTitle}}</h3><div class=heatmap-container ng-style=containerStyles><svg class=heatmap-pf-svg></svg></div><div pf-empty-chart ng-if=\"chartDataAvailable === false\" chart-height=height></div><div ng-if=!loadingDone class=\"spinner spinner-lg loading\"></div><div ng-if=showLegend pf-heatmap-legend legend=legendLabels legend-colors=heatmapColorPattern></div></div>"
+    "<div class=heatmap-pf-container><h3>{{$ctrl.chartTitle}}</h3><div class=heatmap-container ng-style=$ctrl.containerStyles><svg class=heatmap-pf-svg></svg></div><pf-empty-chart ng-if=\"$ctrl.chartDataAvailable === false\" chart-height=$ctrl.height></pf-empty-chart><div ng-if=!$ctrl.loadingDone class=\"spinner spinner-lg loading\"></div><pf-heatmap-legend ng-if=$ctrl.showLegend legend=$ctrl.legendLabels legend-colors=$ctrl.heatmapColorPattern></pf-heatmap-legend></div>"
   );
 
 
   $templateCache.put('charts/line/line-chart.html',
-    "<span><div pf-c3-chart id={{lineChartId}} ng-if=\"chartData.dataAvailable !== false\" config=chartConfig></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=chartConfig.size.height></div></span>"
+    "<span><pf-c3-chart id={{$ctrl.lineChartId}} ng-if=\"$ctrl.chartData.dataAvailable !== false\" config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=$ctrl.chartConfig.size.height></pf-empty-chart></span>"
   );
 
 
   $templateCache.put('charts/sparkline/sparkline-chart.html',
-    "<span><div pf-c3-chart ng-if=\"chartData.dataAvailable !== false\" id={{sparklineChartId}} config=chartConfig></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=chartHeight></div></span>"
+    "<span><pf-c3-chart ng-if=\"$ctrl.chartData.dataAvailable !== false\" id={{$ctrl.sparklineChartId}} config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=$ctrl.chartHeight></pf-empty-chart></span>"
   );
 
 
   $templateCache.put('charts/trends/trends-chart.html',
-    "<span ng-switch on=config.layout ng-class=\"{'data-unavailable-pf': chartData.dataAvailable === false}\"><div ng-switch-default ng-class=\"{'trend-card-large-pf': showLargeCardLayout,'trend-card-small-pf': showSmallCardLayout}\"><span class=trend-header-pf ng-if=config.title>{{config.title}}</span> <span ng-if=showActualValue><span class=trend-title-big-pf>{{getLatestValue()}}</span> <span class=trend-title-small-pf>{{config.units}}</span></span> <span ng-if=showPercentageValue><span class=trend-title-big-pf>{{getPercentageValue() + '%'}}</span> <span class=trend-title-small-pf>of {{chartData.total + ' ' + config.units}}</span></span><div pf-sparkline-chart ng-if=\"chartData.dataAvailable !== false\" config=config chart-data=chartData chart-height=getChartHeight() show-x-axis=showXAxis show-y-axis=showYAxis></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=getChartHeight()></div><span class=trend-footer-pf ng-if=config.timeFrame>{{config.timeFrame}}</span></div><div ng-switch-when=compact class=trend-card-compact-pf><div class=\"row trend-row\"><div class=\"col-sm-4 col-md-4\"><div class=trend-compact-details><span ng-if=showActualValue><span class=trend-title-compact-big-pf>{{getLatestValue()}}</span> <span class=trend-title-compact-small-pf>{{config.units}}</span></span> <span ng-if=showPercentageValue><span class=trend-title-compact-big-pf>{{getPercentageValue() + '%'}}</span> <span class=trend-title-compact-small-pf>of {{chartData.total + ' ' + config.units}}</span></span> <span class=trend-header-compact-pf ng-if=config.title>{{config.title}}</span></div></div><div class=\"col-sm-8 col-md-8\"><div pf-sparkline-chart ng-if=\"chartData.dataAvailable !== false\" config=config chart-data=chartData chart-height=getChartHeight() show-x-axis=showXAxis show-y-axis=showYAxis></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=getChartHeight()></div></div></div></div><div ng-switch-when=inline class=trend-card-inline-pf><div class=\"row trend-row\"><div class=\"col-sm-8 col-md-8 trend-flat-col\"><div pf-sparkline-chart ng-if=\"chartData.dataAvailable !== false\" config=config chart-data=chartData chart-height=getChartHeight() show-x-axis=showXAxis show-y-axis=showYAxis></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=getChartHeight()></div></div><div class=\"col-sm-4 col-md-4 trend-flat-col\"><div class=trend-flat-details><div class=trend-flat-details-cell><span class=trend-title-flat-big-pf>{{getPercentageValue() + '%'}}</span></div><div class=trend-flat-details-cell><span class=trend-label-flat-strong-pf>{{config.trendLabel}}</span> <span class=trend-label-flat-pf>{{getLatestValue()}} of {{chartData.total + ' ' + config.units}}</span></div></div></div></div></div></span>"
+    "<span ng-switch on=$ctrl.config.layout ng-class=\"{'data-unavailable-pf': $ctrl.chartData.dataAvailable === false}\"><div ng-switch-default ng-class=\"{'trend-card-large-pf': $ctrl.showLargeCardLayout,'trend-card-small-pf': $ctrl.showSmallCardLayout}\"><span class=trend-header-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span> <span ng-if=$ctrl.showActualValue><span class=trend-title-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-big-pf>{{$ctrl.getPercentageValue() + '%'}}</span> <span class=trend-title-small-pf>of {{$ctrl.chartData.total + ' ' + $ctrl.config.units}}</span></span><pf-sparkline-chart ng-if=\"$ctrl.chartData.dataAvailable !== false\" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=$ctrl.getChartHeight()></pf-empty-chart><span class=trend-footer-pf ng-if=$ctrl.config.timeFrame>{{$ctrl.config.timeFrame}}</span></div><div ng-switch-when=compact class=trend-card-compact-pf><div class=\"row trend-row\"><div class=\"col-sm-4 col-md-4\"><div class=trend-compact-details><span ng-if=$ctrl.showActualValue><span class=trend-title-compact-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-compact-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-compact-big-pf>{{$ctrl.getPercentageValue() + '%'}}</span> <span class=trend-title-compact-small-pf>of {{$ctrl.chartData.total + ' ' + $ctrl.config.units}}</span></span> <span class=trend-header-compact-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span></div></div><div class=\"col-sm-8 col-md-8\"><pf-sparkline-chart ng-if=\"$ctrl.chartData.dataAvailable !== false\" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div></div></div><div ng-switch-when=inline class=trend-card-inline-pf><div class=\"row trend-row\"><div class=\"col-sm-8 col-md-8 trend-flat-col\"><pf-sparkline-chart ng-if=\"$ctrl.chartData.dataAvailable !== false\" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div><div class=\"col-sm-4 col-md-4 trend-flat-col\"><div class=trend-flat-details><div class=trend-flat-details-cell><span class=trend-title-flat-big-pf>{{$ctrl.getPercentageValue() + '%'}}</span></div><div class=trend-flat-details-cell><span class=trend-label-flat-strong-pf>{{$ctrl.config.trendLabel}}</span> <span class=trend-label-flat-pf>{{$ctrl.getLatestValue()}} of {{$ctrl.chartData.total + ' ' + $ctrl.config.units}}</span></div></div></div></div></div></span>"
   );
 
 
   $templateCache.put('charts/utilization-bar/utilization-bar-chart.html',
-    "<div class=utilization-bar-chart-pf ng-class=\"{'data-unavailable-pf': chartData.dataAvailable === false}\"><span ng-if=\"!layout || layout.type === 'regular'\"><div ng-if=chartTitle class=progress-description>{{chartTitle}}</div><div class=\"progress progress-label-top-right\" ng-if=\"chartData.dataAvailable !== false\"><div class=progress-bar aria-valuenow={{chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate,\n" +
-    "           'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}\" ng-style=\"{width:chartData.percentageUsed + '%'}\" uib-tooltip=\"{{chartData.percentageUsed}}% Used\"><span ng-if=chartFooter ng-bind-html=chartFooter></span> <span ng-if=\"!chartFooter && (!footerLabelFormat || footerLabelFormat === 'actual')\"><strong>{{chartData.used}} of {{chartData.total}} {{units}}</strong> Used</span> <span ng-if=\"!chartFooter && footerLabelFormat === 'percent'\"><strong>{{chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" ng-style=\"{width:(100 - chartData.percentageUsed) + '%'}\" uib-tooltip=\"{{100 - chartData.percentageUsed}}% Available\"></div></div></span> <span ng-if=\"layout && layout.type === 'inline'\"><div class=\"progress-container progress-description-left progress-label-right\" ng-style=\"{'padding-left':layout.titleLabelWidth, 'padding-right':layout.footerLabelWidth}\"><div ng-if=chartTitle class=progress-description ng-style=\"{'max-width':layout.titleLabelWidth}\">{{chartTitle}}</div><div class=progress ng-if=\"chartData.dataAvailable !== false\"><div class=progress-bar aria-valuenow={{chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate, 'progress-bar-success': isOk, 'progress-bar-danger': isError, 'progress-bar-warning': isWarn}\" ng-style=\"{width:chartData.percentageUsed + '%'}\" uib-tooltip=\"{{chartData.percentageUsed}}% Used\"><span ng-if=chartFooter ng-bind-html=chartFooter></span> <span ng-if=\"(!chartFooter) && (!footerLabelFormat || footerLabelFormat === 'actual')\" ng-style=\"{'max-width':layout.footerLabelWidth}\"><strong>{{chartData.used}} {{units}}</strong> Used</span> <span ng-if=\"(!chartFooter) && footerLabelFormat === 'percent'\" ng-style=\"{'max-width':layout.footerLabelWidth}\"><strong>{{chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" ng-style=\"{width:(100 - chartData.percentageUsed) + '%'}\" uib-tooltip=\"{{100 - chartData.percentageUsed}}% Available\"></div></div></div></span><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=45></div></div>"
+    "<div class=utilization-bar-chart-pf ng-class=\"{'data-unavailable-pf': $ctrl.chartData.dataAvailable === false}\"><span ng-if=\"!$ctrl.layout || $ctrl.layout.type === 'regular'\"><div ng-if=$ctrl.chartTitle class=progress-description>{{$ctrl.chartTitle}}</div><div class=\"progress progress-label-top-right\" ng-if=\"$ctrl.chartData.dataAvailable !== false\"><div class=progress-bar aria-valuenow={{$ctrl.chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate,\n" +
+    "           'progress-bar-success': $ctrl.isOk, 'progress-bar-danger': $ctrl.isError, 'progress-bar-warning': $ctrl.isWarn}\" ng-style=\"{width:$ctrl.chartData.percentageUsed + '%'}\" uib-tooltip=\"{{$ctrl.chartData.percentageUsed}}% Used\"><span ng-if=$ctrl.chartFooter ng-bind-html=$ctrl.chartFooter></span> <span ng-if=\"!$ctrl.chartFooter && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === 'actual')\"><strong>{{$ctrl.chartData.used}} of {{$ctrl.chartData.total}} {{$ctrl.units}}</strong> Used</span> <span ng-if=\"!$ctrl.chartFooter && $ctrl.footerLabelFormat === 'percent'\"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" ng-style=\"{width:(100 - $ctrl.chartData.percentageUsed) + '%'}\" uib-tooltip=\"{{100 - $ctrl.chartData.percentageUsed}}% Available\"></div></div></span> <span ng-if=\"$ctrl.layout && $ctrl.layout.type === 'inline'\"><div class=\"progress-container progress-description-left progress-label-right\" ng-style=\"{'padding-left':$ctrl.layout.titleLabelWidth, 'padding-right':$ctrl.layout.footerLabelWidth}\"><div ng-if=$ctrl.chartTitle class=progress-description ng-style=\"{'max-width':$ctrl.layout.titleLabelWidth}\">{{$ctrl.chartTitle}}</div><div class=progress ng-if=\"$ctrl.chartData.dataAvailable !== false\"><div class=progress-bar aria-valuenow={{$ctrl.chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': $ctrl.animate, 'progress-bar-success': $ctrl.isOk, 'progress-bar-danger': $ctrl.isError, 'progress-bar-warning': $ctrl.isWarn}\" ng-style=\"{width:$ctrl.chartData.percentageUsed + '%'}\" uib-tooltip=\"{{$ctrl.chartData.percentageUsed}}% Used\"><span ng-if=$ctrl.chartFooter ng-bind-html=$ctrl.chartFooter></span> <span ng-if=\"(!$ctrl.chartFooter) && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === 'actual')\" ng-style=\"{'max-width':$ctrl.layout.footerLabelWidth}\"><strong>{{$ctrl.chartData.used}} {{$ctrl.units}}</strong> Used</span> <span ng-if=\"(!$ctrl.chartFooter) && $ctrl.footerLabelFormat === 'percent'\" ng-style=\"{'max-width':$ctrl.layout.footerLabelWidth}\"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" ng-style=\"{width:(100 - $ctrl.chartData.percentageUsed) + '%'}\" uib-tooltip=\"{{100 - $ctrl.chartData.percentageUsed}}% Available\"></div></div></div></span><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=45></pf-empty-chart></div>"
   );
 
 
   $templateCache.put('charts/utilization-trend/utilization-trend-chart.html',
-    "<div class=utilization-trend-chart-pf ng-class=\"{'data-unavailable-pf': chartData.dataAvailable === false}\"><h3>{{config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\">{{currentValue}}</h1><div class=\"available-text pull-left\"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div class=donut-chart-pf><div pf-donut-pct-chart ng-if=\"chartData.dataAvailable !== false\" config=donutConfig data=chartData center-label=centerLabel></div><div pf-empty-chart ng-if=\"chartData.dataAvailable === false\" chart-height=231></div></div><div ng-if=\"chartData.dataAvailable !== false\" class=sparkline-chart><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div></div><span class=\"pull-left legend-text\">{{legendLeftText}}</span> <span class=\"pull-right legend-text\">{{legendRightText}}</span></div>"
+    "<div class=utilization-trend-chart-pf ng-class=\"{'data-unavailable-pf': $ctrl.chartData.dataAvailable === false}\"><h3>{{$ctrl.config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\">{{$ctrl.currentValue}}</h1><div class=\"available-text pull-left\"><div><span>{{$ctrl.currentText}}</span></div><div><span>of {{$ctrl.chartData.total}} {{$ctrl.config.units}}</span></div></div></div><div class=donut-chart-pf><pf-donut-pct-chart ng-if=\"$ctrl.chartData.dataAvailable !== false\" config=$ctrl.donutConfig data=$ctrl.chartData center-label=$ctrl.centerLabel></pf-donut-pct-chart><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=231></pf-empty-chart></div><div ng-if=\"$ctrl.chartData.dataAvailable !== false\" class=sparkline-chart><pf-sparkline-chart config=$ctrl.sparklineConfig chart-data=$ctrl.chartData chart-height=$ctrl.sparklineChartHeight show-x-axis=$ctrl.showSparklineXAxis show-y-axis=$ctrl.showSparklineYAxis></pf-sparkline-chart></div><span class=\"pull-left legend-text\">{{$ctrl.legendLeftText}}</span> <span class=\"pull-right legend-text\">{{$ctrl.legendRightText}}</span></div>"
   );
 
 }]);

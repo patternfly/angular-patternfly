@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
  * @name patternfly.charts.directive:pfHeatMap
+ * @restrict E
  *
  * @description
- *   Directive for rendering a heatmap chart.
+ *   Component for rendering a heatmap chart.
  *
  * @param {object} data data for the chart:<br/>
  * <ul style='list-style-type: none'>
@@ -32,18 +33,18 @@
      <div ng-controller="ChartCtrl">
        <div class="row">
          <div class="col-md-5 example-heatmap-container">
-           <div pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
-                show-legend="showLegends"></div>
+           <pf-heatmap id="id" chart-title="title" data="data" chart-data-available="dataAvailable"
+                show-legend="showLegends"></pf-heatmap>
          </div>
          <div class="col-md-3 example-heatmap-container">
-           <div pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
+           <pf-heatmap id="id" chart-title="titleAlt" data="data" chart-data-available="dataAvailable"
                 show-legend="showLegends" legend-labels="legendLabels"  max-block-size="20" block-padding="5"
                 heatmap-color-pattern="heatmapColorPattern" thresholds="thresholds"
-                click-action="clickAction"></div>
+                click-action="clickAction"></pf-heatmap>
          </div>
          <div class="col-md-3 example-heatmap-container">
-           <div pf-heatmap id="id" chart-title="titleSmall" data="data" chart-data-available="dataAvailable"
-                show-legend="showLegends" max-block-size="15" range-tooltips="rangeTooltips"></div>
+           <pf-heatmap id="id" chart-title="titleSmall" data="data" chart-data-available="dataAvailable"
+                show-legend="showLegends" max-block-size="15" range-tooltips="rangeTooltips"></pf-heatmap>
            </div>
        </div>
        <div class="row">
@@ -142,253 +143,263 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfHeatmap', function ($compile, $window) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      data: '=',
-      chartDataAvailable: '=?',
-      height: '=?',
-      chartTitle: '=?',
-      showLegend: '=?',
-      legendLabels: '=?',
-      maxBlockSize: '@',
-      minBlockSize: '@',
-      blockPadding: '@',
-      thresholds: '=?',
-      heatmapColorPattern: '=?',
-      clickAction: '=?',
-      rangeOnHover: '=?',
-      rangeHoverSize: '@',
-      rangeTooltips: '=?'
-    },
-    templateUrl: 'charts/heatmap/heatmap.html',
-    controller: function ($scope) {
-      var thresholdDefaults = [0.7, 0.8, 0.9];
-      var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
-      var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
-      var rangeTooltipDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
-      var heightDefault = 200;
+angular.module('patternfly.charts').component('pfHeatmap', {
+  bindings: {
+    data: '<',
+    chartDataAvailable: '<?',
+    height: '<?',
+    chartTitle: '<?',
+    showLegend: '<?',
+    legendLabels: '<?',
+    maxBlockSize: '@',
+    minBlockSize: '@',
+    blockPadding: '@',
+    thresholds: '<?',
+    heatmapColorPattern: '<?',
+    clickAction: '<?',
+    rangeOnHover: '<?',
+    rangeHoverSize: '@',
+    rangeTooltips: '<?'
+  },
+  templateUrl: 'charts/heatmap/heatmap.html',
+  controller: function ($element, $window, $compile, $scope, $timeout) {
+    'use strict';
+    var ctrl = this, prevData;
 
-      //Allow overriding of defaults
-      if ($scope.maxBlockSize === undefined || isNaN($scope.maxBlockSize)) {
-        $scope.maxSize = 64;
-      } else {
-        $scope.maxSize = parseInt($scope.maxBlockSize);
-        if ($scope.maxSize < 5) {
-          $scope.maxSize = 5;
-        } else if ($scope.maxSize > 50) {
-          $scope.maxSize = 50;
-        }
-      }
+    var containerWidth, containerHeight, blockSize, numberOfRows;
 
-      if ($scope.minBlockSize === undefined || isNaN($scope.minBlockSize)) {
-        $scope.minSize = 2;
-      } else {
-        $scope.minSize = parseInt($scope.minBlockSize);
-      }
+    var thresholdDefaults = [0.7, 0.8, 0.9];
+    var heatmapColorPatternDefaults = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000'];
+    var legendLabelDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
+    var rangeTooltipDefaults = ['< 70%', '70-80%' ,'80-90%', '> 90%'];
+    var heightDefault = 200;
 
-      if ($scope.blockPadding === undefined || isNaN($scope.blockPadding)) {
-        $scope.padding = 2;
-      } else {
-        $scope.padding = parseInt($scope.blockPadding);
-      }
-
-      if ($scope.rangeHoverSize === undefined || isNaN($scope.rangeHoverSize)) {
-        $scope.rangeHoverSize = 15;
-      } else {
-        $scope.rangeHoverSize = parseInt($scope.rangeHoverSize);
-      }
-
-      $scope.rangeOnHover = ($scope.rangeOnHover === undefined || $scope.rangeOnHover) ? true : false;
-
-      if (!$scope.rangeTooltips) {
-        $scope.rangeTooltips = rangeTooltipDefaults;
-      }
-
-      if (!$scope.thresholds) {
-        $scope.thresholds = thresholdDefaults;
-      }
-
-      if (!$scope.heatmapColorPattern) {
-        $scope.heatmapColorPattern = heatmapColorPatternDefaults;
-      }
-
-      if (!$scope.legendLabels) {
-        $scope.legendLabels = legendLabelDefaults;
-      }
-      $scope.height = $scope.height || heightDefault;
-      $scope.showLegend = $scope.showLegend || ($scope.showLegend === undefined);
-      $scope.loadingDone = false;
-    },
-    link: function (scope, element, attrs) {
-      var thisComponent = element[0].querySelector('.heatmap-pf-svg');
-      var containerWidth, containerHeight, blockSize, numberOfRows;
-
-      var setStyles = function () {
-        scope.containerStyles = {
-          height: scope.height + 'px',
-          display: scope.chartDataAvailable === false ? 'none' : 'block'
-        };
+    var setStyles = function () {
+      ctrl.containerStyles = {
+        height: ctrl.height + 'px',
+        display: ctrl.chartDataAvailable === false ? 'none' : 'block'
       };
+    };
 
-      var setSizes = function () {
-        var parentContainer = element[0].querySelector('.heatmap-container');
-        containerWidth = parentContainer.clientWidth;
-        containerHeight = parentContainer.clientHeight;
-        blockSize = determineBlockSize();
+    var setSizes = function () {
+      var parentContainer = $element[0].querySelector('.heatmap-container');
+      containerWidth = parentContainer.clientWidth;
+      containerHeight = parentContainer.clientHeight;
+      blockSize = determineBlockSize();
 
-        if ((blockSize - scope.padding) > scope.maxSize) {
-          blockSize = scope.padding + scope.maxSize;
+      if ((blockSize - ctrl.padding) > ctrl.maxSize) {
+        blockSize = ctrl.padding + ctrl.maxSize;
 
-          // Attempt to square off the area, check if square fits
-          numberOfRows = Math.ceil(Math.sqrt(scope.data.length));
-          if (blockSize * numberOfRows > containerWidth ||
-              blockSize * numberOfRows > containerHeight) {
-            numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
-          }
-        } else if ((blockSize - scope.padding) < scope.minSize) {
-          blockSize = scope.padding + scope.minSize;
-
-          // Attempt to square off the area, check if square fits
-          numberOfRows = Math.ceil(Math.sqrt(scope.data.length));
-          if (blockSize * numberOfRows > containerWidth ||
-              blockSize * numberOfRows > containerHeight) {
-            numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
-          }
-        } else {
+        // Attempt to square off the area, check if square fits
+        numberOfRows = Math.ceil(Math.sqrt(ctrl.data.length));
+        if (blockSize * numberOfRows > containerWidth ||
+          blockSize * numberOfRows > containerHeight) {
           numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
         }
+      } else if ((blockSize - ctrl.padding) < ctrl.minSize) {
+        blockSize = ctrl.padding + ctrl.minSize;
+
+        // Attempt to square off the area, check if square fits
+        numberOfRows = Math.ceil(Math.sqrt(ctrl.data.length));
+        if (blockSize * numberOfRows > containerWidth ||
+          blockSize * numberOfRows > containerHeight) {
+          numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+        }
+      } else {
+        numberOfRows = (blockSize === 0) ? 0 : Math.floor(containerHeight / blockSize);
+      }
+    };
+
+    var determineBlockSize = function () {
+      var x = containerWidth;
+      var y = containerHeight;
+      var n = ctrl.data ? ctrl.data.length : 0;
+      var px = Math.ceil(Math.sqrt(n * x / y));
+      var py = Math.ceil(Math.sqrt(n * y / x));
+      var sx, sy;
+
+      if (Math.floor(px * y / x) * px < n) {
+        sx = y / Math.ceil(px * y / x);
+      } else {
+        sx = x / px;
+      }
+
+      if (Math.floor(py * x / y) * py < n) {
+        sy = x / Math.ceil(x * py / y);
+      } else {
+        sy = y / py;
+      }
+      return Math.max(sx, sy);
+    };
+
+    var redraw = function () {
+      var data = ctrl.data;
+      var color = d3.scale.threshold().domain(ctrl.thresholds).range(ctrl.heatmapColorPattern);
+      var rangeTooltip = d3.scale.threshold().domain(ctrl.thresholds).range(ctrl.rangeTooltips);
+      var blocks;
+      var fillSize = blockSize - ctrl.padding;
+      var highlightBlock = function (block, active) {
+        block.style('fill-opacity', active ? 1 : 0.4);
+      };
+      var highlightBlockColor = function (block, fillColor) {
+        // Get fill color from given block
+        var blockColor = color(block.map(function (d) {
+          return d[0].__data__.value;
+        }));
+        // If given color matches, apply highlight
+        if (blockColor === fillColor) {
+          block.style('fill-opacity', 1);
+        }
       };
 
-      var determineBlockSize = function () {
-        var x = containerWidth;
-        var y = containerHeight;
-        var n = scope.data ? scope.data.length : 0;
-        var px = Math.ceil(Math.sqrt(n * x / y));
-        var py = Math.ceil(Math.sqrt(n * y / x));
-        var sx, sy;
-
-        if (Math.floor(px * y / x) * px < n) {
-          sx = y / Math.ceil(px * y / x);
-        } else {
-          sx = x / px;
+      var svg = window.d3.select(ctrl.thisComponent);
+      svg.selectAll('*').remove();
+      blocks = svg.selectAll('rect').data(data).enter().append('rect');
+      blocks.attr('x', function (d, i) {
+        return Math.floor(i / numberOfRows) * blockSize;
+      }).attr('y', function (d, i) {
+        return i % numberOfRows * blockSize;
+      }).attr('width', fillSize).attr('height', fillSize).style('fill', function (d) {
+        return color(d.value);
+      }).attr('uib-tooltip-html', function (d, i) { //tooltip-html is throwing an exception
+        if (ctrl.rangeOnHover && fillSize <= ctrl.rangeHoverSize) {
+          return '"' + rangeTooltip(d.value) + '"';
         }
+        return "'" + d.tooltip + "'";
+      }).attr('tooltip-append-to-body', function (d, i) {
+        return true;
+      }).attr('tooltip-animation', function (d, i) {
+        return false;
+      });
 
-        if (Math.floor(py * x / y) * py < n) {
-          sy = x / Math.ceil(x * py / y);
-        } else {
-          sy = y / py;
-        }
-        return Math.max(sx, sy);
-      };
-
-      var redraw = function () {
-        var data = scope.data;
-        var color = d3.scale.threshold().domain(scope.thresholds).range(scope.heatmapColorPattern);
-        var rangeTooltip = d3.scale.threshold().domain(scope.thresholds).range(scope.rangeTooltips);
-        var blocks;
-        var fillSize = blockSize - scope.padding;
-        var highlightBlock = function (block, active) {
-          block.style('fill-opacity', active ? 1 : 0.4);
-        };
-        var highlightBlockColor = function (block, fillColor) {
-          // Get fill color from given block
-          var blockColor = color(block.map(function (d) {
+      //Adding events
+      blocks.on('mouseover', function () {
+        var fillColor;
+        blocks.call(highlightBlock, false);
+        if (ctrl.rangeOnHover && fillSize <= ctrl.rangeHoverSize) {
+          // Get fill color for current block
+          fillColor = color(d3.select(this).map(function (d) {
             return d[0].__data__.value;
           }));
-          // If given color matches, apply highlight
-          if (blockColor === fillColor) {
-            block.style('fill-opacity', 1);
-          }
-        };
-
-        var svg = window.d3.select(thisComponent);
-        svg.selectAll('*').remove();
-        blocks = svg.selectAll('rect').data(data).enter().append('rect');
-        blocks.attr('x', function (d, i) {
-          return Math.floor(i / numberOfRows) * blockSize;
-        }).attr('y', function (d, i) {
-          return i % numberOfRows * blockSize;
-        }).attr('width', fillSize).attr('height', fillSize).style('fill', function (d) {
-          return color(d.value);
-        }).attr('uib-tooltip-html', function (d, i) { //tooltip-html is throwing an exception
-          if (scope.rangeOnHover && fillSize <= scope.rangeHoverSize) {
-            return '"' + rangeTooltip(d.value) + '"';
-          }
-          return "'" + d.tooltip + "'";
-        }).attr('tooltip-append-to-body', function (d, i) {
-          return true;
-        }).attr('tooltip-animation', function (d, i) {
-          return false;
-        });
-
-        //Adding events
-        blocks.on('mouseover', function () {
-          var fillColor;
-          blocks.call(highlightBlock, false);
-          if (scope.rangeOnHover && fillSize <= scope.rangeHoverSize) {
-            // Get fill color for current block
-            fillColor = color(d3.select(this).map(function (d) {
-              return d[0].__data__.value;
-            }));
-            // Highlight all blocks matching fill color
-            blocks[0].forEach(function (block) {
-              highlightBlockColor(d3.select(block), fillColor);
-            });
-          } else {
-            d3.select(this).call(highlightBlock, true);
-          }
-        });
-        blocks.on('click', function (d) {
-          if (scope.clickAction) {
-            scope.clickAction(d);
-          }
-        });
-
-        //Compiles the tooltips
-        angular.forEach(angular.element(blocks), function (block) {
-          var el = angular.element(block);
-          $compile(el)(scope);
-        });
-
-        svg.on('mouseleave', function () {
-          blocks.call(highlightBlock, true);
-        });
-      };
-
-      scope.$watch('data', function (newVal, oldVal) {
-        if (typeof(newVal) !== 'undefined') {
-          scope.loadingDone = true;
-          setStyles();
-          if (scope.chartDataAvailable !== false) {
-            setSizes();
-            redraw();
-          }
+          // Highlight all blocks matching fill color
+          blocks[0].forEach(function (block) {
+            highlightBlockColor(d3.select(block), fillColor);
+          });
+        } else {
+          d3.select(this).call(highlightBlock, true);
         }
       });
-      scope.$watch('chartDataAvailable', function () {
-        if (scope.chartDataAvailable === false) {
-          scope.loadingDone = true;
+      blocks.on('click', function (d) {
+        if (ctrl.clickAction) {
+          ctrl.clickAction(d);
         }
-        setStyles();
       });
+
+      //Compiles the tooltips
+      angular.forEach(angular.element(blocks), function (block) {
+        var el = angular.element(block);
+        // TODO: get heatmap tooltips to work without using $compile or $scope
+        $compile(el)($scope);
+      });
+
+      svg.on('mouseleave', function () {
+        blocks.call(highlightBlock, true);
+      });
+    };
+
+    ctrl.updateAll = function () {
+      // Need to deep watch changes in chart data
+      prevData = angular.copy(ctrl.data);
+
+      //Allow overriding of defaults
+      if (ctrl.maxBlockSize === undefined || isNaN(ctrl.maxBlockSize)) {
+        ctrl.maxSize = 64;
+      } else {
+        ctrl.maxSize = parseInt(ctrl.maxBlockSize);
+        if (ctrl.maxSize < 5) {
+          ctrl.maxSize = 5;
+        } else if (ctrl.maxSize > 50) {
+          ctrl.maxSize = 50;
+        }
+      }
+
+      if (ctrl.minBlockSize === undefined || isNaN(ctrl.minBlockSize)) {
+        ctrl.minSize = 2;
+      } else {
+        ctrl.minSize = parseInt(ctrl.minBlockSize);
+      }
+
+      if (ctrl.blockPadding === undefined || isNaN(ctrl.blockPadding)) {
+        ctrl.padding = 2;
+      } else {
+        ctrl.padding = parseInt(ctrl.blockPadding);
+      }
+
+      if (ctrl.rangeHoverSize === undefined || isNaN(ctrl.rangeHoverSize)) {
+        ctrl.rangeHoverSize = 15;
+      } else {
+        ctrl.rangeHoverSize = parseInt(ctrl.rangeHoverSize);
+      }
+
+      ctrl.rangeOnHover = (ctrl.rangeOnHover === undefined || ctrl.rangeOnHover) ? true : false;
+
+      if (!ctrl.rangeTooltips) {
+        ctrl.rangeTooltips = rangeTooltipDefaults;
+      }
+
+      if (!ctrl.thresholds) {
+        ctrl.thresholds = thresholdDefaults;
+      }
+
+      if (!ctrl.heatmapColorPattern) {
+        ctrl.heatmapColorPattern = heatmapColorPatternDefaults;
+      }
+
+      if (!ctrl.legendLabels) {
+        ctrl.legendLabels = legendLabelDefaults;
+      }
+      ctrl.height = ctrl.height || heightDefault;
+      ctrl.showLegend = ctrl.showLegend || (ctrl.showLegend === undefined);
+      ctrl.loadingDone = false;
 
       angular.element($window).bind('resize', function () {
         setSizes();
         redraw();
       });
 
-      scope.$watch(
-        function () {
-          return [element[0].offsetWidth, element[0].offsetHeight].join('x');
-        },
-        function (value) {
+      ctrl.thisComponent = $element[0].querySelector('.heatmap-pf-svg');
+
+      $timeout(function () {
+        setStyles();
+        setSizes();
+        redraw();
+      });
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.chartDataAvailable && !changesObj.chartDataAvailable.isFirstChange()) {
+        setStyles();
+      } else {
+        ctrl.updateAll();
+        ctrl.loadingDone = true;
+      }
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData and config
+      if (!angular.equals(ctrl.data, prevData)) {
+        setStyles();
+        if (ctrl.chartDataAvailable !== false) {
           setSizes();
           redraw();
         }
-      );
-    }
-  };
+      }
+    };
+
+    ctrl.$postLink = function () {
+      setStyles();
+      setSizes();
+      redraw();
+    };
+  }
 });

@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.charts.directive:pfC3Chart
+ * @name patternfly.charts.component:pfC3Chart
+ * @restrict E
  *
  * @description
- *   Directive for wrapping c3 library
+ *   Component for wrapping c3 library
  *
  *   Note: The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
  *   In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application.
@@ -12,13 +13,12 @@
  * @param {string} id the ID of the container that the chart should bind to
  * @param {expression} config the c3 configuration options for the chart
  * @param {function (chart))=} getChartCallback the callback user function to be called once the chart is generated, containing the c3 chart object
- *
  * @example
 
  <example module="patternfly.charts">
    <file name="index.html">
      <div ng-controller="ChartCtrl">
-        <div pf-c3-chart id="chartId" config="chartConfig" get-chart-callback="getChart"></div>
+        <pf-c3-chart id="chartId" config="chartConfig" get-chart-callback="getChart"></pf-c3-chart>
 
         <form role="form" style="width:300px">
           Total = {{total}}, Used = {{used}}, Available = {{available}}
@@ -64,6 +64,7 @@
        }
 
        $scope.submitform = function (val) {
+         console.log("submitform");
          $scope.used = val;
          $scope.updateAvailable();
          $scope.chartConfig.data.columns = [["Used",$scope.used],["Available",$scope.available]];
@@ -75,32 +76,39 @@
 (function () {
   'use strict';
 
-  angular.module('patternfly.charts').directive('pfC3Chart', function ($timeout) {
-    return {
-      restrict: 'A',
-      scope: {
-        config: '=',
-        getChartCallback: '='
-      },
-      template: '<div id=""></div>',
-      replace: true,
-      link: function (scope, element, attrs) {
-        scope.$watch('config', function () {
-          $timeout(function () {
-            // store the chart object
-            var chart;
-            //generate c3 chart data
-            var chartData = scope.config;
-            if (chartData) {
-              chartData.bindto = '#' + attrs.id;
-              chart = c3.generate(chartData);
-              if (scope.getChartCallback) {
-                scope.getChartCallback(chart);
-              }
-            }
-          });
-        }, true);
-      }
-    };
+  angular.module('patternfly.charts').component('pfC3Chart', {
+    bindings: {
+      config: '<',
+      getChartCallback: '<'
+    },
+    template: '<div id=""></div>',
+    controller: function ($timeout, $attrs) {
+      var ctrl = this, prevConfig;
+
+      ctrl.generateChart = function () {
+        var chart;
+        var chartData;
+
+        // Need to deep watch changes in chart config
+        prevConfig = angular.copy(ctrl.config);
+
+        $timeout(function () {
+          chartData = ctrl.config;
+          if (chartData) {
+            chartData.bindto = '#' + $attrs.id;
+            chart = c3.generate(chartData);
+            ctrl.getChartCallback(chart);
+            prevConfig = angular.copy(ctrl.config);
+          }
+        });
+      };
+
+      ctrl.$doCheck = function () {
+        // do a deep compare on config
+        if (!angular.equals(ctrl.config, prevConfig)) {
+          ctrl.generateChart();
+        }
+      };
+    }
   });
 }());

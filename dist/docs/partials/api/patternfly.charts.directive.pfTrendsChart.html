@@ -1,24 +1,23 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/trends/trends-chart.directive.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/b4c5634/src/charts/trends/trends-chart.directive.js#L215" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTrendsChart</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/trends/trends-chart.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/4f9cabd/src/charts/trends/trends-chart.component.js#L216" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTrendsChart</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
 </h1>
 <div><h2 id="description">Description</h2>
-<div class="description"><div class="patternfly-charts-directive-page patternfly-charts-directive-pftrendschart-page"><p>Directive for rendering a trend chart. The trend chart combines overall data with a
+<div class="description"><div class="patternfly-charts-directive-page patternfly-charts-directive-pftrendschart-page"><p>Component for rendering a trend chart. The trend chart combines overall data with a
 pfSparklineChart.
 <br><br>
 See <a href="http://c3js.org/reference.html">http://c3js.org/reference.html</a> for a full list of C3 chart options.<br>
-See also: <a href="#/api/patternfly.charts.directive:pfSparklineChart">patternfly.charts.directive:pfSparklineChart</a></p>
+See also: <a href="#/api/patternfly.charts.component:pfSparklineChart">patternfly.charts.component:pfSparklineChart</a></p>
 </div></div>
 <h2 id="usage">Usage</h2>
-<div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pf-trends-chart
-     config="{object}"
-     chart-data="{object}"
-     [chart-height="{int}"]
-     [show-x-axis="{boolean}"]
-     [show-y-axis="{boolean}"]&gt;
-   ...
-&lt;/ANY&gt;</pre>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-trends-chart
+       config="{object}"
+       chart-data="{object}"
+       [chart-height="{int}"]
+       [show-x-axis="{boolean}"]
+       [show-y-axis="{boolean}"]&gt;
+&lt;/pf-trends-chart&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pftrendschart-page"><p>configuration settings for the trends chart:<br/></p>
 <ul style='list-style-type: none'>
 <li>.chartId    - the unique id of this trends chart
@@ -46,8 +45,8 @@ See also: <a href="#/api/patternfly.charts.directive:pfSparklineChart">patternfl
 <script type="text/ng-template" id="index.html-17">
   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
     <div class="col-md-12">
-      <div pf-trends-chart config="config" chart-data="data"
-           show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+      <pf-trends-chart config="config" chart-data="data"
+           show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></pf-trends-chart>
     </div>
     <hr class="col-md-12">
     <div class="col-md-12">

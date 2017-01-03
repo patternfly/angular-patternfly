@@ -1,9 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.charts.directive:pfLineChart
+ * @name patternfly.charts.component:pfLineChart
+ * @restrict E
  *
  * @description
- *   Directive for rendering a line chart.
+ *   Component for rendering a line chart.
  *   <br><br>
  *   See http://c3js.org/reference.html for a full list of C3 chart options.
  *
@@ -39,7 +40,7 @@
    <file name="index.html">
      <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
        <div class="col-md-12">
-         <div pf-line-chart config="config" chart-data="data" set-area-chart="custAreaChart" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></div>
+         <pf-line-chart config="config" chart-data="data" set-area-chart="custAreaChart" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></pf-line-chart>
        </div>
        <hr class="col-md-12">
        <div class="col-md-12">
@@ -116,118 +117,114 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfLineChart', function (pfUtils) {
-  'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      chartData: '=',
-      showXAxis: '=?',
-      showYAxis: '=?',
-      setAreaChart: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/line/line-chart.html',
-    controller: ['$scope',
-      function ($scope) {
+angular.module('patternfly.charts').component('pfLineChart', {
+  bindings: {
+    config: '<',
+    chartData: '<',
+    showXAxis: '<?',
+    showYAxis: '<?',
+    setAreaChart: '<?'
+  },
+  templateUrl: 'charts/line/line-chart.html',
+  controller: function (pfUtils) {
+    'use strict';
+    var ctrl = this, prevChartData;
 
-        // Create an ID for the chart based on the chartId in the config if given
-        $scope.lineChartId = 'lineChart';
-        if ($scope.config.chartId) {
-          $scope.lineChartId = $scope.config.chartId + $scope.lineChartId;
+    ctrl.updateAll = function () {
+      // Need to deep watch changes in chart data
+      prevChartData = angular.copy(ctrl.chartData);
+
+      // Create an ID for the chart based on the chartId in the config if given
+      if (ctrl.lineChartId === undefined) {
+        ctrl.lineChartId = 'lineChart';
+        if (ctrl.config.chartId) {
+          ctrl.lineChartId = ctrl.config.chartId + ctrl.lineChartId;
         }
-
-        /*
-         * Convert the config data to C3 Data
-         */
-        $scope.getLineData = function (chartData) {
-          var lineData  = {
-            type: $scope.setAreaChart ? "area" : "line"
-          };
-
-          if (chartData && chartData.dataAvailable !== false && chartData.xData) {
-            lineData.x = chartData.xData[0];
-            // Convert the chartData dictionary into a C3 columns data arrays
-            lineData.columns = Object.keys (chartData).map (function (key) {
-              return chartData[key];
-            });
-          }
-
-          return lineData;
-        };
-
-        /*
-         * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
-         *   1) in the config, setting showAxis to true will show both axes
-         *   2) in the attributes showXAxis and showYAxis will override the config if set
-         *
-         * By default only line and the tick marks are shown, no labels. This is a line and should be used
-         * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
-         */
-
-        if ($scope.showXAxis === undefined) {
-          $scope.showXAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-        }
-
-        if ($scope.showYAxis === undefined) {
-          $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-        }
-
-        $scope.defaultConfig = patternfly.c3ChartDefaults().getDefaultLineConfig();
-        $scope.defaultConfig.axis = {
-          x: {
-            show: $scope.showXAxis === true,
-            type: 'timeseries',
-            tick: {
-              format: function () {
-                return '';
-              }
-            }
-          },
-          y: {
-            show: $scope.showYAxis === true,
-            tick: {
-              format: function () {
-                return '';
-              }
-            }
-          }
-        };
-
-        /*
-         * Setup Chart type option. Default is Line Chart.
-         */
-        if ($scope.setAreaChart === undefined) {
-          $scope.setAreaChart = ($scope.config.setAreaChart !== undefined) && $scope.config.setAreaChart;
-        }
-
-        // Convert the given data to C3 chart format
-        $scope.config.data = pfUtils.merge($scope.config.data, $scope.getLineData($scope.chartData));
-
-        // Override defaults with callers specifications
-        $scope.defaultConfig = pfUtils.merge($scope.defaultConfig, $scope.config);
       }
-    ],
 
-    link: function (scope) {
-      scope.$watch('config', function () {
-        scope.config.data = pfUtils.merge(scope.config.data, scope.getLineData(scope.chartData));
-        scope.chartConfig = pfUtils.merge(scope.defaultConfig, scope.config);
-      }, true);
-      scope.$watch('showXAxis', function () {
-        scope.chartConfig.axis.x.show = scope.showXAxis === true;
-      });
-      scope.$watch('showYAxis', function () {
-        scope.chartConfig.axis.y.show = scope.showYAxis === true;
-      });
-      scope.$watch('setAreaChart', function () {
-        scope.chartConfig.data.type = scope.setAreaChart ? "area" : "line";
-      });
-      scope.$watch('chartData', function () {
-        scope.chartConfig.data = pfUtils.merge(scope.chartConfig.data, scope.getLineData(scope.chartData));
-      }, true);
-    }
-  };
-}
-);
+      /*
+       * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
+       *   1) in the config, setting showAxis to true will show both axes
+       *   2) in the attributes showXAxis and showYAxis will override the config if set
+       *
+       * By default only line and the tick marks are shown, no labels. This is a line and should be used
+       * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
+       */
+
+      if (ctrl.showXAxis === undefined) {
+        ctrl.showXAxis = (ctrl.config.showAxis !== undefined) && ctrl.config.showAxis;
+      }
+
+      if (ctrl.showYAxis === undefined) {
+        ctrl.showYAxis = (ctrl.config.showAxis !== undefined) && ctrl.config.showAxis;
+      }
+
+      ctrl.defaultConfig = patternfly.c3ChartDefaults().getDefaultLineConfig();
+      ctrl.defaultConfig.axis = {
+        x: {
+          show: ctrl.showXAxis === true,
+          type: 'timeseries',
+          tick: {
+            format: function () {
+              return '';
+            }
+          }
+        },
+        y: {
+          show: ctrl.showYAxis === true,
+          tick: {
+            format: function () {
+              return '';
+            }
+          }
+        }
+      };
+
+      /*
+       * Setup Chart type option. Default is Line Chart.
+       */
+      if (ctrl.setAreaChart === undefined) {
+        ctrl.setAreaChart = (ctrl.config.setAreaChart !== undefined) && ctrl.config.setAreaChart;
+      }
+
+      // Convert the given data to C3 chart format
+      ctrl.config.data = pfUtils.merge(ctrl.config.data, ctrl.getLineData(ctrl.chartData));
+
+      // Override defaults with callers specifications
+      ctrl.defaultConfig = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+
+      // Will trigger c3 chart generation
+      ctrl.chartConfig = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+    };
+
+    /*
+     * Convert the config data to C3 Data
+     */
+    ctrl.getLineData = function (chartData) {
+      var lineData = {
+        type: ctrl.setAreaChart ? "area" : "line"
+      };
+
+      if (chartData && chartData.dataAvailable !== false && chartData.xData) {
+        lineData.x = chartData.xData[0];
+        // Convert the chartData dictionary into a C3 columns data arrays
+        lineData.columns = Object.keys(chartData).map(function (key) {
+          return chartData[key];
+        });
+      }
+
+      return lineData;
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      ctrl.updateAll();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on chartData
+      if (!angular.equals(ctrl.chartData, prevChartData)) {
+        ctrl.updateAll();
+      }
+    };
+  }
+});

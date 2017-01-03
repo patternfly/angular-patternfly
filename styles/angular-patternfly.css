@@ -469,3 +469,11 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 .pf-expand-placeholder {
   margin-right: 10px;
 }
+
+pf-c3-chart {
+  display: block;
+}
+
+.camelcase {
+  text-transform: capitalize;
+}
