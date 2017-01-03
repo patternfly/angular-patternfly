@@ -68,23 +68,30 @@
    </file>
 
    <file name="script.js">
-     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, Notifications, $rootScope ) {
+     angular.module( 'patternfly.notification' ).controller( 'NotificationDemoCtrl', function( $scope, $timeout ) {
        $scope.types = ['success','info','danger', 'warning'];
-       $scope.notifications = $rootScope.notifications;
-       $scope.notification = {
-          type: $scope.types[0],
-          isPersistent: false,
-          header: 'Default Header.',
-          message: 'Default Message.'
-       }
 
        $scope.updateType = function(item) {
          $scope.notification.type = item;
        };
 
        $scope.removeNotification = function () {
-         $scope.notification = null;
+         $scope.notification = undefined;
+         // Add notification back for demo purposes
+         $timeout(function() {
+           createNotification();
+         }, 1000);
        };
+
+       var createNotification = function () {
+         $scope.notification = {
+           type: $scope.types[0],
+           isPersistent: false,
+           header: 'Default Header.',
+           message: 'Default Message.'
+         };
+       };
+       createNotification();
      });
    </file>
 
