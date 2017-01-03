@@ -3215,10 +3215,11 @@ angular.module('patternfly.filters').component('pfFilterFields', {
     addFilterFn: '<'
   },
   templateUrl: 'filters/filter-fields.html',
-  controller: ["$scope", function ($scope) {
+  controller: function () {
     'use strict';
 
     var ctrl = this;
+    var prevConfig;
 
     ctrl.$onInit = function () {
       angular.extend(ctrl, {
@@ -3228,45 +3229,61 @@ angular.module('patternfly.filters').component('pfFilterFields', {
       });
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
+    ctrl.$onChanges = function () {
+      setupConfig ();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
         setupConfig();
-      }, true);
+      }
     };
 
     function selectField (item) {
       ctrl.currentField = item;
-      ctrl.config.currentValue = null;
+      ctrl.currentValue = null;
     }
 
     function selectValue (filterValue) {
       if (angular.isDefined(filterValue)) {
-        ctrl.addFilterFn(scope.currentField, filterValue);
-        ctrl.config.currentValue = null;
+        ctrl.addFilterFn(ctrl.currentField, filterValue);
+        ctrl.currentValue = null;
       }
     }
 
     function onValueKeyPress (keyEvent) {
       if (keyEvent.which === 13) {
-        ctrl.addFilterFn(ctrl.currentField, ctrl.config.currentValue);
-        ctrl.config.currentValue = undefined;
+        ctrl.addFilterFn(ctrl.currentField, ctrl.currentValue);
+        ctrl.currentValue = undefined;
       }
     }
 
     function setupConfig () {
-      if (ctrl.fields === undefined) {
-        ctrl.fields = [];
-      }
-      if (!ctrl.currentField) {
-        ctrl.currentField = ctrl.config.fields[0];
-        ctrl.config.currentValue = null;
+      var fieldFound = false;
+
+      prevConfig = angular.copy(ctrl.config);
+
+      if (ctrl.config.fields === undefined) {
+        ctrl.config.fields = [];
       }
 
-      if (ctrl.config.currentValue === undefined) {
-        ctrl.config.currentValue = null;
+      if (ctrl.currentField) {
+        fieldFound = _.find(ctrl.config.fields, function (nextField) {
+          return nextField.id === ctrl.currentField.id;
+        });
+      }
+
+      if (!fieldFound) {
+        ctrl.currentField = ctrl.config.fields[0];
+        ctrl.currentValue = null;
+      }
+
+      if (ctrl.currentValue === undefined) {
+        ctrl.currentValue = null;
       }
     }
-  }]
+  }
 });
 ;/**
  * @ngdoc directive
@@ -3298,10 +3315,11 @@ angular.module('patternfly.filters').component('pfFilterResults', {
     config: '='
   },
   templateUrl: 'filters/filter-results.html',
-  controller: ["$scope", function ($scope) {
+  controller: function () {
     'use strict';
 
     var ctrl = this;
+    var prevConfig;
 
     ctrl.$onInit = function () {
       angular.extend(ctrl, {
@@ -3310,13 +3328,20 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       });
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
-        setupConfig();
-      }, true);
+    ctrl.$onChanges = function () {
+      setupConfig ();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
+//        setupConfig();
+      }
     };
 
     function setupConfig () {
+      prevConfig = angular.copy(ctrl.config);
+
       if (!ctrl.config.appliedFilters) {
         ctrl.config.appliedFilters = [];
       }
@@ -3346,7 +3371,7 @@ angular.module('patternfly.filters').component('pfFilterResults', {
         ctrl.config.onFilterChange(ctrl.config.appliedFilters);
       }
     }
-  }]
+  }
 });
 ;/**
  * @ngdoc directive
@@ -6913,10 +6938,11 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     config: '='
   },
   templateUrl: 'sort/sort.html',
-  controller: ["$scope", function ($scope) {
+  controller: function () {
     'use strict';
 
     var ctrl = this;
+    var prevConfig;
 
     ctrl.$onInit = function () {
       angular.extend(ctrl, {
@@ -6924,19 +6950,23 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         changeDirection: changeDirection,
         getSortIconClass: getSortIconClass
       });
-
-      setupConfig();
-
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
+    ctrl.$onChanges = function () {
+      setupConfig();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
         setupConfig();
-      }, true);
+      }
     };
 
     function setupConfig () {
       var updated = false;
+
+      prevConfig = angular.copy(ctrl.config);
 
       if (ctrl.config.fields === undefined) {
         ctrl.config.fields = [];
@@ -6993,7 +7023,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
       return iconClass;
     }
-  }]
+  }
 });
 ;/**
  * @ngdoc directive
@@ -7411,10 +7441,11 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     'actions': '?'
   },
   templateUrl: 'toolbars/toolbar.html',
-  controller: ["$scope", function ($scope) {
+  controller: function () {
     'use strict';
 
     var ctrl = this;
+    var prevConfig;
 
     ctrl.$onInit = function () {
       angular.extend(ctrl, {
@@ -7426,17 +7457,28 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       });
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
-        if (ctrl.config && ctrl.config.viewsConfig && ctrl.config.viewsConfig.views) {
-          ctrl.config.viewsConfig.viewsList = angular.copy(ctrl.config.viewsConfig.views);
-
-          if (!ctrl.config.viewsConfig.currentView) {
-            ctrl.config.viewsConfig.currentView = ctrl.config.viewsConfig.viewsList[0];
-          }
-        }
-      }, true);
+    ctrl.$onChanges = function () {
+      setupConfig ();
     };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
+        setupConfig();
+      }
+    };
+
+    function setupConfig () {
+      prevConfig = angular.copy(ctrl.config);
+
+      if (ctrl.config && ctrl.config.viewsConfig && ctrl.config.viewsConfig.views) {
+        ctrl.config.viewsConfig.viewsList = angular.copy(ctrl.config.viewsConfig.views);
+
+        if (!ctrl.config.viewsConfig.currentView) {
+          ctrl.config.viewsConfig.currentView = ctrl.config.viewsConfig.viewsList[0];
+        }
+      }
+    }
 
     function viewSelected (viewId) {
       ctrl.config.viewsConfig.currentView = viewId;
@@ -7485,7 +7527,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         action.actionFn(action);
       }
     }
-  }]
+  }
 });
 ;/**
  * @ngdoc directive
@@ -10189,7 +10231,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('filters/filter-fields.html',
-    "<div class=\"filter-pf filter-fields\"><div class=\"input-group form-group\"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class=\"btn btn-default filter-fields\" uib-tooltip=\"Filter by\" tooltip-placement=top>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in $ctrl.config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"$ctrl.currentField.filterType !== 'select'\"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.config.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress=\"$ctrl.onValueKeyPress($event)\"></div><div ng-if=\"$ctrl.currentField.filterType === 'select'\"><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\"><span class=\"filter-option pull-left\">{{$ctrl.config.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat=\"filterValue in $ctrl.currentField.filterValues\" ng-class=\"{'selected': filterValue === $ctrl.config.currentValue}\"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue}}</a></li></ul></div></div></div></div>"
+    "<div class=\"filter-pf filter-fields\"><div class=\"input-group form-group\"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class=\"btn btn-default filter-fields\" uib-tooltip=\"Filter by\" tooltip-placement=top>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in $ctrl.config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"$ctrl.currentField.filterType !== 'select'\"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress=\"$ctrl.onValueKeyPress($event)\"></div><div ng-if=\"$ctrl.currentField.filterType === 'select'\"><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\"><span class=\"filter-option pull-left\">{{$ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat=\"filterValue in $ctrl.currentField.filterValues\" ng-class=\"{'selected': filterValue === $ctrl.currentValue}\"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue}}</a></li></ul></div></div></div></div>"
   );
 
 

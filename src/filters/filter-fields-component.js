@@ -27,10 +27,11 @@ angular.module('patternfly.filters').component('pfFilterFields', {
     addFilterFn: '<'
   },
   templateUrl: 'filters/filter-fields.html',
-  controller: function ($scope) {
+  controller: function () {
     'use strict';
 
     var ctrl = this;
+    var prevConfig;
 
     ctrl.$onInit = function () {
       angular.extend(ctrl, {
@@ -40,42 +41,58 @@ angular.module('patternfly.filters').component('pfFilterFields', {
       });
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
+    ctrl.$onChanges = function () {
+      setupConfig ();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
         setupConfig();
-      }, true);
+      }
     };
 
     function selectField (item) {
       ctrl.currentField = item;
-      ctrl.config.currentValue = null;
+      ctrl.currentValue = null;
     }
 
     function selectValue (filterValue) {
       if (angular.isDefined(filterValue)) {
-        ctrl.addFilterFn(scope.currentField, filterValue);
-        ctrl.config.currentValue = null;
+        ctrl.addFilterFn(ctrl.currentField, filterValue);
+        ctrl.currentValue = null;
       }
     }
 
     function onValueKeyPress (keyEvent) {
       if (keyEvent.which === 13) {
-        ctrl.addFilterFn(ctrl.currentField, ctrl.config.currentValue);
-        ctrl.config.currentValue = undefined;
+        ctrl.addFilterFn(ctrl.currentField, ctrl.currentValue);
+        ctrl.currentValue = undefined;
       }
     }
 
     function setupConfig () {
-      if (ctrl.fields === undefined) {
-        ctrl.fields = [];
-      }
-      if (!ctrl.currentField) {
-        ctrl.currentField = ctrl.config.fields[0];
-        ctrl.config.currentValue = null;
+      var fieldFound = false;
+
+      prevConfig = angular.copy(ctrl.config);
+
+      if (ctrl.config.fields === undefined) {
+        ctrl.config.fields = [];
       }
 
-      if (ctrl.config.currentValue === undefined) {
-        ctrl.config.currentValue = null;
+      if (ctrl.currentField) {
+        fieldFound = _.find(ctrl.config.fields, function (nextField) {
+          return nextField.id === ctrl.currentField.id;
+        });
+      }
+
+      if (!fieldFound) {
+        ctrl.currentField = ctrl.config.fields[0];
+        ctrl.currentValue = null;
+      }
+
+      if (ctrl.currentValue === undefined) {
+        ctrl.currentValue = null;
       }
     }
   }

@@ -3,10 +3,11 @@ angular.module('patternfly.sort').component('pfSort', {
     config: '='
   },
   templateUrl: 'sort/sort.html',
-  controller: function ($scope) {
+  controller: function () {
     'use strict';
 
     var ctrl = this;
+    var prevConfig;
 
     ctrl.$onInit = function () {
       angular.extend(ctrl, {
@@ -14,19 +15,23 @@ angular.module('patternfly.sort').component('pfSort', {
         changeDirection: changeDirection,
         getSortIconClass: getSortIconClass
       });
-
-      setupConfig();
-
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
+    ctrl.$onChanges = function () {
+      setupConfig();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
         setupConfig();
-      }, true);
+      }
     };
 
     function setupConfig () {
       var updated = false;
+
+      prevConfig = angular.copy(ctrl.config);
 
       if (ctrl.config.fields === undefined) {
         ctrl.config.fields = [];

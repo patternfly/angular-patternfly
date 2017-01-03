@@ -28,10 +28,11 @@ angular.module('patternfly.filters').component('pfFilterResults', {
     config: '='
   },
   templateUrl: 'filters/filter-results.html',
-  controller: function ($scope) {
+  controller: function () {
     'use strict';
 
     var ctrl = this;
+    var prevConfig;
 
     ctrl.$onInit = function () {
       angular.extend(ctrl, {
@@ -40,13 +41,20 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       });
     };
 
-    ctrl.$postLink = function () {
-      $scope.$watch('config', function () {
-        setupConfig();
-      }, true);
+    ctrl.$onChanges = function () {
+      setupConfig ();
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
+//        setupConfig();
+      }
     };
 
     function setupConfig () {
+      prevConfig = angular.copy(ctrl.config);
+
       if (!ctrl.config.appliedFilters) {
         ctrl.config.appliedFilters = [];
       }
