@@ -477,3 +477,36 @@ pf-c3-chart {
 .camelcase {
   text-transform: capitalize;
 }
+
+.pf-table-view-selected-label {
+  float: right;
+  line-height: 40px;
+}
+
+.table-view-container {
+  width: 97%;
+  margin-left: 18px;
+  background-color: white
+}
+
+.dataTables_wrapper {
+  border: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+table.dataTable thead .sorting_asc {
+  background-image: none !important;
+}
+table.dataTable thead .sorting_desc {
+  background-image: none !important;
+}
+table.dataTable thead .sorting {
+  background-image: none !important;
+}
+table.dataTable tbody th, table.dataTable tbody td {
+  padding: 2px 10px 3px;
+}
+.table-view-pf-select {
+  width: 13px;
+}

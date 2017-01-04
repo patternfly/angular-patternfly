@@ -43,7 +43,7 @@
     "angular-bootstrap": "2.2.x",
     "lodash": "4.x",
     "patternfly": "~3.15.0",
-    "angular-datatables": "^0.5.5",
+    "angular-datatables": "^0.5.6",
     "datatables.net": "^1.10.12",
     "datatables.net-select": "~1.2.0"
   },

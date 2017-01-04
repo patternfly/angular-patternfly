@@ -53,8 +53,8 @@
     "d3": "~3.5.17",
     "jquery": "~2.1.4",
     "moment": "~2.14.1",
-    "angular-datatables": "^0.5.5",
-    "datatables.net": "^1.10.12",
+    "angular-datatables": "^0.5.6",
+    "datatables.net": "^1.10.11",
     "datatables.net-select": "~1.2.0"
   },
   "scripts": {
