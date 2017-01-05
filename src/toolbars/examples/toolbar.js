@@ -46,7 +46,7 @@
  *   </ul>
  *
  * @example
-<example module="patternfly.toolbars">
+<example module="patternfly.toolbars.demo">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
@@ -79,11 +79,7 @@
          </actions>
         </pf-toolbar>
       </div>
-      <hr class="col-md-12">
-      <div class="col-md-12">
-        <label class="events-label">Valid Items: </label>
-      </div>
-      <div class="col-md-12 list-view-container" ng-if="viewType == 'listView'">
+      <div class="col-md-12" ng-if="viewType == 'listView'">
         <pf-list-view config="listConfig" items="items">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
@@ -103,8 +99,8 @@
           </div>
         </pf-list-view>
       </div>
-      <div class="col-md-12 card-view-container" ng-if="viewType == 'cardView'">
-        <pf-card-view config="vm.listConfig" items="items">
+      <div class="col-md-12" ng-if="viewType == 'cardView'">
+        <pf-card-view config="listConfig" items="items">
           <div class="col-md-12">
             <span>{{item.name}}</span>
           </div>
@@ -116,6 +112,24 @@
           </div>
         </pf-card-view>
       </div>
+      <div class="col-md-12 table-view-container" ng-show="viewType == 'tableView'">
+        <pf-table-view config="tableConfig"
+                       dt-options="dtOptions"
+                       colummns="colummns"
+                       items="items">
+        </pf-table-view>
+        <!-- form role="form"  //issues dynamically turning on/off pagination, see below>
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
+            </label>
+            <label>
+              <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
+            </label>
+          </div>
+        </form --!>
+      </div>
+      <hr class="col-md-12">
       <div class="col-md-12">
         <label class="events-label">Current Filters: </label>
       </div>
@@ -131,10 +145,45 @@
     </div>
   </file>
 
+  <file name="modules.js">
+    angular.module('patternfly.toolbars.demo', ['patternfly.toolbars','patternfly.table']);
+  </file>
+
   <file name="script.js">
-  angular.module('patternfly.toolbars').controller('ViewCtrl', ['$scope', 'pfViewUtils',
-    function ($scope, pfViewUtils) {
+  angular.module('patternfly.toolbars.demo').controller('ViewCtrl', ['$scope', 'pfViewUtils', '$filter',
+    function ($scope, pfViewUtils, $filter) {
       $scope.filtersText = '';
+
+      $scope.colummns = [
+        { colHeader: "Name", colItemFld: "name" },
+        { colHeader: "Age", colItemFld: "age"},
+        { colHeader: "Address", colItemFld: "address" },
+        { colHeader: "BirthMonth", colItemFld: "birthMonth"}
+      ];
+
+      $scope.dtOptions = {
+        paginationType: 'full',
+        displayLength: 3,
+        dom: "tp"
+      };
+
+      // attempt to dyamically turn on/off pagination controls
+      // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
+
+      $scope.usePagination = true;
+      $scope.togglePagination = function () {
+        $scope.usePagination = !$scope.usePagination;
+        console.log("---> togglePagination: " + $scope.usePagination);
+        if($scope.usePagination) {
+          $scope.dtOptions.displayLength = 3;
+          $scope.dtOptions.dom = "tp";
+          console.log("---> use pagination: " + $scope.dtOptions.displayLength + ":" + $scope.dtOptions.dom);
+        } else {
+          $scope.dtOptions.displayLength = undefined;
+          $scope.dtOptions.dom = "t";
+        }
+      };
+
 
       $scope.allItems = [
         {
@@ -166,6 +215,24 @@
           age: 19,
           address: "50 Second Street, New York, New York",
           birthMonth: 'February'
+        },
+        {
+          name: "Linda McGovern",
+          age: 32,
+          address: "22 Oak Stree, Denver, Colorado",
+          birthMonth: 'March'
+        },
+        {
+          name: "Jim Brown",
+          age: 55,
+          address: "72 Bourbon Way. Nashville. Tennessee",
+          birthMonth: 'March'
+        },
+        {
+          name: "Holly Nichols",
+          age: 34,
+          address: "21 Jump Street, Hollywood, California",
+          birthMonth: 'March'
         }
       ];
       $scope.items = $scope.allItems;
@@ -211,7 +278,7 @@
       };
 
       var filterChange = function (filters) {
-      $scope.filtersText = "";
+        $scope.filtersText = "";
         filters.forEach(function (filter) {
           $scope.filtersText += filter.title + " : " + filter.value + "\n";
         });
@@ -248,6 +315,7 @@
           }
         ],
         resultsCount: $scope.items.length,
+        totalCount: $scope.allItems.length,
         appliedFilters: [],
         onFilterChange: filterChange
       };
@@ -257,7 +325,7 @@
       };
 
       $scope.viewsConfig = {
-        views: [pfViewUtils.getListView(), pfViewUtils.getCardView()],
+        views: [pfViewUtils.getListView(), pfViewUtils.getCardView(), pfViewUtils.getTableView()],
         onViewSelect: viewSelected
       };
       $scope.viewsConfig.currentView = $scope.viewsConfig.views[0].id;
@@ -376,8 +444,8 @@
           },
           {
             name: 'Grouped Action 2',
-            title: 'Do something similar',
-            actionFn: performAction
+            actionFn: performAction,
+            title: 'Do something similar'
           }
         ],
         actionsInclude: true
@@ -392,15 +460,29 @@
 
       $scope.listConfig = {
         selectionMatchProp: 'name',
-        checkDisabled: false
+        checkDisabled: false,
+        onCheckBoxChange: handleCheckBoxChange
+      };
+
+      $scope.tableConfig = {
+        onCheckBoxChange: handleCheckBoxChange,
+        selectionMatchProp: "name"
       };
 
       $scope.doAdd = function () {
         $scope.actionsText = "Add Action\n" + $scope.actionsText;
       };
+
       $scope.optionSelected = function (option) {
         $scope.actionsText = "Option " + option + " selected\n" + $scope.actionsText;
       };
+
+      function handleCheckBoxChange (item) {
+        var selectedItems = $filter('filter')($scope.allItems, {selected: true});
+        if (selectedItems) {
+          $scope.toolbarConfig.filterConfig.selectedCount = selectedItems.length;
+        }
+      }
     }
   ]);
   </file>

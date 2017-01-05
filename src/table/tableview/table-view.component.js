@@ -29,8 +29,8 @@
        </pf-table-view>
      </div>
      <div class="col-md-12">
-       <br>
-       <form role="form">
+       <!-- issues dynamically turning on/off pagination after table instanciated.
+         form role="form">
          <div class="form-group">
            <label class="checkbox-inline">
              <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
@@ -39,7 +39,7 @@
              <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
            </label>
          </div>
-       </form>
+       </form --!>
      </div>
      <div class="col-md-12">
        <label style="font-weight:normal;vertical-align:center;">Events: </label>
@@ -56,12 +56,17 @@
  function ($scope) {
         $scope.dtOptions = {
           paginationType: 'full',
+          displayLength: 3,
           order: [[2, "asc"]],
-          dom: "t"
+          dom: "tp"
         };
+
+        // attempt to dyamically turn on/off pagination controls
+        // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
 
         $scope.usePagination = false;
         $scope.togglePagination = function () {
+          console.log("---> togglePagination: " + $scope.usePagination);
           if($scope.usePagination) {
             $scope.dtOptions.displayLength = 3;
             $scope.dtOptions.dom = "tp";
@@ -205,13 +210,17 @@ angular.module('patternfly.table').component('pfTableView', {
   templateUrl: 'table/tableview/table-view.html',
   controller: function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout) {
     'use strict';
-    var ctrl = this, prevDtOptions;
+    var ctrl = this, prevDtOptions, prevItems;
+
+    // Once datatables is out of active development I'll remove log statements
+    ctrl.debug = true;
 
     ctrl.selectAll = false;
     ctrl.dtInstance = {};
 
     ctrl.defaultDtOptions = {
       autoWidth: false,
+      destroy: true,
       order: [[1, "asc"]],
       dom: "t",
       select: {
@@ -226,18 +235,37 @@ angular.module('patternfly.table').component('pfTableView', {
     };
 
     ctrl.$onInit = function () {
-      ctrl.updateAll();
+
+      if (ctrl.debug) {
+        $log.debug("$onInit");
+      }
+
+      if (angular.isUndefined(ctrl.dtOptions)) {
+        ctrl.dtOptions = {};
+      }
+      if (angular.isUndefined(ctrl.config)) {
+        ctrl.config = {};
+      }
+
+      ctrl.updateConfigOptions();
+
+      setColumnDefs();
     };
 
-    ctrl.updateAll = function () {
+    ctrl.updateConfigOptions = function () {
       var col, props = "";
 
-      if (angular.isDefined(ctrl.dtOptions.displayLength)) {
+      if (ctrl.debug) {
+        $log.debug("  updateConfigOptions");
+      }
+
+      if (angular.isDefined(ctrl.dtOptions) && angular.isDefined(ctrl.dtOptions.displayLength)) {
         ctrl.dtOptions.displayLength = Number(ctrl.dtOptions.displayLength);
       }
 
-      // Need to deep watch changes in dtOptions
+      // Need to deep watch changes in dtOptions and items
       prevDtOptions = angular.copy(ctrl.dtOptions);
+      prevItems = angular.copy(ctrl.items);
 
       // Setting bound variables to new variables loses it's one way binding
       //   ctrl.dtOptions = pfUtils.merge(ctrl.defaultDtOptions, ctrl.dtOptions);
@@ -262,41 +290,65 @@ angular.module('patternfly.table').component('pfTableView', {
           "' does not match any property in 'config.colummns'! Please set config.selectionMatchProp " +
           "to one of these properties: " + props);
       }
-
-      setColumnDefs();
-    };
-
-    ctrl.$onChanges = function (changesObj) {
-      ctrl.updateAll();
-    };
-
-    ctrl.$doCheck = function () {
-      // do a deep compare on data
-      if (!angular.equals(ctrl.dtOptions, prevDtOptions)) {
-        ctrl.updateAll();
-      }
     };
 
     ctrl.dtInstanceCallback = function (_dtInstance) {
       var oTable, rows;
+      if (ctrl.debug) {
+        $log.debug("--> dtInstanceCallback");
+      }
 
       ctrl.dtInstance = _dtInstance;
       listenForDraw();
       selectRowsByChecked();
     };
 
-    function validSelectionMatchProp () {
-      var retVal = false, prop;
-      var item = ctrl.items[0];
-      for (prop in item) {
-        if (item.hasOwnProperty(prop)) {   //need this 'if' for eslint
-          if (ctrl.config.selectionMatchProp === prop) {
-            retVal = true;
-          }
-        }
+    ctrl.$onChanges = function (changesObj) {
+      if (ctrl.debug) {
+        $log.debug("$onChanges");
       }
-      return retVal;
-    }
+      if ((changesObj.config && !changesObj.config.isFirstChange()) ) {
+        if (ctrl.debug) {
+          $log.debug("...updateConfigOptions");
+        }
+        ctrl.updateConfigOptions();
+      }
+    };
+
+    ctrl.$doCheck = function () {
+      if (ctrl.debug) {
+        $log.debug("$doCheck");
+      }
+      // do a deep compare on dtOptions and items
+      if (!angular.equals(ctrl.dtOptions, prevDtOptions)) {
+        if (ctrl.debug) {
+          $log.debug("  dtOptions !== prevDtOptions");
+        }
+        ctrl.updateConfigOptions();
+      }
+      if (!angular.equals(ctrl.items, prevItems)) {
+        if (ctrl.debug) {
+          $log.debug("  items !== prevItems");
+        }
+        prevItems = angular.copy(ctrl.items);
+        //$timeout(function () {
+        selectRowsByChecked();
+        //});
+      }
+    };
+
+    ctrl.$postLink = function () {
+      if (ctrl.debug) {
+        $log.debug(" $postLink");
+      }
+    };
+
+    ctrl.$onDestroy = function () {
+      if (ctrl.debug) {
+        $log.debug(" $onDestroy");
+      }
+      ctrl.dtInstance = {};
+    };
 
     function setColumnDefs () {
       var i = 0, actnBtns = 1;
@@ -333,13 +385,26 @@ angular.module('patternfly.table').component('pfTableView', {
         oTable = dtInstance.dataTable;
         ctrl.tableId = oTable[0].id;
         oTable.on('draw.dt', function () {
-          $timeout(function () {
-            selectRowsByChecked();
-          });
+          if (ctrl.debug) {
+            $log.debug("--> redraw");
+          }
+          selectRowsByChecked();
         });
       }
     }
 
+    function validSelectionMatchProp () {
+      var retVal = false, prop;
+      var item = ctrl.items[0];
+      for (prop in item) {
+        if (item.hasOwnProperty(prop)) {   //need this 'if' for eslint
+          if (ctrl.config.selectionMatchProp === prop) {
+            retVal = true;
+          }
+        }
+      }
+      return retVal;
+    }
     /*
      *   Checkbox Selections
      */
@@ -356,18 +421,12 @@ angular.module('patternfly.table').component('pfTableView', {
           }
         }
       });
-      $timeout(function () {
-        selectRowsByChecked();
-      });
     };
 
     ctrl.toggleOne = function (item) {
       if (ctrl.config && ctrl.config.onCheckBoxChange) {
         ctrl.config.onCheckBoxChange(item);
       }
-      $timeout(function () {
-        setSelectAllCheckbox();
-      });
     };
 
     function getItemFromRow (matchPropValue) {
@@ -384,29 +443,55 @@ angular.module('patternfly.table').component('pfTableView', {
     }
 
     function selectRowsByChecked () {
-      var oTable, rows, checked;
-      oTable = ctrl.dtInstance.DataTable;
+      $timeout(function () {
+        var oTable, rows, checked;
 
-      // deselect all
-      rows = oTable.rows();
-      rows.deselect();
+        oTable = ctrl.dtInstance.DataTable;
 
-      // select those with checked checkboxes
-      rows = oTable.rows( function ( idx, data, node ) {
-        //         row      td     input type=checkbox
-        checked = node.children[0].children[0].checked;
-        return checked;
+        if (ctrl.debug) {
+          $log.debug("  selectRowsByChecked");
+        }
+
+        if (angular.isUndefined(oTable)) {
+          return;
+        }
+
+        if (ctrl.debug) {
+          $log.debug("  ...oTable defined");
+        }
+
+        // deselect all
+        rows = oTable.rows();
+        rows.deselect();
+
+        // select those with checked checkboxes
+        rows = oTable.rows( function ( idx, data, node ) {
+          //         row      td     input type=checkbox
+          checked = node.children[0].children[0].checked;
+          return checked;
+        });
+
+        if (ctrl.debug) {
+          $log.debug("   ... #checkedRows = " + rows[0].length);
+        }
+
+        if (rows[0].length > 0) {
+          rows.select();
+        }
+        setSelectAllCheckbox();
       });
-      rows.select();
-
-      setSelectAllCheckbox();
     }
 
     function setSelectAllCheckbox () {
-      var numVisibleRows = getVisibleRows().length;
-      var numCheckedRows = document.querySelectorAll("#" + ctrl.tableId + " tbody tr.even.selected").length +
-        document.querySelectorAll("#" + ctrl.tableId + " tbody tr.odd.selected").length;
-      // set selectAll checkbox
+      var numVisibleRows, numCheckedRows;
+
+      if (ctrl.debug) {
+        $log.debug("  setSelectAllCheckbox");
+      }
+
+      numVisibleRows = getVisibleRows().length;
+      numCheckedRows = document.querySelectorAll("#" + ctrl.tableId + " tbody tr.even.selected").length +
+                       document.querySelectorAll("#" + ctrl.tableId + " tbody tr.odd.selected").length;
       ctrl.selectAll = (numVisibleRows === numCheckedRows);
     }
 
@@ -420,9 +505,16 @@ angular.module('patternfly.table').component('pfTableView', {
       var oTable = ctrl.dtInstance.dataTable;
 
       var anNodes = document.querySelectorAll("#" + ctrl.tableId + "  tbody tr");
+
       for (i = 0; i < anNodes.length; ++i) {
         rowData = oTable.fnGetData(anNodes[i]);
-        visibleRows.push( rowData[ ctrl.selectionMatchPropColNum ] );
+        if (rowData !== null) {
+          visibleRows.push(rowData[ctrl.selectionMatchPropColNum]);
+        }
+      }
+
+      if (ctrl.debug) {
+        $log.debug("    getVisibleRows (" + visibleRows.length + ")");
       }
 
       return visibleRows;

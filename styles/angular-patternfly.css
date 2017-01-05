@@ -486,7 +486,11 @@ pf-c3-chart {
 .table-view-container {
   width: 97%;
   margin-left: 18px;
-  background-color: white
+  background-color: white;
+}
+
+table.dataTable.no-footer {
+  border-bottom: none;
 }
 
 .dataTables_wrapper {
