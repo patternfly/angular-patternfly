@@ -321,13 +321,15 @@
       };
 
       var viewSelected = function(viewId) {
-        $scope.viewType = viewId
+        $scope.viewType = viewId;
+        $scope.sortConfig.show = ($scope.viewType === "tableView" ? false : true);
       };
 
       $scope.viewsConfig = {
         views: [pfViewUtils.getListView(), pfViewUtils.getCardView(), pfViewUtils.getTableView()],
         onViewSelect: viewSelected
       };
+
       $scope.viewsConfig.currentView = $scope.viewsConfig.views[0].id;
       $scope.viewType = $scope.viewsConfig.currentView;
 

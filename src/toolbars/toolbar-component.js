@@ -13,6 +13,11 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
     var prevConfig;
 
     ctrl.$onInit = function () {
+      if (angular.isDefined(ctrl.config.sortConfig) && angular.isUndefined(ctrl.config.sortConfig.show)) {
+        // default to true
+        ctrl.config.sortConfig.show = true;
+      }
+
       angular.extend(ctrl, {
         viewSelected: viewSelected,
         isViewSelected: isViewSelected,

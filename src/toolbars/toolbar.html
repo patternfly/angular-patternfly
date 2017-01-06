@@ -6,7 +6,7 @@
           <pf-filter-fields config="$ctrl.config.filterConfig" ng-if="$ctrl.config.filterConfig" add-filter-fn="$ctrl.addFilter"></pf-filter-fields>
         </div>
         <div class="form-group">
-          <pf-sort config="$ctrl.config.sortConfig" ng-if="$ctrl.config.sortConfig"></pf-sort>
+          <pf-sort config="$ctrl.config.sortConfig" ng-if="$ctrl.config.sortConfig && $ctrl.config.sortConfig.show"></pf-sort>
         </div>
         <div class="form-group toolbar-actions"
              ng-if="$ctrl.config.actionsConfig &&
