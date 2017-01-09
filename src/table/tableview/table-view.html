@@ -3,7 +3,7 @@
   <thead>
     <tr role="row">
       <th class="table-view-pf-select"><input type="checkbox" value="$ctrl.selectAll" ng-model="$ctrl.selectAll" ng-change="$ctrl.toggleAll()"/></th>
-      <th ng-repeat="col in $ctrl.colummns">{{col.colHeader}}</th>
+      <th ng-repeat="col in $ctrl.colummns">{{col.header}}</th>
       <th ng-if="$ctrl.areActions()" colspan="{{$ctrl.calcActionsColspan()}}">Actions</th>
     </tr>
   </thead>

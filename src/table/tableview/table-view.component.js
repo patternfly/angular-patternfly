@@ -80,9 +80,9 @@ angular.module('patternfly.table').component('pfTableView', {
       if (!validSelectionMatchProp()) {
         angular.forEach(ctrl.colummns, function (col) {
           if (props.length === 0) {
-            props = col.colItemFld;
+            props = col.itemField;
           } else {
-            props += ", " + col.colItemFld;
+            props += ", " + col.itemField;
           }
         });
         throw new Error("pfTableView - " +
@@ -332,7 +332,7 @@ angular.module('patternfly.table').component('pfTableView', {
 
     ctrl.isColItemFld = function (key) {
       var retVal = false;
-      var tableCol = $filter('filter')(ctrl.colummns, {colItemFld: key});
+      var tableCol = $filter('filter')(ctrl.colummns, {itemField: key});
 
       if (tableCol && tableCol.length === 1) {
         retVal = true;

@@ -144,10 +144,10 @@
       $scope.filtersText = '';
 
       $scope.colummns = [
-        { colHeader: "Name", colItemFld: "name" },
-        { colHeader: "Age", colItemFld: "age"},
-        { colHeader: "Address", colItemFld: "address" },
-        { colHeader: "BirthMonth", colItemFld: "birthMonth"}
+        { header: "Name", itemField: "name" },
+        { header: "Age", itemField: "age"},
+        { header: "Address", itemField: "address" },
+        { header: "BirthMonth", itemField: "birthMonth"}
       ];
 
       // attempt to dyamically turn on/off pagination controls

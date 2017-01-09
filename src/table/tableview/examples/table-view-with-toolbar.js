@@ -15,8 +15,8 @@
  * @param {array} items Array of items to display in the table view.
  * @param {array} columns Array of table column information to display in the table's header row
  * <ul style='list-style-type: none'>
- *   <li>.colHeader     - (string) Text label for a column header
- *   <li>.colItemFld    - (string) Item field to associate with a particular column.
+ *   <li>.header     - (string) Text label for a column header
+ *   <li>.itemField    - (string) Item field to associate with a particular column.
  * </ul>
  * @param {array} actionButtons List of action buttons in each row
  *   <ul style='list-style-type: none'>
@@ -76,10 +76,10 @@
       $scope.actionsText = "";
 
       $scope.colummns = [
-        { colHeader: "Name", colItemFld: "name" },
-        { colHeader: "Age", colItemFld: "age"},
-        { colHeader: "Address", colItemFld: "address" },
-        { colHeader: "BirthMonth", colItemFld: "birthMonth"}
+        { header: "Name", itemField: "name" },
+        { header: "Age", itemField: "age"},
+        { header: "Address", itemField: "address" },
+        { header: "BirthMonth", itemField: "birthMonth"}
       ];
 
       $scope.dtOptions = {
