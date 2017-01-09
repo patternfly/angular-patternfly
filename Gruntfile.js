@@ -82,12 +82,6 @@ module.exports = function (grunt) {
           src: ['**'],
           dest: 'dist/docs',
           expand: true
-        },
-        tableImgs: {
-          cwd: 'lib/datatables/media/images',
-          src: 'sort_*',
-          dest: 'docs/images',
-          expand: true
         }
       },
       cssmin: {
@@ -283,7 +277,7 @@ module.exports = function (grunt) {
       }
     });
 
-    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:styles', 'copy:img', 'copy:tableImgs']);
+    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:styles', 'copy:img']);
 
     // You can specify which modules to build as arguments of the build task.
     grunt.registerTask('build', 'Create bootstrap build files', function () {
