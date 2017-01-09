@@ -112,22 +112,11 @@
           </div>
         </pf-card-view>
       </div>
-      <div class="col-md-12 table-view-container" ng-show="viewType == 'tableView'">
+      <div class="col-md-12" ng-show="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
-                       dt-options="dtOptions"
                        colummns="colummns"
                        items="items">
         </pf-table-view>
-        <!-- form role="form"  //issues dynamically turning on/off pagination, see below>
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
-            </label>
-            <label>
-              <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
-            </label>
-          </div>
-        </form --!>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -160,12 +149,6 @@
         { colHeader: "Address", colItemFld: "address" },
         { colHeader: "BirthMonth", colItemFld: "birthMonth"}
       ];
-
-      $scope.dtOptions = {
-        paginationType: 'full',
-        displayLength: 3,
-        dom: "tp"
-      };
 
       // attempt to dyamically turn on/off pagination controls
       // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
