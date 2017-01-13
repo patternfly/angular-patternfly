@@ -125,11 +125,16 @@ module.exports = function (grunt) {
           dest: 'docs',
           image: 'misc/logo-alt.svg',
           scripts: [
+            'node_modules/jquery/dist/jquery.js',
+            'node_modules/datatables.net/js/jquery.dataTables.js',
+            'node_modules/datatables.net-select/js/dataTables.select.js',
             'node_modules/moment/moment.js',
             'node_modules/c3/c3.js',
             'node_modules/d3/d3.js',
             'node_modules/patternfly/dist/js/patternfly-settings.js',
             'node_modules/angular/angular.js',
+            'node_modules/angular-datatables/dist/angular-datatables.min.js',
+            'node_modules/angular-datatables/dist/plugins/select/angular-datatables.select.min.js',
             'node_modules/angular-sanitize/angular-sanitize.js',
             'node_modules/angular-animate/angular-animate.js',
             'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
@@ -139,8 +144,12 @@ module.exports = function (grunt) {
             'node_modules/angular-ui-router/release/angular-ui-router.min.js'],
           html5Mode: false,
           template: 'grunt-ngdocs-index.tmpl',
-          styles: ['node_modules/patternfly/dist/css/patternfly.css', 'node_modules/patternfly/dist/css/patternfly-additions.css',
-            'dist/styles/angular-patternfly.css', 'misc/ng-docs.css', 'misc/examples.css']
+          styles: ['node_modules/datatables.net-dt/css/jquery.dataTables.css',
+            'node_modules/patternfly/dist/css/patternfly.css',
+            'node_modules/patternfly/dist/css/patternfly-additions.css',
+            'dist/styles/angular-patternfly.css',
+            'misc/ng-docs.css',
+            'misc/examples.css']
         },
 
         all: ['src/**/*.js']
@@ -202,6 +211,11 @@ module.exports = function (grunt) {
           cwd: 'src/',
           src: ['sort/**/*.html'],
           dest: 'templates/sort.js'
+        },
+        'patternfly.table': {
+          cwd: 'src/',
+          src: ['table/**/*.html'],
+          dest: 'templates/table.js'
         },
         'patternfly.toolbars': {
           cwd: 'src/',

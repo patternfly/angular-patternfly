@@ -19,6 +19,8 @@
  * </ul>
  * <li>.appliedFilters - (Array) List of the currently applied filters
  * <li>.resultsCount   - (int) The number of results returned after the current applied filters have been applied
+ * <li>.selectedCount  - (int) The number selected items, The 'n' in the label: 'n' of 'm' selected
+ * <li>.totalCount     - (int) The total number of items before any filters have been applied. The 'm' in the label: 'n' of 'm' selected
  * <li>.onFilterChange - ( function(array of filters) ) Function to call when the applied filters list changes
  * </ul>
  *
@@ -60,6 +62,12 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       }
       if (ctrl.config.resultsCount === undefined) {
         ctrl.config.resultsCount = 0;
+      }
+      if (ctrl.config.selectedCount === undefined) {
+        ctrl.config.selectedCount = 0;
+      }
+      if (ctrl.config.totalCount === undefined) {
+        ctrl.config.totalCount = 0;
       }
     }
 

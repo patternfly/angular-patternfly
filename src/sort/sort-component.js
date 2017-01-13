@@ -10,6 +10,11 @@ angular.module('patternfly.sort').component('pfSort', {
     var prevConfig;
 
     ctrl.$onInit = function () {
+      if (angular.isDefined(ctrl.config) && angular.isUndefined(ctrl.config.show)) {
+        // default to true
+        ctrl.config.show = true;
+      }
+
       angular.extend(ctrl, {
         selectField: selectField,
         changeDirection: changeDirection,
