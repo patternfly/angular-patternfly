@@ -145,7 +145,7 @@ NG_DOCS={
       "type": "directive",
       "moduleName": "patternfly.filters",
       "shortDescription": "Component for the filter results",
-      "keywords": "api applied appliedfilters box call changes comparisons component config configuration current currently directive display entered field fields filter filterable filters filtertype filtervalues function html input list list-style-type number onfilterchange optional patternfly placeholder resultscount returned select settings style text title type unique valid values"
+      "keywords": "api applied appliedfilters box call changes comparisons component config configuration current currently directive display entered field fields filter filterable filters filtertype filtervalues function html input items label list list-style-type number onfilterchange optional patternfly placeholder resultscount returned select selected selectedcount settings style text title total totalcount type unique valid values"
     },
     {
       "section": "api",
@@ -275,12 +275,30 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.table.component:pfTableView - Basic",
+      "shortName": "pfTableView - Basic",
+      "type": "directive",
+      "moduleName": "patternfly.table",
+      "shortDescription": "Component for rendering a simple table view.",
+      "keywords": "$scope action action-buttons actionbuttons actionfn actions address angular angular-datatables api array asc associate basic bedrock boston bourbon brown button buttons california called changes checkbox checked city class col-md-12 colorado colummns column columns componenet component config configuration controller cross default denver determining dinosaur directive disabled display displayed dropdown dt-options dtoptions dtoptionsbuilder east edwards elm eventtext example-container exampletableview field flintstone font-weight frank fred function github grouped handlecheckboxchange header holly hollywood html http invoke io isdisabled isseparator item itemfield items jim john js jump label linda list list-style-type livingston main marie massachusetts matching mcgovern menu menu-actions menuactions module nashville ng-controller nichols norfolk notify oak object oncheckboxchange optional order padding-top pat patternfly pennsylvania perform performaction pftableview pftoolbar pittsburgh property rendering row rows script second selected selection selectionmatchprop simple smith street style switcher table tablectrl tennessee text thomas title toolbar toolbars tooltip true unavailable uuid var view virginia washingstone york"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.table.component:pfTableView - with Toolbar",
+      "shortName": "pfTableView - with Toolbar",
+      "type": "directive",
+      "moduleName": "patternfly.table",
+      "shortDescription": "Example configuring a table view with a toolbar.",
+      "keywords": "$filter $scope action action-buttons actionbuttons actionfn actions actions-label actionsconfig actionsinclude actionstext address age allitems angular angular-datatables api apple appliedfilters applyfilters april array associate attempt august bedrock birth birthmonth boulevard bourbon brown button buttons california called change changes changing checkbox checkbox-inline chris cincinatti class col-md-12 colorado colummns column columns componenet component config configuration configuring console controller controls december default demo denver determining dinosaur directive disabled display displayed displaylength dom dropdown dt-options dtoptions dtoptionsbuilder dyamically dynamically east elm example example-container exampletoolbar false february field fields filter filterchange filterconfig filters filtertype filtervalues flintstone foreach form form-group frank fred full function github green grouped handlecheckboxchange header henry holly hollywood html http https invoke io isdisabled isseparator issues item itemfield items jane january jim john js judy july jump june label larry length linda list list-style-type livingston liz log main march match matches matchesfilter matchesfilters matching mcgovern menu menu-actions menuactions module modules month monthvals moreactions nashville net ng-change ng-controller ng-disabled ng-model nichols norfolk notify november null oak object october ohio oncheckboxchange onfilterchange optional padding-left pagination paginationtype parseint pat patternfly pennsylvania perform performaction performtableaction pftoolbar pfviewutils pittsburgh placeholder primaryactions property push resultscount return role row rows script second select selected selectedcount selecteditems selection selectionmatchprop september smith sortconfig stree street style switcher table tableactionbuttons tableconfig tablemenuactions tableview tennessee text thing thomas title togglepagination toolbar toolbaractionsconfig toolbarconfig toolbars tooltip totalcount tp true turn turning type unavailable undefined usepagination uuid var view viewctrl virginia washingstone width wilma york"
+    },
+    {
+      "section": "api",
       "id": "patternfly.toolbars.componenet:pfToolbar",
       "shortName": "pfToolbar",
       "type": "directive",
       "moduleName": "patternfly.toolbars",
       "shortDescription": "Standard toolbar component. Includes filtering and view selection capabilities",
-      "keywords": "$scope action actionfn actions actions-label actionsconfig actionsinclude actionstext add address age allitems alpha angular api apple appliedfilters applyfilters april august bedrock birth birthmonth boulevard btn btn-default button buttons call capabilities card-view-container cardview caret checkdisabled cincinatti class col-md-12 comparefn comparisons componenet component compvalue config configuration controller currentfield currently currentview custom december dinosaur directive disable disabled display displayed doadd dropdown dropdown-menu dropdown-toggle east elm events-label example-container exampletoolbar fa fa-plus false february fields filter filterchange filterconfig filtering filters filterstext filtertype filtervalues flintstone foreach frank fred function getcardview getlistview green grouped html icon iconclass includes invoke isascending isdisabled isseparator item item1 item2 items january john js judy july june length list list-group-item-heading list-group-item-text list-style-type list-view-container list-view-pf-additional-info list-view-pf-additional-info-item list-view-pf-description listconfig listview livingston localecompare main march match matches matchesfilter matchesfilters menu menuitem module month monthvals moreactions ng-click ng-controller ng-if norfolk november null numeric october ohio onfilterchange onsortchange onviewselect option optional options optionselected parseint pat patternfly pennsylvania perform performaction pfsimplefilter pfsort pfviewutils pittsburgh placehodler placeholder primary primary-action primaryactions pulldown push resultscount return role row rows script second secondary secondary-action select selected selection selectionmatchprop selector separator september set settings smith sort sortchange sortconfig sorttype standard street style text thing thomas title toolbar toolbarconfig toolbars tooltip transclude true type uib-dropdown uib-dropdown-toggle unavailable undefined unique var view viewctrl viewid views viewsconfig viewselected viewtype virginia vm washingstone york"
+      "keywords": "$filter $scope action actionfn actions actions-label actionsconfig actionsinclude actionstext add address age allitems alpha angular api apple appliedfilters applyfilters april attempt august bedrock birth birthmonth boulevard bourbon brown btn btn-default button buttons california call capabilities cardview caret checkdisabled cincinatti class col-md-12 colorado colummns comparefn comparisons componenet component compvalue config configuration console controller controls currentfield currently currentview custom december demo denver dinosaur directive disable disabled display displayed displaylength doadd dom dropdown dropdown-menu dropdown-toggle dtoptions dyamically east elm events-label example-container exampletoolbar fa fa-plus false february fields filter filterchange filterconfig filtering filters filterstext filtertype filtervalues flintstone foreach frank fred function getcardview getlistview gettableview green grouped handlecheckboxchange header holly hollywood html https icon iconclass includes invoke isascending isdisabled isseparator issues item item1 item2 itemfield items january jim john js judy july jump june length linda list list-group-item-heading list-group-item-text list-style-type list-view-pf-additional-info list-view-pf-additional-info-item list-view-pf-description listconfig listview livingston localecompare log main march match matches matchesfilter matchesfilters mcgovern menu menuitem module modules month monthvals moreactions nashville net ng-click ng-controller ng-if ng-show nichols norfolk november null numeric oak october ohio oncheckboxchange onfilterchange onsortchange onviewselect option optional options optionselected pagination parseint pat patternfly pennsylvania perform performaction pfsimplefilter pfsort pfviewutils pittsburgh placehodler placeholder primary primary-action primaryactions pulldown push resultscount return role row rows script second secondary secondary-action select selected selectedcount selecteditems selection selectionmatchprop selector separator september set settings smith sort sortchange sortconfig sorttype standard stree street style table tableconfig tableview tennessee text thing thomas title togglepagination toolbar toolbarconfig toolbars tooltip totalcount tp transclude true turn turning type uib-dropdown uib-dropdown-toggle unavailable undefined unique usepagination var view viewctrl viewid views viewsconfig viewselected viewtype virginia washingstone york"
     },
     {
       "section": "api",
@@ -371,11 +389,16 @@ NG_DOCS={
   "editExample": true,
   "startPage": "/api",
   "scripts": [
+    "jquery.js",
+    "jquery.dataTables.js",
+    "dataTables.select.js",
     "moment.js",
     "c3.js",
     "d3.js",
     "patternfly-settings.js",
     "angular.js",
+    "angular-datatables.min.js",
+    "angular-datatables.select.min.js",
     "angular-sanitize.js",
     "angular-animate.js",
     "ui-bootstrap-tpls.js",

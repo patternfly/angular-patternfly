@@ -94,6 +94,14 @@ angular.module('patternfly.select', ['ui.bootstrap']);
  */
 angular.module('patternfly.sort', ['ui.bootstrap']);
 ;/**
+ * @name  patternfly
+ *
+ * @description
+ *   Table module for patternfly.
+ *
+ */
+angular.module('patternfly.table', ['datatables', 'patternfly.utils', 'patternfly.filters', 'patternfly.sort']);
+;/**
  * @name  patternfly toolbars
  *
  * @description
@@ -3397,6 +3405,8 @@ angular.module('patternfly.filters').component('pfFilterFields', {
  * </ul>
  * <li>.appliedFilters - (Array) List of the currently applied filters
  * <li>.resultsCount   - (int) The number of results returned after the current applied filters have been applied
+ * <li>.selectedCount  - (int) The number selected items, The 'n' in the label: 'n' of 'm' selected
+ * <li>.totalCount     - (int) The total number of items before any filters have been applied. The 'm' in the label: 'n' of 'm' selected
  * <li>.onFilterChange - ( function(array of filters) ) Function to call when the applied filters list changes
  * </ul>
  *
@@ -3438,6 +3448,12 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       }
       if (ctrl.config.resultsCount === undefined) {
         ctrl.config.resultsCount = 0;
+      }
+      if (ctrl.config.selectedCount === undefined) {
+        ctrl.config.selectedCount = 0;
+      }
+      if (ctrl.config.totalCount === undefined) {
+        ctrl.config.totalCount = 0;
       }
     }
 
@@ -7036,6 +7052,11 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     var prevConfig;
 
     ctrl.$onInit = function () {
+      if (angular.isDefined(ctrl.config) && angular.isUndefined(ctrl.config.show)) {
+        // default to true
+        ctrl.config.show = true;
+      }
+
       angular.extend(ctrl, {
         selectField: selectField,
         changeDirection: changeDirection,
@@ -7117,6 +7138,1039 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
   }
 });
 ;/**
+  * @ngdoc directive
+  * @name patternfly.table.component:pfTableView - Basic
+  *
+  * @description
+  * Component for rendering a simple table view.<br><br>
+  * See {@link patternfly.table.component:pfTableView%20-%20with%20Toolbar pfTableView - with Toolbar} for use with a Toolbar<br>
+  * See {@link patternfly.toolbars.componenet:pfToolbar pfToolbar} for use in Toolbar View Switcher
+  *
+  * @param {object} config Optional configuration object
+  * <ul style='list-style-type: none'>
+  *   <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
+  *   <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  * </ul>
+  * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
+  * @param {array} items Array of items to display in the table view.
+  * @param {array} columns Array of table column information to display in the table's header row
+  * <ul style='list-style-type: none'>
+  *   <li>.header     - (string) Text label for a column header
+  *   <li>.itemField    - (string) Item field to associate with a particular column.
+  * </ul>
+  * @param {array} actionButtons List of action buttons in each row
+  *   <ul style='list-style-type: none'>
+  *     <li>.name - (String) The name of the action, displayed on the button
+  *     <li>.title - (String) Optional title, used for the tooltip
+  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
+  *   </ul>
+  * @param {array} menuActions List of actions for dropdown menu in each row
+  *   <ul style='list-style-type: none'>
+  *     <li>.name - (String) The name of the action, displayed on the button
+  *     <li>.title - (String) Optional title, used for the tooltip
+  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
+  *   </ul>
+  * @example
+ <example module="patternfly.table">
+ <file name="index.html">
+ <div ng-controller="TableCtrl" class="row example-container">
+   <div class="col-md-12">
+     <pf-table-view id="exampleTableView"
+          config="config"
+          dt-options="dtOptions"
+          colummns="colummns"
+          items="items"
+          action-buttons="actionButtons"
+          menu-actions="menuActions">
+     </pf-table-view>
+     <div class="col-md-12" style="padding-top: 12px;">
+       <label style="font-weight:normal;vertical-align:center;">Events: </label>
+     </div>
+     <div class="col-md-12">
+       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+     </div>
+   </div>
+ </div>
+ </file>
+
+ <file name="script.js">
+ angular.module('patternfly.table').controller('TableCtrl', ['$scope',
+ function ($scope) {
+        $scope.dtOptions = {
+          order: [[2, "asc"]],
+        };
+
+        $scope.colummns = [
+          { header: "Name", itemField: "name" },
+          { header: "Address", itemField: "address"},
+          { header: "City", itemField: "city" },
+          { header: "State", itemField: "state"}
+        ];
+
+        $scope.items = [
+          {
+            name: "Fred Flintstone",
+            address: "20 Dinosaur Way",
+            city: "Bedrock",
+            state: "Washingstone"
+          },
+          {
+            name: "John Smith",
+            address: "415 East Main Street",
+            city: "Norfolk",
+            state: "Virginia",
+          },
+          {
+            name: "Frank Livingston",
+            address: "234 Elm Street",
+            city: "Pittsburgh",
+            state: "Pennsylvania"
+          },
+          {
+            name: "Linda McGovern",
+            address: "22 Oak Street",
+            city: "Denver",
+            state: "Colorado"
+          },
+          {
+            name: "Jim Brown",
+            address: "72 Bourbon Way",
+            city: "Nashville",
+            state: "Tennessee"
+          },
+          {
+            name: "Holly Nichols",
+            address: "21 Jump Street",
+            city: "Hollywood",
+            state: "California"
+          },
+          {
+            name: "Marie Edwards",
+            address: "17 Cross Street",
+            city: "Boston",
+            state: "Massachusetts"
+          },
+          {
+            name: "Pat Thomas",
+            address: "50 Second Street",
+            city: "New York",
+            state: "New York"
+          },
+        ];
+
+        $scope.eventText = "";
+
+        $scope.config = {
+          onCheckBoxChange: handleCheckBoxChange,
+          selectionMatchProp: "name"
+        };
+
+        function handleCheckBoxChange (item) {
+          $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;
+        };
+
+        var performAction = function (action, item) {
+          $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
+        };
+
+        $scope.actionButtons = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          }
+        ];
+
+        $scope.menuActions = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ];
+      }
+    ]);
+  </file>
+</example>
+*/
+;/**
+ * @ngdoc directive
+ * @name patternfly.table.component:pfTableView - with Toolbar
+ *
+ * @description
+ * Example configuring a table view with a toolbar.<br><br>
+ * Please see {@link patternfly.toolbars.componenet:pfToolbar pfToolbar} for use in Toolbar View Switcher
+ *
+ * @param {object} config Optional configuration object
+ * <ul style='list-style-type: none'>
+ *   <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
+ *   <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+ * </ul>
+ * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
+ * @param {array} items Array of items to display in the table view.
+ * @param {array} columns Array of table column information to display in the table's header row
+ * <ul style='list-style-type: none'>
+ *   <li>.header     - (string) Text label for a column header
+ *   <li>.itemField    - (string) Item field to associate with a particular column.
+ * </ul>
+ * @param {array} actionButtons List of action buttons in each row
+ *   <ul style='list-style-type: none'>
+ *     <li>.name - (String) The name of the action, displayed on the button
+ *     <li>.title - (String) Optional title, used for the tooltip
+ *     <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *   </ul>
+ * @param {array} menuActions List of actions for dropdown menu in each row
+ *   <ul style='list-style-type: none'>
+ *     <li>.name - (String) The name of the action, displayed on the button
+ *     <li>.title - (String) Optional title, used for the tooltip
+ *     <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *   </ul>
+ * @example
+<example module="patternfly.tableview.demo">
+  <file name="index.html">
+    <div ng-controller="ViewCtrl" class="row example-container">
+      <div class="col-md-12">
+        <pf-toolbar id="exampleToolbar" config="toolbarConfig"></pf-toolbar>
+      </div>
+      <div class="col-md-12">
+        <pf-table-view config="tableConfig"
+                       dt-options="dtOptions"
+                       colummns="colummns"
+                       items="items"
+                       action-buttons="tableActionButtons"
+                       menu-actions="tableMenuActions">
+        </pf-table-view>
+        <!-- form role="form"    //[WIP] issues dynamically changing displayLength and turning on/off pagination >
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
+            </label>
+            <label>
+              <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
+            </label>
+          </div>
+        </form --!>
+      </div>
+      <hr class="col-md-12">
+      <div class="col-md-12">
+        <label class="actions-label">Actions: </label>
+      </div>
+      <div class="col-md-12">
+        <textarea rows="6" class="col-md-12">{{actionsText}}</textarea>
+      </div>
+    </div>
+  </file>
+
+  <file name="modules.js">
+    angular.module('patternfly.tableview.demo', ['patternfly.toolbars','patternfly.table']);
+  </file>
+
+  <file name="script.js">
+  angular.module('patternfly.tableview.demo').controller('ViewCtrl', ['$scope', 'pfViewUtils', '$filter',
+    function ($scope, pfViewUtils, $filter) {
+      $scope.actionsText = "";
+
+      $scope.colummns = [
+        { header: "Name", itemField: "name" },
+        { header: "Age", itemField: "age"},
+        { header: "Address", itemField: "address" },
+        { header: "BirthMonth", itemField: "birthMonth"}
+      ];
+
+      $scope.dtOptions = {
+        paginationType: 'full',
+        displayLength: 10,
+        dom: "tp"
+      };
+
+      // [WIP] attempt to dyamically change displayLength (#rows) and turn on/off pagination controls
+      // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
+
+      $scope.usePagination = true;
+      $scope.togglePagination = function () {
+        $scope.usePagination = !$scope.usePagination;
+        console.log("---> togglePagination: " + $scope.usePagination);
+        if($scope.usePagination) {
+          $scope.dtOptions.displayLength = 3;
+          $scope.dtOptions.dom = "tp";
+          console.log("---> use pagination: " + $scope.dtOptions.displayLength + ":" + $scope.dtOptions.dom);
+        } else {
+          $scope.dtOptions.displayLength = undefined;
+          $scope.dtOptions.dom = "t";
+        }
+      };
+
+      $scope.allItems = [
+        {
+          name: "Fred Flintstone",
+          age: 57,
+          address: "20 Dinosaur Way, Bedrock, Washingstone",
+          birthMonth: 'February'
+        },
+        {
+          name: "John Smith",
+          age: 23,
+          address: "415 East Main Street, Norfolk, Virginia",
+          birthMonth: 'October'
+        },
+        {
+          name: "Frank Livingston",
+          age: 71,
+          address: "234 Elm Street, Pittsburgh, Pennsylvania",
+          birthMonth: 'March'
+        },
+        {
+          name: "Judy Green",
+          age: 21,
+          address: "2 Apple Boulevard, Cincinatti, Ohio",
+          birthMonth: 'December'
+        },
+        {
+          name: "Pat Thomas",
+          age: 19,
+          address: "50 Second Street, New York, New York",
+          birthMonth: 'February'
+        },
+        {
+          name: "Linda McGovern",
+          age: 32,
+          address: "22 Oak Stree, Denver, Colorado",
+          birthMonth: 'March'
+        },
+        {
+          name: "Jim Brown",
+          age: 55,
+          address: "72 Bourbon Way. Nashville. Tennessee",
+          birthMonth: 'March'
+        },
+        {
+          name: "Holly Nichols",
+          age: 34,
+          address: "21 Jump Street, Hollywood, California",
+          birthMonth: 'March'
+        },
+        {
+          name: "Wilma Flintstone",
+          age: 47,
+          address: "20 Dinosaur Way, Bedrock, Washingstone",
+          birthMonth: 'February'
+        },
+        {
+          name: "Jane Smith",
+          age: 22,
+          address: "415 East Main Street, Norfolk, Virginia",
+          birthMonth: 'April'
+        },
+        {
+          name: "Liz Livingston",
+          age: 65,
+          address: "234 Elm Street, Pittsburgh, Pennsylvania",
+          birthMonth: 'November'
+        },
+        {
+          name: "Jim Green",
+          age: 23,
+          address: "2 Apple Boulevard, Cincinatti, Ohio",
+          birthMonth: 'January'
+        },
+        {
+          name: "Chris Thomas",
+          age: 21,
+          address: "50 Second Street, New York, New York",
+          birthMonth: 'October'
+        },
+        {
+          name: "Larry McGovern",
+          age: 34,
+          address: "22 Oak Stree, Denver, Colorado",
+          birthMonth: 'September'
+        },
+        {
+          name: "July Brown",
+          age: 51,
+          address: "72 Bourbon Way. Nashville. Tennessee",
+          birthMonth: 'May'
+        },
+        {
+          name: "Henry Nichols",
+          age: 36,
+          address: "21 Jump Street, Hollywood, California",
+          birthMonth: 'March'
+        },
+      ];
+
+      $scope.items = $scope.allItems;
+
+      var matchesFilter = function (item, filter) {
+        var match = true;
+
+        if (filter.id === 'name') {
+          match = item.name.match(filter.value) !== null;
+        } else if (filter.id === 'age') {
+          match = item.age === parseInt(filter.value);
+        } else if (filter.id === 'address') {
+          match = item.address.match(filter.value) !== null;
+        } else if (filter.id === 'birthMonth') {
+          match = item.birthMonth === filter.value;
+        }
+        return match;
+      };
+
+      var matchesFilters = function (item, filters) {
+        var matches = true;
+
+        filters.forEach(function(filter) {
+          if (!matchesFilter(item, filter)) {
+            matches = false;
+            return false;
+          }
+        });
+        return matches;
+      };
+
+      var applyFilters = function (filters) {
+        $scope.items = [];
+        if (filters && filters.length > 0) {
+          $scope.allItems.forEach(function (item) {
+            if (matchesFilters(item, filters)) {
+              $scope.items.push(item);
+            }
+          });
+        } else {
+          $scope.items = $scope.allItems;
+        }
+      };
+
+      var filterChange = function (filters) {
+        applyFilters(filters);
+        $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+      };
+
+      var performAction = function (action) {
+        var selectedItems = $filter('filter')($scope.allItems, {selected: true});
+        if(!selectedItems) {
+          selectedItems = [];
+        }
+        $scope.actionsText = "Toolbar Action: " + action.name + " on " + selectedItems.length + " selected items\n" + $scope.actionsText;
+      };
+
+      var performTableAction = function (action, item) {
+        $scope.actionsText = "Table Row Action on '" + item.name + "' : " + action.name + "\r\n" + $scope.actionsText;
+      };
+
+      function handleCheckBoxChange (item) {
+        var selectedItems = $filter('filter')($scope.allItems, {selected: true});
+        if (selectedItems) {
+          $scope.toolbarConfig.filterConfig.selectedCount = selectedItems.length;
+        }
+      }
+
+      $scope.filterConfig = {
+        fields: [
+          {
+            id: 'name',
+            title:  'Name',
+            placeholder: 'Filter by Name...',
+            filterType: 'text'
+          },
+          {
+            id: 'age',
+            title:  'Age',
+            placeholder: 'Filter by Age...',
+            filterType: 'text'
+          },
+          {
+            id: 'address',
+            title:  'Address',
+            placeholder: 'Filter by Address...',
+            filterType: 'text'
+          },
+          {
+            id: 'birthMonth',
+            title:  'Birth Month',
+            placeholder: 'Filter by Birth Month...',
+            filterType: 'select',
+            filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+          }
+        ],
+        resultsCount: $scope.items.length,
+        totalCount: $scope.allItems.length,
+        appliedFilters: [],
+        onFilterChange: filterChange
+      };
+
+      var monthVals = {
+        'January': 1,
+        'February': 2,
+        'March': 3,
+        'April': 4,
+        'May': 5,
+        'June': 6,
+        'July': 7,
+        'August': 8,
+        'September': 9,
+        'October': 10,
+        'November': 11,
+        'December': 12
+      };
+
+      $scope.toolbarActionsConfig = {
+        primaryActions: [
+          {
+            name: 'Action 1',
+            title: 'Do the first thing',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 2',
+            title: 'Do something else',
+            actionFn: performAction
+          }
+        ],
+        moreActions: [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            actionFn: performAction,
+            title: 'Do something similar'
+          }
+        ],
+        actionsInclude: true
+      };
+
+      $scope.toolbarConfig = {
+        filterConfig: $scope.filterConfig,
+        sortConfig: $scope.sortConfig,
+        actionsConfig: $scope.toolbarActionsConfig
+      };
+
+      $scope.tableConfig = {
+        onCheckBoxChange: handleCheckBoxChange,
+        selectionMatchProp: "name"
+      };
+
+      $scope.tableActionButtons = [
+        {
+          name: 'Action',
+          title: 'Perform an action',
+          actionFn: performTableAction
+        }
+      ];
+
+      $scope.tableMenuActions = [
+        {
+          name: 'Action',
+          title: 'Perform an action',
+          actionFn: performTableAction
+        },
+        {
+          name: 'Another Action',
+          title: 'Do something else',
+          actionFn: performTableAction
+        },
+        {
+          name: 'Disabled Action',
+          title: 'Unavailable action',
+          actionFn: performTableAction,
+          isDisabled: true
+        },
+        {
+          name: 'Something Else',
+          title: '',
+          actionFn: performTableAction
+        },
+        {
+          isSeparator: true
+        },
+        {
+          name: 'Grouped Action 1',
+          title: 'Do something',
+          actionFn: performTableAction
+        },
+        {
+          name: 'Grouped Action 2',
+          title: 'Do something similar',
+          actionFn: performTableAction
+        }
+      ];
+    }
+  ]);
+  </file>
+</example>
+ */
+;angular.module('patternfly.table').component('pfTableView', {
+  bindings: {
+    config: '<?',
+    dtOptions: '<?',
+    colummns: '<',
+    items: '<',
+    actionButtons: '<?',
+    menuActions: '<?'
+  },
+  templateUrl: 'table/tableview/table-view.html',
+  controller: ["DTOptionsBuilder", "DTColumnDefBuilder", "$element", "pfUtils", "$log", "$filter", "$timeout", function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout) {
+    'use strict';
+    var ctrl = this, prevDtOptions, prevItems;
+
+    // Once datatables is out of active development I'll remove log statements
+    ctrl.debug = false;
+
+    ctrl.selectAll = false;
+    ctrl.dtInstance = {};
+
+    ctrl.defaultDtOptions = {
+      autoWidth: false,
+      destroy: true,
+      order: [[1, "asc"]],
+      dom: "t",
+      select: {
+        selector: 'td:first-child input[type="checkbox"]',
+        style: 'multi'
+      }
+    };
+
+    ctrl.defaultConfig = {
+      selectionMatchProp: 'uuid',
+      onCheckBoxChange: null
+    };
+
+    ctrl.$onInit = function () {
+
+      if (ctrl.debug) {
+        $log.debug("$onInit");
+      }
+
+      if (angular.isUndefined(ctrl.dtOptions)) {
+        ctrl.dtOptions = {};
+      }
+      if (angular.isUndefined(ctrl.config)) {
+        ctrl.config = {};
+      }
+
+      ctrl.updateConfigOptions();
+
+      setColumnDefs();
+    };
+
+    ctrl.updateConfigOptions = function () {
+      var col, props = "";
+
+      if (ctrl.debug) {
+        $log.debug("  updateConfigOptions");
+      }
+
+      if (angular.isDefined(ctrl.dtOptions) && angular.isDefined(ctrl.dtOptions.displayLength)) {
+        ctrl.dtOptions.displayLength = Number(ctrl.dtOptions.displayLength);
+      }
+
+      // Need to deep watch changes in dtOptions and items
+      prevDtOptions = angular.copy(ctrl.dtOptions);
+      prevItems = angular.copy(ctrl.items);
+
+      // Setting bound variables to new variables loses it's one way binding
+      //   ctrl.dtOptions = pfUtils.merge(ctrl.defaultDtOptions, ctrl.dtOptions);
+      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+
+      // Instead, use _.defaults to update the existing variable
+      _.defaults(ctrl.dtOptions, ctrl.defaultDtOptions);
+      _.defaults(ctrl.config, ctrl.defaultConfig);
+      // may need to use _.defaultsDeep, but not currently available in
+      // lodash-amd a-pf is using
+
+      if (!validSelectionMatchProp()) {
+        angular.forEach(ctrl.colummns, function (col) {
+          if (props.length === 0) {
+            props = col.itemField;
+          } else {
+            props += ", " + col.itemField;
+          }
+        });
+        throw new Error("pfTableView - " +
+          "config.selectionMatchProp '" + ctrl.config.selectionMatchProp +
+          "' does not match any property in 'config.colummns'! Please set config.selectionMatchProp " +
+          "to one of these properties: " + props);
+      }
+    };
+
+    ctrl.dtInstanceCallback = function (_dtInstance) {
+      var oTable, rows;
+      if (ctrl.debug) {
+        $log.debug("--> dtInstanceCallback");
+      }
+
+      ctrl.dtInstance = _dtInstance;
+      listenForDraw();
+      selectRowsByChecked();
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (ctrl.debug) {
+        $log.debug("$onChanges");
+      }
+      if ((changesObj.config && !changesObj.config.isFirstChange()) ) {
+        if (ctrl.debug) {
+          $log.debug("...updateConfigOptions");
+        }
+        ctrl.updateConfigOptions();
+      }
+    };
+
+    ctrl.$doCheck = function () {
+      if (ctrl.debug) {
+        $log.debug("$doCheck");
+      }
+      // do a deep compare on dtOptions and items
+      if (!angular.equals(ctrl.dtOptions, prevDtOptions)) {
+        if (ctrl.debug) {
+          $log.debug("  dtOptions !== prevDtOptions");
+        }
+        ctrl.updateConfigOptions();
+      }
+      if (!angular.equals(ctrl.items, prevItems)) {
+        if (ctrl.debug) {
+          $log.debug("  items !== prevItems");
+        }
+        prevItems = angular.copy(ctrl.items);
+        //$timeout(function () {
+        selectRowsByChecked();
+        //});
+      }
+    };
+
+    ctrl.$postLink = function () {
+      if (ctrl.debug) {
+        $log.debug(" $postLink");
+      }
+    };
+
+    ctrl.$onDestroy = function () {
+      if (ctrl.debug) {
+        $log.debug(" $onDestroy");
+      }
+      ctrl.dtInstance = {};
+    };
+
+    function setColumnDefs () {
+      var i = 0, actnBtns = 1;
+      var item, prop;
+
+      // add checkbox col, not sortable
+      ctrl.dtColumnDefs = [ DTColumnDefBuilder.newColumnDef(i++).notSortable() ];
+      // add column def. for each property of an item
+      item = ctrl.items[0];
+      for (prop in item) {
+        if (item.hasOwnProperty(prop)) {   //need this 'if' for eslint
+          ctrl.dtColumnDefs.push(DTColumnDefBuilder.newColumnDef(i++));
+          // Determine selectionMatchProp column number
+          if (ctrl.config.selectionMatchProp === prop) {
+            ctrl.selectionMatchPropColNum = (i - 1);
+          }
+        }
+      }
+      // add actions col.
+      if (ctrl.actionButtons && ctrl.actionButtons.length > 0) {
+        for (actnBtns = 1; actnBtns <= ctrl.actionButtons.length; actnBtns++) {
+          ctrl.dtColumnDefs.push(DTColumnDefBuilder.newColumnDef(i++).notSortable());
+        }
+      }
+      if (ctrl.menuActions && ctrl.menuActions.length > 0) {
+        ctrl.dtColumnDefs.push(DTColumnDefBuilder.newColumnDef(i++).notSortable());
+      }
+    }
+
+    function listenForDraw () {
+      var oTable;
+      var dtInstance = ctrl.dtInstance;
+      if (dtInstance && dtInstance.dataTable) {
+        oTable = dtInstance.dataTable;
+        ctrl.tableId = oTable[0].id;
+        oTable.on('draw.dt', function () {
+          if (ctrl.debug) {
+            $log.debug("--> redraw");
+          }
+          selectRowsByChecked();
+        });
+      }
+    }
+
+    function validSelectionMatchProp () {
+      var retVal = false, prop;
+      var item = ctrl.items[0];
+      for (prop in item) {
+        if (item.hasOwnProperty(prop)) {   //need this 'if' for eslint
+          if (ctrl.config.selectionMatchProp === prop) {
+            retVal = true;
+          }
+        }
+      }
+      return retVal;
+    }
+    /*
+     *   Checkbox Selections
+     */
+
+    ctrl.toggleAll = function () {
+      var item;
+      var visibleRows = getVisibleRows();
+      angular.forEach(visibleRows, function (row) {
+        item = getItemFromRow(row);
+        if (item.selected !== ctrl.selectAll) {
+          item.selected = ctrl.selectAll;
+          if (ctrl.config && ctrl.config.onCheckBoxChange) {
+            ctrl.config.onCheckBoxChange(item);
+          }
+        }
+      });
+    };
+
+    ctrl.toggleOne = function (item) {
+      if (ctrl.config && ctrl.config.onCheckBoxChange) {
+        ctrl.config.onCheckBoxChange(item);
+      }
+    };
+
+    function getItemFromRow (matchPropValue) {
+      var item, retVals;
+      var filterObj = {};
+      filterObj[ctrl.config.selectionMatchProp] = matchPropValue;
+      retVals = $filter('filter')(ctrl.items, filterObj);
+
+      if (retVals && retVals.length === 1) {
+        item = retVals[0];
+      }
+
+      return item;
+    }
+
+    function selectRowsByChecked () {
+      $timeout(function () {
+        var oTable, rows, checked;
+
+        oTable = ctrl.dtInstance.DataTable;
+
+        if (ctrl.debug) {
+          $log.debug("  selectRowsByChecked");
+        }
+
+        if (angular.isUndefined(oTable)) {
+          return;
+        }
+
+        if (ctrl.debug) {
+          $log.debug("  ...oTable defined");
+        }
+
+        // deselect all
+        rows = oTable.rows();
+        rows.deselect();
+
+        // select those with checked checkboxes
+        rows = oTable.rows( function ( idx, data, node ) {
+          //         row      td     input type=checkbox
+          checked = node.children[0].children[0].checked;
+          return checked;
+        });
+
+        if (ctrl.debug) {
+          $log.debug("   ... #checkedRows = " + rows[0].length);
+        }
+
+        if (rows[0].length > 0) {
+          rows.select();
+        }
+        setSelectAllCheckbox();
+      });
+    }
+
+    function setSelectAllCheckbox () {
+      var numVisibleRows, numCheckedRows;
+
+      if (ctrl.debug) {
+        $log.debug("  setSelectAllCheckbox");
+      }
+
+      numVisibleRows = getVisibleRows().length;
+      numCheckedRows = document.querySelectorAll("#" + ctrl.tableId + " tbody tr.even.selected").length +
+                       document.querySelectorAll("#" + ctrl.tableId + " tbody tr.odd.selected").length;
+      ctrl.selectAll = (numVisibleRows === numCheckedRows);
+    }
+
+    function getVisibleRows () {
+      // Returns an array of visible 'selectionMatchProp' values
+      // Ex. if selectionMatchProp === 'name' & selectionMatchPropColNum === 1 &
+      //        page length === 3
+      //     returns ['Mary Jane', 'Fred Flinstone', 'Frank Livingston']
+      //
+      var i, rowData, visibleRows = new Array();
+      var oTable = ctrl.dtInstance.dataTable;
+
+      var anNodes = document.querySelectorAll("#" + ctrl.tableId + "  tbody tr");
+
+      for (i = 0; i < anNodes.length; ++i) {
+        rowData = oTable.fnGetData(anNodes[i]);
+        if (rowData !== null) {
+          visibleRows.push(rowData[ctrl.selectionMatchPropColNum]);
+        }
+      }
+
+      if (ctrl.debug) {
+        $log.debug("    getVisibleRows (" + visibleRows.length + ")");
+      }
+
+      return visibleRows;
+    }
+
+    /*
+     *   Action Buttons and Menus
+     */
+
+    ctrl.handleButtonAction = function (action, item) {
+      if (action && action.actionFn) {
+        action.actionFn(action, item);
+      }
+    };
+
+    ctrl.isColItemFld = function (key) {
+      var retVal = false;
+      var tableCol = $filter('filter')(ctrl.colummns, {itemField: key});
+
+      if (tableCol && tableCol.length === 1) {
+        retVal = true;
+      }
+
+      return retVal;
+    };
+
+    ctrl.areActions = function () {
+      return (ctrl.actionButtons && ctrl.actionButtons.length > 0) ||
+        (ctrl.menuActions && ctrl.menuActions.length > 0);
+    };
+
+    ctrl.calcActionsColspan = function () {
+      var colspan = 0;
+
+      if (ctrl.actionButtons && ctrl.actionButtons.length > 0) {
+        colspan += ctrl.actionButtons.length;
+      }
+
+      if (ctrl.menuActions && ctrl.menuActions.length > 0) {
+        colspan += 1;
+      }
+
+      return colspan;
+    };
+
+    ctrl.handleMenuAction = function (action, item) {
+      if (!ctrl.checkDisabled(item) && action && action.actionFn && (action.isDisabled !== true)) {
+        action.actionFn(action, item);
+      }
+    };
+
+    ctrl.setupActions = function (item, event) {
+      /* Ignore disabled items completely
+       if (ctrl.checkDisabled(item)) {
+       return;
+       }*/
+
+      // update the actions based on the current item
+      // $scope.updateActions(item);
+
+      $timeout(function () {
+        var parentDiv = undefined;
+        var nextElement;
+
+        nextElement = event.target;
+        while (nextElement && !parentDiv) {
+          if (nextElement.className.indexOf('dropdown-kebab-pf') !== -1) {
+            parentDiv = nextElement;
+            if (nextElement.className.indexOf('open') !== -1) {
+              setDropMenuLocation (parentDiv);
+            }
+          }
+          nextElement = nextElement.parentElement;
+        }
+      });
+    };
+
+    ctrl.checkDisabled = function (item) {
+      return false;
+    };
+
+    function setDropMenuLocation (parentDiv) {
+      var dropButton = parentDiv.querySelector('.dropdown-toggle');
+      var dropMenu =  parentDiv.querySelector('.dropdown-menu');
+      var parentRect = $element[0].getBoundingClientRect();
+      var buttonRect = dropButton.getBoundingClientRect();
+      var menuRect = dropMenu.getBoundingClientRect();
+      var menuTop = buttonRect.top - menuRect.height;
+      var menuBottom = buttonRect.top + buttonRect.height + menuRect.height;
+
+      if ((menuBottom <= parentRect.top + parentRect.height) || (menuTop < parentRect.top)) {
+        ctrl.dropdownClass = 'dropdown';
+      } else {
+        ctrl.dropdownClass = 'dropup';
+      }
+    }
+  }]
+});
+;/**
  * @ngdoc directive
  * @name patternfly.toolbars.componenet:pfToolbar
  * @restrict E
@@ -7164,7 +8218,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
  *   </ul>
  *
  * @example
-<example module="patternfly.toolbars">
+<example module="patternfly.toolbars.demo">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
@@ -7197,11 +8251,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
          </actions>
         </pf-toolbar>
       </div>
-      <hr class="col-md-12">
-      <div class="col-md-12">
-        <label class="events-label">Valid Items: </label>
-      </div>
-      <div class="col-md-12 list-view-container" ng-if="viewType == 'listView'">
+      <div class="col-md-12" ng-if="viewType == 'listView'">
         <pf-list-view config="listConfig" items="items">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
@@ -7221,8 +8271,8 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           </div>
         </pf-list-view>
       </div>
-      <div class="col-md-12 card-view-container" ng-if="viewType == 'cardView'">
-        <pf-card-view config="vm.listConfig" items="items">
+      <div class="col-md-12" ng-if="viewType == 'cardView'">
+        <pf-card-view config="listConfig" items="items">
           <div class="col-md-12">
             <span>{{item.name}}</span>
           </div>
@@ -7234,6 +8284,13 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           </div>
         </pf-card-view>
       </div>
+      <div class="col-md-12" ng-show="viewType == 'tableView'">
+        <pf-table-view config="tableConfig"
+                       colummns="colummns"
+                       items="items">
+        </pf-table-view>
+      </div>
+      <hr class="col-md-12">
       <div class="col-md-12">
         <label class="events-label">Current Filters: </label>
       </div>
@@ -7249,10 +8306,39 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     </div>
   </file>
 
+  <file name="modules.js">
+    angular.module('patternfly.toolbars.demo', ['patternfly.toolbars','patternfly.table']);
+  </file>
+
   <file name="script.js">
-  angular.module('patternfly.toolbars').controller('ViewCtrl', ['$scope', 'pfViewUtils',
-    function ($scope, pfViewUtils) {
+  angular.module('patternfly.toolbars.demo').controller('ViewCtrl', ['$scope', 'pfViewUtils', '$filter',
+    function ($scope, pfViewUtils, $filter) {
       $scope.filtersText = '';
+
+      $scope.colummns = [
+        { header: "Name", itemField: "name" },
+        { header: "Age", itemField: "age"},
+        { header: "Address", itemField: "address" },
+        { header: "BirthMonth", itemField: "birthMonth"}
+      ];
+
+      // attempt to dyamically turn on/off pagination controls
+      // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
+
+      $scope.usePagination = true;
+      $scope.togglePagination = function () {
+        $scope.usePagination = !$scope.usePagination;
+        console.log("---> togglePagination: " + $scope.usePagination);
+        if($scope.usePagination) {
+          $scope.dtOptions.displayLength = 3;
+          $scope.dtOptions.dom = "tp";
+          console.log("---> use pagination: " + $scope.dtOptions.displayLength + ":" + $scope.dtOptions.dom);
+        } else {
+          $scope.dtOptions.displayLength = undefined;
+          $scope.dtOptions.dom = "t";
+        }
+      };
+
 
       $scope.allItems = [
         {
@@ -7284,6 +8370,24 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           age: 19,
           address: "50 Second Street, New York, New York",
           birthMonth: 'February'
+        },
+        {
+          name: "Linda McGovern",
+          age: 32,
+          address: "22 Oak Stree, Denver, Colorado",
+          birthMonth: 'March'
+        },
+        {
+          name: "Jim Brown",
+          age: 55,
+          address: "72 Bourbon Way. Nashville. Tennessee",
+          birthMonth: 'March'
+        },
+        {
+          name: "Holly Nichols",
+          age: 34,
+          address: "21 Jump Street, Hollywood, California",
+          birthMonth: 'March'
         }
       ];
       $scope.items = $scope.allItems;
@@ -7329,7 +8433,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       };
 
       var filterChange = function (filters) {
-      $scope.filtersText = "";
+        $scope.filtersText = "";
         filters.forEach(function (filter) {
           $scope.filtersText += filter.title + " : " + filter.value + "\n";
         });
@@ -7366,18 +8470,21 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           }
         ],
         resultsCount: $scope.items.length,
+        totalCount: $scope.allItems.length,
         appliedFilters: [],
         onFilterChange: filterChange
       };
 
       var viewSelected = function(viewId) {
-        $scope.viewType = viewId
+        $scope.viewType = viewId;
+        $scope.sortConfig.show = ($scope.viewType === "tableView" ? false : true);
       };
 
       $scope.viewsConfig = {
-        views: [pfViewUtils.getListView(), pfViewUtils.getCardView()],
+        views: [pfViewUtils.getListView(), pfViewUtils.getCardView(), pfViewUtils.getTableView()],
         onViewSelect: viewSelected
       };
+
       $scope.viewsConfig.currentView = $scope.viewsConfig.views[0].id;
       $scope.viewType = $scope.viewsConfig.currentView;
 
@@ -7494,8 +8601,8 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           },
           {
             name: 'Grouped Action 2',
-            title: 'Do something similar',
-            actionFn: performAction
+            actionFn: performAction,
+            title: 'Do something similar'
           }
         ],
         actionsInclude: true
@@ -7510,15 +8617,29 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
       $scope.listConfig = {
         selectionMatchProp: 'name',
-        checkDisabled: false
+        checkDisabled: false,
+        onCheckBoxChange: handleCheckBoxChange
+      };
+
+      $scope.tableConfig = {
+        onCheckBoxChange: handleCheckBoxChange,
+        selectionMatchProp: "name"
       };
 
       $scope.doAdd = function () {
         $scope.actionsText = "Add Action\n" + $scope.actionsText;
       };
+
       $scope.optionSelected = function (option) {
         $scope.actionsText = "Option " + option + " selected\n" + $scope.actionsText;
       };
+
+      function handleCheckBoxChange (item) {
+        var selectedItems = $filter('filter')($scope.allItems, {selected: true});
+        if (selectedItems) {
+          $scope.toolbarConfig.filterConfig.selectedCount = selectedItems.length;
+        }
+      }
     }
   ]);
   </file>
@@ -7539,6 +8660,11 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     var prevConfig;
 
     ctrl.$onInit = function () {
+      if (angular.isDefined(ctrl.config.sortConfig) && angular.isUndefined(ctrl.config.sortConfig.show)) {
+        // default to true
+        ctrl.config.sortConfig.show = true;
+      }
+
       angular.extend(ctrl, {
         viewSelected: viewSelected,
         isViewSelected: isViewSelected,
@@ -10327,7 +11453,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
 
   $templateCache.put('filters/filter-results.html',
-    "<div class=filter-pf><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{$ctrl.config.resultsCount}} Results</h5><p ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a><span class=\"pficon pficon-close\" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p></div><!-- /col --></div><!-- /row --></div>"
+    "<div class=filter-pf><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{$ctrl.config.resultsCount}} Results</h5><p ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a><span class=\"pficon pficon-close\" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p><div ng-if=\"$ctrl.config.totalCount !== 0\" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div><!-- /col --></div><!-- /row --></div>"
   );
 
 
@@ -10450,11 +11576,19 @@ angular.module('patternfly.wizard').component('pfWizard', {
   );
 
 }]);
+;angular.module('patternfly.table').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('table/tableview/table-view.html',
+    "<table datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.colummns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)>{{ value }}</td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table>"
+  );
+
+}]);
 ;angular.module('patternfly.toolbars').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('toolbars/toolbar.html',
-    "<div class=container-fluid><div class=\"row toolbar-pf\"><div class=col-sm-12><form class=toolbar-pf-actions ng-class=\"{'no-filter-results': !$ctrl.config.filterConfig}\"><div class=\"form-group toolbar-apf-filter\"><pf-filter-fields config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig add-filter-fn=$ctrl.addFilter></pf-filter-fields></div><div class=form-group><pf-sort config=$ctrl.config.sortConfig ng-if=$ctrl.config.sortConfig></pf-sort></div><div class=\"form-group toolbar-actions\" ng-if=\"$ctrl.config.actionsConfig &&\n" +
+    "<div class=container-fluid><div class=\"row toolbar-pf\"><div class=col-sm-12><form class=toolbar-pf-actions ng-class=\"{'no-filter-results': !$ctrl.config.filterConfig}\"><div class=\"form-group toolbar-apf-filter\"><pf-filter-fields config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig add-filter-fn=$ctrl.addFilter></pf-filter-fields></div><div class=form-group><pf-sort config=$ctrl.config.sortConfig ng-if=\"$ctrl.config.sortConfig && $ctrl.config.sortConfig.show\"></pf-sort></div><div class=\"form-group toolbar-actions\" ng-if=\"$ctrl.config.actionsConfig &&\n" +
     "                   (($ctrl.config.actionsConfig.primaryActions && $ctrl.config.actionsConfig.primaryActions.length > 0) ||\n" +
     "                    ($ctrl.config.actionsConfig.moreActions && $ctrl.config.actionsConfig.moreActions.length > 0) ||\n" +
     "                    $ctrl.config.actionsConfig.actionsInclude)\"><button class=\"btn btn-default primary-action\" type=button ng-repeat=\"action in $ctrl.config.actionsConfig.primaryActions\" title={{action.title}} ng-click=$ctrl.handleAction(action) ng-disabled=\"action.isDisabled === true\">{{action.name}}</button><div ng-if=$ctrl.config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div uib-dropdown class=dropdown-kebab-pf ng-if=\"$ctrl.config.actionsConfig.moreActions && $ctrl.config.actionsConfig.moreActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat=\"action in $ctrl.config.actionsConfig.moreActions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\"><a ng-if=\"action.isSeparator !== true\" class=secondary-action title={{action.title}} ng-click=$ctrl.handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=toolbar-pf-action-right><div class=\"form-group toolbar-pf-view-selector\" ng-if=\"$ctrl.config.viewsConfig && $ctrl.config.viewsConfig.views\"><button ng-repeat=\"view in $ctrl.config.viewsConfig.viewsList\" class=\"btn btn-link\" ng-class=\"{'active': $ctrl.isViewSelected(view.id), 'disabled': $ctrl.checkViewDisabled(view)}\" title={{view.title}} ng-click=$ctrl.viewSelected(view.id)><i class={{view.iconClass}}></i></button></div></div></form><pf-filter-results config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig></pf-filter-results></div></div></div>"
