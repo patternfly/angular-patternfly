@@ -56,7 +56,7 @@ angular.module('patternfly.form').directive('pfDatepicker', function () {
       element.datepicker('update', $scope.date);
 
       //Change happened on the date picker side. Update the underlying date model
-      element.datepicker($scope.date).on('changeDate', function (elem) {
+      element.datepicker($scope.date).on('changeDate clearDate', function (elem) {
         $scope.$apply(function () {
           $scope.date = elem.date;
         });
@@ -64,8 +64,15 @@ angular.module('patternfly.form').directive('pfDatepicker', function () {
 
       //Update the date picker if there is a change on the date model
       $scope.$watch('date', function (newValue, oldValue) {
+        var elemDate;
         if (oldValue !== newValue) {
-          element.datepicker('update', newValue);
+          elemDate = element.datepicker('getDate');
+          if (!elemDate || !newValue || elemDate.getTime() !== newValue.getTime()) {
+            //Update date picker value only when there is a change
+            //to avoid resetting when a wrong date is typed
+            //into input.
+            element.datepicker('update', newValue);
+          }
         }
       });
     }
