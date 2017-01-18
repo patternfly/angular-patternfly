@@ -2750,8 +2750,6 @@ fieldset[disabled] .combobox-container .input-group-addon.active {
 }
 .close {
   text-shadow: none;
-  z-index: 1;
-  position: relative;
   opacity: 0.6;
   filter: alpha(opacity=60);
 }
@@ -3604,8 +3602,6 @@ a.disabled {
 }
 .list-view-pf-stacked .list-view-pf-description {
   display: block;
-  -ms-flex: none;
-      flex: none;
 }
 @media (min-width: 992px) {
   .list-view-pf-description {
