@@ -60,14 +60,6 @@ hr {
   padding-top: 2px;
 }
 
-.list-view-container span {
-  padding-left: 5px;
-}
-
-.list-view-container .fa {
-  padding-left: 0px;
-}
-
 .card-view-container {
   border: 1px solid #000000;
   margin: 10px;
