@@ -20,6 +20,7 @@
  * <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
  * <li>.selectedItems          - (array) Current set of selected items
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
  * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
@@ -50,13 +51,16 @@
  * @param {function (item))} menuClassForItemFn function(item) Used to specify a class for an item's dropdown kebab
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
  * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via customScope.<xxx>
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12 list-view-container example-list-view">
         <pf-list-view id="exampleListView"
-                          config="config" items="items"
+                          config="config"
+                          empty-state-config="emptyStateConfig"
+                          items="items"
                           action-buttons="actionButtons"
                           enable-button-for-item-fn="enableButtonForItemFn"
                           menu-actions="menuActions"
@@ -149,6 +153,9 @@
            <label class="checkbox-inline">
               <input type="checkbox" ng-model="config.useExpandingRows">Show Expanding Rows</input>
            </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+           </label>
           </div>
         </form>
       </div>
@@ -227,6 +234,7 @@
          dblClick: false,
          selectionMatchProp: 'name',
          selectedItems: [],
+         itemsAvailable: true,
          checkDisabled: checkDisabledItem,
          showSelectBox: true,
          useExpandingRows: false,
@@ -235,6 +243,17 @@
          onCheckBoxChange: handleCheckBoxChange,
          onClick: handleClick,
          onDblClick: handleDblClick
+        };
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
         };
 
         $scope.items = [
@@ -394,7 +413,8 @@ angular.module('patternfly.views').component('pfListView', {
     updateMenuActionForItemFn: '=?',
     actions: '=?',
     updateActionForItemFn: '=?',
-    customScope: '=?'
+    customScope: '=?',
+    emptyStateConfig: '=?'
   },
   transclude: {
     expandedContent: '?listExpandedContent'

@@ -512,3 +512,12 @@ table.dataTable tbody th, table.dataTable tbody td {
 .table-view-pf-select {
   width: 13px;
 }
+
+.blank-slate-pf {
+  height:100%;
+  margin-bottom: 0px;
+}
+
+.blank-slate-pf button {
+  margin-right: 4px;
+}
