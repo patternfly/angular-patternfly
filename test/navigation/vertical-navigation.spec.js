@@ -713,11 +713,13 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
     $stateProvider.state('state0', {
       url: "/state0",
       controller: 'Controller0',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      template: '<!-- -->'
     }).state('state1', {
       url: "/state1",
       controller: 'Controller1',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      template: '<!-- -->'
     });
   });
 
@@ -756,7 +758,7 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
         title: "Dashboard",
         iconClass: "fa fa-dashboard",
         uiSref: 'state1',
-        uiSrefOptions: 'testing'
+        uiSrefOptions: {name: "testing"}
       },
       {
         title: "Dolor",
@@ -806,7 +808,7 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
     // Click dashboard item
     wellDefinedItem.click();
 
-    expect($state.go).toHaveBeenCalledWith('state1','testing');
+    expect($state.go).toHaveBeenCalledWith('state1',{name: "testing"});
 
     // Checking successful state transition
     expect($state.current.name).toBe("state1");
