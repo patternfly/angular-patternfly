@@ -132,6 +132,8 @@ module.exports = function (grunt) {
             'node_modules/c3/c3.js',
             'node_modules/d3/d3.js',
             'node_modules/patternfly/dist/js/patternfly-settings.js',
+            'node_modules/patternfly/dist/js/patternfly-settings-colors.js',
+            'node_modules/patternfly/dist/js/patternfly-settings-charts.js',
             'node_modules/angular/angular.js',
             'node_modules/angular-datatables/dist/angular-datatables.min.js',
             'node_modules/angular-datatables/dist/plugins/select/angular-datatables.select.min.js',
