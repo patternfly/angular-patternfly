@@ -12,7 +12,7 @@
  *   <li>.title  - (string) Text for the main title
  *   <li>.info  - (string) Text for the main informational paragraph
  * </ul>
- * @param {array} actionButtons to display under the icon, title, and informational paragraph.
+ * @param {array} actionButtons Buttons to display under the icon, title, and informational paragraph.
  *   <ul style='list-style-type: none'>
  *     <li>.name - (String) The name of the action, displayed on the button
  *     <li>.title - (String) Optional title, used for the tooltip

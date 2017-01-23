@@ -623,7 +623,10 @@ angular.module('patternfly.views').component('pfListView', {
     };
 
     ctrl.$onInit = function () {
-      ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Setting bound variables to new variables loses it's binding
+      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Instead, use _.defaults to update the existing variable
+      _.defaults(ctrl.config, ctrl.defaultConfig);
       if (!ctrl.config.selectItems) {
         ctrl.config.selectedItems = [];
       }

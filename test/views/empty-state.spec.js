@@ -91,7 +91,7 @@ describe('Component:  pfEnptyState', function () {
 
     expect(element.find('#title').text()).toContain('No Items Available');
 
-    expect(element.find('.pficon-add-circle-o').length).toBe(0);
+    expect(element.find('.blank-slate-pf-icon').length).toBe(0);
     expect(element.find('#info').length).toBe(0);
     expect(element.find('#helpLink').length).toBe(0);
     expect(element.find('button').length).toBe(0);
