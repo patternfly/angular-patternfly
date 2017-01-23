@@ -396,6 +396,8 @@ NG_DOCS={
     "c3.js",
     "d3.js",
     "patternfly-settings.js",
+    "patternfly-settings-colors.js",
+    "patternfly-settings-charts.js",
     "angular.js",
     "angular-datatables.min.js",
     "angular-datatables.select.min.js",

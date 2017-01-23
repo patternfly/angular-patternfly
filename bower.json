@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "authors": [
     "Red Hat"
   ],
@@ -45,7 +45,7 @@
     "angular-datatables": "^0.5.6",
     "datatables.net": "^1.10.12",
     "datatables.net-select": "~1.2.0",
-    "patternfly": "~4.0.0-alpha.1"
+    "patternfly": "~4.0.0-alpha.2"
   },
   "devDependencies": {
     "angular-mocks": "1.5.*",
