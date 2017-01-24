@@ -90,8 +90,8 @@
              <input type="checkbox" ng-model="showDisabled">Show Disabled Cards</input>
            </label>
            <label class="checkbox-inline">
- +           <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
- +         </label>
+             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+           </label>
          </div>
        </form>
      </div>
@@ -217,7 +217,7 @@ angular.module('patternfly.views').component('pfCardView', {
   },
   transclude: true,
   templateUrl: 'views/cardview/card-view.html',
-  controller: function (pfUtils, $log) {
+  controller: function () {
     'use strict';
     var ctrl = this;
     ctrl.defaultConfig = {

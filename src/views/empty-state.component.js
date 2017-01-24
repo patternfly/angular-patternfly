@@ -116,7 +116,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
       }
     };
 
-    ctrl.areMainActions = function () {
+    ctrl.hasMainActions = function () {
       var mainActions;
 
       if (ctrl.actionButtons) {
@@ -127,7 +127,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
       return false;
     };
 
-    ctrl.areSecondaryActions = function () {
+    ctrl.hasSecondaryActions = function () {
       var secondaryActions;
 
       if (ctrl.actionButtons) {

@@ -420,7 +420,7 @@ angular.module('patternfly.views').component('pfListView', {
     expandedContent: '?listExpandedContent'
   },
   templateUrl: 'views/listview/list-view.html',
-  controller: function ($timeout, $window, $element, pfUtils) {
+  controller: function ($timeout, $window, $element) {
     'use strict';
     var ctrl = this;
 
