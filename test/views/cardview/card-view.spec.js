@@ -5,7 +5,7 @@ describe('Component:  pfCardView', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.views', 'patternfly.utils', 'views/cardview/card-view.html');
+    module('patternfly.views', 'patternfly.utils', 'views/cardview/card-view.html', 'views/empty-state.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -219,5 +219,11 @@ describe('Component:  pfCardView', function () {
       exceptionRaised = true;
     }
     expect(exceptionRaised).toBe(true);
+  });
+
+  it('should show the empty state when specified', function () {
+    $scope.cardConfig.itemsAvailable = false;
+    $scope.$digest();
+    expect(element.find('#title').text()).toContain('No Items Available');
   });
 })

@@ -7,7 +7,7 @@ describe('Component:  pfDataList', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.views', 'patternfly.utils', 'views/listview/list-view.html');
+    module('patternfly.views', 'patternfly.utils', 'views/listview/list-view.html', 'views/empty-state.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
@@ -540,5 +540,11 @@ describe('Component:  pfDataList', function () {
     // Make sure one item is hiding the expansion action (based on the item settings above)
     items = element.find('.list-view-pf-expand .fa-angle-right.ng-hide');
     expect(items.length).toBe(1);
+  });
+
+  it('should show the empty state when specified', function () {
+    $scope.listConfig.itemsAvailable = false;
+    $scope.$digest();
+    expect(element.find('#title').text()).toContain('No Items Available');
   });
 });
