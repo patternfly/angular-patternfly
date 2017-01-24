@@ -50,20 +50,18 @@
         </pf-table-view>
       </div>
       <div class="col-md-12">
-        <form role="form"
-          <div class="form-group">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+          </label>
+          <!-- //[WIP] issues dynamically changing displayLength and turning on/off pagination
             <label class="checkbox-inline">
-              <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+              <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
             </label>
-            <!-- //[WIP] issues dynamically changing displayLength and turning on/off pagination
-              <label class="checkbox-inline">
-                <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
-              </label>
-              <label>
-                <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
-              </label> --!>
-          </div>
-        </form>
+            <label>
+              <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
+            </label> --!>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">

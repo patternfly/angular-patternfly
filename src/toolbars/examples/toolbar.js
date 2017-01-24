@@ -124,13 +124,11 @@
         </pf-table-view>
       </div>
       <div class="col-md-12" style="padding-top: 12px;">
-        <form role="form"
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="listConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
-            </label>
-          </div>
-        </form>
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="listConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+          </label>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
