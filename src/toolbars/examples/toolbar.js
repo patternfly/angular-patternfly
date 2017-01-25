@@ -80,7 +80,9 @@
         </pf-toolbar>
       </div>
       <div class="col-md-12" ng-if="viewType == 'listView'">
-        <pf-list-view config="listConfig" items="items">
+        <pf-list-view config="listConfig"
+                      items="items"
+                      empty-state-config="emptyStateConfig">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
               {{item.name}}
@@ -100,7 +102,9 @@
         </pf-list-view>
       </div>
       <div class="col-md-12" ng-if="viewType == 'cardView'">
-        <pf-card-view config="listConfig" items="items">
+        <pf-card-view config="listConfig"
+                      items="items"
+                      empty-state-config="emptyStateConfig">
           <div class="col-md-12">
             <span>{{item.name}}</span>
           </div>
@@ -115,8 +119,16 @@
       <div class="col-md-12" ng-show="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
                        colummns="colummns"
-                       items="items">
+                       items="items"
+                       empty-state-config="emptyStateConfig">
         </pf-table-view>
+      </div>
+      <div class="col-md-12" style="padding-top: 12px;">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="listConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+          </label>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -446,12 +458,25 @@
       $scope.listConfig = {
         selectionMatchProp: 'name',
         checkDisabled: false,
+        itemsAvailable: true,
         onCheckBoxChange: handleCheckBoxChange
+      };
+
+      $scope.emptyStateConfig = {
+        icon: 'pficon-warning-triangle-o',
+        title: 'No Items Available',
+        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+        helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+        }
       };
 
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
-        selectionMatchProp: "name"
+        selectionMatchProp: "name",
+        itemsAvailable: true,
       };
 
       $scope.doAdd = function () {
@@ -460,6 +485,19 @@
 
       $scope.optionSelected = function (option) {
         $scope.actionsText = "Option " + option + " selected\n" + $scope.actionsText;
+      };
+
+      $scope.updateItemsAvailable = function () {
+        $scope.tableConfig.itemsAvailable = $scope.listConfig.itemsAvailable;
+        if(!$scope.listConfig.itemsAvailable) {
+          $scope.toolbarConfig.filterConfig.resultsCount = 0;
+          $scope.toolbarConfig.filterConfig.totalCount = 0;
+          $scope.toolbarConfig.filterConfig.selectedCount = 0;
+       } else {
+          $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+          $scope.toolbarConfig.filterConfig.totalCount = $scope.allItems.length;
+          handleCheckBoxChange();
+        }
       };
 
       function handleCheckBoxChange (item) {

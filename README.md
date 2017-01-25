@@ -79,14 +79,15 @@ Note:
         <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/c3/c3.min.js"></script>
         <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/d3/d3.min.js"></script>
 
-5. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
-   In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application:
+5. (optional) The 'patternfly.charts' and 'patternfly.table' modules are not dependencies in the default angular 'patternfly' module.
+   In order to use patternfly charts and/or patternfly.table, you must add them as dependencies in your application:
 
         my-app.module.js:
 
         angular.module('myApp', [
           'patternfly',
-          'patternfly.charts'
+          'patternfly.charts',
+          'patternfly.table'
         ]);
 
 ### Using with Webpack

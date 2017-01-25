@@ -8,8 +8,9 @@
  *
  * @param {object} config Optional configuration object
  * <ul style='list-style-type: none'>
- *   <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
- *   <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+ *   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is 'uuid'
+ *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+ *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * </ul>
  * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
  * @param {array} items Array of items to display in the table view.
@@ -30,6 +31,7 @@
  *     <li>.title - (String) Optional title, used for the tooltip
  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
  *   </ul>
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.tableview.demo">
   <file name="index.html">
@@ -39,22 +41,27 @@
       </div>
       <div class="col-md-12">
         <pf-table-view config="tableConfig"
+                       empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
                        colummns="colummns"
                        items="items"
                        action-buttons="tableActionButtons"
                        menu-actions="tableMenuActions">
         </pf-table-view>
-        <!-- form role="form"    //[WIP] issues dynamically changing displayLength and turning on/off pagination >
-          <div class="form-group">
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+          </label>
+          <!-- //[WIP] issues dynamically changing displayLength and turning on/off pagination
             <label class="checkbox-inline">
               <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
             </label>
             <label>
               <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
-            </label>
-          </div>
-        </form --!>
+            </label> --!>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -379,7 +386,19 @@
 
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
-        selectionMatchProp: "name"
+        selectionMatchProp: "name",
+        itemsAvailable: true
+      };
+
+      $scope.emptyStateConfig = {
+        icon: 'pficon-warning-triangle-o',
+        title: 'No Items Available',
+        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+        helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+        }
       };
 
       $scope.tableActionButtons = [
@@ -426,6 +445,18 @@
           actionFn: performTableAction
         }
       ];
+
+      $scope.updateItemsAvailable = function () {
+        if(!$scope.tableConfig.itemsAvailable) {
+          $scope.toolbarConfig.filterConfig.resultsCount = 0;
+          $scope.toolbarConfig.filterConfig.totalCount = 0;
+          $scope.toolbarConfig.filterConfig.selectedCount = 0;
+       } else {
+          $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+          $scope.toolbarConfig.filterConfig.totalCount = $scope.allItems.length;
+          handleCheckBoxChange();
+        }
+      };
     }
   ]);
   </file>

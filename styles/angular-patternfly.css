@@ -512,3 +512,14 @@ table.dataTable tbody th, table.dataTable tbody td {
 .table-view-pf-select {
   width: 13px;
 }
+
+/* overriding pf base so that blank slate fills entire parent container */
+.blank-slate-pf {
+  height:100%;
+  margin-bottom: 0px;
+}
+
+/* overriding pf base so that buttons have spaces between them */
+.blank-slate-pf button {
+  margin-right: 4px;
+}
