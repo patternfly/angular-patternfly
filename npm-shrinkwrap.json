@@ -12,6 +12,12 @@
       "from": "angular-animate@>=1.3.0 <1.6.0",
       "resolved": "https://registry.npmjs.org/angular-animate/-/angular-animate-1.5.11.tgz"
     },
+    "angular-drag-and-drop-lists": {
+      "version": "2.0.0",
+      "from": "angular-drag-and-drop-lists@2.0.0",
+      "resolved": "https://registry.npmjs.org/angular-drag-and-drop-lists/-/angular-drag-and-drop-lists-2.0.0.tgz",
+      "optional": true
+    },
     "angular-sanitize": {
       "version": "1.5.11",
       "from": "angular-sanitize@>=1.3.0 <1.6.0",
@@ -29,8 +35,8 @@
     },
     "patternfly": {
       "version": "3.18.1",
-      "from": "patternfly@>=3.18.1 <3.19.0",
-      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-3.18.1.tgz",
+      "from": "git+https://git@github.com/patternfly/patternfly.git#list-view-dnd-dist",
+      "resolved": "git+https://git@github.com/patternfly/patternfly.git#e4266bf27c00739042c92b54b37a70ca9b533ff4",
       "dependencies": {
         "bootstrap": {
           "version": "3.3.7",

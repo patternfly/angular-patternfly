@@ -142,10 +142,11 @@ module.exports = function (grunt) {
             'misc/angular-bootstrap-prettify.js',
             'lib/lodash/lodash.min.js',
             'dist/angular-patternfly.js',
-            'lib/angular-ui-router/release/angular-ui-router.min.js'],
+            'lib/angular-ui-router/release/angular-ui-router.min.js',
+            'node_modules/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js'],
           html5Mode: false,
           template: 'grunt-ngdocs-index.tmpl',
-          styles: ['lib/patternfly/dist/css/patternfly.css', 'lib/patternfly/dist/css/patternfly-additions.css',
+          styles: ['node_modules/patternfly/dist/css/patternfly.css', 'node_modules/patternfly/dist/css/patternfly-additions.css',
             'dist/styles/angular-patternfly.css', 'misc/ng-docs.css', 'misc/examples.css']
         },
 

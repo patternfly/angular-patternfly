@@ -13,7 +13,7 @@
     "angular-sanitize": "1.3.0 - 1.5.*",
     "angular-ui-bootstrap": "0.14.x",
     "lodash": "3.x",
-    "patternfly": "~3.18.1"
+    "patternfly": "git+https://git@github.com/patternfly/patternfly#list-view-dnd-dist"
   },
   "devDependencies": {
     "express": "3.4.4",
@@ -44,6 +44,9 @@
     "matchdep": "0.3.0",
     "nsp": "^2.6.1",
     "patternfly-eng-release": "~3.18.1"
+  },
+  "optionalDependencies": {
+    "angular-drag-and-drop-lists": "2.0.0"
   },
   "scripts": {
     "test": "grunt test"
