@@ -112,6 +112,38 @@ Note:
         <script src="node_modules/angular-datatables/dist/angular-datatables.min.js"></script>
         <script src="node_modules/angular-datatables/dist/plugins/select/angular-datatables.select.min.js"></script>
 
+7. (optional) The 'patternfly.canvas' module is not a dependency in the default angular 'patternfly' module.
+   In order to use pfCanvasEditor or pfCanvas, you must add 'patternfly.canvas' as a dependency in your application:
+
+        my-app.module.js:
+
+        angular.module('myApp', [
+          'patternfly',
+          'patternfly.canvas'
+        ]);
+
+   Add the following Javascript includes to your HTML file(s):
+
+        <!-- jquery before angular.js -->
+        <script src="node_modules/jquery/dist/jquery.js"></script>
+        <script src="node_modules/components-jqueryui/jquery-ui.min.js"></script>
+
+        <script src="node_modules/angular/angular.js"></script>
+
+        <!-- angular-dragdrop after angular.js -->
+        <script src="node_modules/angular-dragdrop/src/angular-dragdrop.js"></script>
+
+   Also, the canvas background grid image is located in 'node_modules/angular-patternfly/dist/imgs/canvas-dot-grid.png'
+   please copy this image to your application's main images directory and reference it by overridding the '.canvas' css
+   class:
+
+         <style>
+             .canvas {
+                 background-image: url('/myapp/imgs/canvas-dot-grid.png');
+                 background-repeat: repeat;
+             }
+         </style>
+
 ### Using with Webpack
 
 In order to use Angular-Patternfly in a Webpack-bundled application there are some things you need to keep in mind:
