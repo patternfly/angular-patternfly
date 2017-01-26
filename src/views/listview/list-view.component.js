@@ -16,6 +16,10 @@
  * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
  * <li>.selectItems            - (boolean) Allow row selection, default is false
  * <li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
+ * <li>.dragEnabled            - (boolean) Enable drag and drop. Default is false.
+ * <li>.dragEnd                - ( function() ) Function to call when the drag operation ended, default is none
+ * <li>.dragMoved              - ( function() ) Function to call when the drag operation moved an element, default is none
+ * <li>.dragStart              - ( function(item) ) Function to call when the drag operation started, default is none
  * <li>.multiSelect            - (boolean) Allow multiple row selections, selectItems must also be set, not applicable when dblClick is true. Default is false
  * <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
@@ -160,6 +164,15 @@
         </form>
       </div>
       <div class="col-md-12">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="config.dragEnabled">Drag and Drop</input>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-12">
         <label style="font-weight:normal;vertical-align:center;">Events: </label>
       </div>
       <div class="col-md-12">
@@ -190,6 +203,28 @@
 
         var checkDisabledItem = function(item) {
           return $scope.showDisabled && (item.name === "John Smith");
+        };
+
+        var dragEnd = function() {
+          $scope.eventText = 'drag end\r\n' + $scope.eventText;
+        };
+        var dragMoved = function() {
+          var index = -1;
+
+          for (var i = 0; i < $scope.items.length; i++) {
+            if ($scope.items[i] === $scope.dragItem) {
+              index = i;
+              break;
+            }
+          }
+          if (index >= 0) {
+            $scope.items.splice(index, 1);
+          }
+          $scope.eventText = 'drag moved\r\n' + $scope.eventText;
+        };
+        var dragStart = function(item) {
+          $scope.dragItem = item;
+          $scope.eventText = item.name + ': drag start\r\n' + $scope.eventText;
         };
 
         $scope.enableButtonForItemFn = function(action, item) {
@@ -232,6 +267,10 @@
          selectItems: false,
          multiSelect: false,
          dblClick: false,
+         dragEnabled: false,
+         dragEnd: dragEnd,
+         dragMoved: dragMoved,
+         dragStart: dragStart,
          selectionMatchProp: 'name',
          selectedItems: [],
          itemsAvailable: true,
@@ -444,6 +483,10 @@ angular.module('patternfly.views').component('pfListView', {
       selectItems: false,
       multiSelect: false,
       dblClick: false,
+      dragEnabled: false,
+      dragEnd: null,
+      dragMoved: null,
+      dragStart: null,
       selectionMatchProp: 'uuid',
       selectedItems: [],
       checkDisabled: false,
@@ -637,6 +680,30 @@ angular.module('patternfly.views').component('pfListView', {
         throw new Error('pfListView - ' +
           'Illegal use of pListView component! ' +
           'Cannot allow both select box and click selection in the same list view.');
+      }
+    };
+
+    ctrl.dragEnd = function () {
+      if (ctrl.config.dragEnd) {
+        ctrl.config.dragEnd();
+      }
+    };
+
+    ctrl.dragMoved = function () {
+      if (ctrl.config.dragMoved) {
+        ctrl.config.dragMoved();
+      }
+    };
+
+    ctrl.isDragOriginal = function (item) {
+      return (item === ctrl.dragItem);
+    };
+
+    ctrl.dragStart = function (item) {
+      ctrl.dragItem = item;
+
+      if (ctrl.config.dragStart) {
+        ctrl.config.dragStart(item);
       }
     };
   }
