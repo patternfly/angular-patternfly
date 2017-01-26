@@ -79,16 +79,38 @@ Note:
         <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/c3/c3.min.js"></script>
         <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/d3/d3.min.js"></script>
 
-5. (optional) The 'patternfly.charts' and 'patternfly.table' modules are not dependencies in the default angular 'patternfly' module.
-   In order to use patternfly charts and/or patternfly.table, you must add them as dependencies in your application:
+5. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
+   In order to use patternfly charts you must add it as a dependency in your application:
 
         my-app.module.js:
 
         angular.module('myApp', [
           'patternfly',
-          'patternfly.charts',
+          'patternfly.charts'
+        ]);
+
+6. (optional) The 'patternfly.table' module is not a dependency in the default angular 'patternfly' module.
+   In order to use pfTableView, you must add 'patternfly.table' as a dependency in your application:
+
+        my-app.module.js:
+
+        angular.module('myApp', [
+          'patternfly',
           'patternfly.table'
         ]);
+
+   Add the following CSS includes to your HTML file(s):
+
+        <!-- Place before any patternfly css -->
+        <link rel="stylesheet" href="node_modules/datatables.net-dt/css/jquery.dataTables.css" />
+
+   Add the following Javascript includes to your HTML file(s):
+
+        <script src="node_modules/jquery/dist/jquery.js"></script>
+        <script src="node_modules/datatables.net/js/jquery.dataTables.js"></script>
+        <script src="node_modules/datatables.net-select/js/dataTables.select.js"></script>
+        <script src="node_modules/angular-datatables/dist/angular-datatables.min.js"></script>
+        <script src="node_modules/angular-datatables/dist/plugins/select/angular-datatables.select.min.js"></script>
 
 ### Using with Webpack
 

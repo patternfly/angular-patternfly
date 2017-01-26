@@ -65,12 +65,6 @@ module.exports = function (grunt) {
           dest: 'docs',
           expand: true
         },
-        styles: {
-          cwd: 'styles/',
-          src: ['*.css', '!*.min.css'],
-          dest: 'dist/styles',
-          expand: true
-        },
         img: {
           cwd: 'misc/',
           src: 'patternfly-orb.svg',
@@ -84,11 +78,22 @@ module.exports = function (grunt) {
           expand: true
         }
       },
+      less: {
+        patternfly: {
+          files: {
+            'dist/styles/angular-patternfly.css': 'styles/angular-patternfly.less'
+          },
+          options: {
+            paths: ['src/less/'],
+            strictMath: true
+          }
+        }
+      },
       cssmin: {
         target: {
           files: [{
             expand: true,
-            cwd: 'styles',
+            cwd: 'dist/styles',
             src: ['*.css', '!*.min.css'],
             dest: 'dist/styles',
             ext: '.min.css'
@@ -265,6 +270,10 @@ module.exports = function (grunt) {
           files: ['Gruntfile.js'],
           tasks: ['eslint']
         },
+        less: {
+          files: ['**/*.less'],
+          tasks: ['less']
+        },
         test: {
           files: ['test/**/*.js'],
           tasks: ['test']
@@ -279,7 +288,7 @@ module.exports = function (grunt) {
       }
     });
 
-    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:styles', 'copy:img']);
+    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:img']);
 
     // You can specify which modules to build as arguments of the build task.
     grunt.registerTask('build', 'Create bootstrap build files', function () {
@@ -299,13 +308,13 @@ module.exports = function (grunt) {
         concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
     });
 
     // Runs all the tasks of build with the exception of tests
     grunt.registerTask('deploy', 'Prepares the project for deployment. Does not run unit tests', function () {
       var concatSrc = 'src/**/*.js';
-      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);
