@@ -31,7 +31,8 @@ module.exports = function(config) {
       'test/wizard/script.js',
       'test/**/*.spec.js',
       'test/**/*.html',
-      'lib/angular-ui-router/release/angular-ui-router.min.js'
+      'lib/angular-ui-router/release/angular-ui-router.min.js',
+      'node_modules/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js'
     ],
 
     // list of files to exclude
