@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/a35c783/src/views/listview/list-view.component.js#L385" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/80e950a/src/views/listview/list-view.component.js#L404" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -20,7 +20,8 @@ If using expanding rows, use a list-expanded-content element containing expandab
        hide-menu-for-item-fn="{function (item))}"
        menu-class-for-item-fn="{function (item))}"
        update-menu-action-for-item-fn="{function (action, item))}"
-       custom-scope="{object}"&gt;
+       custom-scope="{object}"
+       empty-state-config="{object}"&gt;
 &lt;/pf-list-view&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Array of items to display in the list view. If an item in the array has a &#39;rowClass&#39; field, the value of this field will be used as a class specified on the row (list-group-item).</p>
 </div></td></tr><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Configuration settings for the list view:</p>
@@ -32,6 +33,7 @@ If using expanding rows, use a list-expanded-content element containing expandab
 <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
 <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
 <li>.selectedItems          - (array) Current set of selected items
+<li>.itemsAvailable         - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
 <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
 <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
 <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
@@ -59,17 +61,20 @@ If using expanding rows, use a list-expanded-content element containing expandab
 </div></td></tr><tr><td>menuClassForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (item)</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>function(item) Used to specify a class for an item&#39;s dropdown kebab</p>
 </div></td></tr><tr><td>updateMenuActionForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>function(action, item) Used to update a menu action based on the current item</p>
 </div></td></tr><tr><td>customScope</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Object containing any variables/functions used by the transcluded html, access via customScope.<xxx></p>
+</div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils script.js" source-edit-html="index.html-67" source-edit-css="" source-edit-js="script.js-68" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils script.js" source-edit-html="index.html-69" source-edit-css="" source-edit-js="script.js-70" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-67" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils script.js"></pre>
-<script type="text/ng-template" id="index.html-67">
+<pre class="prettyprint linenums" ng-set-text="index.html-69" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils script.js"></pre>
+<script type="text/ng-template" id="index.html-69">
   <div ng-controller="ViewCtrl" class="row example-container">
     <div class="col-md-12 list-view-container example-list-view">
       <pf-list-view id="exampleListView"
-                        config="config" items="items"
+                        config="config"
+                        empty-state-config="emptyStateConfig"
+                        items="items"
                         action-buttons="actionButtons"
                         enable-button-for-item-fn="enableButtonForItemFn"
                         menu-actions="menuActions"
@@ -162,6 +167,9 @@ If using expanding rows, use a list-expanded-content element containing expandab
          <label class="checkbox-inline">
             <input type="checkbox" ng-model="config.useExpandingRows">Show Expanding Rows</input>
          </label>
+         <label class="checkbox-inline">
+           <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+         </label>
         </div>
       </form>
     </div>
@@ -175,8 +183,8 @@ If using expanding rows, use a list-expanded-content element containing expandab
 </script>
 </div>
 <div class="tab-pane" title="script.js">
-<pre class="prettyprint linenums" ng-set-text="script.js-68"></pre>
-<script type="text/ng-template" id="script.js-68">
+<pre class="prettyprint linenums" ng-set-text="script.js-70"></pre>
+<script type="text/ng-template" id="script.js-70">
 angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateCache',
     function ($scope, $templateCache) {
       $scope.eventText = '';
@@ -242,6 +250,7 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
        dblClick: false,
        selectionMatchProp: 'name',
        selectedItems: [],
+       itemsAvailable: true,
        checkDisabled: checkDisabledItem,
        showSelectBox: true,
        useExpandingRows: false,
@@ -250,6 +259,17 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
        onCheckBoxChange: handleCheckBoxChange,
        onClick: handleClick,
        onDblClick: handleDblClick
+      };
+
+      $scope.emptyStateConfig = {
+        icon: 'pficon-warning-triangle-o',
+        title: 'No Items Available',
+        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+        helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+        }
       };
 
       $scope.items = [
@@ -397,6 +417,6 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
 </script>
 </div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-67" ng-eval-javascript="script.js-68"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-69" ng-eval-javascript="script.js-70"></div>
 </div></div>
 </div>

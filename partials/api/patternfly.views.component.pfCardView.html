@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/cardview/card-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/a35c783/src/views/cardview/card-view.component.js#L195" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCardView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/cardview/card-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/80e950a/src/views/cardview/card-view.component.js#L211" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCardView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -10,6 +10,7 @@
 <h2 id="usage">Usage</h2>
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-card-view
        config="{object}"
+       empty-state-config="{object}"
        items="{Array}"&gt;
 &lt;/pf-card-view&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>configuration settings for the cards:<br/></p>
@@ -26,7 +27,9 @@
 <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
 <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
 <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
-</ul></div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">Array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>the data to be shown in the cards<br/></p>
+<li>.itemsAvailable         - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
+</ul></div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">Array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>the data to be shown in the cards<br/></p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><h4 id="example_source">Source</h4>
@@ -46,7 +49,7 @@
   </style>
   <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
     <div class="col-md-12">
-      <pf-card-view id="exampleCardView" config="config" items="items">
+      <pf-card-view id="exampleCardView" config="config" empty-state-config="emptyStateConfig" items="items">
         <div class="col-md-12">
           <span>{{item.name}}</span>
         </div>
@@ -93,6 +96,9 @@
         <div class="form-group">
           <label class="checkbox-inline">
             <input type="checkbox" ng-model="showDisabled">Show Disabled Cards</input>
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
           </label>
         </div>
       </form>
@@ -150,6 +156,7 @@ function ($scope) {
 
        $scope.config = {
         selectItems: false,
+        itemsAvailable: true,
         multiSelect: false,
         dblClick: false,
         selectionMatchProp: 'name',
@@ -195,6 +202,17 @@ function ($scope) {
            state: "New York"
          },
        ]
+
+       $scope.emptyStateConfig = {
+         icon: 'pficon-warning-triangle-o',
+         title: 'No Items Available',
+         info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+         helpLink: {
+            label: 'For more information please see',
+            urlLabel: 'pfExample',
+            url : '#/api/patternfly.views.component:pfEmptyState'
+         }
+       };
      }
 ]);
 </script>

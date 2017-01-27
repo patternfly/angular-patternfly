@@ -7151,8 +7151,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
   *
   * @param {object} config Optional configuration object
   * <ul style='list-style-type: none'>
-  *   <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
-  *   <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  *   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is 'uuid'
+  *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
   * </ul>
   * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
   * @param {array} items Array of items to display in the table view.
@@ -7173,31 +7174,46 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
   *     <li>.title - (String) Optional title, used for the tooltip
   *     <li>.actionFn - (function(action)) Function to invoke when the action selected
   *   </ul>
+  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
   * @example
- <example module="patternfly.table">
+ <example module="patternfly.tableview.demo">
  <file name="index.html">
  <div ng-controller="TableCtrl" class="row example-container">
    <div class="col-md-12">
      <pf-table-view id="exampleTableView"
           config="config"
+          empty-state-config="emptyStateConfig"
           dt-options="dtOptions"
           colummns="colummns"
           items="items"
           action-buttons="actionButtons"
           menu-actions="menuActions">
      </pf-table-view>
-     <div class="col-md-12" style="padding-top: 12px;">
-       <label style="font-weight:normal;vertical-align:center;">Events: </label>
-     </div>
-     <div class="col-md-12">
-       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+   </div>
+   <div class="col-md-12" style="padding-top: 12px;">
+     <div class="form-group">
+       <label class="checkbox-inline">
+         <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+       </label>
      </div>
    </div>
- </div>
+   <hr class="col-md-12">
+   <div class="col-md-12">
+         <div class="col-md-12" style="padding-top: 12px;">
+           <label style="font-weight:normal;vertical-align:center;">Events: </label>
+         </div>
+         <div class="col-md-12">
+           <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+         </div>
+   </div>
+ </file>
+
+ <file name="modules.js">
+   angular.module('patternfly.tableview.demo', ['patternfly.views','patternfly.table']);
  </file>
 
  <file name="script.js">
- angular.module('patternfly.table').controller('TableCtrl', ['$scope',
+ angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope',
  function ($scope) {
         $scope.dtOptions = {
           order: [[2, "asc"]],
@@ -7265,7 +7281,19 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
         $scope.config = {
           onCheckBoxChange: handleCheckBoxChange,
-          selectionMatchProp: "name"
+          selectionMatchProp: "name",
+          itemsAvailable: true
+        };
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
         };
 
         function handleCheckBoxChange (item) {
@@ -7335,8 +7363,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
  *
  * @param {object} config Optional configuration object
  * <ul style='list-style-type: none'>
- *   <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
- *   <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+ *   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is 'uuid'
+ *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+ *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * </ul>
  * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
  * @param {array} items Array of items to display in the table view.
@@ -7357,6 +7386,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
  *     <li>.title - (String) Optional title, used for the tooltip
  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
  *   </ul>
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.tableview.demo">
   <file name="index.html">
@@ -7366,22 +7396,27 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       </div>
       <div class="col-md-12">
         <pf-table-view config="tableConfig"
+                       empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
                        colummns="colummns"
                        items="items"
                        action-buttons="tableActionButtons"
                        menu-actions="tableMenuActions">
         </pf-table-view>
-        <!-- form role="form"    //[WIP] issues dynamically changing displayLength and turning on/off pagination >
-          <div class="form-group">
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+          </label>
+          <!-- //[WIP] issues dynamically changing displayLength and turning on/off pagination
             <label class="checkbox-inline">
               <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
             </label>
             <label>
               <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
-            </label>
-          </div>
-        </form --!>
+            </label> --!>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -7706,7 +7741,19 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
-        selectionMatchProp: "name"
+        selectionMatchProp: "name",
+        itemsAvailable: true
+      };
+
+      $scope.emptyStateConfig = {
+        icon: 'pficon-warning-triangle-o',
+        title: 'No Items Available',
+        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+        helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+        }
       };
 
       $scope.tableActionButtons = [
@@ -7753,6 +7800,18 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           actionFn: performTableAction
         }
       ];
+
+      $scope.updateItemsAvailable = function () {
+        if(!$scope.tableConfig.itemsAvailable) {
+          $scope.toolbarConfig.filterConfig.resultsCount = 0;
+          $scope.toolbarConfig.filterConfig.totalCount = 0;
+          $scope.toolbarConfig.filterConfig.selectedCount = 0;
+       } else {
+          $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+          $scope.toolbarConfig.filterConfig.totalCount = $scope.allItems.length;
+          handleCheckBoxChange();
+        }
+      };
     }
   ]);
   </file>
@@ -7765,7 +7824,8 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     colummns: '<',
     items: '<',
     actionButtons: '<?',
-    menuActions: '<?'
+    menuActions: '<?',
+    emptyStateConfig: '=?'
   },
   templateUrl: 'table/tableview/table-view.html',
   controller: ["DTOptionsBuilder", "DTColumnDefBuilder", "$element", "pfUtils", "$log", "$filter", "$timeout", function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout) {
@@ -8255,7 +8315,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         </pf-toolbar>
       </div>
       <div class="col-md-12" ng-if="viewType == 'listView'">
-        <pf-list-view config="listConfig" items="items">
+        <pf-list-view config="listConfig"
+                      items="items"
+                      empty-state-config="emptyStateConfig">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
               {{item.name}}
@@ -8275,7 +8337,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         </pf-list-view>
       </div>
       <div class="col-md-12" ng-if="viewType == 'cardView'">
-        <pf-card-view config="listConfig" items="items">
+        <pf-card-view config="listConfig"
+                      items="items"
+                      empty-state-config="emptyStateConfig">
           <div class="col-md-12">
             <span>{{item.name}}</span>
           </div>
@@ -8290,8 +8354,16 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       <div class="col-md-12" ng-show="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
                        colummns="colummns"
-                       items="items">
+                       items="items"
+                       empty-state-config="emptyStateConfig">
         </pf-table-view>
+      </div>
+      <div class="col-md-12" style="padding-top: 12px;">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="listConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+          </label>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -8621,12 +8693,25 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       $scope.listConfig = {
         selectionMatchProp: 'name',
         checkDisabled: false,
+        itemsAvailable: true,
         onCheckBoxChange: handleCheckBoxChange
+      };
+
+      $scope.emptyStateConfig = {
+        icon: 'pficon-warning-triangle-o',
+        title: 'No Items Available',
+        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+        helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+        }
       };
 
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
-        selectionMatchProp: "name"
+        selectionMatchProp: "name",
+        itemsAvailable: true,
       };
 
       $scope.doAdd = function () {
@@ -8635,6 +8720,19 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
       $scope.optionSelected = function (option) {
         $scope.actionsText = "Option " + option + " selected\n" + $scope.actionsText;
+      };
+
+      $scope.updateItemsAvailable = function () {
+        $scope.tableConfig.itemsAvailable = $scope.listConfig.itemsAvailable;
+        if(!$scope.listConfig.itemsAvailable) {
+          $scope.toolbarConfig.filterConfig.resultsCount = 0;
+          $scope.toolbarConfig.filterConfig.totalCount = 0;
+          $scope.toolbarConfig.filterConfig.selectedCount = 0;
+       } else {
+          $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+          $scope.toolbarConfig.filterConfig.totalCount = $scope.allItems.length;
+          handleCheckBoxChange();
+        }
       };
 
       function handleCheckBoxChange (item) {
@@ -9303,8 +9401,9 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
  * <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
  * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * </ul>
- *
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @param {Array} items the data to be shown in the cards<br/>
  *
  * @example
@@ -9322,7 +9421,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
    </style>
    <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <pf-card-view id="exampleCardView" config="config" items="items">
+       <pf-card-view id="exampleCardView" config="config" empty-state-config="emptyStateConfig" items="items">
          <div class="col-md-12">
            <span>{{item.name}}</span>
          </div>
@@ -9369,6 +9468,9 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
          <div class="form-group">
            <label class="checkbox-inline">
              <input type="checkbox" ng-model="showDisabled">Show Disabled Cards</input>
+           </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
            </label>
          </div>
        </form>
@@ -9424,6 +9526,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
 
         $scope.config = {
          selectItems: false,
+         itemsAvailable: true,
          multiSelect: false,
          dblClick: false,
          selectionMatchProp: 'name',
@@ -9469,6 +9572,17 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
             state: "New York"
           },
         ]
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
+        };
       }
  ]);
  </file>
@@ -9477,12 +9591,13 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
 angular.module('patternfly.views').component('pfCardView', {
   bindings: {
     config: '=?',
+    emptyStateConfig: '=?',
     items: '=',
     eventId: '@id'
   },
   transclude: true,
   templateUrl: 'views/cardview/card-view.html',
-  controller: ["pfUtils", function (pfUtils) {
+  controller: function () {
     'use strict';
     var ctrl = this;
     ctrl.defaultConfig = {
@@ -9585,11 +9700,169 @@ angular.module('patternfly.views').component('pfCardView', {
     };
 
     ctrl.$onInit = function () {
-      ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Setting bound variables to new variables loses it's binding
+      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Instead, use _.defaults to update the existing variable
+      _.defaults(ctrl.config, ctrl.defaultConfig);
       if (ctrl.config.selectItems && ctrl.config.showSelectBox) {
         throw new Error('pfCardView - ' +
           'Illegal use of pfCardView component! ' +
           'Cannot allow both select box and click selection in the same card view.');
+      }
+    };
+  }
+});
+;/**
+ * @ngdoc directive
+ * @name patternfly.views.component:pfEmptyState
+ * @restrict E
+ *
+ * @description
+ * Component for rendering an empty state.
+ *
+ * @param {object} config Optional configuration object
+ * <ul style='list-style-type: none'>
+ *   <li>.icon   - (string) class for main icon. Ex. 'pficon pficon-add-circle-o'
+ *   <li>.title  - (string) Text for the main title
+ *   <li>.info  - (string) Text for the main informational paragraph
+ * </ul>
+ * @param {array} actionButtons Buttons to display under the icon, title, and informational paragraph.
+ *   <ul style='list-style-type: none'>
+ *     <li>.name - (String) The name of the action, displayed on the button
+ *     <li>.title - (String) Optional title, used for the tooltip
+ *     <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *     <li>.type - (String) Optional type property. Set to 'main' to be displayed as a main action button.
+ *     If unspecified, action button will be displayed as a secondary action button.
+ *   </ul>
+ * @example
+ <example module="patternfly.views" deps="patternfly.utils">
+ <file name="index.html">
+   <div ng-controller="ViewCtrl" class="row example-container">
+     <div class="col-md-12">
+       <pf-empty-state config="config" action-buttons="actionButtons"></pf-empty-state>
+     </div>
+     <hr class="col-md-12">
+     <div class="col-md-12">
+       <label style="font-weight:normal;vertical-align:center;">Events: </label>
+     </div>
+     <div class="col-md-12">
+       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+     </div>
+   </div>
+ </file>
+
+ <file name="script.js">
+ angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
+   function ($scope) {
+     $scope.eventText = '';
+
+     $scope.config = {
+       icon: 'pficon-add-circle-o',
+       title: 'Empty State Title',
+       info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+       helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+       }
+     };
+
+     var performAction = function (action) {
+       $scope.eventText = action.name + " executed. \r\n" + $scope.eventText;
+     };
+
+     $scope.actionButtons = [
+        {
+          name: 'Main Action',
+          title: 'Perform an action',
+          actionFn: performAction,
+          type: 'main'
+        },
+        {
+          name: 'Secondary Action 1',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Secondary Action 2',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Secondary Action 3',
+          title: 'Perform an action',
+          actionFn: performAction
+        }
+     ];
+   }
+ ]);
+</file>
+</example>
+*/
+angular.module('patternfly.views').component('pfEmptyState', {
+  bindings: {
+    config: '<?',
+    actionButtons: "<?"
+  },
+  templateUrl: 'views/empty-state.html',
+  controller: ["$filter", function ($filter) {
+    'use strict';
+    var ctrl = this;
+
+    ctrl.defaultConfig = {
+      title: 'No Items Available'
+    };
+
+    ctrl.$onInit = function () {
+      if (angular.isUndefined(ctrl.config)) {
+        ctrl.config = {};
+      }
+      ctrl.updateConfig();
+    };
+
+    ctrl.updateConfig = function () {
+      _.defaults(ctrl.config, ctrl.defaultConfig);
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if ((changesObj.config && !changesObj.config.isFirstChange()) ) {
+        ctrl.updateConfig();
+      }
+    };
+
+    ctrl.hasMainActions = function () {
+      var mainActions;
+
+      if (ctrl.actionButtons) {
+        mainActions = $filter('filter')(ctrl.actionButtons, {type: 'main'});
+        return mainActions.length;
+      }
+
+      return false;
+    };
+
+    ctrl.hasSecondaryActions = function () {
+      var secondaryActions;
+
+      if (ctrl.actionButtons) {
+        secondaryActions = $filter('filter')(ctrl.actionButtons, {type: undefined});
+        return secondaryActions.length;
+      }
+
+      return false;
+    };
+
+    ctrl.filterMainActions = function (action) {
+      return action.type === 'main';
+    };
+
+    ctrl.filterSecondaryActions = function (action) {
+      return action.type !== 'main';
+    };
+
+    ctrl.handleButtonAction = function (action) {
+      if (action && action.actionFn) {
+        action.actionFn(action);
       }
     };
   }]
@@ -9616,6 +9889,7 @@ angular.module('patternfly.views').component('pfCardView', {
  * <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
  * <li>.selectedItems          - (array) Current set of selected items
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
  * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
@@ -9646,13 +9920,16 @@ angular.module('patternfly.views').component('pfCardView', {
  * @param {function (item))} menuClassForItemFn function(item) Used to specify a class for an item's dropdown kebab
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
  * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via customScope.<xxx>
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12 list-view-container example-list-view">
         <pf-list-view id="exampleListView"
-                          config="config" items="items"
+                          config="config"
+                          empty-state-config="emptyStateConfig"
+                          items="items"
                           action-buttons="actionButtons"
                           enable-button-for-item-fn="enableButtonForItemFn"
                           menu-actions="menuActions"
@@ -9745,6 +10022,9 @@ angular.module('patternfly.views').component('pfCardView', {
            <label class="checkbox-inline">
               <input type="checkbox" ng-model="config.useExpandingRows">Show Expanding Rows</input>
            </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+           </label>
           </div>
         </form>
       </div>
@@ -9823,6 +10103,7 @@ angular.module('patternfly.views').component('pfCardView', {
          dblClick: false,
          selectionMatchProp: 'name',
          selectedItems: [],
+         itemsAvailable: true,
          checkDisabled: checkDisabledItem,
          showSelectBox: true,
          useExpandingRows: false,
@@ -9831,6 +10112,17 @@ angular.module('patternfly.views').component('pfCardView', {
          onCheckBoxChange: handleCheckBoxChange,
          onClick: handleClick,
          onDblClick: handleDblClick
+        };
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
         };
 
         $scope.items = [
@@ -9990,13 +10282,14 @@ angular.module('patternfly.views').component('pfListView', {
     updateMenuActionForItemFn: '=?',
     actions: '=?',
     updateActionForItemFn: '=?',
-    customScope: '=?'
+    customScope: '=?',
+    emptyStateConfig: '=?'
   },
   transclude: {
     expandedContent: '?listExpandedContent'
   },
   templateUrl: 'views/listview/list-view.html',
-  controller: ["$timeout", "$window", "$element", "pfUtils", function ($timeout, $window, $element, pfUtils) {
+  controller: ["$timeout", "$window", "$element", function ($timeout, $window, $element) {
     'use strict';
     var ctrl = this;
 
@@ -10199,7 +10492,10 @@ angular.module('patternfly.views').component('pfListView', {
     };
 
     ctrl.$onInit = function () {
-      ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Setting bound variables to new variables loses it's binding
+      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Instead, use _.defaults to update the existing variable
+      _.defaults(ctrl.config, ctrl.defaultConfig);
       if (!ctrl.config.selectItems) {
         ctrl.config.selectedItems = [];
       }
@@ -11583,7 +11879,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('table/tableview/table-view.html',
-    "<table datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.colummns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)>{{ value }}</td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table>"
+    "<span><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.colummns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)>{{ value }}</td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></span>"
   );
 
 }]);
@@ -11602,12 +11898,17 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('views/cardview/card-view.html',
-    "<div class=card-view-pf><div class=card ng-repeat=\"item in $ctrl.items\" ng-class=\"{'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item)}\"><div class=card-content ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div></div></div>"
+    "<span><div ng-if=\"$ctrl.config.itemsAvailable !== false\" class=card-view-pf><div class=card ng-repeat=\"item in $ctrl.items\" ng-class=\"{'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item)}\"><div class=card-content ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div></div></div><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></span>"
+  );
+
+
+  $templateCache.put('views/empty-state.html',
+    "<div class=blank-slate-pf><div ng-if=$ctrl.config.icon class=blank-slate-pf-icon><span class={{$ctrl.config.icon}}></span></div><h1 id=title>{{$ctrl.config.title}}</h1><p id=info ng-if=$ctrl.config.info>{{$ctrl.config.info}}</p><p id=helpLink ng-if=$ctrl.config.helpLink>{{$ctrl.config.helpLink.label}} <a href={{$ctrl.config.helpLink.url}}>{{$ctrl.config.helpLink.urlLabel}}</a>.</p><div ng-if=$ctrl.hasMainActions() class=blank-slate-pf-main-action><button class=\"btn btn-primary btn-lg\" ng-repeat=\"actionButton in $ctrl.actionButtons | filter:$ctrl.filterMainActions\" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div><div ng-if=$ctrl.hasSecondaryActions() class=blank-slate-pf-secondary-action><button class=\"btn btn-default\" ng-repeat=\"actionButton in $ctrl.actionButtons | filter:$ctrl.filterSecondaryActions\" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div></div>"
   );
 
 
   $templateCache.put('views/listview/list-view.html',
-    "<div class=\"list-group list-view-pf\"><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in $ctrl.items track by $index\" ng-class=\"{'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}\"><div class=list-group-item-header><div class=list-view-pf-expand ng-if=$ctrl.config.useExpandingRows><span class=\"fa fa-angle-right\" ng-show=!item.disableRowExpansion ng-click=$ctrl.toggleItemExpansion(item) ng-class=\"{'fa-angle-down': item.isExpanded}\"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"($ctrl.actionButtons && $ctrl.actionButtons.length > 0) || ($ctrl.menuActions && $ctrl.menuActions.length > 0)\"><button class=\"btn btn-default {{actionButton.class}}\" ng-repeat=\"actionButton in $ctrl.actionButtons\" title={{actionButton.title}} ng-class=\"{'disabled' : $ctrl.checkDisabled(item) || !$ctrl.enableButtonForItem(actionButton, item)}\" ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class=\"{{$ctrl.dropdownClass}} pull-right dropdown-kebab-pf {{$ctrl.getMenuClassForItem(item)}} {{$ctrl.hideMenuForItem(item) ? 'invisible' : ''}}\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': $ctrl.checkDisabled(item)}\" ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"></div></div><div class=\"list-group-item-container container-fluid\" ng-transclude=expandedContent ng-if=\"$ctrl.config.useExpandingRows && item.isExpanded\"></div></div></div>"
+    "<span><div class=\"list-group list-view-pf\" ng-if=\"$ctrl.config.itemsAvailable !== false\"><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in $ctrl.items track by $index\" ng-class=\"{'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}\"><div class=list-group-item-header><div class=list-view-pf-expand ng-if=$ctrl.config.useExpandingRows><span class=\"fa fa-angle-right\" ng-show=!item.disableRowExpansion ng-click=$ctrl.toggleItemExpansion(item) ng-class=\"{'fa-angle-down': item.isExpanded}\"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"($ctrl.actionButtons && $ctrl.actionButtons.length > 0) || ($ctrl.menuActions && $ctrl.menuActions.length > 0)\"><button class=\"btn btn-default {{actionButton.class}}\" ng-repeat=\"actionButton in $ctrl.actionButtons\" title={{actionButton.title}} ng-class=\"{'disabled' : $ctrl.checkDisabled(item) || !$ctrl.enableButtonForItem(actionButton, item)}\" ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class=\"{{$ctrl.dropdownClass}} pull-right dropdown-kebab-pf {{$ctrl.getMenuClassForItem(item)}} {{$ctrl.hideMenuForItem(item) ? 'invisible' : ''}}\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': $ctrl.checkDisabled(item)}\" ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"></div></div><div class=\"list-group-item-container container-fluid\" ng-transclude=expandedContent ng-if=\"$ctrl.config.useExpandingRows && item.isExpanded\"></div></div></div><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></span>"
   );
 
 }]);
