@@ -106,7 +106,7 @@ angular.module( 'patternfly.utils', ['ui.bootstrap'] );
  *   Views module for patternfly.
  *
  */
-angular.module('patternfly.views', ['patternfly.utils', 'patternfly.filters', 'patternfly.sort', 'patternfly.charts']);
+angular.module('patternfly.views', ['patternfly.utils', 'patternfly.filters', 'patternfly.sort', 'patternfly.charts', 'dndLists']);
 ;/**
  * @name  PatternFly Wizard
  *
@@ -8229,6 +8229,10 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
  * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
  * <li>.selectItems            - (boolean) Allow row selection, default is false
  * <li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
+ * <li>.dragEnabled            - (boolean) Enable drag and drop. Default is false.
+ * <li>.dragEnd                - ( function() ) Function to call when the drag operation ended, default is none
+ * <li>.dragMoved              - ( function() ) Function to call when the drag operation moved an element, default is none
+ * <li>.dragStart              - ( function(item) ) Function to call when the drag operation started, default is none
  * <li>.multiSelect            - (boolean) Allow multiple row selections, selectItems must also be set, not applicable when dblClick is true. Default is false
  * <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
@@ -8366,6 +8370,15 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
         </form>
       </div>
       <div class="col-md-12">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="config.dragEnabled">Drag and Drop</input>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-12">
         <label style="font-weight:normal;vertical-align:center;">Events: </label>
       </div>
       <div class="col-md-12">
@@ -8396,6 +8409,27 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
 
         var checkDisabledItem = function(item) {
           return $scope.showDisabled && (item.name === "John Smith");
+        };
+
+        var dragEnd = function() {
+          $scope.eventText = 'drag end\r\n' + $scope.eventText;
+        };
+        var dragMoved = function() {
+          var index = -1;
+
+          for (var i = 0; i < $scope.items.length; i++) {
+            if ($scope.items[i] === $scope.dragItem) {
+              index = i;
+            }
+          }
+          if (index >= 0) {
+            $scope.items.splice(index, 1);
+          }
+          $scope.eventText = 'drag moved\r\n' + $scope.eventText;
+        };
+        var dragStart = function(item) {
+          $scope.dragItem = item;
+          $scope.eventText = item.name + ': drag start\r\n' + $scope.eventText;
         };
 
         $scope.enableButtonForItemFn = function(action, item) {
@@ -8438,6 +8472,10 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
          selectItems: false,
          multiSelect: false,
          dblClick: false,
+         dragEnabled: false,
+         dragEnd: dragEnd,
+         dragMoved: dragMoved,
+         dragStart: dragStart,
          selectionMatchProp: 'name',
          selectedItems: [],
          checkDisabled: checkDisabledItem,
@@ -8638,6 +8676,10 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
           selectItems: false,
           multiSelect: false,
           dblClick: false,
+          dragEnabled: false,
+          dragEnd: null,
+          dragMoved: null,
+          dragStart: null,
           selectionMatchProp: 'uuid',
           selectedItems: [],
           checkDisabled: false,
@@ -8831,6 +8873,30 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
 
       scope.checkDisabled = function (item) {
         return scope.config.checkDisabled && scope.config.checkDisabled(item);
+      };
+
+      scope.dragEnd = function () {
+        if (angular.isFunction(scope.config.dragEnd)) {
+          scope.config.dragEnd();
+        }
+      };
+
+      scope.dragMoved = function () {
+        if (angular.isFunction(scope.config.dragMoved)) {
+          scope.config.dragMoved();
+        }
+      };
+
+      scope.isDragOriginal = function (item) {
+        return (item === scope.dragItem);
+      };
+
+      scope.dragStart = function (item) {
+        scope.dragItem = item;
+
+        if (angular.isFunction(scope.config.dragStart)) {
+          scope.config.dragStart(item);
+        }
       };
     }
   };
@@ -10349,7 +10415,7 @@ angular.module('patternfly.wizard').directive('pfWizardSubstep', function () {
 
 
   $templateCache.put('views/listview/list-view.html',
-    "<div class=\"list-group list-view-pf\"><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in items track by $index\" ng-class=\"{'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}\"><div class=list-group-item-header><div class=list-view-pf-expand ng-if=config.useExpandingRows><span class=\"fa fa-angle-right\" ng-show=!item.disableRowExpansion ng-click=toggleItemExpansion(item) ng-class=\"{'fa-angle-down': item.isExpanded}\"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change=\"checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)\"><button class=\"btn btn-default {{actionButton.class}}\" ng-repeat=\"actionButton in actionButtons\" title={{actionButton.title}} ng-class=\"{'disabled' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}\" ng-click=\"handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class=\"{{dropdownClass}} pull-right dropdown-kebab-pf {{getMenuClassForItem(item)}} {{hideMenuForItem(item) ? 'invisible' : ''}}\" id=kebab_{{$index}} ng-if=\"menuActions && menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': checkDisabled(item)}\" ng-click=\"setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"itemClick($event, item)\" ng-dblclick=\"dblClick($event, item)\"></div></div><div class=\"list-group-item-container container-fluid\" ng-transclude=expandedContent ng-if=\"config.useExpandingRows && item.isExpanded\"></div></div></div>"
+    "<div class=\"list-group list-view-pf\" dnd-list=items ng-class=\"{'list-view-pf-dnd': config.dragEnabled === true}\"><div class=dndPlaceholder></div><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in items track by $index\" dnd-draggable=item dnd-effect-allowed=move dnd-disable-if=\"config.dragEnabled !== true\" dnd-dragstart=dragStart(item) dnd-moved=dragMoved() dnd-dragend=dragEnd() ng-class=\"{'drag-original': isDragOriginal(item), 'pf-selectable': selectItems, 'active': isSelected(item), 'disabled': checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}\"><div class=list-group-item-header><div class=list-view-pf-dnd-drag-items ng-if=\"config.dragEnabled === true\"><div pf-transclude=parent class=list-view-pf-main-info></div></div><div ng-class=\"{'list-view-pf-dnd-original-items': config.dragEnabled === true}\"><div class=list-view-pf-expand ng-if=config.useExpandingRows><span class=\"fa fa-angle-right\" ng-show=!item.disableRowExpansion ng-click=toggleItemExpansion(item) ng-class=\"{'fa-angle-down': item.isExpanded}\"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change=\"checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)\"><button class=\"btn btn-default {{actionButton.class}}\" ng-repeat=\"actionButton in actionButtons\" title={{actionButton.title}} ng-class=\"{'disabled' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}\" ng-click=\"handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class=\"{{dropdownClass}} pull-right dropdown-kebab-pf {{getMenuClassForItem(item)}} {{hideMenuForItem(item) ? 'invisible' : ''}}\" id=kebab_{{$index}} ng-if=\"menuActions && menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': checkDisabled(item)}\" ng-click=\"setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"itemClick($event, item)\" ng-dblclick=\"dblClick($event, item)\"></div><div class=\"list-group-item-container container-fluid\" ng-transclude=expandedContent ng-if=\"config.useExpandingRows && item.isExpanded\"></div></div></div></div></div>"
   );
 
 }]);
