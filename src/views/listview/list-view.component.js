@@ -684,13 +684,13 @@ angular.module('patternfly.views').component('pfListView', {
     };
 
     ctrl.dragEnd = function () {
-      if (ctrl.config.dragEnd) {
+      if (angular.isFunction(ctrl.config.dragEnd)) {
         ctrl.config.dragEnd();
       }
     };
 
     ctrl.dragMoved = function () {
-      if (ctrl.config.dragMoved) {
+      if (angular.isFunction(ctrl.config.dragMoved)) {
         ctrl.config.dragMoved();
       }
     };
@@ -702,7 +702,7 @@ angular.module('patternfly.views').component('pfListView', {
     ctrl.dragStart = function (item) {
       ctrl.dragItem = item;
 
-      if (ctrl.config.dragStart) {
+      if (angular.isFunction(ctrl.config.dragStart)) {
         ctrl.config.dragStart(item);
       }
     };
