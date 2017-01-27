@@ -186,3 +186,171 @@ pf-c3-chart {
 .camelcase {
   text-transform: capitalize;
 }
+
+pf-topology {
+  display: block;
+  user-select: none;
+}
+
+
+.container-topology pf-topology {
+  height: 500px;
+  position: relative;
+}
+.container-topology .canvas {
+  position: absolute;
+}
+
+.container-topology .popup {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #fff;
+  width: 180px;
+  border: 1px #ccc solid;
+  border-radius: 6px;
+  box-shadow: #333 2px 2px 4px;
+  padding: 6px;
+  font-size: 14px;
+}
+
+.container-topology .popup h5 {
+  font-weight: bold;
+}
+
+.container-topology .popup p {
+  margin: 0 0 4px;
+}
+
+.container-topology .popup p:hover {
+  color : #0099cc;
+  cursor: pointer;
+}
+
+.container-topology label.checkbox-inline {
+  font-size:14px;
+}
+
+.pf-topology-svg g {
+  font-family: PatternFlyIcons-webfont;
+  font-size: 18px;
+  text-anchor: middle;
+  cursor: pointer;
+}
+
+.pf-topology-svg g text {
+  stroke: none;
+  stroke-width: 0px;
+}
+
+.pf-topology-svg g.weak use {
+  opacity: .6;
+}
+
+.pf-topology-svg g.Pod text {
+  font-family: FontAwesome;
+  font-size: 16px;
+  fill: #1186C1;
+}
+
+.pf-topology-svg g.Node text {
+  fill: #636363;
+}
+
+.pf-topology-svg g.Service text {
+  fill: #ff7f0e;
+}
+
+.pf-topology-svg g.ReplicationController text {
+  fill: #9467bd;
+  font-size: 20px;
+}
+
+.pf-topology-svg g circle {
+  stroke: #aaa;
+  fill: #fff;
+}
+
+.pf-topology-svg g.fixed use {
+  stroke-width: 2px;
+}
+
+.pf-topology-svg g.selected use,
+.pf-topology-svg g.selected circle {
+  stroke-width: 4px;
+}
+
+.pf-topology-svg line {
+  stroke: #aaa;
+  stroke-width: 1;
+}
+
+.pf-topology-svg line.ReplicationControllerPod {
+  stroke-linecap: round;
+  stroke-dasharray: 5, 2;
+}
+
+.pf-topology-svg g text.attached-label {
+  display: none;
+}
+
+.pf-topology-svg g text.attached-label.visible {
+  font-size: 12px;
+  fill: black;
+  display: block;
+}
+
+.pf-topology-svg g.selected {
+  stroke-width: 4px;
+}
+
+.pf-topology-svg g circle {
+  stroke-width: 2px;
+}
+
+.pf-topology-svg g circle.success {
+  stroke: #3F9C35;
+}
+
+.pf-topology-svg g circle.error {
+  stroke: #CC0000;
+}
+
+.pf-topology-svg g circle.warning {
+  stroke: #EC7A08;
+}
+
+.pf-topology-svg g circle.unknown {
+  stroke: #bbb;
+}
+
+.pf-topology-svg line.ContainerServiceContainerGroup, .pf-topology-svg line.ContainerReplicatorContainerGroup, .pf-topology-svg line.ContainerServiceContainerRoute,
+.pf-topology-svg line.ContainerGroupContainerService, .pf-topology-svg line.ContainerGroupContainerReplicator {
+  stroke-linecap: round;
+  stroke-dasharray: 5.5;
+}
+
+.pf-topology-svg g text.glyph {
+  font-size: 20px;
+  fill: #1186C1;
+}
+
+.pf-topology-svg g.Container text.glyph {
+  font-size: 18px;
+}
+
+.pf-topology-svg g.ContainerGroup text.glyph {
+  font-size: 18px;
+}
+
+.pf-topology-svg g.Vm text.glyph, .pf-topology-svg g.Host text.glyph {
+  fill: #636363;
+}
+
+.pf-topology-svg g.ContainerNode text.glyph {
+  font-size: 18px;
+}
+
+.pf-topology-svg g.ContainerManager text.glyph {
+  font-size: 18px;
+}
