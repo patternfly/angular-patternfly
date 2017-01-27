@@ -662,13 +662,13 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
       };
 
       scope.dragEnd = function () {
-        if (scope.config.dragEnd) {
+        if (angular.isFunction(scope.config.dragEnd)) {
           scope.config.dragEnd();
         }
       };
 
       scope.dragMoved = function () {
-        if (scope.config.dragMoved) {
+        if (angular.isFunction(scope.config.dragMoved)) {
           scope.config.dragMoved();
         }
       };
@@ -680,7 +680,7 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
       scope.dragStart = function (item) {
         scope.dragItem = item;
 
-        if (scope.config.dragStart) {
+        if (angular.isFunction(scope.config.dragStart)) {
           scope.config.dragStart(item);
         }
       };
