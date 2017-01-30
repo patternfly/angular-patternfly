@@ -28,7 +28,6 @@ angular.module('patternfly.charts').component('pfTopology', {
     ctrl.$onInit = function () {
       $element.css("display", "block");
       options = {"force": ctrl.force, "radius": ctrl.radius};
-      //graph = topologyGraph($element[0], notify, options);
       ctrl.showLabels = false;
 
       $element.on("$destroy", function () {
@@ -598,27 +597,27 @@ angular.module('patternfly.charts').component('pfTopology', {
     }
 
     function getItemStatusClass (d) {
-      switch (d.item.status) {
-      case "OK":
-      case "Active":
-      case "Available":
-      case "On":
-      case "Ready":
-      case "Running":
-      case "Succeeded":
-      case "Valid":
+      switch (d.item.status.toLowerCase()) {
+      case "ok":
+      case "active":
+      case "available":
+      case "on":
+      case "ready":
+      case "running":
+      case "succeeded":
+      case "valid":
         return "success";
-      case "NotReady":
-      case "Failed":
-      case "Error":
-      case "Unreachable":
+      case "notready":
+      case "failed":
+      case "error":
+      case "unreachable":
         return "error";
-      case 'Warning':
-      case 'Waiting':
-      case 'Pending':
+      case 'warning':
+      case 'waiting':
+      case 'pending':
         return "warning";
-      case 'Unknown':
-      case 'Terminated':
+      case 'unknown':
+      case 'terminated':
         return "unknown";
       }
     }

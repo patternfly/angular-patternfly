@@ -4,7 +4,7 @@
  * @restrict E
  *
  * @description
- *   Component for rendering a topology chart.  Individual nodes and relationships can be represented with this view.  CSS is especially important for rendering the noes and lines.  The example inline contains specific examples that can be used to change the icon size and the line type of the relationships.
+ *   Component for rendering a topology chart.  Individual nodes and relationships can be represented with this view.  CSS is especially important for rendering the nodes and lines.  The example inline contains specific examples that can be used to change the icon size and the line type of the relationships.
  *
  *   In addition; searching, filtering and label visibility is also supported.<br/>
  *
@@ -172,11 +172,11 @@
           "fontfamily": "FontAwesome"
         },
         "Host": {
-  				"type": "glyph",
-	  			"icon": "",
-			  	"fontfamily": "PatternFlyIcons-webfont"
-		  	},
-		  	"Vm": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        },
+        "Vm": {
           "type": "glyph",
           "icon": "",
           "fontfamily": "PatternFlyIcons-webfont"
@@ -186,41 +186,41 @@
           "icon": "",
           "fontfamily": "PatternFlyIcons-webfont"
         }
-			},
+      },
     });
 
     $rootScope.data = datasets[index];
 
     var nodeKinds = {
-			"ContainerReplicator": true,
-			"ContainerGroup": true,
-			"Container": true,
-			"ContainerNode": true,
-			"ContainerService": true,
-			"Host": true,
-			"Vm": true,
-			"ContainerRoute": true,
-			"ContainerManager": true
-		};
+      "ContainerReplicator": true,
+      "ContainerGroup": true,
+      "Container": true,
+      "ContainerNode": true,
+      "ContainerService": true,
+      "Host": true,
+      "Vm": true,
+      "ContainerRoute": true,
+      "ContainerManager": true
+    };
 
-		$rootScope.kinds = nodeKinds;
+    $rootScope.kinds = nodeKinds;
 
-		var icons = $rootScope.data.icons;
+    var icons = $rootScope.data.icons;
     $scope.nodes = {};
-		for(var kind in nodeKinds) {
-		  var icon = icons[kind];
-		  $scope.nodes[kind] = {
-		    "name": kind,
-		    "enabled": nodeKinds[kind],
-		    "radius": 16,
-		    "textX": 0,
-		    "textY": 5,
-		    "height": 18,
-		    "width": 18,
-		    "icon": icon.icon,
-		    "fontFamily": icon.fontfamily
-		  };
-		}
+    for(var kind in nodeKinds) {
+      var icon = icons[kind];
+      $scope.nodes[kind] = {
+        "name": kind,
+        "enabled": nodeKinds[kind],
+        "radius": 16,
+        "textX": 0,
+        "textY": 5,
+        "height": 18,
+        "width": 18,
+        "icon": icon.icon,
+        "fontFamily": icon.fontfamily
+      };
+    }
 
     // Individual values can also be set for specific icons
     $scope.nodes.ContainerService.textY = 9;
