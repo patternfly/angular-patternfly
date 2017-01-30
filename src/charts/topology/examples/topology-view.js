@@ -4,7 +4,7 @@
  * @restrict E
  *
  * @description
- *   Component for rendering a topology chart.  Individual nodes and relationships can be represented with this view.
+ *   Component for rendering a topology chart.  Individual nodes and relationships can be represented with this view.  CSS is especially important for rendering the noes and lines.  The example inline contains specific examples that can be used to change the icon size and the line type of the relationships.
  *
  *   In addition; searching, filtering and label visibility is also supported.<br/>
  *
@@ -250,5 +250,60 @@
     }
  });
  </file>
+ <file name="topology.css">
+
+ .pf-topology-svg g.Pod text {
+    font-family: FontAwesome;
+    font-size: 16px;
+    fill: #1186C1;
+  }
+
+   .pf-topology-svg g.Node text {
+    fill: #636363;
+  }
+
+   .pf-topology-svg g.Service text {
+    fill: #ff7f0e;
+  }
+
+   .pf-topology-svg g.ReplicationController text {
+    fill: #9467bd;
+    font-size: 20px;
+  }
+
+   .pf-topology-svg line.ReplicationControllerPod {
+    stroke-linecap: round;
+    stroke-dasharray: 5, 2;
+  }
+
+
+  .pf-topology-svg line.ContainerServiceContainerGroup, .pf-topology-svg line.ContainerReplicatorContainerGroup, .pf-topology-svg line.ContainerServiceContainerRoute,
+   .pf-topology-svg line.ContainerGroupContainerService, .pf-topology-svg line.ContainerGroupContainerReplicator {
+    stroke-linecap: round;
+    stroke-dasharray: 5.5;
+  }
+
+
+ .pf-topology-svg g.Container text.glyph {
+    font-size: 18px;
+  }
+
+   .pf-topology-svg g.ContainerGroup text.glyph {
+    font-size: 18px;
+  }
+
+   .pf-topology-svg g.Vm text.glyph, .pf-topology-svg g.Host text.glyph {
+    fill: #636363;
+  }
+
+   .pf-topology-svg g.ContainerNode text.glyph {
+    font-size: 18px;
+  }
+
+   .pf-topology-svg g.ContainerManager text.glyph {
+    font-size: 18px;
+  }
+ </file>
+
  </example>
  */
