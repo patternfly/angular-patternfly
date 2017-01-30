@@ -12,7 +12,7 @@
  * <ul style='list-style-type: none'>
  * <li>.name    - name of the item the node represents
  * <li>.status  - optional status of the node (can be used to differentiate the circle color)
- * <li>.kind    - the kind of node
+ * <li>.kind    - the kind of node - this is a general key that needs to be unique for grouping the nodes  Filtering and styles use this value as well to correctly select the nodes.
  * </ul>
  *
  * @param {object} relations the object containing all of the node relationships:<br/>
@@ -90,7 +90,7 @@
           "name": "registry",
           "kind": "Container",
           "miq_id": 10000000000235,
-          "status": "Running",
+          "status": "Error",
           "display_kind": "Container"
         },
         "ContainerReplicator10r56": {
@@ -226,6 +226,11 @@
     $scope.nodes.ContainerService.textY = 9;
     $scope.nodes.ContainerService.textX = -1;
 
+    $scope.nodes.ContainerGroup.height = 30;
+    $scope.nodes.ContainerGroup.width = 30;
+    $scope.nodes.ContainerGroup.radius = 28;
+    $scope.nodes.ContainerGroup.textY = 8;
+
     $scope.itemSelected = function (item) {
       var text = "";
       if (item) {
@@ -289,7 +294,7 @@
   }
 
    .pf-topology-svg g.ContainerGroup text.glyph {
-    font-size: 18px;
+    font-size: 28px;
   }
 
    .pf-topology-svg g.Vm text.glyph, .pf-topology-svg g.Host text.glyph {

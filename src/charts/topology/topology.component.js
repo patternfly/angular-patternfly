@@ -1,12 +1,12 @@
 angular.module('patternfly.charts').component('pfTopology', {
   bindings: {
-    items: '=',
-    relations: '=',
-    kinds: '=',
-    icons: '=',
-    selection: '=',
-    force: '=',
-    radius: '=',
+    items: '<',
+    relations: '<',
+    kinds: '<',
+    icons: '<',
+    selection: '<',
+    force: '<',
+    radius: '<',
     nodes: '<',
     searchText: '<?',
     chartRendered: '&?',
@@ -43,10 +43,6 @@ angular.module('patternfly.charts').component('pfTopology', {
     };
 
     ctrl.$onChanges = function (changesObj) {
-      if (changesObj.kinds || changesObj.items || changesObj.relations) {
-        ctrl.updateAll();
-      }
-
       if (changesObj.searchText && graph) {
         search(changesObj.searchText.currentValue);
       }
@@ -55,7 +51,7 @@ angular.module('patternfly.charts').component('pfTopology', {
         toggleLabelVisibility();
       }
 
-      if (changesObj.selection) {
+      if (changesObj.selection && graph) {
         graph.select(changesObj.selection.currentValue || null);
       }
     };
