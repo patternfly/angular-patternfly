@@ -27,7 +27,7 @@
  * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
  * <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
- * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
+ * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none. Note: row expansion is the default behavior after onClick performed, but user can stop such default behavior by adding the sentence "return false;" to the end of onClick function body
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
  * </ul>
  * @param {array} actionButtons List of action buttons in each row
@@ -578,6 +578,7 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
         var alreadySelected;
         var selectionChanged = false;
         var continueEvent = true;
+        var enableRowExpansion = scope.config && scope.config.useExpandingRows && item && !item.disableRowExpansion;
 
         // Ignore disabled item clicks completely
         if (scope.checkDisabled(item)) {
@@ -620,7 +621,11 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
           }
         }
         if (scope.config.onClick) {
-          scope.config.onClick(item, e);
+          if (scope.config.onClick(item, e) !== false && enableRowExpansion) {
+            scope.toggleItemExpansion(item);
+          }
+        } else if (enableRowExpansion) {
+          scope.toggleItemExpansion(item);
         }
 
         return continueEvent;
