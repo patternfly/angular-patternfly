@@ -559,7 +559,7 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
               }
               nextElement = nextElement.parentElement;
             }
-          });
+          }, 100);
         };
       },
 
