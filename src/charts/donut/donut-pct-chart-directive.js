@@ -384,7 +384,7 @@ angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUti
           $scope.config.data.onclick = $scope.config.onClickFn;
         };
 
-        $scope.config = pfUtils.merge($().c3ChartDefaults().getDefaultDonutConfig(), $scope.config);
+        $scope.config = pfUtils.merge(patternfly.c3ChartDefaults().getDefaultDonutConfig(), $scope.config);
         $scope.updateAll($scope);
 
 
