@@ -1782,6 +1782,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
            </div>
            <div class="col-md-3">
                  <button ng-click="addDataPoint()">Add Data Point</button>
+                 <button ng-click="resetData()">Reset Data</button>
            </div>
          </div>
        </div>
@@ -1820,8 +1821,8 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
        $scope.data = {
          dataAvailable: true,
          xData: dates,
-         yData0: ['Created', 12, 10,10, 62, 17, 10, 15, 13, 17, 10, 12, 10, 10, 12, 17, 16, 15, 13, 17, 10],
-         yData1: ['Deleted', 10, 17, 76,14, 10, 10, 10, 10, 10, 10, 10, 17, 17, 14, 10, 10, 10, 10, 10, 10]
+         yData0: ['Created', 12, 10, 10, 62, 17, 10, 15, 13, 17, 10, 12, 10, 10, 12, 17, 16, 15, 13, 17, 10],
+         yData1: ['Deleted', 10, 17, 76, 14, 10, 10, 10, 10, 10, 10, 10, 17, 17, 14, 10, 10, 10, 10, 10, 10]
        };
 
        $scope.custShowXAxis = false;
@@ -1832,6 +1833,14 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
          $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
          $scope.data.yData0.push(Math.round(Math.random() * 100));
          $scope.data.yData1.push(Math.round(Math.random() * 100));
+       };
+
+       $scope.resetData = function () {
+         $scope.data = {
+           xData: dates,
+           yData0: ['Created', 12, 10, 10, 62],
+           yData1: ['Deleted', 10, 17, 76, 14]
+         };
        };
      });
    </file>
@@ -1946,7 +1955,7 @@ angular.module('patternfly.charts').directive('pfLineChart', ["pfUtils", functio
         scope.chartConfig.data.type = scope.setAreaChart ? "area" : "line";
       });
       scope.$watch('chartData', function () {
-        scope.chartConfig.data = pfUtils.merge(scope.chartConfig.data, scope.getLineData(scope.chartData));
+        scope.chartConfig.data = scope.getLineData(scope.chartData);
       }, true);
     }
   };
