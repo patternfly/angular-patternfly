@@ -72,7 +72,7 @@
    </file>
  </example>
  */
-(function () {
+(function (patternfly) {
   'use strict';
 
   angular.module('patternfly.charts').directive('pfC3Chart', function ($timeout) {
@@ -103,4 +103,4 @@
       }
     };
   });
-}());
+}(patternfly));
