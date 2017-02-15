@@ -143,197 +143,198 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUtils) {
+(function (patternfly) {
   'use strict';
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      chartData: '=',
-      chartHeight: '=?',
-      showXAxis: '=?',
-      showYAxis: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/sparkline/sparkline-chart.html',
-    controller: ['$scope',
-      function ($scope) {
+  angular.module('patternfly.charts').directive('pfSparklineChart', function (pfUtils) {
+    return {
+      restrict: 'A',
+      scope: {
+        config: '=',
+        chartData: '=',
+        chartHeight: '=?',
+        showXAxis: '=?',
+        showYAxis: '=?'
+      },
+      replace: true,
+      templateUrl: 'charts/sparkline/sparkline-chart.html',
+      controller: ['$scope',
+        function ($scope) {
 
-        // Create an ID for the chart based on the chartId in the config if given
-        $scope.sparklineChartId = 'sparklineChart';
-        if ($scope.config.chartId) {
-          $scope.sparklineChartId = $scope.config.chartId + $scope.sparklineChartId;
-        }
-
-        /*
-         * Convert the config data to C3 Data
-         */
-        $scope.getSparklineData = function (chartData) {
-          var sparklineData  = {
-            type: 'area'
-          };
-
-          if (chartData && chartData.dataAvailable !== false && chartData.xData && chartData.yData) {
-            sparklineData.x = chartData.xData[0];
-            sparklineData.columns = [
-              chartData.xData,
-              chartData.yData
-            ];
+          // Create an ID for the chart based on the chartId in the config if given
+          $scope.sparklineChartId = 'sparklineChart';
+          if ($scope.config.chartId) {
+            $scope.sparklineChartId = $scope.config.chartId + $scope.sparklineChartId;
           }
 
-          return sparklineData;
-        };
+          /*
+           * Convert the config data to C3 Data
+           */
+          $scope.getSparklineData = function (chartData) {
+            var sparklineData  = {
+              type: 'area'
+            };
 
-        $scope.getTooltipTableHTML = function (tipRows) {
-          return '<div class="module-triangle-bottom">' +
-            '  <table class="c3-tooltip">' +
-            '    <tbody>' +
-            tipRows +
-            '    </tbody>' +
-            '  </table>' +
-            '</div>';
-        };
+            if (chartData && chartData.dataAvailable !== false && chartData.xData && chartData.yData) {
+              sparklineData.x = chartData.xData[0];
+              sparklineData.columns = [
+                chartData.xData,
+                chartData.yData
+              ];
+            }
 
-        $scope.sparklineTooltip = function () {
-          return {
-            contents: function (d) {
-              var tipRows;
-              var percentUsed = 0;
+            return sparklineData;
+          };
 
-              if ($scope.config.tooltipFn) {
-                tipRows = $scope.config.tooltipFn(d);
-              } else {
-                switch ($scope.config.tooltipType) {
-                case 'usagePerDay':
-                  if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
+          $scope.getTooltipTableHTML = function (tipRows) {
+            return '<div class="module-triangle-bottom">' +
+              '  <table class="c3-tooltip">' +
+              '    <tbody>' +
+              tipRows +
+              '    </tbody>' +
+              '  </table>' +
+              '</div>';
+          };
+
+          $scope.sparklineTooltip = function () {
+            return {
+              contents: function (d) {
+                var tipRows;
+                var percentUsed = 0;
+
+                if ($scope.config.tooltipFn) {
+                  tipRows = $scope.config.tooltipFn(d);
+                } else {
+                  switch ($scope.config.tooltipType) {
+                  case 'usagePerDay':
+                    if ($scope.chartData.dataAvailable !== false && $scope.chartData.total > 0) {
+                      percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
+                    }
+                    tipRows =
+                      '<tr>' +
+                      '  <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +
+                      '</tr>' +
+                      '<tr>' +
+                      '  <td class="name">' + percentUsed + '%:' + '</td>' +
+                      '  <td class="value text-nowrap">' + d[0].value + ' ' +  ($scope.config.units ? $scope.config.units + ' ' : '') + d[0].name + '</td>' +
+                      '</tr>';
+                    break;
+                  case 'valuePerDay':
+                    tipRows =
+                      '<tr>' +
+                      '  <td class="value">' +  d[0].x.toLocaleDateString() + '</td>' +
+                      '  <td class="value text-nowrap">' +  d[0].value + ' ' + d[0].name + '</td>' +
+                      '</tr>';
+                    break;
+                  case 'percentage':
                     percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
+                    tipRows =
+                      '<tr>' +
+                      '  <td class="name">' + percentUsed + '%' + '</td>' +
+                      '</tr>';
+                    break;
+                  default:
+                    tipRows = patternfly.c3ChartDefaults().getDefaultSparklineTooltip().contents(d);
                   }
-                  tipRows =
-                    '<tr>' +
-                    '  <th colspan="2">' + d[0].x.toLocaleDateString() + '</th>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '  <td class="name">' + percentUsed + '%:' + '</td>' +
-                    '  <td class="value text-nowrap">' + d[0].value + ' ' +  ($scope.config.units ? $scope.config.units + ' ' : '') + d[0].name + '</td>' +
-                    '</tr>';
-                  break;
-                case 'valuePerDay':
-                  tipRows =
-                    '<tr>' +
-                    '  <td class="value">' +  d[0].x.toLocaleDateString() + '</td>' +
-                    '  <td class="value text-nowrap">' +  d[0].value + ' ' + d[0].name + '</td>' +
-                    '</tr>';
-                  break;
-                case 'percentage':
-                  percentUsed = Math.round(d[0].value / $scope.chartData.total * 100.0);
-                  tipRows =
-                    '<tr>' +
-                    '  <td class="name">' + percentUsed + '%' + '</td>' +
-                    '</tr>';
-                  break;
-                default:
-                  tipRows = $().c3ChartDefaults().getDefaultSparklineTooltip().contents(d);
+                }
+                return $scope.getTooltipTableHTML(tipRows);
+              },
+              position: function (data, width, height, element) {
+                var center;
+                var top;
+                var chartBox;
+                var graphOffsetX;
+                var x;
+
+                try {
+                  center = parseInt(element.getAttribute('x'));
+                  top = parseInt(element.getAttribute('y'));
+                  chartBox = document.querySelector('#' + $scope.sparklineChartId).getBoundingClientRect();
+                  graphOffsetX = document.querySelector('#' + $scope.sparklineChartId + ' g.c3-axis-y').getBoundingClientRect().right;
+                  x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
+
+                  return {
+                    top: top - height,
+                    left: Math.min(x, chartBox.width - width)
+                  };
+                } catch (e) {
                 }
               }
-              return $scope.getTooltipTableHTML(tipRows);
+            };
+          };
+
+          /*
+           * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
+           *   1) in the config, setting showAxis to true will show both axes
+           *   2) in the attributes showXAxis and showYAxis will override the config if set
+           *
+           * By default only line and the tick marks are shown, no labels. This is a sparkline and should be used
+           * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
+           */
+
+          if ($scope.showXAxis === undefined) {
+            $scope.showXAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
+          }
+
+          if ($scope.showYAxis === undefined) {
+            $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
+          }
+
+          $scope.defaultConfig = patternfly.c3ChartDefaults().getDefaultSparklineConfig();
+          $scope.defaultConfig.axis = {
+            x: {
+              show: $scope.showXAxis === true,
+              type: 'timeseries',
+              tick: {
+                format: function () {
+                  return '';
+                }
+              }
             },
-            position: function (data, width, height, element) {
-              var center;
-              var top;
-              var chartBox;
-              var graphOffsetX;
-              var x;
-
-              try {
-                center = parseInt(element.getAttribute('x'));
-                top = parseInt(element.getAttribute('y'));
-                chartBox = document.querySelector('#' + $scope.sparklineChartId).getBoundingClientRect();
-                graphOffsetX = document.querySelector('#' + $scope.sparklineChartId + ' g.c3-axis-y').getBoundingClientRect().right;
-                x = Math.max(0, center + graphOffsetX - chartBox.left - Math.floor(width / 2));
-
-                return {
-                  top: top - height,
-                  left: Math.min(x, chartBox.width - width)
-                };
-              } catch (e) {
+            y: {
+              show: $scope.showYAxis === true,
+              tick: {
+                format: function () {
+                  return '';
+                }
               }
             }
           };
-        };
 
-        /*
-         * Setup Axis options. Default is to not show either axis. This can be overridden in two ways:
-         *   1) in the config, setting showAxis to true will show both axes
-         *   2) in the attributes showXAxis and showYAxis will override the config if set
-         *
-         * By default only line and the tick marks are shown, no labels. This is a sparkline and should be used
-         * only to show a brief idea of trending. This can be overridden by setting the config.axis options per C3
-         */
-
-        if ($scope.showXAxis === undefined) {
-          $scope.showXAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-        }
-
-        if ($scope.showYAxis === undefined) {
-          $scope.showYAxis = ($scope.config.showAxis !== undefined) && $scope.config.showAxis;
-        }
-
-        $scope.defaultConfig = $().c3ChartDefaults().getDefaultSparklineConfig();
-        $scope.defaultConfig.axis = {
-          x: {
-            show: $scope.showXAxis === true,
-            type: 'timeseries',
-            tick: {
-              format: function () {
-                return '';
-              }
-            }
-          },
-          y: {
-            show: $scope.showYAxis === true,
-            tick: {
-              format: function () {
-                return '';
-              }
-            }
+          // Setup the default configuration
+          $scope.defaultConfig.tooltip = $scope.sparklineTooltip();
+          if ($scope.chartHeight) {
+            $scope.defaultConfig.size.height = $scope.chartHeight;
           }
-        };
+          $scope.defaultConfig.units = '';
 
-        // Setup the default configuration
-        $scope.defaultConfig.tooltip = $scope.sparklineTooltip();
-        if ($scope.chartHeight) {
-          $scope.defaultConfig.size.height = $scope.chartHeight;
+          // Convert the given data to C3 chart format
+          $scope.config.data = pfUtils.merge($scope.config.data, $scope.getSparklineData($scope.chartData));
+
+          // Override defaults with callers specifications
+          $scope.chartConfig = pfUtils.merge($scope.defaultConfig, $scope.config);
         }
-        $scope.defaultConfig.units = '';
+      ],
 
-        // Convert the given data to C3 chart format
-        $scope.config.data = pfUtils.merge($scope.config.data, $scope.getSparklineData($scope.chartData));
-
-        // Override defaults with callers specifications
-        $scope.chartConfig = pfUtils.merge($scope.defaultConfig, $scope.config);
+      link: function (scope) {
+        scope.$watch('config', function () {
+          scope.config.data = pfUtils.merge(scope.config.data, scope.getSparklineData(scope.chartData));
+          scope.chartConfig = pfUtils.merge(scope.defaultConfig, scope.config);
+        }, true);
+        scope.$watch('chartHeight', function () {
+          if (scope.chartHeight) {
+            scope.chartConfig.size.height = scope.chartHeight;
+          }
+        });
+        scope.$watch('showXAxis', function () {
+          scope.chartConfig.axis.x.show = scope.showXAxis === true;
+        });
+        scope.$watch('showYAxis', function () {
+          scope.chartConfig.axis.y.show = scope.showYAxis === true;
+        });
+        scope.$watch('chartData', function () {
+          scope.chartConfig.data = pfUtils.merge(scope.chartConfig.data, scope.getSparklineData(scope.chartData));
+        }, true);
       }
-    ],
-
-    link: function (scope) {
-      scope.$watch('config', function () {
-        scope.config.data = pfUtils.merge(scope.config.data, scope.getSparklineData(scope.chartData));
-        scope.chartConfig = pfUtils.merge(scope.defaultConfig, scope.config);
-      }, true);
-      scope.$watch('chartHeight', function () {
-        if (scope.chartHeight) {
-          scope.chartConfig.size.height = scope.chartHeight;
-        }
-      });
-      scope.$watch('showXAxis', function () {
-        scope.chartConfig.axis.x.show = scope.showXAxis === true;
-      });
-      scope.$watch('showYAxis', function () {
-        scope.chartConfig.axis.y.show = scope.showYAxis === true;
-      });
-      scope.$watch('chartData', function () {
-        scope.chartConfig.data = pfUtils.merge(scope.chartConfig.data, scope.getSparklineData(scope.chartData));
-      }, true);
-    }
-  };
-}
-);
+    };
+  });
+}(patternfly));

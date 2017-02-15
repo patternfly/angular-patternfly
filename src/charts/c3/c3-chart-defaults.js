@@ -1,7 +1,7 @@
-(function () {
+(function (patternfly) {
   'use strict';
 
-  var patternflyDefaults = $().c3ChartDefaults();
+  var patternflyDefaults = patternfly.c3ChartDefaults();
 
   angular.module('patternfly.charts').constant('c3ChartDefaults', {
     getDefaultColors: patternflyDefaults.getDefaultColors,
@@ -20,4 +20,4 @@
     getDefaultSparklineConfig: patternflyDefaults.getDefaultSparklineConfig,
     getDefaultLineConfig: patternflyDefaults.getDefaultLineConfig
   });
-})();
+})(patternfly);

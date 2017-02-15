@@ -257,179 +257,180 @@
    </file>
  </example>
  */
-angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUtils, $timeout) {
+(function (patternfly) {
   'use strict';
+  angular.module('patternfly.charts').directive('pfDonutPctChart', function (pfUtils, $timeout) {
+    return {
+      restrict: 'A',
+      scope: {
+        config: '=',
+        data: '=',
+        chartHeight: '=?',
+        centerLabel: '=?'
+      },
+      replace: true,
+      templateUrl: 'charts/donut/donut-pct-chart.html',
+      controller: ['$scope',
+        function ($scope) {
+          var donutTooltip;
 
-  return {
-    restrict: 'A',
-    scope: {
-      config: '=',
-      data: '=',
-      chartHeight: '=?',
-      centerLabel: '=?'
-    },
-    replace: true,
-    templateUrl: 'charts/donut/donut-pct-chart.html',
-    controller: ['$scope',
-      function ($scope) {
-        var donutTooltip;
-
-        $scope.donutChartId = 'donutChart';
-        if ($scope.config.chartId) {
-          $scope.donutChartId = $scope.config.chartId + $scope.donutChartId;
-        }
-
-        $scope.updateAvailable = function () {
-          $scope.data.available = $scope.data.total - $scope.data.used;
-        };
-
-        if ($scope.data.available === undefined) {
-          $scope.updateAvailable();
-        }
-
-        $scope.getStatusColor = function (used, thresholds) {
-          var color = pfUtils.colorPalette.blue;
-
-          if (thresholds) {
-            color = pfUtils.colorPalette.green;
-            if (used >= thresholds.error) {
-              color = pfUtils.colorPalette.red;
-            } else if (used >= thresholds.warning) {
-              color = pfUtils.colorPalette.orange;
-            }
+          $scope.donutChartId = 'donutChart';
+          if ($scope.config.chartId) {
+            $scope.donutChartId = $scope.config.chartId + $scope.donutChartId;
           }
 
-          return color;
-        };
-
-        $scope.statusDonutColor = function (scope) {
-          var color, percentUsed;
-
-          color = { pattern: [] };
-          percentUsed = scope.data.used / scope.data.total * 100.0;
-          color.pattern[0] = $scope.getStatusColor(percentUsed, scope.config.thresholds);
-          color.pattern[1] = pfUtils.colorPalette.black300;
-          return color;
-        };
-
-        donutTooltip = function (scope) {
-          return {
-            contents: function (d) {
-              var tooltipHtml;
-
-              if (scope.config.tooltipFn) {
-                tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
-                                scope.config.tooltipFn(d) +
-                             '</span>';
-              } else {
-                tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
-                          Math.round(d[0].ratio * 100) + '%' + ' ' + $scope.config.units + ' ' + d[0].name +
-                       '</span>';
-              }
-
-              return tooltipHtml;
-            }
+          $scope.updateAvailable = function () {
+            $scope.data.available = $scope.data.total - $scope.data.used;
           };
-        };
 
-        $scope.getDonutData = function (scope) {
-          return {
-            columns: [
-              ['Used', scope.data.used],
-              ['Available', scope.data.available]
-            ],
-            type: 'donut',
-            donut: {
-              label: {
-                show: false
-              }
-            },
-            groups: [
-              ['used', 'available']
-            ],
-            order: null
-          };
-        };
-
-        $scope.getCenterLabelText = function () {
-          var centerLabelText;
-
-          // default to 'used' info.
-          centerLabelText = { bigText: $scope.data.used,
-                              smText:  $scope.config.units + ' Used' };
-
-          if ($scope.config.centerLabelFn) {
-            centerLabelText.bigText = $scope.config.centerLabelFn();
-            centerLabelText.smText = '';
-          } else if ($scope.centerLabel === 'none') {
-            centerLabelText.bigText = '';
-            centerLabelText.smText = '';
-          } else if ($scope.centerLabel === 'available') {
-            centerLabelText.bigText = $scope.data.available;
-            centerLabelText.smText = $scope.config.units + ' Available';
-          } else if ($scope.centerLabel === 'percent') {
-            centerLabelText.bigText = Math.round($scope.data.used / $scope.data.total * 100.0) + '%';
-            centerLabelText.smText = 'of ' + $scope.data.total + ' ' + $scope.config.units;
+          if ($scope.data.available === undefined) {
+            $scope.updateAvailable();
           }
 
-          return centerLabelText;
+          $scope.getStatusColor = function (used, thresholds) {
+            var color = pfUtils.colorPalette.blue;
+
+            if (thresholds) {
+              color = pfUtils.colorPalette.green;
+              if (used >= thresholds.error) {
+                color = pfUtils.colorPalette.red;
+              } else if (used >= thresholds.warning) {
+                color = pfUtils.colorPalette.orange;
+              }
+            }
+
+            return color;
+          };
+
+          $scope.statusDonutColor = function (scope) {
+            var color, percentUsed;
+
+            color = { pattern: [] };
+            percentUsed = scope.data.used / scope.data.total * 100.0;
+            color.pattern[0] = $scope.getStatusColor(percentUsed, scope.config.thresholds);
+            color.pattern[1] = pfUtils.colorPalette.black300;
+            return color;
+          };
+
+          donutTooltip = function (scope) {
+            return {
+              contents: function (d) {
+                var tooltipHtml;
+
+                if (scope.config.tooltipFn) {
+                  tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                                  scope.config.tooltipFn(d) +
+                               '</span>';
+                } else {
+                  tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                            Math.round(d[0].ratio * 100) + '%' + ' ' + $scope.config.units + ' ' + d[0].name +
+                         '</span>';
+                }
+
+                return tooltipHtml;
+              }
+            };
+          };
+
+          $scope.getDonutData = function (scope) {
+            return {
+              columns: [
+                ['Used', scope.data.used],
+                ['Available', scope.data.available]
+              ],
+              type: 'donut',
+              donut: {
+                label: {
+                  show: false
+                }
+              },
+              groups: [
+                ['used', 'available']
+              ],
+              order: null
+            };
+          };
+
+          $scope.getCenterLabelText = function () {
+            var centerLabelText;
+
+            // default to 'used' info.
+            centerLabelText = { bigText: $scope.data.used,
+                                smText:  $scope.config.units + ' Used' };
+
+            if ($scope.config.centerLabelFn) {
+              centerLabelText.bigText = $scope.config.centerLabelFn();
+              centerLabelText.smText = '';
+            } else if ($scope.centerLabel === 'none') {
+              centerLabelText.bigText = '';
+              centerLabelText.smText = '';
+            } else if ($scope.centerLabel === 'available') {
+              centerLabelText.bigText = $scope.data.available;
+              centerLabelText.smText = $scope.config.units + ' Available';
+            } else if ($scope.centerLabel === 'percent') {
+              centerLabelText.bigText = Math.round($scope.data.used / $scope.data.total * 100.0) + '%';
+              centerLabelText.smText = 'of ' + $scope.data.total + ' ' + $scope.config.units;
+            }
+
+            return centerLabelText;
+          };
+
+
+          $scope.updateAll = function (scope) {
+            $scope.updateAvailable();
+            $scope.config.data = pfUtils.merge($scope.config.data, $scope.getDonutData($scope));
+            $scope.config.color = $scope.statusDonutColor($scope);
+            $scope.config.tooltip = donutTooltip(scope);
+            $scope.config.data.onclick = $scope.config.onClickFn;
+          };
+
+          $scope.config = pfUtils.merge(patternfly.c3ChartDefaults().getDefaultDonutConfig(), $scope.config);
+          $scope.updateAll($scope);
+
+
+        }
+      ],
+      link: function (scope, element) {
+        var setupDonutChartTitle = function () {
+          $timeout(function () {
+            var donutChartTitle, centerLabelText;
+
+            donutChartTitle = d3.select(element[0]).select('text.c3-chart-arcs-title');
+            if (!donutChartTitle) {
+              return;
+            }
+
+            centerLabelText = scope.getCenterLabelText();
+
+            // Remove any existing title.
+            donutChartTitle.selectAll('*').remove();
+            if (centerLabelText.bigText && !centerLabelText.smText) {
+              donutChartTitle.text(centerLabelText.bigText);
+            } else {
+              donutChartTitle.insert('tspan').text(centerLabelText.bigText).classed('donut-title-big-pf', true).attr('dy', 0).attr('x', 0);
+              donutChartTitle.insert('tspan').text(centerLabelText.smText).classed('donut-title-small-pf', true).attr('dy', 20).attr('x', 0);
+            }
+          }, 300);
         };
 
+        scope.$watch('config', function () {
+          scope.updateAll(scope);
+          setupDonutChartTitle();
+        }, true);
+        scope.$watch('chartHeight', function () {
+          if (scope.chartHeight) {
+            scope.config.size.height = scope.chartHeight;
+          }
+        });
+        scope.$watch('data', function () {
+          scope.updateAll(scope);
+          setupDonutChartTitle();
+        }, true);
 
-        $scope.updateAll = function (scope) {
-          $scope.updateAvailable();
-          $scope.config.data = pfUtils.merge($scope.config.data, $scope.getDonutData($scope));
-          $scope.config.color = $scope.statusDonutColor($scope);
-          $scope.config.tooltip = donutTooltip(scope);
-          $scope.config.data.onclick = $scope.config.onClickFn;
-        };
-
-        $scope.config = pfUtils.merge($().c3ChartDefaults().getDefaultDonutConfig(), $scope.config);
-        $scope.updateAll($scope);
-
-
+        scope.$watch('centerLabel', function () {
+          setupDonutChartTitle();
+        });
       }
-    ],
-    link: function (scope, element) {
-      var setupDonutChartTitle = function () {
-        $timeout(function () {
-          var donutChartTitle, centerLabelText;
-
-          donutChartTitle = d3.select(element[0]).select('text.c3-chart-arcs-title');
-          if (!donutChartTitle) {
-            return;
-          }
-
-          centerLabelText = scope.getCenterLabelText();
-
-          // Remove any existing title.
-          donutChartTitle.selectAll('*').remove();
-          if (centerLabelText.bigText && !centerLabelText.smText) {
-            donutChartTitle.text(centerLabelText.bigText);
-          } else {
-            donutChartTitle.insert('tspan').text(centerLabelText.bigText).classed('donut-title-big-pf', true).attr('dy', 0).attr('x', 0);
-            donutChartTitle.insert('tspan').text(centerLabelText.smText).classed('donut-title-small-pf', true).attr('dy', 20).attr('x', 0);
-          }
-        }, 300);
-      };
-
-      scope.$watch('config', function () {
-        scope.updateAll(scope);
-        setupDonutChartTitle();
-      }, true);
-      scope.$watch('chartHeight', function () {
-        if (scope.chartHeight) {
-          scope.config.size.height = scope.chartHeight;
-        }
-      });
-      scope.$watch('data', function () {
-        scope.updateAll(scope);
-        setupDonutChartTitle();
-      }, true);
-
-      scope.$watch('centerLabel', function () {
-        setupDonutChartTitle();
-      });
-    }
-  };
-});
+    };
+  });
+}(patternfly));
