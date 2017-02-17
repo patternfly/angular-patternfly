@@ -134,10 +134,8 @@
         cursor: auto;
         opacity: 0.4;
       }
-      .toolbox-footer {
-        margin-bottom: 10px;
+      .toolbox-filter {
         margin-top: 10px;
-        width: 100%;
         .search-text {
           border: 1px solid @color-pf-black-400;
           float: right;
@@ -161,8 +159,17 @@
         }
       }
       .close-toolbox {
-        padding-top: 36px;
-        text-align: center;
+        font-size: 16px;
+        float: right;
+        position: relative;
+        cursor: pointer;
+        top: -17px;
+        right: -12px;
+        color: @color-pf-black-600;
+        cursor: pointer;
+        :hover {
+          color: @color-pf-black-800;
+        }
       }
     }
     .canvas-container {

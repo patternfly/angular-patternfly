@@ -36,6 +36,14 @@
 
         <div class="canvas-editor-toolbox" id="toolbox" ng-if="$ctrl.toolboxVisible">
 
+          <a ng-click="$ctrl.toolboxVisible = false" class="close-toolbox"><span class="pficon pficon-close"></span></a>
+
+          <div class="toolbox-filter">
+            <input ng-model="$ctrl.searchText" id="filterFld" class="search-text"
+                   placeholder="{{'Filter by name'}}"/>
+            <a ng-click="$ctrl.searchText = ''"><span class="pficon pficon-close clear-search-text"></span></a>
+          </div>
+
           <uib-tabset>
             <uib-tab ng-repeat="tab in $ctrl.toolboxTabs" heading="" active="tab.active">
               <uib-tab-heading ng-click="$ctrl.tabClicked()">
@@ -71,13 +79,6 @@
                              search-text="$ctrl.searchText"/>
             </uib-tab>
           </uib-tabset>
-
-          <div class="toolbox-footer">
-            <!-- Filter -->
-            <input ng-model="$ctrl.searchText" id="filterFld" class="search-text"
-                   placeholder="{{'Filter by name'}}"/>
-            <a ng-click="$ctrl.searchText = ''"><span class="pficon pficon-close clear-search-text"></span></a>
-          </div>
         </div>
 
         <div class="canvas-container" data-drop="true" data-jqyoui-options jqyoui-droppable="{onDrop:'$ctrl.dropCallback'}">
