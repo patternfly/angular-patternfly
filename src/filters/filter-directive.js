@@ -93,11 +93,12 @@
 
         var matchesFilter = function (item, filter) {
           var match = true;
+          var re = new RegExp(filter.value, 'i');
 
           if (filter.id === 'name') {
-            match = item.name.match(filter.value) !== null;
+            match = item.name.match(re) !== null;
           } else if (filter.id === 'address') {
-            match = item.address.match(filter.value) !== null;
+            match = item.address.match(re) !== null;
           } else if (filter.id === 'birthMonth') {
             match = item.birthMonth === filter.value;
           }
