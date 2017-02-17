@@ -67,7 +67,7 @@ module.exports = function (grunt) {
         },
         img: {
           cwd: 'misc/',
-          src: 'patternfly-orb.svg',
+          src: ['patternfly-orb.svg', '*.png'],
           dest: 'docs/img',
           expand: true
         },
@@ -75,6 +75,12 @@ module.exports = function (grunt) {
           cwd: 'docs',
           src: ['**'],
           dest: 'dist/docs',
+          expand: true
+        },
+        distimg: {
+          cwd: 'misc',
+          src: ['canvas-dot-grid.png'],
+          dest: 'dist/imgs',
           expand: true
         }
       },
@@ -131,6 +137,7 @@ module.exports = function (grunt) {
           image: 'misc/logo-alt.svg',
           scripts: [
             'node_modules/jquery/dist/jquery.js',
+            'node_modules/components-jqueryui/jquery-ui.min.js',
             'node_modules/datatables.net/js/jquery.dataTables.js',
             'node_modules/datatables.net-select/js/dataTables.select.js',
             'node_modules/moment/moment.js',
@@ -140,6 +147,7 @@ module.exports = function (grunt) {
             'node_modules/patternfly/dist/js/patternfly-settings-colors.js',
             'node_modules/patternfly/dist/js/patternfly-settings-charts.js',
             'node_modules/angular/angular.js',
+            'node_modules/angular-dragdrop/src/angular-dragdrop.js',
             'node_modules/angular-datatables/dist/angular-datatables.min.js',
             'node_modules/angular-datatables/dist/plugins/select/angular-datatables.select.min.js',
             'node_modules/angular-sanitize/angular-sanitize.js',
@@ -239,6 +247,11 @@ module.exports = function (grunt) {
           cwd: 'src/',
           src: ['wizard/**/*.html'],
           dest: 'templates/wizard.js'
+        },
+        'patternfly.canvas': {
+          cwd: 'src/',
+          src: ['canvas-view/**/*.html'],
+          dest: 'templates/canvas.js'
         }
       },
       // ng-annotate tries to make the code safe for minification automatically
@@ -271,16 +284,12 @@ module.exports = function (grunt) {
           files: ['Gruntfile.js'],
           tasks: ['eslint']
         },
-        less: {
-          files: ['**/*.less'],
-          tasks: ['less']
-        },
         test: {
           files: ['test/**/*.js'],
           tasks: ['test']
         },
         all: {
-          files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],
+          files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css', '**/*.less'],
           tasks: ['build'],
           options: {
             livereload: 35722
@@ -289,7 +298,7 @@ module.exports = function (grunt) {
       }
     });
 
-    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:img']);
+    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:img', 'copy:distimg']);
 
     // You can specify which modules to build as arguments of the build task.
     grunt.registerTask('build', 'Create bootstrap build files', function () {
