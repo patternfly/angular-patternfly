@@ -419,7 +419,7 @@
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfListView', function ($timeout, $window, pfUtils) {
+angular.module('patternfly.views').directive('pfListView', function ($window, pfUtils) {
   'use strict';
   return {
     restrict: 'A',
@@ -545,7 +545,7 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
           // update the actions based on the current item
           $scope.updateActions(item);
 
-          $timeout(function () {
+          $window.requestAnimationFrame(function () {
             var parentDiv = undefined;
             var nextElement;
 
@@ -559,7 +559,7 @@ angular.module('patternfly.views').directive('pfListView', function ($timeout, $
               }
               nextElement = nextElement.parentElement;
             }
-          }, 100);
+          });
         };
       },
 
