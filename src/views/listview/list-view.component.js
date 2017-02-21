@@ -575,7 +575,7 @@ angular.module('patternfly.views').component('pfListView', {
           }
           nextElement = nextElement.parentElement;
         }
-      }, 100);
+      });
     };
 
     ctrl.itemClick = function (e, item) {
