@@ -8648,7 +8648,7 @@ angular.module('patternfly.views').directive('pfCardView', ["pfUtils", function 
   </file>
 </example>
  */
-angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window", "pfUtils", function ($timeout, $window, pfUtils) {
+angular.module('patternfly.views').directive('pfListView', ["$window", "pfUtils", function ($window, pfUtils) {
   'use strict';
   return {
     restrict: 'A',
@@ -8774,7 +8774,7 @@ angular.module('patternfly.views').directive('pfListView', ["$timeout", "$window
           // update the actions based on the current item
           $scope.updateActions(item);
 
-          $timeout(function () {
+          $window.requestAnimationFrame(function () {
             var parentDiv = undefined;
             var nextElement;
 
