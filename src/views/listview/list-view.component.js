@@ -459,7 +459,7 @@ angular.module('patternfly.views').component('pfListView', {
     expandedContent: '?listExpandedContent'
   },
   templateUrl: 'views/listview/list-view.html',
-  controller: function ($timeout, $window, $element) {
+  controller: function ($window, $element) {
     'use strict';
     var ctrl = this;
 
@@ -561,7 +561,7 @@ angular.module('patternfly.views').component('pfListView', {
       // update the actions based on the current item
       ctrl.updateActions(item);
 
-      $timeout(function () {
+      $window.requestAnimationFrame(function () {
         var parentDiv = undefined;
         var nextElement;
 
