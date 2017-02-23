@@ -1,4 +1,12 @@
 /**
+ * @name  patternfly canvas
+ *
+ * @description
+ *   Canvas module for patternfly.
+ *
+ */
+angular.module('patternfly.canvas', ['dragging', 'ngDragDrop', 'ui.bootstrap']);
+;/**
  * @name  patternfly card
  *
  * @description
@@ -122,7 +130,7 @@ angular.module( 'patternfly.utils', ['ui.bootstrap'] );
  *   Views module for patternfly.
  *
  */
-angular.module('patternfly.views', ['patternfly.utils', 'patternfly.filters', 'patternfly.sort', 'patternfly.charts']);
+angular.module('patternfly.views', ['patternfly.utils', 'patternfly.filters', 'patternfly.sort', 'patternfly.charts', 'dndLists']);
 ;/**
  * @name  PatternFly Wizard
  *
@@ -193,6 +201,2721 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
     }
   };
 }]);
+;(function () {
+  'use strict';
+
+  angular.module('patternfly.canvas').component('pfCanvasEditor', {
+
+    bindings: {
+      chartDataModel: "=",
+      chartViewModel: "=?",
+      toolboxTabs: "=",
+      readOnly: '<?'
+    },
+    transclude: true,
+    templateUrl: "canvas-view/canvas-editor/canvas-editor.html",
+    controller: ["$timeout", function ($timeout) {
+      var ctrl = this;
+      var newNodeCount = 0;
+      var prevClickedOnChart, prevInConnectingMode;
+
+      ctrl.$onInit = function () {
+        ctrl.toolboxVisible = false;
+        ctrl.hideConnectors = false;
+        ctrl.draggedItem = null;
+      };
+
+      // need to get these in next digest cycle, after pfCanvas sets chartViewModel
+      $timeout(function () {
+        prevClickedOnChart = ctrl.chartViewModel.clickedOnChart;
+        prevInConnectingMode = ctrl.chartViewModel.inConnectingMode;
+      });
+
+      ctrl.$doCheck = function () {
+        if (angular.isDefined(prevClickedOnChart) && angular.isDefined(prevInConnectingMode)) {
+          if (!angular.equals(ctrl.chartViewModel.clickedOnChart, prevClickedOnChart)) {
+            if (ctrl.chartViewModel.clickedOnChart) {
+              ctrl.chartViewModel.clickedOnChart = false;
+              ctrl.hideToolbox();
+            }
+            prevClickedOnChart = ctrl.chartViewModel.clickedOnChart;
+          }
+          if (!angular.equals(ctrl.chartViewModel.inConnectingMode, prevInConnectingMode)) {
+            if (ctrl.chartViewModel.inConnectingMode) {
+              ctrl.hideConnectors = false;
+              ctrl.hideToolbox();
+            }
+            prevInConnectingMode = ctrl.chartViewModel.inConnectingMode;
+          }
+        }
+      };
+
+      ctrl.addNodeToCanvas = function (newNode) {
+        ctrl.chartViewModel.addNode(newNode);
+      };
+
+      /*** Toolbox Methods ***/
+
+      ctrl.showToolbox = function () {
+        ctrl.toolboxVisible = true;
+        // add class to subtabs to apply PF style and
+        // focus to filter input box
+
+        $timeout(function () {
+          angular.element(".subtabs>ul").addClass('nav-tabs-pf');
+          angular.element("#filterFld").focus();
+        });
+      };
+
+      ctrl.hideToolbox = function () {
+        ctrl.toolboxVisible = false;
+      };
+
+      ctrl.toggleToolbox = function () {
+        if (!ctrl.readOnly && !ctrl.chartViewModel.inConnectingMode) {
+          if (ctrl.toolboxVisible === true) {
+            ctrl.hideToolbox();
+          } else {
+            ctrl.showToolbox();
+          }
+        }
+      };
+
+      ctrl.tabClicked = function () {
+        angular.element("#filterFld").focus();
+      };
+
+      /*** Toolbox ***/
+
+      ctrl.startCallback = function (event, ui, item) {
+        ctrl.draggedItem = item;
+      };
+
+      ctrl.dropCallback = function (event, ui) {
+        var newNode = angular.copy(ctrl.draggedItem);
+        newNodeCount++;
+        newNode.x = event.clientX - 600;
+        newNode.y = event.clientY - 200;
+        newNode.backgroundColor = newNode.backgroundColor ? newNode.backgroundColor : '#fff';
+
+        ctrl.chartViewModel.addNode(newNode);
+      };
+
+      ctrl.addNodeByClick = function (item) {
+        var newNode = angular.copy(item);
+        newNodeCount++;
+        newNode.x = 250 + (newNodeCount * 4 + 160);
+        newNode.y = 200 + (newNodeCount * 4 + 160);
+        newNode.backgroundColor = newNode.backgroundColor ? newNode.backgroundColor : '#fff';
+
+        ctrl.chartViewModel.addNode(newNode);
+      };
+
+      ctrl.tabClicked = function () {
+        angular.element("#filterFld").focus();
+      };
+
+      ctrl.activeTab = function () {
+        return ctrl.toolboxTabs.filter(function (tab) {
+          return tab.active;
+        })[0];
+      };
+
+      ctrl.activeSubTab = function () {
+        var activeTab = ctrl.activeTab();
+        if (activeTab && activeTab.subtabs) {
+          return activeTab.subtabs.filter(function (subtab) {
+            return subtab.active;
+          })[0];
+        }
+      };
+
+      ctrl.activeSubSubTab = function () {
+        var activeSubTab = ctrl.activeSubTab();
+        if (activeSubTab && activeSubTab.subtabs) {
+          return activeSubTab.subtabs.filter(function (subsubtab) {
+            return subsubtab.active;
+          })[0];
+        }
+      };
+
+      /*** Zoom ***/
+
+      ctrl.maxZoom = function () {
+        if (ctrl.chartViewModel && ctrl.chartViewModel.zoom) {
+          return ctrl.chartViewModel.zoom.isMax();
+        }
+
+        return false;
+      };
+
+      ctrl.minZoom = function () {
+        if (ctrl.chartViewModel && ctrl.chartViewModel.zoom) {
+          return ctrl.chartViewModel.zoom.isMin();
+        }
+
+        return false;
+      };
+
+      ctrl.zoomIn = function () {
+        ctrl.chartViewModel.zoom.in();
+      };
+
+      ctrl.zoomOut = function () {
+        ctrl.chartViewModel.zoom.out();
+      };
+    }] // controller
+  }); // module
+})();
+;/* eslint-disable */
+(function() {
+  'use strict';
+
+  angular.module('patternfly.canvas')
+    .directive('toolboxItems', toolboxItemsDirective);
+
+  function toolboxItemsDirective() {
+    var directive = {
+      restrict: 'E',
+      scope: {
+        items: '=',
+        startDragCallback: '=',
+        clickCallback: '=',
+        searchText: '='
+      },
+      controller: toolboxItemsController,
+      templateUrl: 'canvas-view/canvas-editor/toolbox-items.html',
+      controllerAs: 'vm',
+      bindToController: true
+    };
+
+    return directive;
+
+    function toolboxItemsController() {
+      var vm = this;
+
+      vm.clickCallbackfmDir = function(item) {
+        if (!item.disableInToolbox) {
+          vm.clickCallback(item);
+        }
+      };
+
+      vm.startDragCallbackfmDir = function(event, ui, item) {
+        vm.startDragCallback(event, ui, item);
+      };
+    }
+  }
+})();
+;(function () {
+  'use strict';
+
+  angular.module('patternfly.canvas')
+  .filter('trustAsResourceUrl', ['$sce', function ($sce) {
+    return function (val) {
+      return $sce.trustAsResourceUrl(val);
+    };
+  }])
+
+  //
+  // Directive that generates the rendered chart from the data model.
+  //
+  .directive('pfCanvas', ["$document", function ($document) {
+    return {
+      restrict: 'E',
+      templateUrl: "canvas-view/canvas/canvas.html",
+      replace: true,
+      scope: {
+        chartDataModel: "=",
+        chartViewModel: "=?",
+        readOnly: "=?",
+        hideConnectors: "=?"
+      },
+      controller: 'CanvasController',
+      link: link
+    };
+    function link (scope) {
+      var deleteKeyCode = 46;
+      var ctrlKeyCode = 17;
+      var ctrlDown = false;
+      var aKeyCode = 65;
+      var dKeyCode = 68;
+      var escKeyCode = 27;
+
+      $document.find('body').keydown(function (evt) {
+        if (evt.keyCode === ctrlKeyCode) {
+          ctrlDown = true;
+          evt.stopPropagation();
+          evt.preventDefault();
+        }
+
+        if (evt.keyCode === aKeyCode && ctrlDown) {
+          //
+          // Ctrl + A
+          //
+          scope.selectAll();
+          scope.$digest();
+          evt.stopPropagation();
+          evt.preventDefault();
+        }
+      });
+
+      $document.find('body').keyup(function (evt) {
+        if (evt.keyCode === deleteKeyCode) {
+          scope.deleteSelected();
+          scope.$digest();
+        }
+
+        if (evt.keyCode === escKeyCode) {
+          scope.deselectAll();
+          scope.$digest();
+        }
+
+        if (evt.keyCode === ctrlKeyCode) {
+          ctrlDown = false;
+          evt.stopPropagation();
+          evt.preventDefault();
+        }
+      });
+    }
+  }])
+  //
+  // Controller for the canvas directive.
+  // Having a separate controller is better for unit testing, otherwise
+  // it is painful to unit test a directive without instantiating the DOM
+  // (which is possible, just not ideal).
+  //
+  .controller('CanvasController', ['$scope', 'dragging', '$element', '$document', function CanvasController ($scope, dragging, $element, $document) {
+    var controller = this;
+
+    $scope.chart = new pfCanvas.ChartViewModel($scope.chartDataModel);
+    $scope.chartViewModel = $scope.chart;
+    //
+    // Reference to the document and jQuery, can be overridden for testting.
+    //
+    this.document = document;
+
+    //
+    // Wrap jQuery so it can easily be  mocked for testing.
+    //
+    this.jQuery = function (element) {
+      return angular.element(element);
+    };
+
+    //
+    // Init data-model variables.
+    //
+    $scope.draggingConnection = false;
+    $scope.connectorSize = 6;
+    $scope.dragSelecting = false;
+
+    //
+    // Reference to the connection, connector or node that the mouse is currently over.
+    //
+    $scope.mouseOverConnector = null;
+    $scope.mouseOverConnection = null;
+    $scope.mouseOverNode = null;
+
+    //
+    // The class for connections and connectors.
+    //
+    this.connectionClass = 'connection';
+    this.connectorClass = 'connector';
+    this.nodeClass = 'node';
+
+    //
+    // Translate the coordinates so they are relative to the svg element.
+    //
+    this.translateCoordinates = function (x, y, evt) {
+      var svgElem =  $element.get(0);
+      var matrix = svgElem.getScreenCTM();
+      var point = svgElem.createSVGPoint();
+      point.x = (x - evt.view.pageXOffset) / $scope.zoomLevel();
+      point.y = (y - evt.view.pageYOffset) / $scope.zoomLevel();
+
+      return point.matrixTransform(matrix.inverse());
+    };
+
+    $scope.hideConnectors = $scope.hideConnectors ? $scope.hideConnectors : false;
+
+    $scope.isConnectorConnected = function (connector) {
+      return (connector && connector.connected());
+    };
+
+    $scope.isConnectorUnconnectedAndValid = function (connector) {
+      return (connector && !connector.connected() && !connector.invalid() &&
+              connector.parentNode() !== $scope.connectingModeSourceNode);
+    };
+
+    // determins if a dest. connector is connected to the source node
+    $scope.isConnectedTo = function (connector, node) {
+      var i,connection;
+      var connections = $scope.chart.connections;
+      for (i = 0; i < connections.length; i++) {
+        connection = connections[i];
+        if (connection.dest === connector && connection.source.parentNode() === node) {
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    $scope.availableConnections = function () {
+      return $scope.chart.validConnections;
+    };
+
+    $scope.foreignObjectSupported = function () {
+      return $document[0].implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Extensibility', '1.1');
+    };
+
+    $scope.addNodeToCanvas = function (newNode) {
+      $scope.chart.addNode(newNode);
+    };
+
+    $scope.$on('selectAll', function (evt, args) {
+      $scope.selectAll();
+    });
+
+    $scope.selectAll = function () {
+      $scope.chart.selectAll();
+    };
+
+    $scope.$on('deselectAll', function (evt, args) {
+      $scope.deselectAll();
+    });
+
+    $scope.deselectAll = function () {
+      $scope.chart.deselectAll();
+    };
+
+    $scope.$on('deleteSelected', function (evt, args) {
+      $scope.deleteSelected();
+    });
+
+    $scope.deleteSelected = function () {
+      $scope.chart.deleteSelected();
+    };
+
+    //
+    // Called on mouse down in the chart.
+    //
+    $scope.mouseDown = function (evt) {
+      if ($scope.readOnly) {
+        return;
+      }
+
+      if ($scope.chart.inConnectingMode ) {
+        // camceling out of connection mode, remove unused output connector
+        $scope.cancelConnectingMode();
+      }
+
+      $scope.chart.deselectAll();
+
+      $scope.chart.clickedOnChart = true;
+
+      dragging.startDrag(evt, {
+
+        //
+        // Commence dragging... setup variables to display the drag selection rect.
+        //
+        dragStarted: function (x, y) {
+          var startPoint;
+          $scope.dragSelecting = true;
+          startPoint = controller.translateCoordinates(x, y, evt);
+          $scope.dragSelectionStartPoint = startPoint;
+          $scope.dragSelectionRect = {
+            x: startPoint.x,
+            y: startPoint.y,
+            width: 0,
+            height: 0,
+          };
+        },
+
+        //
+        // Update the drag selection rect while dragging continues.
+        //
+        dragging: function (x, y) {
+          var startPoint = $scope.dragSelectionStartPoint;
+          var curPoint = controller.translateCoordinates(x, y, evt);
+
+          $scope.dragSelectionRect = {
+            x: curPoint.x > startPoint.x ? startPoint.x : curPoint.x,
+            y: curPoint.y > startPoint.y ? startPoint.y : curPoint.y,
+            width: curPoint.x > startPoint.x ? curPoint.x - startPoint.x : startPoint.x - curPoint.x,
+            height: curPoint.y > startPoint.y ? curPoint.y - startPoint.y : startPoint.y - curPoint.y,
+          };
+        },
+
+        //
+        // Dragging has ended... select all that are within the drag selection rect.
+        //
+        dragEnded: function () {
+          $scope.dragSelecting = false;
+          $scope.chart.applySelectionRect($scope.dragSelectionRect);
+          delete $scope.dragSelectionStartPoint;
+          delete $scope.dragSelectionRect;
+        },
+      });
+    };
+
+    //
+    // Handle nodeMouseOver on an node.
+    //
+    $scope.nodeMouseOver = function (evt, node) {
+      if (!$scope.readOnly) {
+        $scope.mouseOverNode = node;
+      }
+    };
+
+    //
+    // Handle nodeMouseLeave on an node.
+    //
+    $scope.nodeMouseLeave = function (evt, node) {
+      $scope.mouseOverNode = null;
+    };
+
+    //
+    // Handle mousedown on a node.
+    //
+    $scope.nodeMouseDown = function (evt, node) {
+      var chart = $scope.chart;
+      var lastMouseCoords;
+
+      if ($scope.readOnly) {
+        return;
+      }
+
+      dragging.startDrag(evt, {
+
+        //
+        // Node dragging has commenced.
+        //
+        dragStarted: function (x, y) {
+          lastMouseCoords = controller.translateCoordinates(x, y, evt);
+
+          //
+          // If nothing is selected when dragging starts,
+          // at least select the node we are dragging.
+          //
+          if (!node.selected()) {
+            chart.deselectAll();
+            node.select();
+          }
+        },
+
+        //
+        // Dragging selected nodes... update their x,y coordinates.
+        //
+        dragging: function (x, y) {
+          var curCoords = controller.translateCoordinates(x, y, evt);
+          var deltaX = curCoords.x - lastMouseCoords.x;
+          var deltaY = curCoords.y - lastMouseCoords.y;
+
+          chart.updateSelectedNodesLocation(deltaX, deltaY);
+
+          lastMouseCoords = curCoords;
+        },
+
+        //
+        // The node wasn't dragged... it was clicked.
+        //
+        clicked: function () {
+          chart.handleNodeClicked(node, evt.ctrlKey);
+        },
+
+      });
+    };
+
+    //
+    // Listen for node action
+    //
+    $scope.$on('nodeActionClicked', function (evt, args) {
+      var action = args.action;
+      var node = args.node;
+
+      if (action === 'nodeActionConnect') {
+        $scope.startConnectingMode(node);
+      }
+    });
+
+    $scope.$on('nodeActionClosed', function () {
+      $scope.mouseOverNode = null;
+    });
+
+    $scope.connectingModeOutputConnector = null;
+    $scope.connectingModeSourceNode = null;
+
+    $scope.startConnectingMode = function (node) {
+      $scope.chart.inConnectingMode = true;
+      $scope.hideConnectors = false;
+      $scope.connectingModeSourceNode = node;
+      $scope.connectingModeSourceNode.select();
+      $scope.connectingModeOutputConnector = node.getOutputConnector();
+      $scope.chart.updateValidNodesAndConnectors($scope.connectingModeSourceNode);
+    };
+
+    $scope.cancelConnectingMode = function () {
+      // if output connector not connected to something, remove it
+      if (!$scope.connectingModeOutputConnector.connected()) {
+        $scope.chart.removeOutputConnector($scope.connectingModeOutputConnector);
+      }
+      $scope.stopConnectingMode();
+    };
+
+    $scope.stopConnectingMode = function () {
+      $scope.chart.inConnectingMode = false;
+      $scope.chart.resetValidNodesAndConnectors();
+    };
+
+    //
+    // Handle connectionMouseOver on an connection.
+    //
+    $scope.connectionMouseOver = function (evt, connection) {
+      if (!$scope.draggingConnection && !$scope.readOnly) {  // Only allow 'connection mouse over' when not dragging out a connection.
+        $scope.mouseOverConnection = connection;
+      }
+    };
+
+    //
+    // Handle connectionMouseLeave on an connection.
+    //
+    $scope.connectionMouseLeave = function (evt, connection) {
+      $scope.mouseOverConnection = null;
+    };
+
+    //
+    // Handle mousedown on a connection.
+    //
+    $scope.connectionMouseDown = function (evt, connection) {
+      var chart = $scope.chart;
+      if (!$scope.readOnly) {
+        chart.handleConnectionMouseDown(connection, evt.ctrlKey);
+      }
+      // Don't let the chart handle the mouse down.
+      evt.stopPropagation();
+      evt.preventDefault();
+    };
+
+    //
+    // Handle connectorMouseOver on an connector.
+    //
+    $scope.connectorMouseOver = function (evt, node, connector, connectorIndex, isInputConnector) {
+      if (!$scope.readOnly) {
+        $scope.mouseOverConnector = connector;
+      }
+    };
+
+    //
+    // Handle connectorMouseLeave on an connector.
+    //
+    $scope.connectorMouseLeave = function (evt, node, connector, connectorIndex, isInputConnector) {
+      $scope.mouseOverConnector = null;
+    };
+
+    //
+    // Handle mousedown on an input connector.
+    //
+    $scope.connectorMouseDown = function (evt, node, connector, connectorIndex, isInputConnector) {
+      if ($scope.chart.inConnectingMode && node !== $scope.connectingModeSourceNode) {
+        $scope.chart.createNewConnection($scope.connectingModeOutputConnector, $scope.mouseOverConnector);
+        $scope.stopConnectingMode();
+      }
+    };
+
+    //
+    // zoom.
+    //
+    $scope.$on('zoomIn', function (evt, args) {
+      $scope.chart.zoom.in();
+    });
+
+    $scope.$on('zoomOut', function (evt, args) {
+      $scope.chart.zoom.out();
+    });
+
+    $scope.maxZoom = function () {
+      return ($scope.chart.chartViewModel && $scope.chart.chartViewModel.zoom) ? $scope.chart.chartViewModel.zoom.isMax() : false;
+    };
+    $scope.minZoom = function () {
+      return ($scope.chart.chartViewModel && $scope.chart.chartViewModel.zoom) ? $scope.chart.chartViewModel.zoom.isMin() : false;
+    };
+
+    $scope.zoomLevel = function () {
+      return $scope.chart.zoom.getLevel();
+    };
+  }
+  ]);
+})();
+;/* eslint-disable */
+//
+// Global accessor.
+//
+var pfCanvas = {};
+
+// Module.
+(function() {
+  //
+  // Height of flow chart.
+  //
+  pfCanvas.defaultHeight = 756;
+
+  //
+  // Width of flow chart.
+  //
+  pfCanvas.defaultWidth = 1396;
+
+  pfCanvas.defaultBgImageSize = 24;
+
+  //
+  // Width of a node.
+  //
+  pfCanvas.defaultNodeWidth = 150;
+
+  //
+  // Height of a node.
+  //
+  pfCanvas.defaultNodeHeight = 150;
+
+  //
+  // Amount of space reserved for displaying the node's name.
+  //
+  pfCanvas.nodeNameHeight = 40;
+
+  //
+  // Height of a connector in a node.
+  //
+  pfCanvas.connectorHeight = 25;
+
+  //
+  // Compute the Y coordinate of a connector, given its index.
+  //
+  pfCanvas.computeConnectorY = function(connectorIndex) {
+    return pfCanvas.defaultNodeHeight / 2 + connectorIndex * pfCanvas.connectorHeight;
+  };
+
+  //
+  // Compute the position of a connector in the graph.
+  //
+  pfCanvas.computeConnectorPos = function(node, connectorIndex, inputConnector) {
+    return {
+      x: node.x() + (inputConnector ? 0 : node.width ? node.width() : pfCanvas.defaultNodeWidth),
+      y: node.y() + pfCanvas.computeConnectorY(connectorIndex),
+    };
+  };
+
+  //
+  // View model for a connector.
+  //
+  pfCanvas.ConnectorViewModel = function(connectorDataModel, x, y, parentNode) {
+    this.data = connectorDataModel;
+
+    this._parentNode = parentNode;
+    this._x = x;
+    this._y = y;
+
+    //
+    // The name of the connector.
+    //
+    this.name = function() {
+      return this.data.name;
+    };
+
+    //
+    // X coordinate of the connector.
+    //
+    this.x = function() {
+      return this._x;
+    };
+
+    //
+    // Y coordinate of the connector.
+    //
+    this.y = function() {
+      return this._y;
+    };
+
+    //
+    // The parent node that the connector is attached to.
+    //
+    this.parentNode = function() {
+      return this._parentNode;
+    };
+
+    //
+    // Is this connector connected?
+    //
+    this.connected = function() {
+      return this.data.connected;
+    };
+
+    //
+    // set connector connected
+    //
+    this.setConnected = function(value) {
+      this.data.connected = value;
+    };
+
+    //
+    // Is this connector invalid for a connecton?
+    //
+    this.invalid = function() {
+      return this.data.invalid;
+    };
+
+    //
+    // set connector invalid
+    //
+    this.setInvalid = function(value) {
+      this.data.invalid = value;
+    };
+
+    //
+    // Font Family for the the node.
+    //
+    this.fontFamily = function() {
+      return this.data.fontFamily || "";
+    };
+
+    //
+    // Font Content for the the node.
+    //
+    this.fontContent = function() {
+      return this.data.fontContent || "";
+    };
+  };
+
+  //
+  // Create view model for a list of data models.
+  //
+  var createConnectorsViewModel = function(connectorDataModels, x, parentNode) {
+    var viewModels = [];
+
+    if (connectorDataModels) {
+      for (var i = 0; i < connectorDataModels.length; ++i) {
+        var connectorViewModel = new pfCanvas.ConnectorViewModel(connectorDataModels[i], x, pfCanvas.computeConnectorY(i), parentNode);
+        viewModels.push(connectorViewModel);
+      }
+    }
+
+    return viewModels;
+  };
+
+  //
+  // View model for a node.
+  //
+  pfCanvas.NodeViewModel = function(nodeDataModel) {
+    this.data = nodeDataModel;
+
+    // set the default width value of the node
+    if (!this.data.width || this.data.width < 0) {
+      this.data.width = pfCanvas.defaultNodeWidth;
+    }
+    this.inputConnectors = createConnectorsViewModel(this.data.inputConnectors, 0, this);
+    this.outputConnectors = createConnectorsViewModel(this.data.outputConnectors, this.data.width, this);
+
+    // Set to true when the node is selected.
+    this._selected = false;
+
+    //
+    // Name of the node.
+    //
+    this.name = function() {
+      return this.data.name || "";
+    };
+
+    //
+    // id of the node.
+    //
+    this.id = function() {
+      return this.data.id || -1;
+    };
+
+    //
+    // Image for the the node.
+    //
+    this.image = function() {
+      return this.data.image || "";
+    };
+
+    //
+    // Icon for the the node.
+    //
+    this.icon = function() {
+      return this.data.icon || "";
+    };
+
+    //
+    // Is node a bundle
+    //
+    this.bundle = function() {
+      return this.data.bundle || "";
+    };
+
+    //
+    // background color for the node.
+    //
+    this.backgroundColor = function() {
+      return this.data.backgroundColor;
+    };
+
+    //
+    // X coordinate of the node.
+    //
+    this.x = function() {
+      return this.data.x;
+    };
+
+    //
+    // Y coordinate of the node.
+    //
+    this.y = function() {
+      return this.data.y;
+    };
+
+    //
+    // Width of the node.
+    //
+    this.width = function() {
+      return this.data.width;
+    };
+
+    //
+    // Font Family for the the node.
+    //
+    this.fontFamily = function() {
+      return this.data.fontFamily || "";
+    };
+
+    //
+    // Font size for the the icon
+    //
+    this.fontSize = function() {
+      return this.data.fontSize || "";
+    };
+
+    //
+    // Font Content for the the node.
+    //
+    this.fontContent = function() {
+      return this.data.fontContent || "";
+    };
+
+    //
+    // Returns valid connection types for the node.
+    //
+    this.validConnectionTypes = function() {
+      return this.data.validConnectionTypes || [];
+    };
+
+    //
+    // Is this node valid for current connection?
+    //
+    this.invalid = function() {
+      return this.data.invalid;
+    };
+
+    //
+    // set node valid
+    //
+    this.setInvalid = function(value) {
+      this.data.invalid = value;
+    };
+
+    //
+    // Height of the node.
+    //
+    this.height = function() {
+      /*
+       var numConnectors =
+       Math.max(
+       this.inputConnectors.length,
+       this.outputConnectors.length);
+
+       return pfCanvas.computeConnectorY(numConnectors);
+       */
+
+      return pfCanvas.defaultNodeHeight;
+    };
+
+    //
+    // Select the node.
+    //
+    this.select = function() {
+      this._selected = true;
+    };
+
+    //
+    // Deselect the node.
+    //
+    this.deselect = function() {
+      this._selected = false;
+    };
+
+    //
+    // Toggle the selection state of the node.
+    //
+    this.toggleSelected = function() {
+      this._selected = !this._selected;
+    };
+
+    //
+    // Returns true if the node is selected.
+    //
+    this.selected = function() {
+      return this._selected;
+    };
+
+    //
+    // Internal function to add a connector.
+    this._addConnector = function(connectorDataModel, x, connectorsDataModel, connectorsViewModel) {
+      var connectorViewModel = new pfCanvas.ConnectorViewModel(connectorDataModel, x,
+        pfCanvas.computeConnectorY(connectorsViewModel.length), this);
+
+      connectorsDataModel.push(connectorDataModel);
+
+      // Add to node's view model.
+      connectorsViewModel.push(connectorViewModel);
+
+      return connectorViewModel;
+    };
+
+    //
+    // Internal function to remove a connector.
+    this._removeConnector = function(connectorDataModel, connectorsDataModel, connectorsViewModel) {
+      var connectorIndex = connectorsDataModel.indexOf(connectorDataModel);
+      connectorsDataModel.splice(connectorIndex, 1);
+      connectorsViewModel.splice(connectorIndex, 1);
+    };
+
+    //
+    // Add an input connector to the node.
+    //
+    this.addInputConnector = function(connectorDataModel) {
+      if (!this.data.inputConnectors) {
+        this.data.inputConnectors = [];
+      }
+      this._addConnector(connectorDataModel, 0, this.data.inputConnectors, this.inputConnectors);
+    };
+
+    //
+    // Get the single ouput connector for the node.
+    //
+    this.getOutputConnector = function() {
+      if (!this.data.outputConnectors) {
+        this.data.outputConnectors = [];
+      }
+
+      if (this.data.outputConnectors.length === 0) {
+        var connectorDataModel = {name: 'out'};
+
+        return this._addConnector(connectorDataModel, this.data.width, this.data.outputConnectors, this.outputConnectors);
+      } else {
+        return this.outputConnectors[0];
+      }
+    };
+
+    //
+    // Remove an ouput connector from the node.
+    //
+    this.removeOutputConnector = function(connectorDataModel) {
+      if (this.data.outputConnectors) {
+        this._removeConnector(connectorDataModel, this.data.outputConnectors, this.outputConnectors);
+      }
+    };
+
+    this.tags = function() {
+      return this.data.tags;
+    };
+  };
+
+  //
+  // Wrap the nodes data-model in a view-model.
+  //
+  var createNodesViewModel = function(nodesDataModel) {
+    var nodesViewModel = [];
+
+    if (nodesDataModel) {
+      for (var i = 0; i < nodesDataModel.length; ++i) {
+        nodesViewModel.push(new pfCanvas.NodeViewModel(nodesDataModel[i]));
+      }
+    }
+
+    return nodesViewModel;
+  };
+
+  //
+  // View model for a node action.
+  //
+  pfCanvas.NodeActionViewModel = function(nodeActionDataModel) {
+    this.data = nodeActionDataModel;
+
+    //
+    // id of the node action.
+    //
+    this.id = function() {
+      return this.data.id || "";
+    };
+
+    //
+    // Name of the node action.
+    //
+    this.name = function() {
+      return this.data.name || "";
+    };
+
+    //
+    // Font Family for the the node.
+    //
+    this.iconClass = function() {
+      return this.data.iconClass || "";
+    };
+
+    //
+    // Font Content for the the node.
+    //
+    this.action = function() {
+      return this.data.action || "";
+    };
+  };
+
+  //
+  // Wrap the node actions data-model in a view-model.
+  //
+  var createNodeActionsViewModel = function(nodeActionsDataModel) {
+    var nodeActionsViewModel = [];
+
+    if (nodeActionsDataModel) {
+      for (var i = 0; i < nodeActionsDataModel.length; ++i) {
+        nodeActionsViewModel.push(new pfCanvas.NodeActionViewModel(nodeActionsDataModel[i]));
+      }
+    }
+
+    return nodeActionsViewModel;
+  };
+
+  //
+  // View model for a connection.
+  //
+  pfCanvas.ConnectionViewModel = function(connectionDataModel, sourceConnector, destConnector) {
+    this.data = connectionDataModel;
+    this.source = sourceConnector;
+    this.dest = destConnector;
+
+    // Set to true when the connection is selected.
+    this._selected = false;
+
+    this.name = function() {
+      return destConnector.name() || "";
+    };
+
+    this.sourceCoordX = function() {
+      return this.source.parentNode().x() + this.source.x();
+    };
+
+    this.sourceCoordY = function() {
+      return this.source.parentNode().y() + this.source.y();
+    };
+
+    this.sourceCoord = function() {
+      return {
+        x: this.sourceCoordX(),
+        y: this.sourceCoordY(),
+      };
+    };
+
+    this.sourceTangentX = function() {
+      return pfCanvas.computeConnectionSourceTangentX(this.sourceCoord(), this.destCoord());
+    };
+
+    this.sourceTangentY = function() {
+      return pfCanvas.computeConnectionSourceTangentY(this.sourceCoord(), this.destCoord());
+    };
+
+    this.destCoordX = function() {
+      return this.dest.parentNode().x() + this.dest.x();
+    };
+
+    this.destCoordY = function() {
+      return this.dest.parentNode().y() + this.dest.y();
+    };
+
+    this.destCoord = function() {
+      return {
+        x: this.destCoordX(),
+        y: this.destCoordY(),
+      };
+    };
+
+    this.destTangentX = function() {
+      return pfCanvas.computeConnectionDestTangentX(this.sourceCoord(), this.destCoord());
+    };
+
+    this.destTangentY = function() {
+      return pfCanvas.computeConnectionDestTangentY(this.sourceCoord(), this.destCoord());
+    };
+
+    this.middleX = function(scale) {
+      if (angular.isUndefined(scale)) {
+        scale = 0.5;
+      }
+
+      return this.sourceCoordX() * (1 - scale) + this.destCoordX() * scale;
+    };
+
+    this.middleY = function(scale) {
+      if (angular.isUndefined(scale)) {
+        scale = 0.5;
+      }
+
+      return this.sourceCoordY() * (1 - scale) + this.destCoordY() * scale;
+    };
+
+    //
+    // Select the connection.
+    //
+    this.select = function() {
+      this._selected = true;
+    };
+
+    //
+    // Deselect the connection.
+    //
+    this.deselect = function() {
+      this._selected = false;
+    };
+
+    //
+    // Toggle the selection state of the connection.
+    //
+    this.toggleSelected = function() {
+      this._selected = !this._selected;
+    };
+
+    //
+    // Returns true if the connection is selected.
+    //
+    this.selected = function() {
+      return this._selected;
+    };
+  };
+
+  //
+  // Helper function.
+  //
+  var computeConnectionTangentOffset = function(pt1, pt2) {
+    return (pt2.x - pt1.x) / 2;
+  };
+
+  //
+  // Compute the tangent for the bezier curve.
+  //
+  pfCanvas.computeConnectionSourceTangentX = function(pt1, pt2) {
+    return pt1.x + computeConnectionTangentOffset(pt1, pt2);
+  };
+
+  //
+  // Compute the tangent for the bezier curve.
+  //
+  pfCanvas.computeConnectionSourceTangentY = function(pt1, pt2) {
+    return pt1.y;
+  };
+
+  //
+  // Compute the tangent for the bezier curve.
+  //
+  pfCanvas.computeConnectionSourceTangent = function(pt1, pt2) {
+    return {
+      x: pfCanvas.computeConnectionSourceTangentX(pt1, pt2),
+      y: pfCanvas.computeConnectionSourceTangentY(pt1, pt2),
+    };
+  };
+
+  //
+  // Compute the tangent for the bezier curve.
+  //
+  pfCanvas.computeConnectionDestTangentX = function(pt1, pt2) {
+    return pt2.x - computeConnectionTangentOffset(pt1, pt2);
+  };
+
+  //
+  // Compute the tangent for the bezier curve.
+  //
+  pfCanvas.computeConnectionDestTangentY = function(pt1, pt2) {
+    return pt2.y;
+  };
+
+  //
+  // Compute the tangent for the bezier curve.
+  //
+  pfCanvas.computeConnectionDestTangent = function(pt1, pt2) {
+    return {
+      x: pfCanvas.computeConnectionDestTangentX(pt1, pt2),
+      y: pfCanvas.computeConnectionDestTangentY(pt1, pt2),
+    };
+  };
+
+  //
+  // View model for the chart.
+  //
+  pfCanvas.ChartViewModel = function(chartDataModel) {
+    //
+    // Find a specific node within the chart.
+    //
+    this.findNode = function(nodeID) {
+      for (var i = 0; i < this.nodes.length; ++i) {
+        var node = this.nodes[i];
+        if (node.data.id === nodeID) {
+          return node;
+        }
+      }
+
+      throw new Error("Failed to find node " + nodeID);
+    };
+
+    //
+    // Find a specific input connector within the chart.
+    //
+    this.findInputConnector = function(nodeID, connectorIndex) {
+      var node = this.findNode(nodeID);
+
+      if (!node.inputConnectors || node.inputConnectors.length <= connectorIndex) {
+        throw new Error("Node " + nodeID + " has invalid input connectors.");
+      }
+
+      return node.inputConnectors[connectorIndex];
+    };
+
+    //
+    // Find a specific output connector within the chart.
+    //
+    this.findOutputConnector = function(nodeID, connectorIndex) {
+      var node = this.findNode(nodeID);
+
+      /*if (!node.outputConnectors || node.outputConnectors.length < connectorIndex) {
+        throw new Error("Node " + nodeID + " has invalid output connectors.");
+      }
+
+      return node.outputConnectors[connectorIndex];*/
+      return node.getOutputConnector();
+    };
+
+    //
+    // Create a view model for connection from the data model.
+    //
+    this._createConnectionViewModel = function(connectionDataModel) {
+      var sourceConnector = this.findOutputConnector(connectionDataModel.source.nodeID, connectionDataModel.source.connectorIndex);
+      var destConnector = this.findInputConnector(connectionDataModel.dest.nodeID, connectionDataModel.dest.connectorIndex);
+
+      sourceConnector.setConnected(true);
+      destConnector.setConnected(true);
+      return new pfCanvas.ConnectionViewModel(connectionDataModel, sourceConnector, destConnector);
+    };
+
+    //
+    // Wrap the connections data-model in a view-model.
+    //
+    this._createConnectionsViewModel = function(connectionsDataModel) {
+      var connectionsViewModel = [];
+
+      if (connectionsDataModel) {
+        for (var i = 0; i < connectionsDataModel.length; ++i) {
+          connectionsViewModel.push(this._createConnectionViewModel(connectionsDataModel[i]));
+        }
+      }
+
+      return connectionsViewModel;
+    };
+
+    // Reference to the underlying data.
+    this.data = chartDataModel;
+
+    // Create a view-model for nodes.
+    this.nodes = createNodesViewModel(this.data.nodes);
+
+    // Create a view-model for nodes.
+    this.nodeActions = createNodeActionsViewModel(this.data.nodeActions);
+
+    // Create a view-model for connections.
+    this.connections = this._createConnectionsViewModel(this.data.connections);
+
+    // Are there any valid connections (used in connection mode) ?
+    this.validConnections = true;
+
+    // Create a view-model for zoom.
+    this.zoom = new pfCanvas.ZoomViewModel();
+
+    // Flag to indicate in connecting mode
+    this.inConnectingMode = false;
+
+    // Flag to indicate whether the chart was just clicked on.
+    this.clickedOnChart = false;
+
+    //
+    // Create a view model for a new connection.
+    //
+    this.createNewConnection = function(startConnector, endConnector) {
+      var connectionsDataModel = this.data.connections;
+      if (!connectionsDataModel) {
+        connectionsDataModel = this.data.connections = [];
+      }
+
+      var connectionsViewModel = this.connections;
+      if (!connectionsViewModel) {
+        connectionsViewModel = this.connections = [];
+      }
+
+      var startNode = startConnector.parentNode();
+      var startConnectorIndex = startNode.outputConnectors.indexOf(startConnector);
+      startConnector = startNode.outputConnectors[startConnectorIndex];
+      var startConnectorType = 'output';
+      if (startConnectorIndex === -1) {
+        startConnectorIndex = startNode.inputConnectors.indexOf(startConnector);
+        startConnectorType = 'input';
+        if (startConnectorIndex === -1) {
+          throw new Error("Failed to find source connector within either inputConnectors or outputConnectors of source node.");
+        }
+      }
+
+      var endNode = endConnector.parentNode();
+      var endConnectorIndex = endNode.inputConnectors.indexOf(endConnector);
+      endConnector = endNode.inputConnectors[endConnectorIndex];
+      var endConnectorType = 'input';
+      if (endConnectorIndex === -1) {
+        endConnectorIndex = endNode.outputConnectors.indexOf(endConnector);
+        endConnectorType = 'output';
+        if (endConnectorIndex === -1) {
+          throw new Error("Failed to find dest connector within inputConnectors or outputConnectors of dest node.");
+        }
+      }
+
+      if (startConnectorType === endConnectorType) {
+        throw new Error("Failed to create connection. Only output to input connections are allowed.");
+      }
+
+      if (startNode === endNode) {
+        throw new Error("Failed to create connection. Cannot link a node with itself.");
+      }
+
+      startNode = {
+        nodeID: startNode.data.id,
+        connectorIndex: startConnectorIndex,
+      };
+
+      endNode = {
+        nodeID: endNode.data.id,
+        connectorIndex: endConnectorIndex,
+      };
+
+      var connectionDataModel = {
+        source: startConnectorType === 'output' ? startNode : endNode,
+        dest: startConnectorType === 'output' ? endNode : startNode,
+      };
+      connectionsDataModel.push(connectionDataModel);
+
+      var outputConnector = startConnectorType === 'output' ? startConnector : endConnector;
+      var inputConnector = startConnectorType === 'output' ? endConnector : startConnector;
+
+      var connectionViewModel = new pfCanvas.ConnectionViewModel(connectionDataModel, outputConnector, inputConnector);
+      connectionsViewModel.push(connectionViewModel);
+
+      startConnector.setConnected(true);
+      endConnector.setConnected(true);
+    };
+
+    //
+    // Add a node to the view model.
+    //
+    this.addNode = function(nodeDataModel) {
+      if (!this.data.nodes) {
+        this.data.nodes = [];
+      }
+
+      //
+      // Update the data model.
+      //
+      this.data.nodes.push(nodeDataModel);
+
+      //
+      // Update the view model.
+      //
+      this.nodes.push(new pfCanvas.NodeViewModel(nodeDataModel));
+    };
+
+    //
+    // Select all nodes and connections in the chart.
+    //
+    this.selectAll = function() {
+      var nodes = this.nodes;
+      for (var i = 0; i < nodes.length; ++i) {
+        var node = nodes[i];
+        node.select();
+      }
+
+      var connections = this.connections;
+      for (i = 0; i < connections.length; ++i) {
+        var connection = connections[i];
+        connection.select();
+      }
+    };
+
+    //
+    // Deselect all nodes and connections in the chart.
+    //
+    this.deselectAll = function() {
+      var nodes = this.nodes;
+      for (var i = 0; i < nodes.length; ++i) {
+        var node = nodes[i];
+        node.deselect();
+        // close any/all open toolbar dialogs
+        node.toolbarDlgOpen = false;
+      }
+
+      var connections = this.connections;
+      for (i = 0; i < connections.length; ++i) {
+        var connection = connections[i];
+        connection.deselect();
+      }
+    };
+
+    //
+    // Mark nodes & connectors as valid/invalid based on source node's
+    // valid connection types
+    //
+    this.updateValidNodesAndConnectors = function(sourceNode) {
+      this.validConnections = false;
+      var validConnectionTypes = sourceNode.validConnectionTypes();
+      for (var i = 0; i < this.nodes.length; ++i) {
+        var node = this.nodes[i];
+        node.setInvalid(true);
+        for (var c = 0; c < node.inputConnectors.length; c++) {
+          var inputConnector = node.inputConnectors[c];
+          inputConnector.setInvalid(validConnectionTypes.indexOf(inputConnector.data.type) === -1);
+          if (!inputConnector.invalid() && node !== sourceNode && !inputConnector.connected()) {
+            node.setInvalid(false);
+            this.validConnections = true;
+          }
+        }
+      }
+    };
+
+    //
+    // Mark nodes & connectors as valid
+    //
+    this.resetValidNodesAndConnectors = function() {
+      for (var i = 0; i < this.nodes.length; ++i) {
+        var node = this.nodes[i];
+        node.setInvalid(false);
+        for (var c = 0; c < node.inputConnectors.length; c++) {
+          var inputConnector = node.inputConnectors[c];
+          inputConnector.setInvalid(false);
+        }
+      }
+    };
+
+    this.removeOutputConnector = function(connectorViewModel) {
+      var parentNode = connectorViewModel.parentNode();
+      parentNode.removeOutputConnector(connectorViewModel.data);
+    };
+
+    //
+    // Update the location of the node and its connectors.
+    //
+    this.updateSelectedNodesLocation = function(deltaX, deltaY) {
+      var selectedNodes = this.getSelectedNodes();
+
+      for (var i = 0; i < selectedNodes.length; ++i) {
+        var node = selectedNodes[i];
+        node.data.x += deltaX;
+        node.data.y += deltaY;
+      }
+    };
+
+    //
+    // Handle mouse click on a particular node.
+    //
+    this.handleNodeClicked = function(node, ctrlKey) {
+      if (ctrlKey) {
+        node.toggleSelected();
+      } else {
+        this.deselectAll();
+        node.select();
+      }
+
+      // Move node to the end of the list so it is rendered after all the other.
+      // This is the way Z-order is done in SVG.
+
+      var nodeIndex = this.nodes.indexOf(node);
+      if (nodeIndex === -1) {
+        throw new Error("Failed to find node in view model!");
+      }
+      this.nodes.splice(nodeIndex, 1);
+      this.nodes.push(node);
+    };
+
+    //
+    // Handle mouse down on a connection.
+    //
+    this.handleConnectionMouseDown = function(connection, ctrlKey) {
+      if (ctrlKey) {
+        connection.toggleSelected();
+      } else {
+        this.deselectAll();
+        connection.select();
+      }
+    };
+
+    //
+    // Delete all nodes and connections that are selected.
+    //
+    this.duplicateSelectedNode = function() {
+      var duplicatedNode = angular.copy(this.getSelectedNodes()[0]);
+      delete duplicatedNode.data.outputConnectors;
+      return duplicatedNode.data;
+    };
+
+    //
+    // Delete all nodes and connections that are selected.
+    //
+    this.deleteSelected = function() {
+      var newNodeViewModels = [];
+      var newNodeDataModels = [];
+
+      var deletedNodeIds = [];
+
+      //
+      /* Sort nodes into:
+       *		nodes to keep and
+       *		nodes to delete.
+       */
+
+      for (var nodeIndex = 0; nodeIndex < this.nodes.length; ++nodeIndex) {
+        var node = this.nodes[nodeIndex];
+        if (!node.selected()) {
+          // Only retain non-selected nodes.
+          newNodeViewModels.push(node);
+          newNodeDataModels.push(node.data);
+        } else {
+          // Keep track of nodes that were deleted, so their connections can also
+          // be deleted.
+          deletedNodeIds.push(node.data.id);
+        }
+      }
+
+      var newConnectionViewModels = [];
+      var newConnectionDataModels = [];
+
+      //
+      // Remove connections that are selected.
+      // Also remove connections for nodes that have been deleted.
+      //
+      for (var connectionIndex = 0; connectionIndex < this.connections.length; ++connectionIndex) {
+        var connection = this.connections[connectionIndex];
+        if (!connection.selected()) {
+          if (deletedNodeIds.indexOf(connection.data.source.nodeID) === -1
+            && deletedNodeIds.indexOf(connection.data.dest.nodeID) === -1) {
+            //
+            // The nodes this connection is attached to, where not deleted,
+            // so keep the connection.
+            //
+            newConnectionViewModels.push(connection);
+            newConnectionDataModels.push(connection.data);
+          }
+        } else {
+          // connection selected, so it will be deleted (ie. not included in the 'newConnection models)
+          // also delete the connection's source node's output connector (if source node hasn't been deleteed
+          if (deletedNodeIds.indexOf(connection.data.source.nodeID) === -1) {
+            var sourceConnectorViewModel = connection.source;
+            if (sourceConnectorViewModel) {
+              sourceConnectorViewModel._parentNode.removeOutputConnector(sourceConnectorViewModel.data);
+              // also set connected to false on the dest node
+              var destConnectorViewModel = connection.dest;
+              if (destConnectorViewModel) {
+                destConnectorViewModel.setConnected(false);
+              } else {
+                throw new Error("Failed to find dest node of deleted connection!");
+              }
+            } else {
+              throw new Error("Failed to find source node of deleted connection!");
+            }
+          }
+        }
+      }
+
+      //
+      // Update nodes and connections.
+      //
+      this.nodes = newNodeViewModels;
+      this.data.nodes = newNodeDataModels;
+      this.connections = newConnectionViewModels;
+      this.data.connections = newConnectionDataModels;
+    };
+
+    //
+    // Select nodes and connections that fall within the selection rect.
+    //
+    this.applySelectionRect = function(selectionRect) {
+      this.deselectAll();
+
+      for (var i = 0; i < this.nodes.length; ++i) {
+        var node = this.nodes[i];
+        if (node.x() >= selectionRect.x
+          && node.y() >= selectionRect.y
+          && node.x() + node.width() <= selectionRect.x + selectionRect.width
+          && node.y() + node.height() <= selectionRect.y + selectionRect.height) {
+          // Select nodes that are within the selection rect.
+          node.select();
+        }
+      }
+
+      for (i = 0; i < this.connections.length; ++i) {
+        var connection = this.connections[i];
+        if (connection.source.parentNode().selected()
+          && connection.dest.parentNode().selected()) {
+          // Select the connection if both its parent nodes are selected.
+          connection.select();
+        }
+      }
+    };
+
+    //
+    // Get the array of nodes that are currently selected.
+    //
+    this.getSelectedNodes = function() {
+      var selectedNodes = [];
+
+      for (var i = 0; i < this.nodes.length; ++i) {
+        var node = this.nodes[i];
+        if (node.selected()) {
+          selectedNodes.push(node);
+        }
+      }
+
+      return selectedNodes;
+    };
+
+    //
+    // Is only one node selected
+    //
+    this.isOnlyOneNodeSelected = function() {
+      return this.getSelectedNodes().length === 1;
+    };
+
+    //
+    // Are any nodes selected
+    //
+    this.areAnyNodesSelected = function() {
+      return this.getSelectedNodes().length > 0;
+    };
+
+    //
+    // Get the array of connections that are currently selected.
+    //
+    this.getSelectedConnections = function() {
+      var selectedConnections = [];
+
+      for (var i = 0; i < this.connections.length; ++i) {
+        var connection = this.connections[i];
+        if (connection.selected()) {
+          selectedConnections.push(connection);
+        }
+      }
+
+      return selectedConnections;
+    };
+  };
+
+  //
+  // Zoom view model
+  //
+  pfCanvas.ZoomViewModel = function() {
+    this.max = 1; // Max zoom level
+    this.min = parseFloat(".5"); // Min zoom level
+    this.inc = parseFloat(".25"); // Zoom level increment
+    this.level = this.max; // Zoom level
+
+    //
+    // Is max zoom
+    //
+    this.isMax = function() {
+      return (this.level === this.max);
+    };
+
+    //
+    // Is min zoom
+    //
+    this.isMin = function() {
+      return (this.level === this.min);
+    };
+
+    //
+    // Get background image size
+    //
+    this.getBackgroundSize = function() {
+      var size = pfCanvas.defaultBgImageSize * this.getLevel();
+
+      return size;
+    };
+
+    //
+    // Get height to accomodate flow chart
+    //
+    this.getChartHeight = function() {
+      var height = (pfCanvas.defaultHeight / this.min) * this.getLevel();
+
+      return height;
+    };
+
+    //
+    // Get width to accomodate flow chart
+    //
+    this.getChartWidth = function() {
+      var width = (pfCanvas.defaultWidth / this.min) * this.getLevel();
+
+      return width;
+    };
+
+    //
+    // Zoom level
+    //
+    this.getLevel = function() {
+      return this.level;
+    };
+
+    //
+    // Zoom in
+    //
+    this.in = function() {
+      if (!this.isMax()) {
+        this.level = (this.level * 10 + this.inc * 10) / 10;
+      }
+    };
+
+    //
+    // Zoom out
+    //
+    this.out = function() {
+      if (!this.isMin()) {
+        this.level = (this.level * 10 - this.inc * 10) / 10;
+      }
+    };
+  };
+})();
+;(function () {
+  'use strict';
+
+  // Service used to help with dragging and clicking on elements.
+  angular.module('dragging', ['mouseCapture'])
+    .factory('dragging', ['mouseCapture', Factory]);
+
+  function Factory (mouseCapture) {
+    //
+    // Threshold for dragging.
+    // When the mouse moves by at least this amount dragging starts.
+    //
+    var threshold = 5;
+
+    return {
+
+      //
+      // Called by users of the service to register a mousedown event and start dragging.
+      // Acquires the 'mouse capture' until the mouseup event.
+      //
+      startDrag: function (evt, config) {
+        var dragging = false;
+        var x = evt.pageX;
+        var y = evt.pageY;
+
+        //
+        // Handler for mousemove events while the mouse is 'captured'.
+        //
+        var mouseMove = function (evt) {
+          if (!dragging) {
+            if (Math.abs(evt.pageX - x) > threshold
+              || Math.abs(evt.pageY - y) > threshold) {
+              dragging = true;
+
+              if (config.dragStarted) {
+                config.dragStarted(x, y, evt);
+              }
+
+              if (config.dragging) {
+                // First 'dragging' call to take into account that we have
+                // already moved the mouse by a 'threshold' amount.
+                config.dragging(evt.pageX, evt.pageY, evt);
+              }
+            }
+          } else {
+            if (config.dragging) {
+              config.dragging(evt.pageX, evt.pageY, evt);
+            }
+
+            x = evt.pageX;
+            y = evt.pageY;
+          }
+        };
+
+        //
+        // Handler for when mouse capture is released.
+        //
+        var released = function () {
+          if (dragging) {
+            if (config.dragEnded) {
+              config.dragEnded();
+            }
+          } else {
+            if (config.clicked) {
+              config.clicked();
+            }
+          }
+        };
+
+        //
+        // Handler for mouseup event while the mouse is 'captured'.
+        // Mouseup releases the mouse capture.
+        //
+        var mouseUp = function (evt) {
+          mouseCapture.release();
+
+          evt.stopPropagation();
+          evt.preventDefault();
+        };
+
+        //
+        // Acquire the mouse capture and start handling mouse events.
+        //
+        mouseCapture.acquire(evt, {
+          mouseMove: mouseMove,
+          mouseUp: mouseUp,
+          released: released,
+        });
+
+        evt.stopPropagation();
+        evt.preventDefault();
+      },
+
+    };
+  }
+})();
+
+;(function () {
+  "use strict";
+
+  // Service used to acquire 'mouse capture' then receive dragging events while the mouse is captured.
+  angular.module('mouseCapture', [])
+    .factory('mouseCapture', ['$rootScope', Factory])
+    .directive('mouseCapture', [ComponentDirective]);
+
+  function Factory ($rootScope) {
+    //
+    // Element that the mouse capture applies to, defaults to 'document'
+    // unless the 'mouse-capture' directive is used.
+    //
+    var $element = document;
+
+    //
+    // Set when mouse capture is acquired to an object that contains
+    // handlers for 'mousemove' and 'mouseup' events.
+    //
+    var mouseCaptureConfig = null;
+
+    //
+    // Handler for mousemove events while the mouse is 'captured'.
+    //
+    var mouseMove = function (evt) {
+      if (mouseCaptureConfig && mouseCaptureConfig.mouseMove) {
+        mouseCaptureConfig.mouseMove(evt);
+
+        $rootScope.$digest();
+      }
+    };
+
+    //
+    // Handler for mouseup event while the mouse is 'captured'.
+    //
+    var mouseUp = function (evt) {
+      if (mouseCaptureConfig && mouseCaptureConfig.mouseUp) {
+        mouseCaptureConfig.mouseUp(evt);
+
+        $rootScope.$digest();
+      }
+    };
+
+    return {
+
+      //
+      // Register an element to use as the mouse capture element instead of
+      // the default which is the document.
+      //
+      registerElement: function (element) {
+        $element = element;
+      },
+
+      //
+      // Acquire the 'mouse capture'.
+      // After acquiring the mouse capture mousemove and mouseup events will be
+      // forwarded to callbacks in 'config'.
+      //
+      acquire: function (evt, config) {
+        //
+        // Release any prior mouse capture.
+        //
+        this.release();
+
+        mouseCaptureConfig = config;
+
+        //
+        // In response to the mousedown event register handlers for mousemove and mouseup
+        // during 'mouse capture'.
+        //
+        $element.mousemove(mouseMove);
+        $element.mouseup(mouseUp);
+      },
+
+      //
+      // Release the 'mouse capture'.
+      //
+      release: function () {
+        if (mouseCaptureConfig) {
+          if (mouseCaptureConfig.released) {
+            //
+            // Let the client know that their 'mouse capture' has been released.
+            //
+            mouseCaptureConfig.released();
+          }
+
+          mouseCaptureConfig = null;
+        }
+
+        $element.unbind("mousemove", mouseMove);
+        $element.unbind("mouseup", mouseUp);
+      },
+    };
+  }
+
+  function ComponentDirective () {
+    return {
+      restrict: 'A',
+      controller: ['$scope', '$element', '$attrs', 'mouseCapture',
+        function ($scope, $element, $attrs, mouseCapture) {
+          //
+          // Register the directives element as the mouse capture element.
+          //
+          mouseCapture.registerElement($element);
+        }],
+
+    };
+  }
+})();
+
+;(function () {
+  'use strict';
+
+  nodeToolbarDirective.$inject = ["$document"];
+  angular.module('patternfly.canvas')
+    .directive('nodeToolbar', nodeToolbarDirective);
+
+  function nodeToolbarDirective ($document) {
+    var directive = {
+      restrict: 'E',
+      scope: {
+        node: '=',
+        nodeActions: '=',
+      },
+      controller: NodeToolbarController,
+      templateUrl: 'canvas-view/canvas/node-toolbar.html',
+      controllerAs: 'vm',
+      bindToController: true,
+    };
+
+    return directive;
+
+    function NodeToolbarController ($scope) {
+      var vm = this;
+      vm.selectedAction = "none";
+
+      $scope.actionIconClicked = function (action) {
+        vm.selectedAction = action;
+        $scope.$emit('nodeActionClicked', {'action': action, 'node': vm.node});
+      };
+
+      $scope.close = function () {
+        vm.selectedAction = 'none';
+        $scope.$emit('nodeActionClosed');
+      };
+    }
+  }
+})();
+;/**
+ * @ngdoc directive
+ * @name patternfly.canvas.directive:pfCanvas
+ * @restrict E
+ *
+ * @description
+ * Directive for core operations and rendering of a canvas. Does not work in IE 11 or lower because they do not support
+ * latest svg specification's 'foreignObject' api.  Tested in FireFox, Chrome, and MS-Edge.
+ * @param {object} chartDataModel Chart data object which defines the nodes and connections on the canvas
+ * <ul style='list-style-type: none'>
+ *   <li>.nodes  - An array of node objects.  For each node's main icon/image you can define either an <em>image url</em>, an <em>icon class</em>, or
+ *   <em>fontContent</em> unicode characters.  For more information please see the details below:
+ *   <ul style='list-style-type: none'>
+ *     <li>.name     - (string) The name of the node
+ *     <li>.x        - (number) The canvas x-coordinate to place the node
+ *     <li>.y        - (number) The canvas y-coordinate to place the node
+ *     <li>.id       - (number) The node id.  Used to define connections between nodes.
+ *     <li>.width    - (number) The width of the node rectangle
+ *     <li>.image    - (string) (Optional) The url of the main node image.  Ex: "/img/kubernetes.svg"
+ *     <li>.icon     - (string) (Optional) The icon class of the node icon.  Ex: "pf pficon-service" Note: Does not work in IE browsers
+ *     <li>.fontSize - (string) (Optional) The size of the main node icon. Used with <em>icon</em>
+ *     <li>.fontFamily  - (string) (Optional) The font family of the node icon. Ex: "fontawesome"
+ *     <li>.fontContent - (string) (Optional) The unicode characters of the node icon. Used with <em>fontFamily</em>. Ex: "\uf0c2"
+ *     <li>.backgroundColor - (string) The background color of the node rectangle
+ *     <li>.inputConnectors - An array of input connectors.  Connectors appear on the left side of a node's rectangle when in 'connection mode' and are endpoints of connections between nodes.
+ *     <ul style='list-style-type: none'>
+ *       <li>.name        - (string) The name of the connector
+ *       <li>.type        - (string) A user defined 'type' of input connector.  Nodes can only connect to certain 'types' of connectors.  Used with <em>validConnectionTypes</em>. Ex: "network".
+ *       <li>.fontFamily  - (string) (Optional) The font family of the connector icon. Ex: "PatternFlyIcons-webfont"
+ *       <li>.fontContent - (string) (Optional) The unicode characters of the connector icon. Used with <em>fontFamily</em>. Ex: "\ue621"
+ *     </ul>
+ *     <li>.validConnectionTypes - An array of valid connector types which the node can connect to. Used with <em>node.type's</em>. Ex: "["network","container"]
+ *   </ul>
+ *   <li>.nodeActions  - An array of actions which appear in a toolbar under a node.
+ *     <ul style='list-style-type: none'>
+ *       <li>.id        - (number) The id of the node action
+ *       <li>.name      - (string) The name of the node action
+ *       <li>.iconClass - (string) The icon class of the action.  Ex: "pf pficon-edit"
+ *       <li>.action    - (string) The action identifier, which is passed along with the action event.
+ *     </ul>
+ *   <li>.connections  - An array of connections between nodes
+ *     <ul style='list-style-type: none'>
+ *       <li>.source - (object) The source of a connection
+ *         <ul style='list-style-type: none'>
+ *           <li>.nodeID         - (number) The id of the source node
+ *           <li>.connectorIndex - (number) The index of the output connector on the source node.  Since all nodes have a single output connector, this value is always 0
+ *         </ul>
+ *       <li>.dest - (object) The destination/target of a connection
+ *         <ul style='list-style-type: none'>
+ *           <li>.nodeID         - (number) The id of the destination node
+ *           <li>.connectorIndex - (number) The index of the input connector on the dest/target node to connect.  Zero equals the top input connector, increment for subsequent input connectors.
+ *         </ul>
+ *     </ul>
+ * </ul>
+ * @param {object} chartViewModel (Optional) The chartViewModel is initialized from the chartDataModel and contains additional helper methods such as <code>chartViewModel.isOnlyOneNodeSelected()</code> and
+ * <code>chartViewModel.getSelectedNodes()</code>.  You only need to specify a chartViewModel object if you plan on using advanced canvas operations.
+ * @param {boolean} readOnly A flag indicating whether the canvas is in 'read-only' mode.  When in 'read-only' mode nodes cannot be moved, selected, or deleted, and the node action toolbar is hidden.
+ * @param {boolean} hideConnectors A flag indicating whether connections should be hidden or shown on the canvas
+ * @example
+ <example module="patternfly.canvas.demo">
+ <file name="index.html">
+   <style>
+     .canvas {
+         background-image: url('/img/canvas-dot-grid.png');
+         background-repeat: repeat;
+     }
+   </style>
+   <div ng-controller="CanvasDemoCtrl" class="example-container">
+     <div class="canvas-demo-container">
+       <pf-canvas chart-data-model="chartDataModel"
+                  chart-view-model="chartViewModel"
+                  read-only="readOnly"
+                  hide-connectors="hideConnectors">
+       </pf-canvas>
+     </div>
+     <hr>
+     <div class="form-group">
+       <label class="checkbox-inline">
+         <input type="checkbox" ng-model="readOnly">Read Only</input>
+       </label>
+
+       <label class="checkbox-inline">
+         <input type="checkbox" ng-model="hideConnectors">Hide Connections</input>
+       </label>
+
+       <button ng-click="addNode()" style="margin-left: 10px;">Add Node</button>
+
+       <button ng-click="selectAll()" style="margin-left: 10px;">Select All (Ctrl+A)</button>
+       <button ng-click="deselectAll()">Deselect All (esc key)</button>
+       <button ng-click="deleteSelected()">Delete Selected (delete key)</button>
+
+       <button ng-click="zoomIn()" style="margin-left: 10px;">Zoom In</button>
+       <button ng-click="zoomOut()">Zoom Out</button>
+     </div>
+     <div style="padding-top: 12px;">
+       <label style="font-weight:normal;vertical-align:middle;">Events: </label>
+     </div>
+     <div>
+       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+     </div>
+   </div>
+ </file>
+
+ <file name="modules.js">
+   angular.module('patternfly.canvas.demo', ['patternfly.canvas']);
+ </file>
+
+ <file name="script.js">
+ angular.module( 'patternfly.canvas.demo' ).controller( 'CanvasDemoCtrl', function( $scope ) {
+     $scope.chartDataModel = {
+          "nodes": [
+            {
+              "name": "Nuage",
+              "x": 345,
+              "y": 67,
+              "id": 1,
+              "image": "/img/OpenShift-logo.svg",
+              "width": 150,
+              "bundle": true,
+              "backgroundColor": "#fff",
+              "inputConnectors": [
+                {
+                  "name": "Network",
+                  "type": "network",
+                  "fontFamily": "PatternFlyIcons-webfont",
+                  "fontContent": "\ue909"
+                },
+                {
+                  "name": "Container",
+                  "type": "container",
+                  "fontFamily": "PatternFlyIcons-webfont",
+                  "fontContent": "\ue621"
+                }
+              ],
+              "validConnectionTypes": ["network", "container"]
+            },
+            {
+              "name": "Vmware",
+              "x": 100,
+              "y": 290,
+              "id": 2,
+              "image": "/img/kubernetes.svg",
+              "width": 150,
+              "backgroundColor": "#fff",
+              "validConnectionTypes": ["storage"],
+              "inputConnectors": [
+                {
+                    "name": "Network",
+                    "type": "network",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue909"
+                  },
+                  {
+                    "name": "Storage",
+                    "type": "storage",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue90e"
+                  },
+                  {
+                    "name": "Container",
+                    "type": "container",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue621"
+                  }
+                ],
+            },
+            {
+              "name": "NetApp",
+              "x": 350,
+              "y": 291,
+              "id": 3,
+              "width": 150,
+              "icon": "pf pficon-service",
+              "fontSize": "76px",
+              "backgroundColor": "#fff",
+              "inputConnectors": [
+                {
+                    "name": "Network",
+                    "type": "network",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue909"
+                  },
+                  {
+                    "name": "Container",
+                    "type": "container",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue621"
+                  }
+                ],
+              "validConnectionTypes": ["network"]
+            },
+            {
+              "name": "OpenShift",
+              "x": 105,
+              "y": 67,
+              "id": 4,
+              "width": 150,
+              "fontFamily": "fontawesome",
+              "fontContent": "\uf0c2",
+              "backgroundColor": "#fff",
+              "inputConnectors": [
+                {
+                  "name": "Storage",
+                  "type": "storage",
+                  "fontFamily": "PatternFlyIcons-webfont",
+                  "fontContent": "\ue90e"
+                },
+                {
+                  "name": "Container",
+                  "type": "container",
+                  "fontFamily": "PatternFlyIcons-webfont",
+                  "fontContent": "\ue621"
+                }
+              ],
+              "validConnectionTypes": ["network", "container", "storage"]
+            }
+          ],
+          "nodeActions" : [
+            {
+              "id": 1,
+              "name": "connect",
+              "iconClass": "fa fa-share-alt",
+              "action": "nodeActionConnect",
+            },
+            {
+              "id": 2,
+              "name": "edit",
+              "iconClass": "pf pficon-edit",
+              "action": "nodeActionEdit",
+            },
+            {
+              "id": 3,
+              "name": "tag",
+              "iconClass": "fa fa-tag",
+              "action": "nodeActionTag",
+            },
+          ],
+          "connections": [
+            {
+              "source": {
+                "nodeID": 4,
+                "connectorIndex": 0
+              },
+              "dest": {
+                "nodeID": 1,
+                "connectorIndex": 1
+              }
+            },
+            {
+              "source": {
+                "nodeID": 4,
+                "connectorIndex": 0
+              },
+              "dest": {
+                "nodeID": 3,
+                "connectorIndex": 0
+              }
+            }
+          ]
+     };
+
+     $scope.newNode = {
+      "name": "NetApp",
+      "id": 1000,
+      "width": 150,
+      "icon": "pf pficon-service",
+      "fontSize": "76px",
+      "backgroundColor": "#fff",
+      "inputConnectors": [
+        {
+            "name": "Network",
+            "type": "network",
+            "fontFamily": "PatternFlyIcons-webfont",
+            "fontContent": "\ue909"
+          },
+          {
+            "name": "Container",
+            "type": "container",
+            "fontFamily": "PatternFlyIcons-webfont",
+            "fontContent": "\ue621"
+          }
+        ],
+      "validConnectionTypes": ["network"]
+     };
+
+     $scope.chartViewModel;
+     $scope.readOnly = false;
+     $scope.hideConnectors = false;
+     $scope.eventText = "";
+
+     var numNewNodes = 1;
+
+     $scope.addNode = function() {
+       var newNode = angular.copy($scope.newNode);
+       newNode.id ++;
+       newNode.name = newNode.name + " " + numNewNodes++;
+       newNode.x = 250 + (numNewNodes * 4 + 160);
+       newNode.y = 200 + (numNewNodes * 4 + 160);
+
+       $scope.chartViewModel.addNode(newNode);
+     }
+
+     $scope.$on('nodeActionClicked', function(evt, args) {
+       var action = args.action;
+       var node = args.node;
+       $scope.eventText = node.name() + ' ' + action + '\r\n' + $scope.eventText;
+     });
+
+     $scope.zoomIn = function() {
+       $scope.$broadcast('zoomIn');
+     }
+     $scope.zoomOut = function() {
+       $scope.$broadcast('zoomOut');
+     }
+
+     $scope.selectAll = function() {
+       $scope.$broadcast('selectAll');
+     }
+     $scope.deselectAll = function() {
+       $scope.$broadcast('deselectAll');
+     }
+     $scope.deleteSelected = function() {
+       $scope.$broadcast('deleteSelected');
+     }
+ });
+ </file>
+ </example>
+ */
+;/**
+ * @ngdoc directive
+ * @name patternfly.canvas.directive:pfCanvasEditor
+ * @restrict E
+ *
+ * @description
+ * Component for canvas editor which adds a toolbox where items can be dragged and dropped onto canvas, as well as other canvas
+ * operations such as: Zoom In, Zoom Out, Hide Connections, Remove Node, and Duplicate Node.  Does not work in IE 11 or lower because they do not support
+ * latest svg specification's 'foreignObject' api.  Tested in FireFox, Chrome, and MS-Edge.
+ *
+ * @param {object} chartDataModel Chart data object which defines the nodes and connections on the canvas. See {@link patternfly.canvas.directive:pfCanvas} for detailed information.
+ * @param {object} chartViewModel (Optional) The chartViewModel is initialized from the chartDataModel and contains additional helper methods such as <code>chartViewModel.isOnlyOneNodeSelected()</code> and
+ * <code>chartViewModel.getSelectedNodes()</code>.
+ * @param {boolean} toolboxTabs An array of Tab objects used in the Toolbox.  Each Tab object many contain 'subtabs' and/or 'items'.  Items may be dragged onto the canvas.
+ * <ul style='list-style-type: none'>
+ *   <li>.preTitle - (string) (Optional) A small title above the main tab title
+ *   <li>.title    - (string) The main title of the tab
+ *   <li>.subtabs  - (Array) An array of sub Tab objects. Supports up to three levels of nested sub tabs
+ *   <li>.items    - (Array) An array of items which can be dragged and dropped onto the canvas
+ *   <ul style='list-style-type: none'>
+ *     <li>.name     - (string) The item name/title
+ *     <li>.id       - (number) The item id
+ *     <li>.image    - (string) (Optional) The url of the item's image.  Ex: "/img/kubernetes.svg"
+ *     <li>.icon     - (string) (Optional) The icon class of the item's icon.  Ex: "pf pficon-service"
+ *   </ul>
+ * </ul>
+ * @param {boolean} readOnly (Optional) A flag indicating whether the canvas is in 'read-only' mode.  When in 'read-only' mode nodes cannot be moved, selected, or deleted, and the node action toolbar is hidden.
+ * @example
+ <example module="patternfly.canvaseditor.demo">
+ <file name="index.html">
+   <style>
+     .canvas {
+         background-image: url('/img/canvas-dot-grid.png');
+         background-repeat: repeat;
+     }
+   </style>
+   <div ng-controller="CanvasEditorDemoCtrl" class="example-container">
+     <pf-canvas-editor chart-data-model="chartDataModel"
+                       chart-view-model="chartViewModel"
+                       toolbox-tabs="toolboxTabs"
+                       read-only="readOnly">
+       <span ng-if="!readOnly" class="more-actions">
+         <a id="duplicateItem" ng-click="duplicateNode()" ng-class="{'disabled': !chartViewModel.isOnlyOneNodeSelected() || chartViewModel.inConnectingMode}">
+           <span class="pficon fa fa-copy"
+                 tooltip-append-to-body="true" tooltip-placement="bottom"
+                 uib-tooltip="{{'Duplicate Item'}}">
+           </span>
+         </a>
+         <a id="deleteNodes" ng-click="deleteNodes()" ng-class="{'disabled': !chartViewModel.areAnyNodesSelected() || chartViewModel.inConnectingMode}">
+           <span class="pficon pficon-delete"
+                 tooltip-append-to-body="true" tooltip-placement="bottom"
+                 uib-tooltip="{{'Delete Selected Items'}}">
+           </span>
+         </a>
+       </span>
+     </pf-canvas-editor>
+     <hr>
+     <div class="form-group">
+       <label class="checkbox-inline">
+         <input type="checkbox" ng-model="readOnly">Read Only</input>
+       </label>
+     </div>
+     <div style="padding-top: 12px;">
+       <label style="font-weight:normal;vertical-align:middle;">Events: </label>
+     </div>
+     <div>
+       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+     </div>
+   </div>
+ </file>
+
+ <file name="modules.js">
+   angular.module('patternfly.canvaseditor.demo', ['patternfly.canvas']);
+ </file>
+
+ <file name="script.js">
+ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCtrl', function( $scope, $filter ) {
+     $scope.chartDataModel = {
+          "nodes": [
+            {
+              "name": "Nuage",
+              "x": 345,
+              "y": 67,
+              "id": 1,
+              "image": "/img/OpenShift-logo.svg",
+              "width": 150,
+              "bundle": true,
+              "backgroundColor": "#fff",
+              "inputConnectors": [
+                {
+                  "name": "Network",
+                  "type": "network",
+                  "fontFamily": "PatternFlyIcons-webfont",
+                  "fontContent": "\ue909"
+                },
+                {
+                  "name": "Container",
+                  "type": "container",
+                  "fontFamily": "PatternFlyIcons-webfont",
+                  "fontContent": "\ue621"
+                }
+              ],
+              "validConnectionTypes": ["network", "container"]
+            },
+            {
+              "name": "Vmware",
+              "x": 100,
+              "y": 290,
+              "id": 2,
+              "image": "/img/kubernetes.svg",
+              "width": 150,
+              "backgroundColor": "#fff",
+              "validConnectionTypes": ["storage"],
+              "inputConnectors": [
+                {
+                    "name": "Network",
+                    "type": "network",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue909"
+                  },
+                  {
+                    "name": "Storage",
+                    "type": "storage",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue90e"
+                  },
+                  {
+                    "name": "Container",
+                    "type": "container",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue621"
+                  }
+                ],
+            },
+            {
+              "name": "NetApp",
+              "x": 350,
+              "y": 291,
+              "id": 3,
+              "width": 150,
+              "icon": "pf pficon-service",
+              "fontSize": "76px",
+              "backgroundColor": "#fff",
+              "inputConnectors": [
+                {
+                    "name": "Network",
+                    "type": "network",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue909"
+                  },
+                  {
+                    "name": "Container",
+                    "type": "container",
+                    "fontFamily": "PatternFlyIcons-webfont",
+                    "fontContent": "\ue621"
+                  }
+                ],
+              "validConnectionTypes": ["network"]
+            },
+            {
+              "name": "OpenShift",
+              "x": 105,
+              "y": 67,
+              "id": 4,
+              "width": 150,
+              "fontFamily": "fontawesome",
+              "fontContent": "\uf0c2",
+              "backgroundColor": "#fff",
+              "inputConnectors": [
+                {
+                  "name": "Storage",
+                  "type": "storage",
+                  "fontFamily": "PatternFlyIcons-webfont",
+                  "fontContent": "\ue90e"
+                },
+                {
+                  "name": "Container",
+                  "type": "container",
+                  "fontFamily": "PatternFlyIcons-webfont",
+                  "fontContent": "\ue621"
+                }
+              ],
+              "validConnectionTypes": ["network", "container", "storage"]
+            }
+          ],
+          "nodeActions" : [
+            {
+              "id": 1,
+              "name": "connect",
+              "iconClass": "fa fa-share-alt",
+              "action": "nodeActionConnect",
+            },
+            {
+              "id": 2,
+              "name": "edit",
+              "iconClass": "pf pficon-edit",
+              "action": "nodeActionEdit",
+            },
+            {
+              "id": 3,
+              "name": "tag",
+              "iconClass": "fa fa-tag",
+              "action": "nodeActionTag",
+            },
+          ],
+          "connections": [
+            {
+              "source": {
+                "nodeID": 4,
+                "connectorIndex": 0
+              },
+              "dest": {
+                "nodeID": 1,
+                "connectorIndex": 1
+              }
+            },
+            {
+              "source": {
+                "nodeID": 4,
+                "connectorIndex": 0
+              },
+              "dest": {
+                "nodeID": 3,
+                "connectorIndex": 0
+              }
+            }
+          ]
+     };
+
+     $scope.toolboxTabs = [
+       {
+         "preTitle": "Toolbox",
+         "title": "Items A",
+         "active": true,
+         "items": [
+           {
+             "name": "Nuage",
+             "id": 10000000000004,
+             "image": "/img/OpenShift-logo.svg"
+           },
+           {
+             "name": "Vmware",
+             "id": 10000000000010,
+             "image": "/img/kubernetes.svg"
+           }
+         ]
+       },
+       {
+         "preTitle": "Toolbox",
+         "title": "Items B",
+         "active": true,
+         "items": [
+           {
+             "name": "NetApp",
+             "id": 10000000000014,
+             "icon": "pf pficon-service"
+           },
+           {
+             "name": "OpenShift",
+             "id": 10000000000021,
+             "icon": "fa fa-cloud"
+           },
+           {
+             "name": "OpenStack",
+             "id": 10000000000022,
+             "icon": "pf pficon-network"
+           },
+           {
+             "name": "Storage",
+             "id": 10000000000026,
+             "icon": "pf pficon-storage-domain"
+           },
+           {
+             "name": "VM",
+             "id": 10000000000023,
+             "icon": "pf pficon-virtual-machine"
+           },
+           {
+             "name": "Replicatore",
+             "id": 10000000000027,
+             "icon": "pf pficon-replicator"
+           }
+         ]
+       }
+     ];
+
+     $scope.chartViewModel;
+     $scope.readOnly = false;
+     $scope.eventText = "";
+
+     $scope.$on('nodeActionClicked', function(evt, args) {
+       var action = args.action;
+       var node = args.node;
+       $scope.eventText = node.name() + ' ' + action + '\r\n' + $scope.eventText;
+     });
+
+     $scope.deleteNodes = function() {
+       if ($scope.chartViewModel.inConnectingMode) {
+         return;
+       }
+
+       $scope.chartViewModel.deleteSelected();
+
+       angular.element("#deleteNodes").blur();
+     };
+
+     $scope.duplicateNode = function() {
+       if ($scope.chartViewModel.inConnectingMode) {
+         return;
+       }
+
+       var duplicatedNode = $scope.chartViewModel.duplicateSelectedNode();
+
+       // Note: node id will be used in connections to/from this duplicated node
+       // If id changes, connections array/obj will need to be updated as well
+       duplicatedNode.id = Math.floor((Math.random() * 600) + 1);  // random number between 1 and 600
+       duplicatedNode.name = getCopyName(duplicatedNode.name);
+       duplicatedNode.backgroundColor = '#fff';
+
+       duplicatedNode.x = duplicatedNode.x + 15 * $scope.chartDataModel.nodes.length;
+       duplicatedNode.y = duplicatedNode.y + 15 * $scope.chartDataModel.nodes.length;
+
+       $scope.chartViewModel.addNode(duplicatedNode);
+
+       angular.element("#duplicateItem").blur();
+     }
+
+     function getCopyName(baseName) {
+       // Test to see if we are duplicating an existing 'Copy'
+       var baseNameLength = baseName.indexOf(' Copy');
+       if (baseNameLength === -1) {
+         baseNameLength = baseName.length;
+       }
+       baseName = baseName.substr(0, baseNameLength);
+       var filteredArray = $filter('filter')($scope.chartDataModel.nodes, {name: baseName}, false);
+       var copyName = baseName + " Copy" + ((filteredArray.length === 1) ? "" : " " + filteredArray.length);
+
+       return copyName;
+    }
+ });
+ </file>
+ </example>
+ */
 ;/**
  * @ngdoc directive
  * @name patternfly.card.component:pfAggregateStatusCard
@@ -1866,6 +4589,7 @@ angular.module('patternfly.charts').component('pfHeatmap', {
            </div>
            <div class="col-md-3">
                  <button ng-click="addDataPoint()">Add Data Point</button>
+                 <button ng-click="resetData()">Reset Data</button>
            </div>
          </div>
        </div>
@@ -1904,8 +4628,8 @@ angular.module('patternfly.charts').component('pfHeatmap', {
        $scope.data = {
          dataAvailable: true,
          xData: dates,
-         yData0: ['Created', 12, 10,10, 62, 17, 10, 15, 13, 17, 10, 12, 10, 10, 12, 17, 16, 15, 13, 17, 10],
-         yData1: ['Deleted', 10, 17, 76,14, 10, 10, 10, 10, 10, 10, 10, 17, 17, 14, 10, 10, 10, 10, 10, 10]
+         yData0: ['Created', 12, 10, 10, 62, 17, 10, 15, 13, 17, 10, 12, 10, 10, 12, 17, 16, 15, 13, 17, 10],
+         yData1: ['Deleted', 10, 17, 76, 14, 10, 10, 10, 10, 10, 10, 10, 17, 17, 14, 10, 10, 10, 10, 10, 10]
        };
 
        $scope.custShowXAxis = false;
@@ -1916,6 +4640,14 @@ angular.module('patternfly.charts').component('pfHeatmap', {
          $scope.data.xData.push(new Date($scope.data.xData[$scope.data.xData.length - 1].getTime() + (24 * 60 * 60 * 1000)));
          $scope.data.yData0.push(Math.round(Math.random() * 100));
          $scope.data.yData1.push(Math.round(Math.random() * 100));
+       };
+
+       $scope.resetData = function () {
+         $scope.data = {
+           xData: dates,
+           yData0: ['Created', 12, 10, 10, 62],
+           yData1: ['Deleted', 10, 17, 76, 14]
+         };
        };
      });
    </file>
@@ -1992,7 +4724,7 @@ angular.module('patternfly.charts').component('pfLineChart', {
       }
 
       // Convert the given data to C3 chart format
-      ctrl.config.data = pfUtils.merge(ctrl.config.data, ctrl.getLineData(ctrl.chartData));
+      ctrl.config.data = ctrl.getLineData(ctrl.chartData);
 
       // Override defaults with callers specifications
       ctrl.defaultConfig = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
@@ -2361,6 +5093,945 @@ angular.module('patternfly.charts').component('pfSparklineChart', {
         ctrl.updateAll();
       }
     };
+  }]
+});
+;/**
+ * @ngdoc directive
+ * @name patternfly.charts.component:pfTopology
+ * @restrict E
+ *
+ * @description
+ *   Component for rendering a topology chart.  Individual nodes and relationships can be represented with this view.  CSS is especially important for rendering the nodes and lines.  The example inline contains specific examples that can be used to change the icon size and the line type of the relationships.
+ *
+ *   In addition; searching, filtering and label visibility is also supported.<br/>
+ *
+ * @param {object} items items to display in the topology chart, each is represented as an individual node.  The keys of this object are used in the relations attribute. The items should have a item.kind attribute, as well as the usual item.metadata and so on.:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.name    - name of the item the node represents
+ * <li>.status  - optional status of the node (can be used to differentiate the circle color)
+ * <li>.kind    - the kind of node - this is a general key that needs to be unique for grouping the nodes  Filtering and styles use this value as well to correctly select the nodes.
+ * </ul>
+ *
+ * @param {object} relations the object containing all of the node relationships:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.source   - the key of the source node
+ * <li>.target  -  the key of the target node
+ * </ul>
+ *
+ * @param {object} icons The different icons to be used in the node representations
+ * @param {object} selection The item to be selected
+ * @param {object} force Optional. A D3 force layout to use instead of creating one by default. The force layout size will be updated, and layout will be started as appropriate.
+ * @param {object} nodes The node configuration for the various types of nodes<br/>
+ * @param {string} searchText Search text which is watched for changes and highlights the nodes matching the search text
+ * @param {object} kinds The different kinds of nodes represented in the topology chart
+ * @param {function (vertices, added) } chartRendered The argument will be D3 selection of elements that correspond to items. Each item has its data set to one of the items. The default implementation of this event sets the title from Kubernetes metadata and tweaks the look of for certain statuses. Use event.preventDefault() to prevent this default behavior.
+ * @param {boolean} itemSelected A function that is dispatched when an item is selected (along with the node data associated with the function
+ * @param {boolean} showLabels A watched boolean that determines whether or not lables should be displayed beneath the nodes
+ * @param {function (node) } tooltipFunction A passed in tooltip function which can be used to overwrite the default tooltip behavior
+ *
+ * @example
+ <example module="patternfly.charts">
+ <file name="index.html">
+ <div ng-controller="TopologyCtrl" class="container-topology">
+ <pf-topology items="data.items" relations="data.relations" kinds="kinds" icons="data.icons" nodes="nodes" item-selected="itemSelected(item)" search-text="searchText" show-labels="showLabels" tooltip-function="tooltip(node)">
+ </pf-topology>
+
+ <div class="controls">
+ <label id="selected"></label>
+
+ <label>Search:
+ <input type="text" name="input" ng-model="searchText">
+ </label>
+
+ <label>Show labels:
+ <input type="checkbox" ng-model="showLabels">
+ </label>
+ <input type="button" ng-click="removeKind()" value="Remove Kind" />
+ </div>
+ </div>
+ </file>
+
+ <file name="script.js">
+ angular.module( 'patternfly.charts' ).controller( 'TopologyCtrl', function( $scope, $rootScope ) {
+    var index = 0;
+    var datasets = [];
+
+    function sink(dataset) {
+      datasets.push(dataset);
+    }
+
+    sink({
+      "items": {
+        "ContainerManager10r20": {
+          "name": "ocp-master.example.com",
+          "kind": "ContainerManager",
+          "miq_id": 10000000000020,
+          "status": "Valid",
+          "display_kind": "OpenshiftEnterprise"
+        },
+        "ContainerNode10r14": {
+          "name": "ocp-master.example.com",
+          "kind": "ContainerNode",
+          "miq_id": 10000000000014,
+          "status": "Ready",
+          "display_kind": "Node"
+        },
+        "ContainerGroup10r240": {
+          "name": "docker-registry-2-vrguw",
+          "kind": "ContainerGroup",
+          "miq_id": 10000000000240,
+          "status": "Running",
+          "display_kind": "Pod"
+        },
+        "Container10r235": {
+          "name": "registry",
+          "kind": "Container",
+          "miq_id": 10000000000235,
+          "status": "Error",
+          "display_kind": "Container"
+        },
+        "ContainerReplicator10r56": {
+          "name": "docker-registry-2",
+          "kind": "ContainerReplicator",
+          "miq_id": 10000000000056,
+          "status": "OK",
+          "display_kind": "Replicator"
+        },
+        "ContainerService10r61": {
+          "name": "docker-registry",
+          "kind": "ContainerService",
+          "miq_id": 10000000000061,
+          "status": "Unknown",
+          "display_kind": "Service"
+        },
+      },
+      "relations": [
+        {
+          "source": "ContainerManager10r20",
+          "target": "ContainerNode10r14"
+        }, {
+          "source": "ContainerNode10r14",
+          "target": "ContainerGroup10r240"
+        }, {
+          "source": "ContainerGroup10r240",
+          "target": "Container10r235"
+        }, {
+          "source": "ContainerGroup10r240",
+          "target": "ContainerReplicator10r56"
+        }, {
+          "source": "ContainerGroup10r240",
+          "target": "ContainerService10r61"
+        }, {
+          "source": "ContainerNode10r14",
+          "target": "ContainerGroup10r241"
+        }, {
+          "source": "ContainerGroup10r241",
+          "target": "Container10r236"
+        }, {
+          "source": "ContainerGroup10r241",
+          "target": "ContainerReplicator10r57"
+        }
+      ],
+      "icons": {
+        "AvailabilityZone": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        },
+        "ContainerReplicator": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        },
+        "ContainerGroup": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "FontAwesome"
+        },
+        "ContainerNode": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        },
+        "ContainerService": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        },
+        "ContainerRoute": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        },
+        "Container": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "FontAwesome"
+        },
+        "Host": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        },
+        "Vm": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        },
+        "ContainerManager": {
+          "type": "glyph",
+          "icon": "",
+          "fontfamily": "PatternFlyIcons-webfont"
+        }
+      },
+    });
+
+    $rootScope.data = datasets[index];
+
+    var nodeKinds = {
+      "ContainerReplicator": true,
+      "ContainerGroup": true,
+      "Container": true,
+      "ContainerNode": true,
+      "ContainerService": true,
+      "Host": true,
+      "Vm": true,
+      "ContainerRoute": true,
+      "ContainerManager": true
+    };
+
+    $rootScope.kinds = nodeKinds;
+
+    var icons = $rootScope.data.icons;
+    $scope.nodes = {};
+    for(var kind in nodeKinds) {
+      var icon = icons[kind];
+      $scope.nodes[kind] = {
+        "name": kind,
+        "enabled": nodeKinds[kind],
+        "radius": 16,
+        "textX": 0,
+        "textY": 5,
+        "height": 18,
+        "width": 18,
+        "icon": icon.icon,
+        "fontFamily": icon.fontfamily
+      };
+    }
+
+    // Individual values can also be set for specific icons
+    $scope.nodes.ContainerService.textY = 9;
+    $scope.nodes.ContainerService.textX = -1;
+
+    $scope.nodes.ContainerGroup.height = 30;
+    $scope.nodes.ContainerGroup.width = 30;
+    $scope.nodes.ContainerGroup.radius = 28;
+    $scope.nodes.ContainerGroup.textY = 8;
+
+    $scope.itemSelected = function (item) {
+      var text = "";
+      if (item) {
+        text = "Selected: " + item.name;
+      }
+      angular.element(document.getElementById("selected")).text(text);
+    };
+
+    $scope.removeKind = function () {
+      if($rootScope.kinds.ContainerNode) {
+        delete $rootScope.kinds.ContainerNode;
+      }
+    };
+
+    $scope.tooltip = function (node) {
+      var status = [
+        'Name: ' + node.item.name,
+        'Type: ' + node.item.kind,
+        'Status: ' + node.item.status
+      ];
+      return status;
+    }
+ });
+ </file>
+ <file name="topology.css">
+
+ .pf-topology-svg g.Pod text {
+    font-family: FontAwesome;
+    font-size: 16px;
+    fill: #1186C1;
+  }
+
+   .pf-topology-svg g.Node text {
+    fill: #636363;
+  }
+
+   .pf-topology-svg g.Service text {
+    fill: #ff7f0e;
+  }
+
+   .pf-topology-svg g.ReplicationController text {
+    fill: #9467bd;
+    font-size: 20px;
+  }
+
+   .pf-topology-svg line.ReplicationControllerPod {
+    stroke-linecap: round;
+    stroke-dasharray: 5, 2;
+  }
+
+
+  .pf-topology-svg line.ContainerServiceContainerGroup, .pf-topology-svg line.ContainerReplicatorContainerGroup, .pf-topology-svg line.ContainerServiceContainerRoute,
+   .pf-topology-svg line.ContainerGroupContainerService, .pf-topology-svg line.ContainerGroupContainerReplicator {
+    stroke-linecap: round;
+    stroke-dasharray: 5.5;
+  }
+
+
+ .pf-topology-svg g.Container text.glyph {
+    font-size: 18px;
+  }
+
+   .pf-topology-svg g.ContainerGroup text.glyph {
+    font-size: 28px;
+  }
+
+   .pf-topology-svg g.Vm text.glyph, .pf-topology-svg g.Host text.glyph {
+    fill: #636363;
+  }
+
+   .pf-topology-svg g.ContainerNode text.glyph {
+    font-size: 18px;
+  }
+
+   .pf-topology-svg g.ContainerManager text.glyph {
+    font-size: 18px;
+  }
+ </file>
+
+ </example>
+ */
+;angular.module('patternfly.charts').component('pfTopology', {
+  bindings: {
+    items: '<',
+    relations: '<',
+    kinds: '<',
+    icons: '<',
+    selection: '<',
+    force: '<',
+    radius: '<',
+    nodes: '<',
+    searchText: '<?',
+    chartRendered: '&?',
+    itemSelected: '&?',
+    showLabels: '<?',
+    tooltipFunction: '&?'
+  },
+  controller: ["$element", "$attrs", function ($element, $attrs) {
+    'use strict';
+    var options, graph,
+      ctrl = this,
+      previousItems,
+      previousRelations,
+      previousKinds,
+      contextMenuShowing,
+      vs;
+    var cache = { };
+
+    ctrl.$onInit = function () {
+      $element.css("display", "block");
+      options = {"force": ctrl.force, "radius": ctrl.radius};
+      ctrl.showLabels = false;
+
+      $element.on("$destroy", function () {
+        graph.close();
+      });
+
+      d3.select("body").on('click', function () {
+        if (contextMenuShowing) {
+          removeContextMenu();
+        }
+      });
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.searchText && graph) {
+        search(changesObj.searchText.currentValue);
+      }
+
+      if (changesObj.showLabels && vs) {
+        toggleLabelVisibility();
+      }
+
+      if (changesObj.selection && graph) {
+        graph.select(changesObj.selection.currentValue || null);
+      }
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on data
+      if (graph) {
+        if (!angular.equals(ctrl.kinds, previousKinds)) {
+          previousKinds = angular.copy(ctrl.kinds);
+          render(graph.kinds(ctrl.kinds));
+        }
+
+        if (!angular.equals(ctrl.items, previousItems) || !angular.equals(ctrl.relations, previousRelations)) {
+          previousItems = angular.copy(ctrl.items);
+          previousRelations = angular.copy(ctrl.relations);
+          render(graph.data(ctrl.items, ctrl.relations));
+        }
+      }
+    };
+
+    ctrl.$postLink = function () {
+      options = {"force": ctrl.force, "radius": ctrl.radius};
+      graph = topologyGraph($element[0], notify, options);
+    };
+
+    function topologyGraph (selector, notify, options) {
+      var outer = d3.select(selector);
+
+      /* Kinds of objects to show */
+      var kinds = null;
+
+      /* Data we've been fed */
+      var items = {};
+      var relations = [];
+
+      /* Graph information */
+      var width;
+      var height;
+      var radius = 20;
+      var timeout;
+      var nodes = [];
+      var links = [];
+      var lookup = {};
+      var selection = null;
+      var force = options.force;
+      var drag, svg, vertices, edges;
+
+      if (options.radius) {
+        radius = options.radius;
+      }
+
+      /* Allow the force to be passed in, default if not */
+      if (!force) {
+        force = d3.layout.force()
+          .charge(-800)
+          .gravity(0.2)
+          .linkDistance(80);
+      }
+
+      drag = force.drag();
+
+      svg = outer.append("svg")
+        .attr("viewBox", "0 0 1600 1200")
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .attr("class", "pf-topology-svg");
+
+      vertices = d3.select();
+      edges = d3.select();
+
+      force.on("tick", function () {
+        edges.attr("x1", function (d) {
+          return d.source.x;
+        })
+          .attr("y1", function (d) {
+            return d.source.y;
+          })
+          .attr("x2", function (d) {
+            return d.target.x;
+          })
+          .attr("y2", function (d) {
+            return d.target.y;
+          });
+
+        vertices
+          .attr("cx", function (d) {
+            d.x = d.fixed ? d.x : Math.max(radius, Math.min(width - radius, d.x));
+            return d.x;
+          })
+          .attr("cy", function (d) {
+            d.y = d.fixed ? d.y : Math.max(radius, Math.min(height - radius, d.y));
+            return d.y;
+          })
+          .attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
+          });
+      });
+
+      drag
+        .on("dragstart", function (d) {
+          notify(d.item);
+
+          if (d.fixed !== true) {
+            d.floatpoint = [d.x, d.y];
+          }
+          d.fixed = true;
+          d3.select(this).classed("fixed", true);
+        })
+        .on("dragend", function (d) {
+          var moved = true;
+          if (d.floatpoint) {
+            moved = (d.x < d.floatpoint[0] - 5 || d.x > d.floatpoint[0] + 5) ||
+              (d.y < d.floatpoint[1] - 5 || d.y > d.floatpoint[1] + 5);
+            delete d.floatpoint;
+          }
+          d.fixed = moved && d.x > 3 && d.x < (width - 3) && d.y >= 3 && d.y < (height - 3);
+          d3.select(this).classed("fixed", d.fixed);
+        });
+
+      svg
+        .on("dblclick", function () {
+          svg.selectAll("g")
+            .classed("fixed", false)
+            .each(function (d) {
+              d.fixed = false;
+            });
+          force.start();
+        })
+        .on("click", function (ev) {
+          if (!d3.select(d3.event.target).datum()) {
+            notify(null);
+          }
+        });
+
+      function select (item) {
+        if (item !== undefined) {
+          selection = item;
+        }
+        svg.selectAll("g")
+          .classed("selected", function (d) {
+            return d.item === selection;
+          });
+      }
+
+      function adjust () {
+        timeout = null;
+        width = outer.node().clientWidth;
+        height = outer.node().clientHeight;
+        force.size([width, height]);
+        svg.attr("viewBox", "0 0 " + width + " " + height);
+        update();
+      }
+
+      function update () {
+        var added;
+
+        edges = svg.selectAll("line")
+          .data(links);
+
+        edges.exit().remove();
+        edges.enter().insert("line", ":first-child");
+
+        edges.attr("class", function (d) {
+          return d.kinds;
+        });
+
+        vertices = svg.selectAll("g")
+          .data(nodes, function (d) {
+            return d.id;
+          });
+
+        vertices.exit().remove();
+
+        added = vertices.enter().append("g")
+          .call(drag);
+
+        select(selection);
+
+        force
+          .nodes(nodes)
+          .links(links)
+          .start();
+
+        return added;
+      }
+
+      function digest () {
+        var pnodes = nodes;
+        var plookup = lookup;
+        var item, id, kind, node;
+        var i, len, relation, s, t;
+        /* The actual data for the graph */
+        nodes = [];
+        links = [];
+        lookup = {};
+
+        for (id in items) {
+          if (id) {
+            item = items[id];
+            kind = item.kind;
+
+            if (kinds && !kinds[kind]) {
+              continue;
+            }
+
+            /* Prevents flicker */
+            node = pnodes[plookup[id]];
+            if (!node) {
+              node = cache[id];
+              delete cache[id];
+              if (!node) {
+                node = {};
+              }
+            }
+
+            node.id = id;
+            node.item = item;
+
+            lookup[id] = nodes.length;
+            nodes.push(node);
+          }
+        }
+        for (i = 0, len = relations.length; i < len; i++) {
+          relation = relations[i];
+
+          s = lookup[relation.source];
+          t = lookup[relation.target];
+          if (s === undefined || t === undefined) {
+            continue;
+          }
+
+          links.push({source: s, target: t, kinds: nodes[s].item.kind + nodes[t].item.kind});
+        }
+
+        if (width && height) {
+          return update();
+        }
+        return d3.select();
+      }
+
+      function resized () {
+        window.clearTimeout(timeout);
+        timeout = window.setTimeout(adjust, 1);
+      }
+
+      window.addEventListener('resize', resized);
+
+      adjust();
+      resized();
+
+      return {
+        select: select,
+        kinds: function (value) {
+          var added;
+          kinds = value;
+          added = digest();
+          return [vertices, added];
+        },
+        data: function (newItems, newRelations) {
+          var added;
+          items = newItems || {};
+          relations = newRelations || [];
+          added = digest();
+          return [vertices, added];
+        },
+        close: function () {
+          var id, node;
+          window.removeEventListener('resize', resized);
+          window.clearTimeout(timeout);
+          /*
+           * Keep the positions of these items cached,
+           * in case we are asked to make the same graph again.
+           */
+          cache = {};
+          for (id in lookup) {
+            if (id) {
+              node = nodes[lookup[id]];
+              delete node.item;
+              cache[id] = node;
+            }
+          }
+
+          nodes = [];
+          lookup = {};
+        }
+      };
+    }
+
+    function search (query) {
+      var svg = getSVG();
+      var nodes = svg.selectAll("g");
+      var selected, links;
+      if (query !== "") {
+        selected = nodes.filter(function (d) {
+          return d.item.name.indexOf(query) === -1;
+        });
+        selected.style("opacity", "0.2");
+        links = svg.selectAll("line");
+        links.style("opacity", "0.2");
+      }
+    }
+
+    function resetSearch (d3) {
+      // Display all topology nodes and links
+      d3.selectAll("g, line").transition()
+        .duration(2000)
+        .style("opacity", 1);
+    }
+
+    function toggleLabelVisibility () {
+      if (ctrl.showLabels) {
+        vs.selectAll("text.attached-label")
+          .classed("visible", true);
+      } else {
+        vs.selectAll("text.attached-label")
+          .classed("visible", false);
+      }
+    }
+
+    function getSVG () {
+      var graph = d3.select("pf-topology");
+      var svg = graph.select('svg');
+      return svg;
+    }
+
+    function notify (item) {
+      ctrl.itemSelected({item: item});
+      if ($attrs.selection === undefined) {
+        graph.select(item);
+      }
+    }
+
+    function icon (d) {
+      return '#' + d.item.kind;
+    }
+
+    function title (d) {
+      return d.item.name;
+    }
+
+    function render (args) {
+      var vertices = args[0];
+      var added = args[1];
+      var event;
+
+      // allow custom rendering of chart
+      if (angular.isFunction(ctrl.chartRendered)) {
+        event = ctrl.chartRendered({vertices: vertices, added: added});
+      }
+
+      if (!event || !event.defaultPrevented) {
+        added.attr("class", function (d) {
+          return d.item.kind;
+        });
+
+        added.append("circle")
+          .attr("r", function (d) {
+            return getDimensions(d).r;
+          })
+          .attr('class', function (d) {
+            return getItemStatusClass(d);
+          })
+          .on("contextmenu", function (d) {
+            contextMenu(ctrl, d);
+          });
+
+        added.append("title");
+
+        added.on("dblclick", function (d) {
+          return dblclick(d);
+        });
+
+        added.append("image")
+          .attr("xlink:href", function (d) {
+            // overwrite this . . .
+            var iconInfo = ctrl.icons[d.item.kind];
+            switch (iconInfo.type) {
+            case 'image':
+              return iconInfo.icon;
+            case "glyph":
+              return null;
+            }
+          })
+          .attr("height", function (d) {
+            var iconInfo = ctrl.icons[d.item.kind];
+            if (iconInfo.type !== 'image') {
+              return 0;
+            }
+            return 40;
+          })
+          .attr("width", function (d) {
+            var iconInfo = ctrl.icons[d.item.kind];
+            if (iconInfo.type !== 'image') {
+              return 0;
+            }
+            return 40;
+          })
+          .attr("y", function (d) {
+            return getDimensions(d).y;
+          })
+          .attr("x", function (d) {
+            return getDimensions(d).x;
+          })
+          .on("contextmenu", function (d) {
+            contextMenu(ctrl, d);
+          });
+
+        added.append("text")
+          .each(function (d) {
+            var iconInfo = ctrl.icons[d.item.kind];
+            if (iconInfo.type !== 'glyph') {
+              return;
+            }
+            d3.select(this).text(iconInfo.icon)
+              .attr("class", "glyph")
+              .attr('font-family', iconInfo.fontfamily);
+          })
+
+          .attr("y", function (d) {
+            return getDimensions(d).y;
+          })
+          .attr("x", function (d) {
+            return getDimensions(d).x;
+          })
+          .on("contextmenu", function (d) {
+            contextMenu(this, d);
+          });
+
+
+        added.append("text")
+          .attr("x", 26)
+          .attr("y", 24)
+          .text(function (d) {
+            return d.item.name;
+          })
+          .attr('class', function () {
+            var className = "attached-label";
+            if (ctrl.showLabels) {
+              return className + ' visible';
+            }
+            return className;
+          });
+
+        added.selectAll("title").text(function (d) {
+          return tooltip(d).join("\n");
+        });
+
+        vs = vertices;
+      }
+      graph.select();
+    }
+
+    function tooltip (d) {
+      if (ctrl.tooltipFunction) {
+        return ctrl.tooltipFunction({node: d});
+      }
+      return 'Name: ' + d.item.name;
+    }
+
+    function removeContextMenu () {
+      d3.event.preventDefault();
+      d3.select('.popup').remove();
+      contextMenuShowing = false;
+    }
+
+    function contextMenu (that, data) {
+      var canvasSize, popupSize, canvas, mousePosition, popup;
+
+      if (contextMenuShowing) {
+        removeContextMenu();
+      } else {
+        d3.event.preventDefault();
+
+        canvas = d3.select('pf-topology');
+        mousePosition = d3.mouse(canvas.node());
+
+        popup = canvas.append('div')
+          .attr('class', 'popup')
+          .style('left', mousePosition[0] + 'px')
+          .style('top', mousePosition[1] + 'px');
+        popup.append('h5').text('Actions on ' + data.item.kind);
+
+        buildContextMenuOptions(popup, data);
+
+        canvasSize = [
+          canvas.node().offsetWidth,
+          canvas.node().offsetHeight
+        ];
+
+        popupSize = [
+          popup.node().offsetWidth,
+          popup.node().offsetHeight
+        ];
+
+        if (popupSize[0] + mousePosition[0] > canvasSize[0]) {
+          popup.style('left', 'auto');
+          popup.style('right', 0);
+        }
+
+        if (popupSize[1] + mousePosition[1] > canvasSize[1]) {
+          popup.style('top', 'auto');
+          popup.style('bottom', 0);
+        }
+        contextMenuShowing = !contextMenuShowing;
+      }
+    }
+
+    function buildContextMenuOptions (popup, data) {
+      if (data.item.kind === 'Tag') {
+        return false;
+      }
+      addContextMenuOption(popup, 'Go to summary page', data, dblclick);
+    }
+
+    function dblclick (d) {
+      window.location.assign(d.url);
+    }
+
+    function addContextMenuOption (popup, text, data, callback) {
+      popup.append('p').text(text).on('click', function () {
+        callback(data);
+      });
+    }
+
+    function getDimensions (d) {
+      var nodeEntry = ctrl.nodes[d.item.kind];
+      var defaultDimensions = defaultElementDimensions();
+      if (nodeEntry) {
+        if (nodeEntry.textX) {
+          defaultDimensions.x = nodeEntry.textX;
+        }
+        if (nodeEntry.textY) {
+          defaultDimensions.y = nodeEntry.textY;
+        }
+
+        if (nodeEntry.radius) {
+          defaultDimensions.r = nodeEntry.radius;
+        }
+      }
+      return defaultDimensions;
+    }
+
+    function defaultElementDimensions () {
+      return { x: 0, y: 9, r: 17 };
+    }
+
+    function getItemStatusClass (d) {
+      switch (d.item.status.toLowerCase()) {
+      case "ok":
+      case "active":
+      case "available":
+      case "on":
+      case "ready":
+      case "running":
+      case "succeeded":
+      case "valid":
+        return "success";
+      case "notready":
+      case "failed":
+      case "error":
+      case "unreachable":
+        return "error";
+      case 'warning':
+      case 'waiting':
+      case 'pending':
+        return "warning";
+      case 'unknown':
+      case 'terminated':
+        return "unknown";
+      }
+    }
   }]
 });
 ;/**
@@ -3159,11 +6830,12 @@ angular.module('patternfly.charts').component('pfUtilizationTrendChart', {
 
         var matchesFilter = function (item, filter) {
           var match = true;
+          var re = new RegExp(filter.value, 'i');
 
           if (filter.id === 'name') {
-            match = item.name.match(filter.value) !== null;
+            match = item.name.match(re) !== null;
           } else if (filter.id === 'address') {
-            match = item.address.match(filter.value) !== null;
+            match = item.address.match(re) !== null;
           } else if (filter.id === 'birthMonth') {
             match = item.birthMonth === filter.value;
           }
@@ -7151,8 +10823,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
   *
   * @param {object} config Optional configuration object
   * <ul style='list-style-type: none'>
-  *   <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
-  *   <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  *   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is 'uuid'
+  *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
   * </ul>
   * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
   * @param {array} items Array of items to display in the table view.
@@ -7173,31 +10846,46 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
   *     <li>.title - (String) Optional title, used for the tooltip
   *     <li>.actionFn - (function(action)) Function to invoke when the action selected
   *   </ul>
+  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
   * @example
- <example module="patternfly.table">
+ <example module="patternfly.tableview.demo">
  <file name="index.html">
  <div ng-controller="TableCtrl" class="row example-container">
    <div class="col-md-12">
      <pf-table-view id="exampleTableView"
           config="config"
+          empty-state-config="emptyStateConfig"
           dt-options="dtOptions"
           colummns="colummns"
           items="items"
           action-buttons="actionButtons"
           menu-actions="menuActions">
      </pf-table-view>
-     <div class="col-md-12" style="padding-top: 12px;">
-       <label style="font-weight:normal;vertical-align:center;">Events: </label>
-     </div>
-     <div class="col-md-12">
-       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+   </div>
+   <div class="col-md-12" style="padding-top: 12px;">
+     <div class="form-group">
+       <label class="checkbox-inline">
+         <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+       </label>
      </div>
    </div>
- </div>
+   <hr class="col-md-12">
+   <div class="col-md-12">
+         <div class="col-md-12" style="padding-top: 12px;">
+           <label style="font-weight:normal;vertical-align:center;">Events: </label>
+         </div>
+         <div class="col-md-12">
+           <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+         </div>
+   </div>
+ </file>
+
+ <file name="modules.js">
+   angular.module('patternfly.tableview.demo', ['patternfly.views','patternfly.table']);
  </file>
 
  <file name="script.js">
- angular.module('patternfly.table').controller('TableCtrl', ['$scope',
+ angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope',
  function ($scope) {
         $scope.dtOptions = {
           order: [[2, "asc"]],
@@ -7265,7 +10953,19 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
         $scope.config = {
           onCheckBoxChange: handleCheckBoxChange,
-          selectionMatchProp: "name"
+          selectionMatchProp: "name",
+          itemsAvailable: true
+        };
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
         };
 
         function handleCheckBoxChange (item) {
@@ -7335,8 +11035,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
  *
  * @param {object} config Optional configuration object
  * <ul style='list-style-type: none'>
- *   <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
- *   <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+ *   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is 'uuid'
+ *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+ *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * </ul>
  * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
  * @param {array} items Array of items to display in the table view.
@@ -7357,6 +11058,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
  *     <li>.title - (String) Optional title, used for the tooltip
  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
  *   </ul>
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.tableview.demo">
   <file name="index.html">
@@ -7366,22 +11068,27 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       </div>
       <div class="col-md-12">
         <pf-table-view config="tableConfig"
+                       empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
                        colummns="colummns"
                        items="items"
                        action-buttons="tableActionButtons"
                        menu-actions="tableMenuActions">
         </pf-table-view>
-        <!-- form role="form"    //[WIP] issues dynamically changing displayLength and turning on/off pagination >
-          <div class="form-group">
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+          </label>
+          <!-- //[WIP] issues dynamically changing displayLength and turning on/off pagination
             <label class="checkbox-inline">
               <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
             </label>
             <label>
               <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
-            </label>
-          </div>
-        </form --!>
+            </label> --!>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -7706,7 +11413,19 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
-        selectionMatchProp: "name"
+        selectionMatchProp: "name",
+        itemsAvailable: true
+      };
+
+      $scope.emptyStateConfig = {
+        icon: 'pficon-warning-triangle-o',
+        title: 'No Items Available',
+        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+        helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+        }
       };
 
       $scope.tableActionButtons = [
@@ -7753,6 +11472,18 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           actionFn: performTableAction
         }
       ];
+
+      $scope.updateItemsAvailable = function () {
+        if(!$scope.tableConfig.itemsAvailable) {
+          $scope.toolbarConfig.filterConfig.resultsCount = 0;
+          $scope.toolbarConfig.filterConfig.totalCount = 0;
+          $scope.toolbarConfig.filterConfig.selectedCount = 0;
+       } else {
+          $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+          $scope.toolbarConfig.filterConfig.totalCount = $scope.allItems.length;
+          handleCheckBoxChange();
+        }
+      };
     }
   ]);
   </file>
@@ -7765,7 +11496,8 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     colummns: '<',
     items: '<',
     actionButtons: '<?',
-    menuActions: '<?'
+    menuActions: '<?',
+    emptyStateConfig: '=?'
   },
   templateUrl: 'table/tableview/table-view.html',
   controller: ["DTOptionsBuilder", "DTColumnDefBuilder", "$element", "pfUtils", "$log", "$filter", "$timeout", function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout) {
@@ -8255,7 +11987,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         </pf-toolbar>
       </div>
       <div class="col-md-12" ng-if="viewType == 'listView'">
-        <pf-list-view config="listConfig" items="items">
+        <pf-list-view config="listConfig"
+                      items="items"
+                      empty-state-config="emptyStateConfig">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
               {{item.name}}
@@ -8275,7 +12009,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         </pf-list-view>
       </div>
       <div class="col-md-12" ng-if="viewType == 'cardView'">
-        <pf-card-view config="listConfig" items="items">
+        <pf-card-view config="listConfig"
+                      items="items"
+                      empty-state-config="emptyStateConfig">
           <div class="col-md-12">
             <span>{{item.name}}</span>
           </div>
@@ -8290,8 +12026,16 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       <div class="col-md-12" ng-show="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
                        colummns="colummns"
-                       items="items">
+                       items="items"
+                       empty-state-config="emptyStateConfig">
         </pf-table-view>
+      </div>
+      <div class="col-md-12" style="padding-top: 12px;">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="listConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+          </label>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -8397,13 +12141,14 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
       var matchesFilter = function (item, filter) {
         var match = true;
+        var re = new RegExp(filter.value, 'i');
 
         if (filter.id === 'name') {
-          match = item.name.match(filter.value) !== null;
+          match = item.name.match(re) !== null;
         } else if (filter.id === 'age') {
           match = item.age === parseInt(filter.value);
         } else if (filter.id === 'address') {
-          match = item.address.match(filter.value) !== null;
+          match = item.address.match(re) !== null;
         } else if (filter.id === 'birthMonth') {
           match = item.birthMonth === filter.value;
         }
@@ -8621,12 +12366,25 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       $scope.listConfig = {
         selectionMatchProp: 'name',
         checkDisabled: false,
+        itemsAvailable: true,
         onCheckBoxChange: handleCheckBoxChange
+      };
+
+      $scope.emptyStateConfig = {
+        icon: 'pficon-warning-triangle-o',
+        title: 'No Items Available',
+        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+        helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+        }
       };
 
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
-        selectionMatchProp: "name"
+        selectionMatchProp: "name",
+        itemsAvailable: true,
       };
 
       $scope.doAdd = function () {
@@ -8635,6 +12393,19 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
       $scope.optionSelected = function (option) {
         $scope.actionsText = "Option " + option + " selected\n" + $scope.actionsText;
+      };
+
+      $scope.updateItemsAvailable = function () {
+        $scope.tableConfig.itemsAvailable = $scope.listConfig.itemsAvailable;
+        if(!$scope.listConfig.itemsAvailable) {
+          $scope.toolbarConfig.filterConfig.resultsCount = 0;
+          $scope.toolbarConfig.filterConfig.totalCount = 0;
+          $scope.toolbarConfig.filterConfig.selectedCount = 0;
+       } else {
+          $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+          $scope.toolbarConfig.filterConfig.totalCount = $scope.allItems.length;
+          handleCheckBoxChange();
+        }
       };
 
       function handleCheckBoxChange (item) {
@@ -9303,8 +13074,9 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
  * <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
  * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * </ul>
- *
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @param {Array} items the data to be shown in the cards<br/>
  *
  * @example
@@ -9322,7 +13094,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
    </style>
    <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <pf-card-view id="exampleCardView" config="config" items="items">
+       <pf-card-view id="exampleCardView" config="config" empty-state-config="emptyStateConfig" items="items">
          <div class="col-md-12">
            <span>{{item.name}}</span>
          </div>
@@ -9369,6 +13141,9 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
          <div class="form-group">
            <label class="checkbox-inline">
              <input type="checkbox" ng-model="showDisabled">Show Disabled Cards</input>
+           </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
            </label>
          </div>
        </form>
@@ -9424,6 +13199,7 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
 
         $scope.config = {
          selectItems: false,
+         itemsAvailable: true,
          multiSelect: false,
          dblClick: false,
          selectionMatchProp: 'name',
@@ -9469,6 +13245,17 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
             state: "New York"
           },
         ]
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
+        };
       }
  ]);
  </file>
@@ -9477,12 +13264,13 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
 angular.module('patternfly.views').component('pfCardView', {
   bindings: {
     config: '=?',
+    emptyStateConfig: '=?',
     items: '=',
     eventId: '@id'
   },
   transclude: true,
   templateUrl: 'views/cardview/card-view.html',
-  controller: ["pfUtils", function (pfUtils) {
+  controller: function () {
     'use strict';
     var ctrl = this;
     ctrl.defaultConfig = {
@@ -9585,11 +13373,169 @@ angular.module('patternfly.views').component('pfCardView', {
     };
 
     ctrl.$onInit = function () {
-      ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Setting bound variables to new variables loses it's binding
+      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Instead, use _.defaults to update the existing variable
+      _.defaults(ctrl.config, ctrl.defaultConfig);
       if (ctrl.config.selectItems && ctrl.config.showSelectBox) {
         throw new Error('pfCardView - ' +
           'Illegal use of pfCardView component! ' +
           'Cannot allow both select box and click selection in the same card view.');
+      }
+    };
+  }
+});
+;/**
+ * @ngdoc directive
+ * @name patternfly.views.component:pfEmptyState
+ * @restrict E
+ *
+ * @description
+ * Component for rendering an empty state.
+ *
+ * @param {object} config Optional configuration object
+ * <ul style='list-style-type: none'>
+ *   <li>.icon   - (string) class for main icon. Ex. 'pficon pficon-add-circle-o'
+ *   <li>.title  - (string) Text for the main title
+ *   <li>.info  - (string) Text for the main informational paragraph
+ * </ul>
+ * @param {array} actionButtons Buttons to display under the icon, title, and informational paragraph.
+ *   <ul style='list-style-type: none'>
+ *     <li>.name - (String) The name of the action, displayed on the button
+ *     <li>.title - (String) Optional title, used for the tooltip
+ *     <li>.actionFn - (function(action)) Function to invoke when the action selected
+ *     <li>.type - (String) Optional type property. Set to 'main' to be displayed as a main action button.
+ *     If unspecified, action button will be displayed as a secondary action button.
+ *   </ul>
+ * @example
+ <example module="patternfly.views" deps="patternfly.utils">
+ <file name="index.html">
+   <div ng-controller="ViewCtrl" class="row example-container">
+     <div class="col-md-12">
+       <pf-empty-state config="config" action-buttons="actionButtons"></pf-empty-state>
+     </div>
+     <hr class="col-md-12">
+     <div class="col-md-12">
+       <label style="font-weight:normal;vertical-align:center;">Events: </label>
+     </div>
+     <div class="col-md-12">
+       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+     </div>
+   </div>
+ </file>
+
+ <file name="script.js">
+ angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
+   function ($scope) {
+     $scope.eventText = '';
+
+     $scope.config = {
+       icon: 'pficon-add-circle-o',
+       title: 'Empty State Title',
+       info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+       helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+       }
+     };
+
+     var performAction = function (action) {
+       $scope.eventText = action.name + " executed. \r\n" + $scope.eventText;
+     };
+
+     $scope.actionButtons = [
+        {
+          name: 'Main Action',
+          title: 'Perform an action',
+          actionFn: performAction,
+          type: 'main'
+        },
+        {
+          name: 'Secondary Action 1',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Secondary Action 2',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Secondary Action 3',
+          title: 'Perform an action',
+          actionFn: performAction
+        }
+     ];
+   }
+ ]);
+</file>
+</example>
+*/
+angular.module('patternfly.views').component('pfEmptyState', {
+  bindings: {
+    config: '<?',
+    actionButtons: "<?"
+  },
+  templateUrl: 'views/empty-state.html',
+  controller: ["$filter", function ($filter) {
+    'use strict';
+    var ctrl = this;
+
+    ctrl.defaultConfig = {
+      title: 'No Items Available'
+    };
+
+    ctrl.$onInit = function () {
+      if (angular.isUndefined(ctrl.config)) {
+        ctrl.config = {};
+      }
+      ctrl.updateConfig();
+    };
+
+    ctrl.updateConfig = function () {
+      _.defaults(ctrl.config, ctrl.defaultConfig);
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if ((changesObj.config && !changesObj.config.isFirstChange()) ) {
+        ctrl.updateConfig();
+      }
+    };
+
+    ctrl.hasMainActions = function () {
+      var mainActions;
+
+      if (ctrl.actionButtons) {
+        mainActions = $filter('filter')(ctrl.actionButtons, {type: 'main'});
+        return mainActions.length;
+      }
+
+      return false;
+    };
+
+    ctrl.hasSecondaryActions = function () {
+      var secondaryActions;
+
+      if (ctrl.actionButtons) {
+        secondaryActions = $filter('filter')(ctrl.actionButtons, {type: undefined});
+        return secondaryActions.length;
+      }
+
+      return false;
+    };
+
+    ctrl.filterMainActions = function (action) {
+      return action.type === 'main';
+    };
+
+    ctrl.filterSecondaryActions = function (action) {
+      return action.type !== 'main';
+    };
+
+    ctrl.handleButtonAction = function (action) {
+      if (action && action.actionFn) {
+        action.actionFn(action);
       }
     };
   }]
@@ -9612,10 +13558,15 @@ angular.module('patternfly.views').component('pfCardView', {
  * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
  * <li>.selectItems            - (boolean) Allow row selection, default is false
  * <li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
+ * <li>.dragEnabled            - (boolean) Enable drag and drop. Default is false.
+ * <li>.dragEnd                - ( function() ) Function to call when the drag operation ended, default is none
+ * <li>.dragMoved              - ( function() ) Function to call when the drag operation moved an element, default is none
+ * <li>.dragStart              - ( function(item) ) Function to call when the drag operation started, default is none
  * <li>.multiSelect            - (boolean) Allow multiple row selections, selectItems must also be set, not applicable when dblClick is true. Default is false
  * <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
  * <li>.selectedItems          - (array) Current set of selected items
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
  * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
@@ -9646,13 +13597,16 @@ angular.module('patternfly.views').component('pfCardView', {
  * @param {function (item))} menuClassForItemFn function(item) Used to specify a class for an item's dropdown kebab
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
  * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via customScope.<xxx>
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12 list-view-container example-list-view">
         <pf-list-view id="exampleListView"
-                          config="config" items="items"
+                          config="config"
+                          empty-state-config="emptyStateConfig"
+                          items="items"
                           action-buttons="actionButtons"
                           enable-button-for-item-fn="enableButtonForItemFn"
                           menu-actions="menuActions"
@@ -9745,6 +13699,18 @@ angular.module('patternfly.views').component('pfCardView', {
            <label class="checkbox-inline">
               <input type="checkbox" ng-model="config.useExpandingRows">Show Expanding Rows</input>
            </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+           </label>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-12">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="config.dragEnabled">Drag and Drop</input>
+            </label>
           </div>
         </form>
       </div>
@@ -9779,6 +13745,28 @@ angular.module('patternfly.views').component('pfCardView', {
 
         var checkDisabledItem = function(item) {
           return $scope.showDisabled && (item.name === "John Smith");
+        };
+
+        var dragEnd = function() {
+          $scope.eventText = 'drag end\r\n' + $scope.eventText;
+        };
+        var dragMoved = function() {
+          var index = -1;
+
+          for (var i = 0; i < $scope.items.length; i++) {
+            if ($scope.items[i] === $scope.dragItem) {
+              index = i;
+              break;
+            }
+          }
+          if (index >= 0) {
+            $scope.items.splice(index, 1);
+          }
+          $scope.eventText = 'drag moved\r\n' + $scope.eventText;
+        };
+        var dragStart = function(item) {
+          $scope.dragItem = item;
+          $scope.eventText = item.name + ': drag start\r\n' + $scope.eventText;
         };
 
         $scope.enableButtonForItemFn = function(action, item) {
@@ -9821,8 +13809,13 @@ angular.module('patternfly.views').component('pfCardView', {
          selectItems: false,
          multiSelect: false,
          dblClick: false,
+         dragEnabled: false,
+         dragEnd: dragEnd,
+         dragMoved: dragMoved,
+         dragStart: dragStart,
          selectionMatchProp: 'name',
          selectedItems: [],
+         itemsAvailable: true,
          checkDisabled: checkDisabledItem,
          showSelectBox: true,
          useExpandingRows: false,
@@ -9831,6 +13824,17 @@ angular.module('patternfly.views').component('pfCardView', {
          onCheckBoxChange: handleCheckBoxChange,
          onClick: handleClick,
          onDblClick: handleDblClick
+        };
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
         };
 
         $scope.items = [
@@ -9990,13 +13994,14 @@ angular.module('patternfly.views').component('pfListView', {
     updateMenuActionForItemFn: '=?',
     actions: '=?',
     updateActionForItemFn: '=?',
-    customScope: '=?'
+    customScope: '=?',
+    emptyStateConfig: '=?'
   },
   transclude: {
     expandedContent: '?listExpandedContent'
   },
   templateUrl: 'views/listview/list-view.html',
-  controller: ["$timeout", "$window", "$element", "pfUtils", function ($timeout, $window, $element, pfUtils) {
+  controller: ["$window", "$element", function ($window, $element) {
     'use strict';
     var ctrl = this;
 
@@ -10020,6 +14025,10 @@ angular.module('patternfly.views').component('pfListView', {
       selectItems: false,
       multiSelect: false,
       dblClick: false,
+      dragEnabled: false,
+      dragEnd: null,
+      dragMoved: null,
+      dragStart: null,
       selectionMatchProp: 'uuid',
       selectedItems: [],
       checkDisabled: false,
@@ -10094,7 +14103,7 @@ angular.module('patternfly.views').component('pfListView', {
       // update the actions based on the current item
       ctrl.updateActions(item);
 
-      $timeout(function () {
+      $window.requestAnimationFrame(function () {
         var parentDiv = undefined;
         var nextElement;
 
@@ -10199,7 +14208,10 @@ angular.module('patternfly.views').component('pfListView', {
     };
 
     ctrl.$onInit = function () {
-      ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Setting bound variables to new variables loses it's binding
+      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Instead, use _.defaults to update the existing variable
+      _.defaults(ctrl.config, ctrl.defaultConfig);
       if (!ctrl.config.selectItems) {
         ctrl.config.selectedItems = [];
       }
@@ -10210,6 +14222,30 @@ angular.module('patternfly.views').component('pfListView', {
         throw new Error('pfListView - ' +
           'Illegal use of pListView component! ' +
           'Cannot allow both select box and click selection in the same list view.');
+      }
+    };
+
+    ctrl.dragEnd = function () {
+      if (angular.isFunction(ctrl.config.dragEnd)) {
+        ctrl.config.dragEnd();
+      }
+    };
+
+    ctrl.dragMoved = function () {
+      if (angular.isFunction(ctrl.config.dragMoved)) {
+        ctrl.config.dragMoved();
+      }
+    };
+
+    ctrl.isDragOriginal = function (item) {
+      return (item === ctrl.dragItem);
+    };
+
+    ctrl.dragStart = function (item) {
+      ctrl.dragItem = item;
+
+      if (angular.isFunction(ctrl.config.dragStart)) {
+        ctrl.config.dragStart(item);
       }
     };
   }]
@@ -11380,6 +15416,43 @@ angular.module('patternfly.wizard').component('pfWizard', {
     };
   }]
 });
+;angular.module('patternfly.canvas').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('canvas-view/canvas-editor/canvas-editor.html',
+    "<div class=canvas-editor-container><div class=canvas-editor-toolbar><button id=toggleToolbox class=\"btn btn-primary\" ng-class=\"{'disabled': $ctrl.chartViewModel.inConnectingMode || $ctrl.readOnly}\" type=button ng-click=$ctrl.toggleToolbox() tooltip-placement=bottom-left uib-tooltip=\"{{'Add Item To Canvas'}}\">Add Item <span class=fa ng-class=\"{'fa-angle-double-up': $ctrl.toolboxVisible, 'fa-angle-double-down': !$ctrl.toolboxVisible}\"></span></button><!-- user defined more actions --> <span ng-transclude></span> <span class=right-aligned-controls><input ng-class=\"{'disabled': $ctrl.chartViewModel.inConnectingMode}\" ng-model=$ctrl.hideConnectors ng-change=$ctrl.toggleshowHideConnectors() type=checkbox ng-checked=\"$ctrl.hideConnectors\"> <span class=show-hide-connectors-label>Hide Connectors</span> <a id=zoomOut ng-click=$ctrl.zoomOut() ng-class=\"{'disabled': $ctrl.minZoom()}\"><span class=\"pficon fa fa-minus\" tooltip-append-to-body=true tooltip-placement=bottom uib-tooltip=\"{{'Zoom Out'}}\"></span></a> <a id=zoomIn ng-click=$ctrl.zoomIn() ng-class=\"{'disabled': $ctrl.maxZoom()}\"><span class=\"pficon fa fa-plus\" tooltip-append-to-body=true tooltip-placement=bottom-right uib-tooltip=\"{{'Zoom In'}}\"></span></a></span></div><div class=canvas-editor-toolbox-container><div class=canvas-editor-toolbox id=toolbox ng-if=$ctrl.toolboxVisible><a ng-click=\"$ctrl.toolboxVisible = false\" class=close-toolbox><span class=\"pficon pficon-close\"></span></a><div class=toolbox-filter><input ng-model=$ctrl.searchText id=filterFld class=search-text placeholder=\"{{'Filter by name'}}\"> <a ng-click=\"$ctrl.searchText = ''\"><span class=\"pficon pficon-close clear-search-text\"></span></a></div><uib-tabset><uib-tab ng-repeat=\"tab in $ctrl.toolboxTabs\" heading=\"\" active=tab.active><uib-tab-heading ng-click=$ctrl.tabClicked()><div class=tab-pre-title>{{tab.preTitle}}</div><div class=tab-title ng-class=\"{'tab-single-line':tab.preTitle == null}\">{{tab.title}}</div></uib-tab-heading><uib-tabset class=subtabs ng-if=tab.subtabs><uib-tab ng-repeat=\"subtab in tab.subtabs\" heading={{subtab.title}} active=subtab.active ng-click=$ctrl.tabClicked()><uib-tabset class=subtabs ng-if=subtab.subtabs><uib-tab ng-repeat=\"subsubtab in subtab.subtabs\" heading={{subsubtab.title}} active=subsubtab.active ng-click=$ctrl.tabClicked()><toolbox-items items=subsubtab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text=\"$ctrl.searchText\"></uib-tab></uib-tabset><!-- SubTabs without Sub-Sub Tabs --><toolbox-items ng-if=!subtab.subtabs items=subtab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text=\"$ctrl.searchText\"></uib-tab></uib-tabset><!-- Primary Tabs without SubTabs --><toolbox-items ng-if=!tab.subtabs items=tab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text=\"$ctrl.searchText\"></uib-tab></uib-tabset></div><div class=canvas-container data-drop=true data-jqyoui-options jqyoui-droppable=\"{onDrop:'$ctrl.dropCallback'}\"><pf-canvas chart-data-model=$ctrl.chartDataModel chart-view-model=$ctrl.chartViewModel read-only=$ctrl.readOnly hide-connectors=$ctrl.hideConnectors></pf-canvas></div></div></div>"
+  );
+
+
+  $templateCache.put('canvas-view/canvas-editor/toolbox-items.html',
+    "<ul class=toolbox-items-list><li class=toolbox-item ng-repeat=\"item in vm.items | filter:vm.searchText\" data-drag={{!item.disableInToolbox}} jqyoui-draggable=\"{onStart:'vm.startDragCallbackfmDir(item)'}\" ng-class=\"{'not-draggable': item.disableInToolbox}\" data-jqyoui-options=\"{revert: 'invalid', helper: 'clone'}\" ng-click=vm.clickCallbackfmDir(item) uib-tooltip=\"{{(item.disableInToolbox ? 'Items cannot be added to the canvas more than once.' : '')}}\"><img ng-if=item.image src={{item.image}} alt=\"{{item.name}}\"> <i ng-if=\"item.icon && !item.image\" class=\"draggable-item-icon {{item.icon}}\"></i> <span>{{ item.name }}</span></li></ul>"
+  );
+
+
+  $templateCache.put('canvas-view/canvas/canvas.html',
+    "<svg class=\"canvas draggable-container\" xmlns=http://www.w3.org/2000/svg ng-mousedown=mouseDown($event) ng-mousemove=mouseMove($event) ng-class=\"{'read-only': readOnly, 'canvas-in-connection-mode': chart.inConnectingMode}\" ng-style=\"{'height': chart.zoom.getChartHeight() + 'px', 'width': chart.zoom.getChartWidth() + 'px', 'background-size': chart.zoom.getBackgroundSize() + 'px '+  chart.zoom.getBackgroundSize() + 'px'}\" mouse-capture><!-- Zoom --><g ng-attr-transform=scale({{zoomLevel()}})><!-- Connection Mode Notification --><g ng-if=chart.inConnectingMode><rect class=connecting-mode-rec ry=1 rx=1 x=0 y=0 width=640 height=32></rect><text class=connecting-mode-label x=12 y=22 ng-if=availableConnections()>Select a second item to complete the connection or click on the canvas to cancel</text><text class=connecting-mode-label-warning x=12 y=22 ng-if=!availableConnections()>No available connections! Click on the canvas to cancel</text></g><!-- Main Node Loop --><g ng-repeat=\"node in chart.nodes\" ng-mousedown=\"nodeMouseDown($event, node)\" ng-mouseover=\"nodeMouseOver($event, node)\" ng-mouseleave=\"nodeMouseLeave($event, node)\" ng-attr-transform=\"translate({{node.x()}}, {{node.y()}})\"><!-- Node --><rect ng-class=\"{'invalid-node-rect': node.invalid(), 'selected-node-rect': node.selected(), 'mouseover-node-rect': node == mouseOverNode, 'node-rect': node != mouseOverNode}\" ry=0 rx=0 x=0 y=0 ng-attr-width={{node.width()}} ng-attr-height={{node.height()}} fill={{node.backgroundColor()}} fill-opacity=1.0></rect><!-- Node Title: no-wrap --><text ng-if=!foreignObjectSupported() class=node-header ng-class=\"{'invalid-node-header': node.invalid()}\" ng-attr-x={{node.width()/2}} ng-attr-y=\"{{node.height() - 24}}\" text-anchor=middle alignment-baseline=middle>{{node.name()}}</text><!-- Node Title: text wrap --><foreignobject ng-if=foreignObjectSupported() x=0 ng-attr-y=\"{{node.height() - 42}}\" ng-attr-width={{node.width()}} ng-attr-height=\"{{node.height() - 42}}\"><body><div class=node-header ng-attr-width={{node.width()}} ng-attr-height=\"{{node.height() - 42}}\"><p ng-class=\"{'invalid-node-header': node.invalid()}\" ng-style=\"{width: node.width()}\">{{node.name()}}</p></div></body></foreignobject><!-- Node Image --><image ng-if=node.image() class=node-center-img ng-class=\"{'invalid-node-img': node.invalid()}\" ng-href=\"{{node.image() | trustAsResourceUrl}}\" xlink:href=\"\" ng-attr-x=\"{{(node.width()/2) - 40}}\" ng-attr-y={{20}} height=80px width=80px></image><!-- Node Icon: icon class --><foreignobject ng-if=\"node.icon() && !node.image() && foreignObjectSupported()\" ng-attr-x=\"{{(node.width()/2) - 44}}\" ng-attr-y=\"{{(node.height()/2) - 54}}\" ng-attr-height={{node.height()}}px ng-attr-width={{node.width()}}px class=node-center-img-icon ng-class=\"{'invalid-node-header': node.invalid()}\"><body><i class={{node.icon()}} ng-style=\"{'font-size': node.fontSize() ? node.fontSize() : '76px'}\"></i></body></foreignobject><!-- Node Icon: fontContent --><text ng-if=\"node.fontFamily() && !node.image()\" class=node-center-icon ng-class=\"{'invalid-node-header': node.invalid()}\" font-family={{node.fontFamily()}} ng-attr-x=\"{{(node.width()/2) - 34 + ((node.bundle()) ? 4 : 0) }}\" ng-attr-y={{90}}>{{node.fontContent()}}</text><!-- Sm. Top Left Bundle Icon --><text ng-if=node.bundle() class=bundle-icon x=6 y=22 font-family=PatternFlyIcons-webfont font-size=20>{{'\\ue918'}}</text><!-- Bottom Node Toolbar --><g id=nodeToolBar ng-if=\"node == mouseOverNode && !chart.inConnectingMode\"><g class=svg-triangle><polyline points=\"4,152 14,140 24,152\"></polyline></g><foreignobject ng-attr-x={{node.x}} ng-attr-y={{node.height()+1}} ng-mousedown=$event.stopPropagation() height=100% width=100%><body><node-toolbar node=node node-actions=chart.nodeActions></node-toolbar></body></foreignobject></g><!-- Connected Input Connectors --><g ng-if=!hideConnectors ng-repeat=\"connector in node.inputConnectors | filter: isConnectorConnected\" ng-mousedown=\"connectorMouseDown($event, node, connector, $index, true)\" ng-mouseover=\"connectorMouseOver($event, node, connector, $index, true)\" ng-mouseleave=\"connectorMouseLeave($event, node, connector, $index, true)\" class=\"connector input-connector\"><circle ng-if=\"!chart.inConnectingMode || isConnectedTo(connector, connectingModeSourceNode)\" ng-class=\"{'mouseover-connector-circle': connector == mouseOverConnector,\n" +
+    "                   'connector-circle': connector != mouseOverConnector}\" ng-attr-r={{connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g><!-- Unconnected Input Connectors --><g ng-if=chart.inConnectingMode ng-repeat=\"connector in node.inputConnectors | filter: isConnectorUnconnectedAndValid\" ng-mousedown=\"connectorMouseDown($event, node, connector, $index, true)\" ng-mouseover=\"connectorMouseOver($event, node, connector, $index, true)\" ng-mouseleave=\"connectorMouseLeave($event, node, connector, $index, true)\" class=\"connector input-connector\"><text ng-if=connector.fontFamily() class=connector-icons font-family={{connector.fontFamily()}} ng-attr-x=\"{{connector.x() - 28}}\" ng-attr-y=\"{{connector.y() + 7}}\">{{connector.fontContent()}}</text><circle ng-class=\"{'unconnected-circle': connector != mouseOverConnector,\n" +
+    "                         'mouseover-unconnected-circle': connector == mouseOverConnector}\" ng-attr-r={{connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle><g ng-if=\"connector == mouseOverConnector\"><rect class=connector-tooltip ry=1 rx=1 ng-attr-x=\"{{connector.x() - 4}}\" ng-attr-y=\"{{connector.y() + 12}}\" ng-attr-width={{80}} height=20></rect><text class=connector-tooltip-text ng-attr-x=\"{{connector.x() + 2}}\" ng-attr-y=\"{{connector.y() + 26}}\" text-anchor=start alignment-baseline=top>{{connector.name()}}</text></g></g><!-- Output Connector --><g ng-if=!hideConnectors ng-repeat=\"connector in node.outputConnectors\" ng-mousedown=\"connectorMouseDown($event, node, connector, $index, false)\" ng-mouseover=\"connectorMouseOver($event, node, connector, $index, false)\" ng-mouseleave=\"connectorMouseLeave($event, node, connector, $index, false)\" class=\"connector output-connector\"><circle ng-if=\"!chart.inConnectingMode || (connectingModeSourceNode === connector.parentNode())\" ng-class=\"{'connector-circle': connector != mouseOverConnector,\n" +
+    "                   'mouseover-connector-circle': connector == mouseOverConnector}\" ng-attr-r={{connectorSize}} ng-attr-r={{connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g></g><!--  End Nodes Loop --><!-- Connections --><g ng-if=!hideConnectors ng-repeat=\"connection in chart.connections\" class=connection ng-mousedown=\"connectionMouseDown($event, connection)\" ng-mouseover=\"connectionMouseOver($event, connection)\" ng-mouseleave=\"connectionMouseLeave($event, connection)\"><g ng-if=\"!chart.inConnectingMode || connectingModeSourceNode === connection.source.parentNode()\"><path ng-class=\"{'selected-connection-line': connection.selected(),\n" +
+    "                     'mouseover-connection-line': connection == mouseOverConnection,\n" +
+    "                     'connection-line': connection != mouseOverConnection}\" ng-attr-d=\"M {{connection.sourceCoordX()}}, {{connection.sourceCoordY()}}\n" +
+    "                     C {{connection.sourceTangentX()}}, {{connection.sourceTangentY()}}\n" +
+    "                       {{connection.destTangentX()}}, {{connection.destTangentY()}}\n" +
+    "                       {{connection.destCoordX()}}, {{connection.destCoordY()}}\"></path><text ng-if=\"connection == mouseOverConnection\" ng-class=\"{'selected-connection-name': connection.selected(),\n" +
+    "                     'mouseover-connection-name': connection == mouseOverConnection && !connection.selected(),\n" +
+    "                     'connection-name': connection != mouseOverConnection && !connection.selected()}\" ng-attr-x={{connection.middleX()}} ng-attr-y={{connection.middleY()}} text-anchor=middle alignment-baseline=middle>{{connection.name()}}</text><circle ng-class=\"{'selected-connection-endpoint': connection.selected(),\n" +
+    "                       'mouseover-connection-endpoint': connection == mouseOverConnection && !connection.selected(),\n" +
+    "                       'connection-endpoint': connection != mouseOverConnection && !connection.selected()}\" r=5 ng-attr-cx={{connection.sourceCoordX()}} ng-attr-cy={{connection.sourceCoordY()}}></circle><circle ng-class=\"{'selected-connection-endpoint': connection.selected(),\n" +
+    "                       'mouseover-connection-endpoint': connection == mouseOverConnection && !connection.selected(),\n" +
+    "                       'connection-endpoint': connection != mouseOverConnection && !connection.selected()}\" r=5 ng-attr-cx={{connection.destCoordX()}} ng-attr-cy={{connection.destCoordY()}}></circle></g></g><rect ng-if=dragSelecting class=drag-selection-rect ng-attr-x={{dragSelectionRect.x}} ng-attr-y={{dragSelectionRect.y}} ng-attr-width={{dragSelectionRect.width}} ng-attr-height={{dragSelectionRect.height}}></rect></g></svg>"
+  );
+
+
+  $templateCache.put('canvas-view/canvas/node-toolbar.html',
+    "<div class=node-toolbar ng-style=\"{width: vm.node.width()}\"><span ng-repeat=\"nodeAction in vm.nodeActions\" class=\"{{nodeAction.iconClass()}} node-toolbar-icons\" ng-click=actionIconClicked(nodeAction.action())></span></div>"
+  );
+
+}]);
 ;angular.module('patternfly.card').run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -11583,7 +15656,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('table/tableview/table-view.html',
-    "<table datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.colummns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)>{{ value }}</td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table>"
+    "<span><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.colummns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)>{{ value }}</td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></span>"
   );
 
 }]);
@@ -11602,12 +15675,17 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('views/cardview/card-view.html',
-    "<div class=card-view-pf><div class=card ng-repeat=\"item in $ctrl.items\" ng-class=\"{'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item)}\"><div class=card-content ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div></div></div>"
+    "<span><div ng-if=\"$ctrl.config.itemsAvailable !== false\" class=card-view-pf><div class=card ng-repeat=\"item in $ctrl.items\" ng-class=\"{'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item)}\"><div class=card-content ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div></div></div><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></span>"
+  );
+
+
+  $templateCache.put('views/empty-state.html',
+    "<div class=blank-slate-pf><div ng-if=$ctrl.config.icon class=blank-slate-pf-icon><span class={{$ctrl.config.icon}}></span></div><h1 id=title>{{$ctrl.config.title}}</h1><p id=info ng-if=$ctrl.config.info>{{$ctrl.config.info}}</p><p id=helpLink ng-if=$ctrl.config.helpLink>{{$ctrl.config.helpLink.label}} <a href={{$ctrl.config.helpLink.url}}>{{$ctrl.config.helpLink.urlLabel}}</a>.</p><div ng-if=$ctrl.hasMainActions() class=blank-slate-pf-main-action><button class=\"btn btn-primary btn-lg\" ng-repeat=\"actionButton in $ctrl.actionButtons | filter:$ctrl.filterMainActions\" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div><div ng-if=$ctrl.hasSecondaryActions() class=blank-slate-pf-secondary-action><button class=\"btn btn-default\" ng-repeat=\"actionButton in $ctrl.actionButtons | filter:$ctrl.filterSecondaryActions\" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div></div>"
   );
 
 
   $templateCache.put('views/listview/list-view.html',
-    "<div class=\"list-group list-view-pf\"><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in $ctrl.items track by $index\" ng-class=\"{'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}\"><div class=list-group-item-header><div class=list-view-pf-expand ng-if=$ctrl.config.useExpandingRows><span class=\"fa fa-angle-right\" ng-show=!item.disableRowExpansion ng-click=$ctrl.toggleItemExpansion(item) ng-class=\"{'fa-angle-down': item.isExpanded}\"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"($ctrl.actionButtons && $ctrl.actionButtons.length > 0) || ($ctrl.menuActions && $ctrl.menuActions.length > 0)\"><button class=\"btn btn-default {{actionButton.class}}\" ng-repeat=\"actionButton in $ctrl.actionButtons\" title={{actionButton.title}} ng-class=\"{'disabled' : $ctrl.checkDisabled(item) || !$ctrl.enableButtonForItem(actionButton, item)}\" ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class=\"{{$ctrl.dropdownClass}} pull-right dropdown-kebab-pf {{$ctrl.getMenuClassForItem(item)}} {{$ctrl.hideMenuForItem(item) ? 'invisible' : ''}}\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': $ctrl.checkDisabled(item)}\" ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"></div></div><div class=\"list-group-item-container container-fluid\" ng-transclude=expandedContent ng-if=\"$ctrl.config.useExpandingRows && item.isExpanded\"></div></div></div>"
+    "<span><div class=\"list-group list-view-pf\" dnd-list=$ctrl.items ng-class=\"{'list-view-pf-dnd': $ctrl.config.dragEnabled === true}\" ng-if=\"$ctrl.config.itemsAvailable !== false\"><div class=dndPlaceholder></div><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in $ctrl.items track by $index\" dnd-draggable=item dnd-effect-allowed=move dnd-disable-if=\"$ctrl.config.dragEnabled !== true\" dnd-dragstart=$ctrl.dragStart(item) dnd-moved=$ctrl.dragMoved() dnd-dragend=$ctrl.dragEnd() ng-class=\"{'drag-original': $ctrl.isDragOriginal(item), 'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}\"><div class=list-group-item-header><div class=list-view-pf-dnd-drag-items ng-if=\"$ctrl.config.dragEnabled === true\"><div pf-transclude=parent class=list-view-pf-main-info></div></div><div ng-class=\"{'list-view-pf-dnd-original-items': $ctrl.config.dragEnabled === true}\"><div class=list-view-pf-expand ng-if=$ctrl.config.useExpandingRows><span class=\"fa fa-angle-right\" ng-show=!item.disableRowExpansion ng-click=$ctrl.toggleItemExpansion(item) ng-class=\"{'fa-angle-down': item.isExpanded}\"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"($ctrl.actionButtons && $ctrl.actionButtons.length > 0) || ($ctrl.menuActions && $ctrl.menuActions.length > 0)\"><button class=\"btn btn-default {{actionButton.class}}\" ng-repeat=\"actionButton in $ctrl.actionButtons\" title={{actionButton.title}} ng-class=\"{'disabled' : $ctrl.checkDisabled(item) || !$ctrl.enableButtonForItem(actionButton, item)}\" ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class=\"{{$ctrl.dropdownClass}} pull-right dropdown-kebab-pf {{$ctrl.getMenuClassForItem(item)}} {{$ctrl.hideMenuForItem(item) ? 'invisible' : ''}}\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': $ctrl.checkDisabled(item)}\" ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"></div></div><div class=\"list-group-item-container container-fluid\" ng-transclude=expandedContent ng-if=\"$ctrl.config.useExpandingRows && item.isExpanded\"></div></div></div></div><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></span>"
   );
 
 }]);

@@ -65,15 +65,9 @@ module.exports = function (grunt) {
           dest: 'docs',
           expand: true
         },
-        styles: {
-          cwd: 'styles/',
-          src: ['*.css', '!*.min.css'],
-          dest: 'dist/styles',
-          expand: true
-        },
         img: {
           cwd: 'misc/',
-          src: 'patternfly-orb.svg',
+          src: ['patternfly-orb.svg', '*.png'],
           dest: 'docs/img',
           expand: true
         },
@@ -82,13 +76,30 @@ module.exports = function (grunt) {
           src: ['**'],
           dest: 'dist/docs',
           expand: true
+        },
+        distimg: {
+          cwd: 'misc',
+          src: ['canvas-dot-grid.png'],
+          dest: 'dist/imgs',
+          expand: true
+        }
+      },
+      less: {
+        patternfly: {
+          files: {
+            'dist/styles/angular-patternfly.css': 'styles/angular-patternfly.less'
+          },
+          options: {
+            paths: ['src/less/'],
+            strictMath: true
+          }
         }
       },
       cssmin: {
         target: {
           files: [{
             expand: true,
-            cwd: 'styles',
+            cwd: 'dist/styles',
             src: ['*.css', '!*.min.css'],
             dest: 'dist/styles',
             ext: '.min.css'
@@ -126,6 +137,7 @@ module.exports = function (grunt) {
           image: 'misc/logo-alt.svg',
           scripts: [
             'node_modules/jquery/dist/jquery.js',
+            'node_modules/components-jqueryui/jquery-ui.min.js',
             'node_modules/datatables.net/js/jquery.dataTables.js',
             'node_modules/datatables.net-select/js/dataTables.select.js',
             'node_modules/moment/moment.js',
@@ -135,6 +147,7 @@ module.exports = function (grunt) {
             'node_modules/patternfly/dist/js/patternfly-settings-colors.js',
             'node_modules/patternfly/dist/js/patternfly-settings-charts.js',
             'node_modules/angular/angular.js',
+            'node_modules/angular-dragdrop/src/angular-dragdrop.js',
             'node_modules/angular-datatables/dist/angular-datatables.min.js',
             'node_modules/angular-datatables/dist/plugins/select/angular-datatables.select.min.js',
             'node_modules/angular-sanitize/angular-sanitize.js',
@@ -143,7 +156,8 @@ module.exports = function (grunt) {
             'misc/angular-bootstrap-prettify.js',
             'node_modules/lodash/lodash.min.js',
             'dist/angular-patternfly.js',
-            'node_modules/angular-ui-router/release/angular-ui-router.min.js'],
+            'node_modules/angular-ui-router/release/angular-ui-router.min.js',
+            'node_modules/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js'],
           html5Mode: false,
           template: 'grunt-ngdocs-index.tmpl',
           styles: ['node_modules/datatables.net-dt/css/jquery.dataTables.css',
@@ -233,6 +247,11 @@ module.exports = function (grunt) {
           cwd: 'src/',
           src: ['wizard/**/*.html'],
           dest: 'templates/wizard.js'
+        },
+        'patternfly.canvas': {
+          cwd: 'src/',
+          src: ['canvas-view/**/*.html'],
+          dest: 'templates/canvas.js'
         }
       },
       // ng-annotate tries to make the code safe for minification automatically
@@ -270,7 +289,7 @@ module.exports = function (grunt) {
           tasks: ['test']
         },
         all: {
-          files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css'],
+          files: ['Gruntfile.js', 'src/**/*.js', 'src/**/*.html', 'styles/**/*.css', '**/*.less'],
           tasks: ['build'],
           options: {
             livereload: 35722
@@ -279,7 +298,7 @@ module.exports = function (grunt) {
       }
     });
 
-    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:styles', 'copy:img']);
+    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:img', 'copy:distimg']);
 
     // You can specify which modules to build as arguments of the build task.
     grunt.registerTask('build', 'Create bootstrap build files', function () {
@@ -299,13 +318,13 @@ module.exports = function (grunt) {
         concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
     });
 
     // Runs all the tasks of build with the exception of tests
     grunt.registerTask('deploy', 'Prepares the project for deployment. Does not run unit tests', function () {
       var concatSrc = 'src/**/*.js';
-      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);

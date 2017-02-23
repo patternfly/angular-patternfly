@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/line/line-chart.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/95b74dd/src/charts/line/line-chart.component.js#L120" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfLineChart</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/line/line-chart.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/c5ccbf2/src/charts/line/line-chart.component.js#L129" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfLineChart</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
@@ -41,10 +41,10 @@ First and second Array elements, xData and yData, must exist, next data arrays a
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-charts-component-page patternfly-charts-component-pflinechart-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.charts" source-edit-deps="angular.js script.js" source-edit-html="index.html-13" source-edit-css="" source-edit-js="script.js-14" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.charts" source-edit-deps="angular.js script.js" source-edit-html="index.html-17" source-edit-css="" source-edit-js="script.js-18" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-13" ng-html-wrap-loaded="patternfly.charts angular.js script.js"></pre>
-<script type="text/ng-template" id="index.html-13">
+<pre class="prettyprint linenums" ng-set-text="index.html-17" ng-html-wrap-loaded="patternfly.charts angular.js script.js"></pre>
+<script type="text/ng-template" id="index.html-17">
   <div ng-controller="ChartCtrl" class="row" style="display:inline-block; width: 100%;">
     <div class="col-md-12">
       <pf-line-chart config="config" chart-data="data" set-area-chart="custAreaChart" show-x-axis="custShowXAxis" show-y-axis="custShowYAxis"></pf-line-chart>
@@ -69,6 +69,7 @@ First and second Array elements, xData and yData, must exist, next data arrays a
         </div>
         <div class="col-md-3">
               <button ng-click="addDataPoint()">Add Data Point</button>
+              <button ng-click="resetData()">Reset Data</button>
         </div>
       </div>
     </div>
@@ -89,8 +90,8 @@ First and second Array elements, xData and yData, must exist, next data arrays a
 </script>
 </div>
 <div class="tab-pane" title="script.js">
-<pre class="prettyprint linenums" ng-set-text="script.js-14"></pre>
-<script type="text/ng-template" id="script.js-14">
+<pre class="prettyprint linenums" ng-set-text="script.js-18"></pre>
+<script type="text/ng-template" id="script.js-18">
   angular.module( 'patternfly.charts' ).controller( 'ChartCtrl', function( $scope, pfUtils ) {
 
     $scope.config = {
@@ -109,8 +110,8 @@ First and second Array elements, xData and yData, must exist, next data arrays a
     $scope.data = {
       dataAvailable: true,
       xData: dates,
-      yData0: ['Created', 12, 10,10, 62, 17, 10, 15, 13, 17, 10, 12, 10, 10, 12, 17, 16, 15, 13, 17, 10],
-      yData1: ['Deleted', 10, 17, 76,14, 10, 10, 10, 10, 10, 10, 10, 17, 17, 14, 10, 10, 10, 10, 10, 10]
+      yData0: ['Created', 12, 10, 10, 62, 17, 10, 15, 13, 17, 10, 12, 10, 10, 12, 17, 16, 15, 13, 17, 10],
+      yData1: ['Deleted', 10, 17, 76, 14, 10, 10, 10, 10, 10, 10, 10, 17, 17, 14, 10, 10, 10, 10, 10, 10]
     };
 
     $scope.custShowXAxis = false;
@@ -122,10 +123,18 @@ First and second Array elements, xData and yData, must exist, next data arrays a
       $scope.data.yData0.push(Math.round(Math.random() * 100));
       $scope.data.yData1.push(Math.round(Math.random() * 100));
     };
+
+    $scope.resetData = function () {
+      $scope.data = {
+        xData: dates,
+        yData0: ['Created', 12, 10, 10, 62],
+        yData1: ['Deleted', 10, 17, 76, 14]
+      };
+    };
   });
 </script>
 </div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.charts" ng-set-html="index.html-13" ng-eval-javascript="script.js-14"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.charts" ng-set-html="index.html-17" ng-eval-javascript="script.js-18"></div>
 </div></div>
 </div>

@@ -21,8 +21,9 @@
  * <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
  * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * </ul>
- *
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @param {Array} items the data to be shown in the cards<br/>
  *
  * @example
@@ -40,7 +41,7 @@
    </style>
    <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <pf-card-view id="exampleCardView" config="config" items="items">
+       <pf-card-view id="exampleCardView" config="config" empty-state-config="emptyStateConfig" items="items">
          <div class="col-md-12">
            <span>{{item.name}}</span>
          </div>
@@ -87,6 +88,9 @@
          <div class="form-group">
            <label class="checkbox-inline">
              <input type="checkbox" ng-model="showDisabled">Show Disabled Cards</input>
+           </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
            </label>
          </div>
        </form>
@@ -142,6 +146,7 @@
 
         $scope.config = {
          selectItems: false,
+         itemsAvailable: true,
          multiSelect: false,
          dblClick: false,
          selectionMatchProp: 'name',
@@ -187,6 +192,17 @@
             state: "New York"
           },
         ]
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
+        };
       }
  ]);
  </file>
@@ -195,12 +211,13 @@
 angular.module('patternfly.views').component('pfCardView', {
   bindings: {
     config: '=?',
+    emptyStateConfig: '=?',
     items: '=',
     eventId: '@id'
   },
   transclude: true,
   templateUrl: 'views/cardview/card-view.html',
-  controller: function (pfUtils) {
+  controller: function () {
     'use strict';
     var ctrl = this;
     ctrl.defaultConfig = {
@@ -303,7 +320,10 @@ angular.module('patternfly.views').component('pfCardView', {
     };
 
     ctrl.$onInit = function () {
-      ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Setting bound variables to new variables loses it's binding
+      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Instead, use _.defaults to update the existing variable
+      _.defaults(ctrl.config, ctrl.defaultConfig);
       if (ctrl.config.selectItems && ctrl.config.showSelectBox) {
         throw new Error('pfCardView - ' +
           'Illegal use of pfCardView component! ' +

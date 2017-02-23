@@ -16,10 +16,15 @@
  * <li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
  * <li>.selectItems            - (boolean) Allow row selection, default is false
  * <li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
+ * <li>.dragEnabled            - (boolean) Enable drag and drop. Default is false.
+ * <li>.dragEnd                - ( function() ) Function to call when the drag operation ended, default is none
+ * <li>.dragMoved              - ( function() ) Function to call when the drag operation moved an element, default is none
+ * <li>.dragStart              - ( function(item) ) Function to call when the drag operation started, default is none
  * <li>.multiSelect            - (boolean) Allow multiple row selections, selectItems must also be set, not applicable when dblClick is true. Default is false
  * <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
  * <li>.selectedItems          - (array) Current set of selected items
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
  * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
@@ -50,13 +55,16 @@
  * @param {function (item))} menuClassForItemFn function(item) Used to specify a class for an item's dropdown kebab
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
  * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via customScope.<xxx>
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12 list-view-container example-list-view">
         <pf-list-view id="exampleListView"
-                          config="config" items="items"
+                          config="config"
+                          empty-state-config="emptyStateConfig"
+                          items="items"
                           action-buttons="actionButtons"
                           enable-button-for-item-fn="enableButtonForItemFn"
                           menu-actions="menuActions"
@@ -149,6 +157,18 @@
            <label class="checkbox-inline">
               <input type="checkbox" ng-model="config.useExpandingRows">Show Expanding Rows</input>
            </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+           </label>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-12">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="config.dragEnabled">Drag and Drop</input>
+            </label>
           </div>
         </form>
       </div>
@@ -183,6 +203,28 @@
 
         var checkDisabledItem = function(item) {
           return $scope.showDisabled && (item.name === "John Smith");
+        };
+
+        var dragEnd = function() {
+          $scope.eventText = 'drag end\r\n' + $scope.eventText;
+        };
+        var dragMoved = function() {
+          var index = -1;
+
+          for (var i = 0; i < $scope.items.length; i++) {
+            if ($scope.items[i] === $scope.dragItem) {
+              index = i;
+              break;
+            }
+          }
+          if (index >= 0) {
+            $scope.items.splice(index, 1);
+          }
+          $scope.eventText = 'drag moved\r\n' + $scope.eventText;
+        };
+        var dragStart = function(item) {
+          $scope.dragItem = item;
+          $scope.eventText = item.name + ': drag start\r\n' + $scope.eventText;
         };
 
         $scope.enableButtonForItemFn = function(action, item) {
@@ -225,8 +267,13 @@
          selectItems: false,
          multiSelect: false,
          dblClick: false,
+         dragEnabled: false,
+         dragEnd: dragEnd,
+         dragMoved: dragMoved,
+         dragStart: dragStart,
          selectionMatchProp: 'name',
          selectedItems: [],
+         itemsAvailable: true,
          checkDisabled: checkDisabledItem,
          showSelectBox: true,
          useExpandingRows: false,
@@ -235,6 +282,17 @@
          onCheckBoxChange: handleCheckBoxChange,
          onClick: handleClick,
          onDblClick: handleDblClick
+        };
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+             label: 'For more information please see',
+             urlLabel: 'pfExample',
+             url : '#/api/patternfly.views.component:pfEmptyState'
+          }
         };
 
         $scope.items = [
@@ -394,13 +452,14 @@ angular.module('patternfly.views').component('pfListView', {
     updateMenuActionForItemFn: '=?',
     actions: '=?',
     updateActionForItemFn: '=?',
-    customScope: '=?'
+    customScope: '=?',
+    emptyStateConfig: '=?'
   },
   transclude: {
     expandedContent: '?listExpandedContent'
   },
   templateUrl: 'views/listview/list-view.html',
-  controller: function ($timeout, $window, $element, pfUtils) {
+  controller: function ($window, $element) {
     'use strict';
     var ctrl = this;
 
@@ -424,6 +483,10 @@ angular.module('patternfly.views').component('pfListView', {
       selectItems: false,
       multiSelect: false,
       dblClick: false,
+      dragEnabled: false,
+      dragEnd: null,
+      dragMoved: null,
+      dragStart: null,
       selectionMatchProp: 'uuid',
       selectedItems: [],
       checkDisabled: false,
@@ -498,7 +561,7 @@ angular.module('patternfly.views').component('pfListView', {
       // update the actions based on the current item
       ctrl.updateActions(item);
 
-      $timeout(function () {
+      $window.requestAnimationFrame(function () {
         var parentDiv = undefined;
         var nextElement;
 
@@ -603,7 +666,10 @@ angular.module('patternfly.views').component('pfListView', {
     };
 
     ctrl.$onInit = function () {
-      ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Setting bound variables to new variables loses it's binding
+      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
+      // Instead, use _.defaults to update the existing variable
+      _.defaults(ctrl.config, ctrl.defaultConfig);
       if (!ctrl.config.selectItems) {
         ctrl.config.selectedItems = [];
       }
@@ -614,6 +680,30 @@ angular.module('patternfly.views').component('pfListView', {
         throw new Error('pfListView - ' +
           'Illegal use of pListView component! ' +
           'Cannot allow both select box and click selection in the same list view.');
+      }
+    };
+
+    ctrl.dragEnd = function () {
+      if (angular.isFunction(ctrl.config.dragEnd)) {
+        ctrl.config.dragEnd();
+      }
+    };
+
+    ctrl.dragMoved = function () {
+      if (angular.isFunction(ctrl.config.dragMoved)) {
+        ctrl.config.dragMoved();
+      }
+    };
+
+    ctrl.isDragOriginal = function (item) {
+      return (item === ctrl.dragItem);
+    };
+
+    ctrl.dragStart = function (item) {
+      ctrl.dragItem = item;
+
+      if (angular.isFunction(ctrl.config.dragStart)) {
+        ctrl.config.dragStart(item);
       }
     };
   }

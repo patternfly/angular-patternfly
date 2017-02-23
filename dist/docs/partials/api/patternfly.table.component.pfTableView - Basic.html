@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/95b74dd/src/table/tableview/examples/table-view-basic.js#L186" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - Basic</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/c5ccbf2/src/table/tableview/examples/table-view-basic.js#L214" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - Basic</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.table</code>
 </span>
 </div>
@@ -15,13 +15,15 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
      items="{array}"
      columns="{array}"
      action-buttons="{array}"
-     menu-actions="{array}"&gt;
+     menu-actions="{array}"
+     empty-state-config="{object}"&gt;
    ...
 &lt;/ANY&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional configuration object</p>
 <ul style='list-style-type: none'>
-  <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
-  <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
+  <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  <li>.itemsAvailable      - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
 </ul></div></td></tr><tr><td>dtOptions</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional angular-datatables DTOptionsBuilder configuration object.  See <a href="http://l-lin.github.io/angular-datatables/archives/#/api">angular-datatables: DTOptionsBuilder</a></p>
 </div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Array of items to display in the table view.</p>
 </div></td></tr><tr><td>columns</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Array of table column information to display in the table&#39;s header row</p>
@@ -38,37 +40,54 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
   <li>.name - (String) The name of the action, displayed on the button
   <li>.title - (String) Optional title, used for the tooltip
   <li>.actionFn - (function(action)) Function to invoke when the action selected
-</ul></div></td></tr></tbody></table></div>
+</ul></div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.table" source-edit-deps="angular.js script.js" source-edit-html="index.html-53" source-edit-css="" source-edit-js="script.js-54" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.tableview.demo" source-edit-deps="angular.js modules.js script.js" source-edit-html="index.html-59" source-edit-css="" source-edit-js="modules.js script.js-60" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-53" ng-html-wrap-loaded="patternfly.table angular.js script.js"></pre>
-<script type="text/ng-template" id="index.html-53">
+<pre class="prettyprint linenums" ng-set-text="index.html-59" ng-html-wrap-loaded="patternfly.tableview.demo angular.js modules.js script.js"></pre>
+<script type="text/ng-template" id="index.html-59">
 <div ng-controller="TableCtrl" class="row example-container">
   <div class="col-md-12">
     <pf-table-view id="exampleTableView"
          config="config"
+         empty-state-config="emptyStateConfig"
          dt-options="dtOptions"
          colummns="colummns"
          items="items"
          action-buttons="actionButtons"
          menu-actions="menuActions">
     </pf-table-view>
-    <div class="col-md-12" style="padding-top: 12px;">
-      <label style="font-weight:normal;vertical-align:center;">Events: </label>
-    </div>
-    <div class="col-md-12">
-      <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+  </div>
+  <div class="col-md-12" style="padding-top: 12px;">
+    <div class="form-group">
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+      </label>
     </div>
   </div>
+  <hr class="col-md-12">
+  <div class="col-md-12">
+        <div class="col-md-12" style="padding-top: 12px;">
+          <label style="font-weight:normal;vertical-align:center;">Events: </label>
+        </div>
+        <div class="col-md-12">
+          <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+        </div>
+  </div>
+</script>
 </div>
+<div class="tab-pane" title="modules.js">
+<pre class="prettyprint linenums" ng-set-text="modules.js"></pre>
+<script type="text/ng-template" id="modules.js">
+  angular.module('patternfly.tableview.demo', ['patternfly.views','patternfly.table']);
 </script>
 </div>
 <div class="tab-pane" title="script.js">
-<pre class="prettyprint linenums" ng-set-text="script.js-54"></pre>
-<script type="text/ng-template" id="script.js-54">
-angular.module('patternfly.table').controller('TableCtrl', ['$scope',
+<pre class="prettyprint linenums" ng-set-text="script.js-60"></pre>
+<script type="text/ng-template" id="script.js-60">
+angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope',
 function ($scope) {
        $scope.dtOptions = {
          order: [[2, "asc"]],
@@ -136,7 +155,19 @@ function ($scope) {
 
        $scope.config = {
          onCheckBoxChange: handleCheckBoxChange,
-         selectionMatchProp: "name"
+         selectionMatchProp: "name",
+         itemsAvailable: true
+       };
+
+       $scope.emptyStateConfig = {
+         icon: 'pficon-warning-triangle-o',
+         title: 'No Items Available',
+         info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+         helpLink: {
+            label: 'For more information please see',
+            urlLabel: 'pfExample',
+            url : '#/api/patternfly.views.component:pfEmptyState'
+         }
        };
 
        function handleCheckBoxChange (item) {
@@ -196,6 +227,6 @@ function ($scope) {
  </script>
 </div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.table" ng-set-html="index.html-53" ng-eval-javascript="script.js-54"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.tableview.demo" ng-set-html="index.html-59" ng-eval-javascript="modules.js script.js-60"></div>
 </div></div>
 </div>

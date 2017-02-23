@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "authors": [
     "Red Hat"
   ],
@@ -39,13 +39,15 @@
   "dependencies": {
     "angular": "1.5.*",
     "angular-animate": "1.5.*",
-    "angular-sanitize": "1.5.*",
     "angular-bootstrap": "2.2.x",
-    "lodash": "4.x",
+    "angular-dragdrop": "1.0.13",
     "angular-datatables": "^0.5.6",
+    "angular-drag-and-drop-lists": "2.0.0",
+    "angular-sanitize": "1.5.*",
     "datatables.net": "^1.10.12",
     "datatables.net-select": "~1.2.0",
-    "patternfly": "~4.0.0-alpha.2"
+    "lodash": "4.x",
+    "patternfly": "~4.0.0-alpha.3"
   },
   "devDependencies": {
     "angular-mocks": "1.5.*",

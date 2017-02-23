@@ -9,7 +9,7 @@
 This project will provide a set of common AngularJS directives for use with the PatternFly reference implementation.
 
 * Web site: https://www.patternfly.org
-* API Docs: http://angular-patternfly.rhcloud.com/#/api
+* API Docs: http://www.patternfly.org/angular-patternfly/#/api
 * Build Status: https://travis-ci.org/patternfly/angular-patternfly.svg?branch=master
 
 ## Getting started
@@ -80,7 +80,7 @@ Note:
         <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/d3/d3.min.js"></script>
 
 5. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
-   In order to use patternfly charts you must add 'patternfly.charts' as a dependency in your application:
+   In order to use patternfly charts you must add it as a dependency in your application:
 
         my-app.module.js:
 
@@ -88,6 +88,61 @@ Note:
           'patternfly',
           'patternfly.charts'
         ]);
+
+6. (optional) The 'patternfly.table' module is not a dependency in the default angular 'patternfly' module.
+   In order to use pfTableView, you must add 'patternfly.table' as a dependency in your application:
+
+        my-app.module.js:
+
+        angular.module('myApp', [
+          'patternfly',
+          'patternfly.table'
+        ]);
+
+   Add the following CSS includes to your HTML file(s):
+
+        <!-- Place before any patternfly css -->
+        <link rel="stylesheet" href="node_modules/datatables.net-dt/css/jquery.dataTables.css" />
+
+   Add the following Javascript includes to your HTML file(s):
+
+        <script src="node_modules/jquery/dist/jquery.js"></script>
+        <script src="node_modules/datatables.net/js/jquery.dataTables.js"></script>
+        <script src="node_modules/datatables.net-select/js/dataTables.select.js"></script>
+        <script src="node_modules/angular-datatables/dist/angular-datatables.min.js"></script>
+        <script src="node_modules/angular-datatables/dist/plugins/select/angular-datatables.select.min.js"></script>
+
+7. (optional) The 'patternfly.canvas' module is not a dependency in the default angular 'patternfly' module.
+   In order to use pfCanvasEditor or pfCanvas, you must add 'patternfly.canvas' as a dependency in your application:
+
+        my-app.module.js:
+
+        angular.module('myApp', [
+          'patternfly',
+          'patternfly.canvas'
+        ]);
+
+   Add the following Javascript includes to your HTML file(s):
+
+        <!-- jquery before angular.js -->
+        <script src="node_modules/jquery/dist/jquery.js"></script>
+        <script src="node_modules/components-jqueryui/jquery-ui.min.js"></script>
+
+        <script src="node_modules/angular/angular.js"></script>
+
+        <!-- angular-dragdrop after angular.js -->
+        <script src="node_modules/angular-dragdrop/src/angular-dragdrop.js"></script>
+
+   Also, the canvas background grid image is located in 'node_modules/angular-patternfly/dist/imgs/canvas-dot-grid.png'
+   please copy this image to your application's main images directory and reference it by overridding the '.canvas' css
+   class:
+
+         <style>
+             .canvas {
+                 background-image: url('/myapp/imgs/canvas-dot-grid.png');
+                 background-repeat: repeat;
+             }
+         </style>
 
 ### Using with Webpack
 
