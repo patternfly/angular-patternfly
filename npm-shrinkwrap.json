@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "dependencies": {
     "angular": {
       "version": "1.5.11",
@@ -29,6 +29,11 @@
       "from": "angular-sanitize@>=1.5.0 <1.6.0",
       "resolved": "https://registry.npmjs.org/angular-sanitize/-/angular-sanitize-1.5.11.tgz"
     },
+    "angular-svg-base-fix": {
+      "version": "2.0.0",
+      "from": "angular-svg-base-fix@2.0.0",
+      "resolved": "https://registry.npmjs.org/angular-svg-base-fix/-/angular-svg-base-fix-2.0.0.tgz"
+    },
     "angular-ui-bootstrap": {
       "version": "2.3.2",
       "from": "angular-ui-bootstrap@>=2.3.0 <2.4.0",
@@ -44,6 +49,12 @@
       "version": "0.4.11",
       "from": "c3@>=0.4.11 <0.5.0",
       "resolved": "https://registry.npmjs.org/c3/-/c3-0.4.11.tgz",
+      "optional": true
+    },
+    "components-jqueryui": {
+      "version": "1.12.1",
+      "from": "components/jqueryui#1.12.1",
+      "resolved": "git://github.com/components/jqueryui.git#44ecf3794cc56b65954cc19737234a3119d036cc",
       "optional": true
     },
     "d3": {
@@ -86,9 +97,9 @@
       "optional": true
     },
     "patternfly": {
-      "version": "4.0.0-alpha.2",
-      "from": "git+https://git@github.com/patternfly/patternfly.git#list-view-dnd-branch-4.0-dev-dist",
-      "resolved": "git+https://git@github.com/patternfly/patternfly.git#f00594b466c88b6a8b8aa94215205afd1ff23856",
+      "version": "4.0.0-alpha.3",
+      "from": "patternfly@>=4.0.0-alpha.3 <4.1.0",
+      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-4.0.0-alpha.3.tgz",
       "dependencies": {
         "bootstrap": {
           "version": "3.3.7",
