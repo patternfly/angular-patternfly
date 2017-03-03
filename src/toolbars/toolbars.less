@@ -29,3 +29,27 @@
 .toolbar-pf-actions.no-filter-results {
   margin-bottom: 10px;
 }
+.dropdown-column-visibility-pf {
+  margin-left: 15px;
+  .dropdown-menu {
+    > li {
+      border-color: transparent;
+      border-style: solid;
+      border-width: 1px 0;
+      padding: 1px 10px;
+      &:hover {
+        background-color: @color-pf-blue-50;
+        border-color: @color-pf-blue-100;
+      }
+      > input {
+        margin-right: 10px;
+        margin-top: 0;
+        vertical-align: middle;
+      }
+      > label {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+

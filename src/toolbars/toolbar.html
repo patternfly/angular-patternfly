@@ -7,6 +7,17 @@
         </div>
         <div class="form-group">
           <pf-sort config="$ctrl.config.sortConfig" ng-if="$ctrl.config.sortConfig && $ctrl.config.sortConfig.show"></pf-sort>
+          <div uib-dropdown auto-close="outsideClick" class="dropdown-kebab-pf dropdown-column-visibility-pf" ng-if="$ctrl.config.columnVisibilityConfig && $ctrl.config.columnVisibilityConfig.show">
+            <button uib-dropdown-toggle class="btn btn-link" type="button">
+              <span class="fa fa-columns"></span>
+            </button>
+            <ul uib-dropdown-menu aria-labelledby="dropdownKebab">
+              <li ng-repeat="column in $ctrl.config.columnVisibilityConfig.columns" ng-click="$ctrl.toggleColumnVisibility(column)">
+                <input type="checkbox" class="column-visibility-field" value="{{column.index}}" ng-checked="column.visible"/>
+                <label>{{column.name}}</label>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="form-group toolbar-actions"
              ng-if="$ctrl.config.actionsConfig &&

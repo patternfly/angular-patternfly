@@ -1,6 +1,7 @@
 angular.module('patternfly.toolbars').component('pfToolbar', {
   bindings: {
-    config: '='
+    config: '=',
+    onToggleColumnVisibility: '&'
   },
   transclude: {
     'actions': '?'
@@ -17,13 +18,18 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
         // default to true
         ctrl.config.sortConfig.show = true;
       }
+      if (angular.isDefined(ctrl.config.columnVisibilityConfig) && angular.isUndefined(ctrl.config.columnVisibilityConfig.show)) {
+        // default to true
+        ctrl.config.columnVisibilityConfig.show = true;
+      }
 
       angular.extend(ctrl, {
         viewSelected: viewSelected,
         isViewSelected: isViewSelected,
         checkViewDisabled: checkViewDisabled,
         addFilter: addFilter,
-        handleAction: handleAction
+        handleAction: handleAction,
+        toggleColumnVisibility: toggleColumnVisibility
       });
     };
 
@@ -90,6 +96,11 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
           ctrl.config.filterConfig.onFilterChange(ctrl.config.filterConfig.appliedFilters);
         }
       }
+    }
+
+    function toggleColumnVisibility (column) {
+      column.visible = !column.visible;
+      ctrl.onToggleColumnVisibility({ column: column });
     }
 
     function handleAction (action) {

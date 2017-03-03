@@ -3,6 +3,7 @@ angular.module('patternfly.table').component('pfTableView', {
     config: '<?',
     dtOptions: '<?',
     colummns: '<',
+    columnVisibility: '<',
     items: '<',
     actionButtons: '<?',
     menuActions: '<?',
@@ -11,7 +12,7 @@ angular.module('patternfly.table').component('pfTableView', {
   templateUrl: 'table/tableview/table-view.html',
   controller: function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout) {
     'use strict';
-    var ctrl = this, prevDtOptions, prevItems;
+    var ctrl = this, prevDtOptions, prevItems, prevColumnVisibility;
 
     // Once datatables is out of active development I'll remove log statements
     ctrl.debug = false;
@@ -67,6 +68,7 @@ angular.module('patternfly.table').component('pfTableView', {
       // Need to deep watch changes in dtOptions and items
       prevDtOptions = angular.copy(ctrl.dtOptions);
       prevItems = angular.copy(ctrl.items);
+      prevColumnVisibility = angular.copy(ctrl.columnVisibility);
 
       // Setting bound variables to new variables loses it's one way binding
       //   ctrl.dtOptions = pfUtils.merge(ctrl.defaultDtOptions, ctrl.dtOptions);
@@ -135,6 +137,10 @@ angular.module('patternfly.table').component('pfTableView', {
         //$timeout(function () {
         selectRowsByChecked();
         //});
+      }
+      if (!angular.equals(ctrl.columnVisibility, prevColumnVisibility)) {
+        prevColumnVisibility = angular.copy(ctrl.columnVisibility);
+        ctrl.dtColumnDefs[ctrl.columnVisibility.index].visible = ctrl.columnVisibility.visible;
       }
     };
 

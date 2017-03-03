@@ -50,7 +50,7 @@
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <pf-toolbar id="exampleToolbar" config="toolbarConfig">
+        <pf-toolbar id="exampleToolbar" config="toolbarConfig" on-toggle-column-visibility="toggleColumnVisibility(column)">
          <actions>
            <span class="dropdown primary-action" uib-dropdown>
              <button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type="button">
@@ -119,6 +119,7 @@
       <div class="col-md-12" ng-show="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
                        colummns="colummns"
+                       column-visibility="columnVisibility"
                        items="items"
                        empty-state-config="emptyStateConfig">
         </pf-table-view>
@@ -319,6 +320,7 @@
       var viewSelected = function(viewId) {
         $scope.viewType = viewId;
         $scope.sortConfig.show = ($scope.viewType === "tableView" ? false : true);
+        $scope.columnVisibilityConfig.show = ($scope.viewType === "tableView" ? true : false);
       };
 
       $scope.viewsConfig = {
@@ -392,6 +394,36 @@
         onSortChange: sortChange
       };
 
+      $scope.columnVisibilityConfig = {
+        columns: [
+          {
+            name:  'Name',
+            index: 1,
+            visible: true
+          },
+          {
+            name:  'Age',
+            index: 2,
+            visible: true
+          },
+          {
+            name:  'Address',
+            index: 3,
+            visible: true
+          },
+          {
+            name:  'Birth Month',
+            index: 4,
+            visible: true
+          }
+        ],
+        show: false
+      };
+
+      $scope.toggleColumnVisibility = function (column) {
+        $scope.columnVisibility = { index: column.index, visible: column.visible };
+      };
+
       $scope.actionsText = "";
       var performAction = function (action) {
         $scope.actionsText = action.name + "\n" + $scope.actionsText;
@@ -453,6 +485,7 @@
         viewsConfig: $scope.viewsConfig,
         filterConfig: $scope.filterConfig,
         sortConfig: $scope.sortConfig,
+        columnVisibilityConfig: $scope.columnVisibilityConfig,
         actionsConfig: $scope.actionsConfig
       };
 

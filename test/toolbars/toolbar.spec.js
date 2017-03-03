@@ -4,6 +4,7 @@ describe('Directive:  pfToolbar', function () {
   var element;
   var $pfViewUtils;
   var performedAction;
+  var $componentController;
 
   // load the controller's module
   beforeEach(function () {
@@ -12,10 +13,11 @@ describe('Directive:  pfToolbar', function () {
       'sort/sort.html');
   });
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, pfViewUtils) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, pfViewUtils, _$componentController_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $pfViewUtils = pfViewUtils;
+    $componentController = _$componentController_;
   }));
 
   var compileHTML = function (markup, scope) {
@@ -52,6 +54,25 @@ describe('Directive:  pfToolbar', function () {
             id: 'address',
             title:  'Address',
             sortType: 'alpha'
+          }
+        ]
+      },
+      columnVisibilityConfig: {
+        columns: [
+          {
+            name:  'Name',
+            index: 1,
+            visible: true
+          },
+          {
+            name:  'Age',
+            index: 2,
+            visible: true
+          },
+          {
+            name:  'Address',
+            index: 3,
+            visible: true
           }
         ]
       },
@@ -366,6 +387,36 @@ describe('Directive:  pfToolbar', function () {
     results = element.find('.sort-pf .dropdown-toggle');
     expect(results.length).toBe(1);
     expect(results.html().trim().slice(0,'Address'.length)).toBe("Address");
+  });
+
+  it('should have correct number of column-visibility fields', function () {
+    var fields = element.find('.dropdown-column-visibility-pf .column-visibility-field');
+    expect(fields.length).toBe(3);
+  });
+
+  it('should have all columns be set visiable at the beginning', function () {
+    var fields = element.find('.dropdown-column-visibility-pf .column-visibility-field');
+    var allVisible = jQuery.makeArray(fields).every(function (field) {
+      return field.checked === true;
+    });
+    expect(allVisible).toBe(true);
+  });
+
+  it('should call the "onToggleColumnVisibility" binding, when toggling the visibility of one column', function() {
+    var onToggleColumnVisibilitySpy = jasmine.createSpy('onToggleColumnVisibility');
+    var bindings = { config: {}, onToggleColumnVisibility: onToggleColumnVisibilitySpy };
+    var ctrl = $componentController('pfToolbar', null, bindings);
+    ctrl.$onInit();
+    ctrl.toggleColumnVisibility({ visible: true });
+    expect(onToggleColumnVisibilitySpy).toHaveBeenCalledWith({ column: { visible: false } });
+  });
+
+  it('should toggle the checked state of the checkbox when its related field is clicked', function () {
+    var fields = element.find('.dropdown-column-visibility-pf .column-visibility-field');
+    expect(fields[0].checked).toBe(true);
+    eventFire(fields[0].parentNode, 'click');
+    $scope.$digest();
+    expect(fields[0].checked).toBe(false);
   });
 
   it('should update the direction icon when the sort type changes', function () {

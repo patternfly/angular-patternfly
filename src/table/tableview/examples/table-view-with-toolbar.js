@@ -37,13 +37,14 @@
   <file name="index.html">
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
-        <pf-toolbar id="exampleToolbar" config="toolbarConfig"></pf-toolbar>
+        <pf-toolbar id="exampleToolbar" config="toolbarConfig" on-toggle-column-visibility="toggleColumnVisibility(column)"></pf-toolbar>
       </div>
       <div class="col-md-12">
         <pf-table-view config="tableConfig"
                        empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
                        colummns="colummns"
+                       column-visibility="columnVisibility"
                        items="items"
                        action-buttons="tableActionButtons"
                        menu-actions="tableMenuActions">
@@ -378,9 +379,74 @@
         actionsInclude: true
       };
 
+      var sortChange = function (sortId, isAscending) {
+        $scope.dtOptions.order = [[ sortId.colInx, isAscending ? 'asc' : 'desc' ]];
+      };
+
+      $scope.sortConfig = {
+        fields: [
+          {
+            id: 'name',
+            title:  'Name',
+            sortType: 'alpha',
+            colInx: 1
+          },
+          {
+            id: 'age',
+            title:  'Age',
+            sortType: 'numeric',
+            colInx: 2
+          },
+          {
+            id: 'address',
+            title:  'Address',
+            sortType: 'alpha',
+            colInx: 3
+          },
+          {
+            id: 'birthMonth',
+            title:  'Birth Month',
+            sortType: 'alpha',
+            colInx: 4
+          }
+        ],
+        onSortChange: sortChange
+      };
+
+      $scope.columnVisibilityConfig = {
+        columns: [
+          {
+            name:  'Name',
+            index: 1,
+            visible: true
+          },
+          {
+            name:  'Age',
+            index: 2,
+            visible: true
+          },
+          {
+            name:  'Address',
+            index: 3,
+            visible: true
+          },
+          {
+            name:  'Birth Month',
+            index: 4,
+            visible: true
+          }
+        ],
+        show: true
+      };
+
+      $scope.toggleColumnVisibility = function (column) {
+        $scope.columnVisibility = { index: column.index, visible: column.visible };
+      };
+
       $scope.toolbarConfig = {
         filterConfig: $scope.filterConfig,
         sortConfig: $scope.sortConfig,
+        columnVisibilityConfig: $scope.columnVisibilityConfig,
         actionsConfig: $scope.toolbarActionsConfig
       };
 
