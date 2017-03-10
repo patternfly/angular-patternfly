@@ -80,7 +80,7 @@ describe('Directive:  pfDataList', function () {
       {
         name: 'Action 3',
         title: 'Dangerous Action',
-				class: 'btn-danger',
+        class: 'btn-danger',
         actionFn: performAction
       }
     ];
@@ -320,14 +320,14 @@ describe('Directive:  pfDataList', function () {
     expect(buttons.length).toBe(items.length * 2);
   });
 
-	it('should have the proper button class applied', function() {
+  it('should have the proper button class applied', function() {
     var items = element.find('.list-group-item');
     var buttons = element.find('.list-view-pf-actions .btn-danger');
     expect(items.length).toBe(5);
-		expect(buttons.hasClass('btn-default')).toBe(false);
-		expect(buttons.hasClass('btn-danger')).toBe(true);
+    expect(buttons.hasClass('btn-default')).toBe(false);
+    expect(buttons.hasClass('btn-danger')).toBe(true);
     expect(buttons.length).toBe(items.length * 1);
-	});
+  });
 
   it('should disable action buttons appropriately', function () {
     var items = element.find('.list-group-item');
