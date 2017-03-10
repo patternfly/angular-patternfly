@@ -76,6 +76,12 @@ describe('Directive:  pfDataList', function () {
         name: 'Action 2',
         title: 'Do something else',
         actionFn: performAction
+      },
+      {
+        name: 'Action 3',
+        title: 'Dangerous Action',
+				class: 'btn-danger',
+        actionFn: performAction
       }
     ];
     $scope.menuActions = [
@@ -314,6 +320,15 @@ describe('Directive:  pfDataList', function () {
     expect(buttons.length).toBe(items.length * 2);
   });
 
+	it('should have the proper button class applied', function() {
+    var items = element.find('.list-group-item');
+    var buttons = element.find('.list-view-pf-actions .btn-danger');
+    expect(items.length).toBe(5);
+		expect(buttons.hasClass('btn-default')).toBe(false);
+		expect(buttons.hasClass('btn-danger')).toBe(true);
+    expect(buttons.length).toBe(items.length * 1);
+	});
+
   it('should disable action buttons appropriately', function () {
     var items = element.find('.list-group-item');
     var buttons = element.find('.list-view-pf-actions .btn-default');
@@ -326,6 +341,7 @@ describe('Directive:  pfDataList', function () {
   it('should call the action function with the appropriate action when an action button is clicked', function () {
     var items = element.find('.list-group-item');
     var actionButtons = element.find('.list-view-pf-actions .btn-default');
+    var dangerButton = element.find('.list-view-pf-actions .btn-danger');
 
     expect(items.length).toBe(5);
     expect(actionButtons.length).toBe(items.length * 2);
@@ -339,6 +355,11 @@ describe('Directive:  pfDataList', function () {
     $scope.$digest();
 
     expect(performedAction.name).toBe('Action 2');
+
+    eventFire(dangerButton[0], 'click');
+    $scope.$digest();
+
+    expect(performedAction.name).toBe('Action 3');
   });
 
   it('should not call the action function when a disabled action button is clicked', function () {
