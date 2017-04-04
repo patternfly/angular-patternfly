@@ -3,8 +3,11 @@
  * @name patternfly.select.component:pfSelect
  * @restrict E
  *
- * @param {string} ngModel Model binding using the {@link https://docs.angularjs.org/api/ng/type/ngModel.NgModelController/ NgModelController} is mandatory.
- * @param {string=} ngOptions The `{@link https://docs.angularjs.org/api/ng/directive/select/ ngOptions}` attribute can be used to dynamically generate a list of `<option>` elements
+ * @param {object} selected Curently selected value
+ * @param {object} options Array of valid selections
+ * @param {string} displayField Field from the object in the array to display for selection (optional)
+ * @param {string} emptyValue value to display when nothing is selected
+ * @param {function(item)} onSelect Function to call upon user selection of an item.
  *
  * @description
  * The pfSelect component provides a wrapper for the angular ui bootstrap dropdown container allowing for use of ng-model and ng-options
