@@ -85,8 +85,9 @@
     controller: function ($timeout, $attrs) {
       var ctrl = this, prevConfig;
 
+      // store the chart object
+      var chart;
       ctrl.generateChart = function () {
-        var chart;
         var chartData;
 
         // Need to deep watch changes in chart config
@@ -96,7 +97,12 @@
           chartData = ctrl.config;
           if (chartData) {
             chartData.bindto = '#' + $attrs.id;
-            chart = c3.generate(chartData);
+            if (!chart) {
+              chart = c3.generate(chartData);
+            } else {
+              //if it is created, then, we only need to load changes
+              chart.load(scope.config.data);
+            }
             ctrl.getChartCallback(chart);
             prevConfig = angular.copy(ctrl.config);
           }
