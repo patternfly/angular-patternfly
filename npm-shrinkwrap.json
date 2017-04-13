@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "4.0.0-alpha.3",
+  "version": "4.0.0-rc.1",
   "dependencies": {
     "angular": {
       "version": "1.5.11",
@@ -98,7 +98,7 @@
     },
     "patternfly": {
       "version": "4.0.0-rc.1",
-      "from": "patternfly@>=4.0.0-alpha.3 <4.1.0",
+      "from": "patternfly@>=4.0.0-rc.1 <4.1.0",
       "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-4.0.0-rc.1.tgz",
       "dependencies": {
         "bootstrap": {
