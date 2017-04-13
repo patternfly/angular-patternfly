@@ -97,9 +97,9 @@
       "optional": true
     },
     "patternfly": {
-      "version": "4.0.0-alpha.3",
+      "version": "4.0.0-rc.1",
       "from": "patternfly@>=4.0.0-alpha.3 <4.1.0",
-      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-4.0.0-alpha.3.tgz",
+      "resolved": "https://registry.npmjs.org/patternfly/-/patternfly-4.0.0-rc.1.tgz",
       "dependencies": {
         "bootstrap": {
           "version": "3.3.7",
