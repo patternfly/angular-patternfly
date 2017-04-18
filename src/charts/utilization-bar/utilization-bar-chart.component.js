@@ -76,7 +76,7 @@
    <file name="script.js">
    angular.module( 'patternfly.example', ['patternfly.charts', 'patternfly.card']);
 
-   angular.module( 'patternfly.example' ).controller( 'ChartCtrl', function( $scope ) {
+   angular.module( 'patternfly.example' ).controller( 'ChartCtrl', function( $scope, $interval ) {
 
     $scope.title1 = 'RAM Usage';
     $scope.units1 = 'MB';
@@ -116,6 +116,13 @@
       'used': '450',
       'total': '500',
     };
+
+    $interval(function () {
+      $scope.data5.used = Number($scope.data5.used) + 40;
+      if ($scope.data5.used > 500) {
+        $scope.data5.used = 10;
+      }
+    }, 1000);
 
     $scope.layoutInline = {
       'type': 'inline'
