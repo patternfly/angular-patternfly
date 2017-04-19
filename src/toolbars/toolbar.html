@@ -1,7 +1,7 @@
 <div class="container-fluid">
-  <div class="row toolbar-pf">
+  <div class="row toolbar-pf" ng-class="{'table-view-pf-toolbar': $ctrl.isTableViewSelected()}">
     <div class="col-sm-12">
-      <form class="toolbar-pf-actions" ng-class="{'no-filter-results': !$ctrl.config.filterConfig}">
+      <form class="toolbar-pf-actions" ng-class="{'no-filter': !$ctrl.config.filterConfig}">
         <div class="form-group toolbar-apf-filter">
           <pf-filter-fields config="$ctrl.config.filterConfig" ng-if="$ctrl.config.filterConfig" add-filter-fn="$ctrl.addFilter"></pf-filter-fields>
         </div>

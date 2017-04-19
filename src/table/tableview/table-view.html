@@ -1,4 +1,4 @@
-<span>
+<div class="container-fluid">
   <table ng-if="$ctrl.config.itemsAvailable !== false"
          datatable="ng" dt-options="$ctrl.dtOptions" dt-column-defs="$ctrl.dtColumnDefs" dt-instance="$ctrl.dtInstanceCallback"
          class="table-view-container table table-striped table-bordered table-hover dataTable">
@@ -48,4 +48,4 @@
     </tbody>
   </table>
   <pf-empty-state ng-if="$ctrl.config.itemsAvailable === false" config="$ctrl.emptyStateConfig"></pf-empty-state>
-</span>
+</div>

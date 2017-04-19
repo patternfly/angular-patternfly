@@ -43,6 +43,7 @@
  *           </ul>
  *         <li>.actionsInclude  - (Boolean) set to true if using the actions transclude to add custom action buttons (only available if using Angular 1.5 or later)
  *       </ul>
+ *       <li>.isTableView  - (Boolean) set to true if toolbar is only being used with a table view and viewsConfig is not defined.
  *   </ul>
  *
  * @example

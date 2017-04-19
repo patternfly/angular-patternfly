@@ -21,6 +21,7 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
       angular.extend(ctrl, {
         viewSelected: viewSelected,
         isViewSelected: isViewSelected,
+        isTableViewSelected: isTableViewSelected,
         checkViewDisabled: checkViewDisabled,
         addFilter: addFilter,
         handleAction: handleAction
@@ -45,7 +46,7 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
         ctrl.config.viewsConfig.viewsList = angular.copy(ctrl.config.viewsConfig.views);
 
         if (!ctrl.config.viewsConfig.currentView) {
-          ctrl.config.viewsConfig.currentView = ctrl.config.viewsConfig.viewsList[0];
+          ctrl.config.viewsConfig.currentView = ctrl.config.viewsConfig.viewsList[0].id;
         }
       }
     }
@@ -59,6 +60,10 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
 
     function isViewSelected (viewId) {
       return ctrl.config.viewsConfig && (ctrl.config.viewsConfig.currentView === viewId);
+    }
+
+    function isTableViewSelected () {
+      return ctrl.config.viewsConfig ? (ctrl.config.viewsConfig.currentView === 'tableView') : ctrl.config.isTableView;
     }
 
     function checkViewDisabled (view) {
