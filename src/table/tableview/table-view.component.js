@@ -91,6 +91,10 @@ angular.module('patternfly.table').component('pfTableView', {
           "' does not match any property in 'config.colummns'! Please set config.selectionMatchProp " +
           "to one of these properties: " + props);
       }
+
+      if (ctrl.items.length === 0) {
+        ctrl.config.itemsAvailable = false;
+      }
     };
 
     ctrl.dtInstanceCallback = function (_dtInstance) {
@@ -197,6 +201,11 @@ angular.module('patternfly.table').component('pfTableView', {
     function validSelectionMatchProp () {
       var retVal = false, prop;
       var item = ctrl.items[0];
+
+      if (!ctrl.items || ctrl.items.length === 0) {
+        return true;    //ok to pass in empty items array
+      }
+
       for (prop in item) {
         if (item.hasOwnProperty(prop)) {   //need this 'if' for eslint
           if (ctrl.config.selectionMatchProp === prop) {
