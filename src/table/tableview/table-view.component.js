@@ -160,7 +160,7 @@ angular.module('patternfly.table').component('pfTableView', {
       // add column def. for each property of an item
       item = ctrl.items[0];
       for (prop in item) {
-        if (item.hasOwnProperty(prop)) {   //need this 'if' for eslint
+        if (item.hasOwnProperty(prop) && ctrl.isColItemFld(prop)) {
           ctrl.dtColumnDefs.push(DTColumnDefBuilder.newColumnDef(i++));
           // Determine selectionMatchProp column number
           if (ctrl.config.selectionMatchProp === prop) {
