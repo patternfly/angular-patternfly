@@ -282,12 +282,6 @@ describe('Directive:  pfToolbar', function () {
     var active = element.find('.active');
 
     expect(viewSelector.length).toBe(1);
-    expect(active.length).toBe(0);
-
-    $scope.config.viewsConfig.currentView = $scope.config.viewsConfig.views[0].id;
-    $scope.$apply();
-
-    active = element.find('.active');
     expect(active.length).toBe(1);
   });
 
@@ -297,7 +291,7 @@ describe('Directive:  pfToolbar', function () {
     var listSelector = element.find('.toolbar-pf-view-selector .btn-link');
 
     expect(viewSelector.length).toBe(1);
-    expect(active.length).toBe(0);
+    expect(active.length).toBe(1);
     expect(listSelector.length).toBe(5);
 
     eventFire(listSelector[0], 'click');

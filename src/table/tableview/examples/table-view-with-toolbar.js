@@ -381,7 +381,8 @@
       $scope.toolbarConfig = {
         filterConfig: $scope.filterConfig,
         sortConfig: $scope.sortConfig,
-        actionsConfig: $scope.toolbarActionsConfig
+        actionsConfig: $scope.toolbarActionsConfig,
+        isTableView: true
       };
 
       $scope.tableConfig = {
