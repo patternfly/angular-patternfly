@@ -97,13 +97,17 @@
           chartData = ctrl.config;
           if (chartData) {
             chartData.bindto = '#' + $attrs.id;
-            if (!chart) {
+            // always re-generate donut pct chart because it's colors
+            // change based on data and thresholds
+            if (!chart || $attrs.id.indexOf('donutPctChart')) {
               chart = c3.generate(chartData);
             } else {
-              //if it is created, then, we only need to load changes
-              chart.load(scope.config.data);
+              //if chart is already created, then we only need to re-load data
+              chart.load(ctrl.config.data);
             }
-            ctrl.getChartCallback(chart);
+            if (ctrl.getChartCallback) {
+              ctrl.getChartCallback(chart);
+            }
             prevConfig = angular.copy(ctrl.config);
           }
         });
