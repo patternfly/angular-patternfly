@@ -14,3 +14,4 @@ Bug Fixes
 
 Breaking Changes
 - pfInlineNotification - pfNotificationRemove function added which ties the click event of the close button to a user specified function.  Previously, this used to be hardcoded to use the Notifications service, this is now optional.
+- pfListView - If defined, actionButton class will replace 'btn-default'. Previously it was appended.  (Issue #434) 
