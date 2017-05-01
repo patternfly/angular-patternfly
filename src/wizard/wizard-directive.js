@@ -20,6 +20,8 @@
   *
   * @param {string} title The wizard title displayed in the header
   * @param {boolean=} hideIndicators  Hides the step indicators in the header of the wizard
+  * @param {boolean=} hideSidebar  Hides page navigation sidebar on the wizard pages
+  * @param {boolean=} hideHeader Optional value to hide the title bar. Default is false.
   * @param {string=} currentStep The current step can be changed externally - this is the title of the step to switch the wizard to
   * @param {string=} cancelTitle The text to display on the cancel button
   * @param {string=} backTitle The text to display on the back button
@@ -305,6 +307,8 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
     scope: {
       title: '@',
       hideIndicators: '=?',
+      hideSidebar: '@',
+      hideHeader: '@',
       currentStep: '=?',
       cancelTitle: '=?',
       backTitle: '=?',
@@ -388,6 +392,8 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       $scope.steps = [];
       $scope.context = {};
       this.context = $scope.context;
+      this.hideSidebar = $scope.hideSidebar === 'true';
+      $scope.hideHeader = $scope.hideHeader === 'true';
 
       if (angular.isUndefined($scope.wizardReady)) {
         $scope.wizardReady = true;
@@ -511,6 +517,14 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
         } else {
           $scope.firstStep = stepIdx($scope.selectedStep) === 0 && $scope.selectedStep.currentStepNumber() === 1;
         }
+      };
+
+      $scope.allowStepIndicatorClick = function (step) {
+        return step.allowClickNav &&
+          !$scope.wizardDone &&
+          $scope.selectedStep.okToNavAway &&
+          ($scope.selectedStep.nextEnabled || (step.stepPriority < $scope.selectedStep.stepPriority)) &&
+          ($scope.selectedStep.prevEnabled || (step.stepPriority > $scope.selectedStep.stepPriority));
       };
 
       $scope.stepClick = function (step) {
@@ -645,6 +659,12 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
               $scope.goTo($scope.getEnabledSteps()[index - 1]);
             }
           }
+        } else {
+          if (index === 0) {
+            throw new Error("Can't go back. It's already in step 0");
+          } else {
+            $scope.goTo($scope.getEnabledSteps()[index - 1]);
+          }
         }
       };
 
@@ -673,6 +693,9 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
         //go to first step
         this.goTo(0);
       };
+
+      // Provide wizard controls to steps and sub-steps
+      $scope.wizard = this;
     },
     link: function ($scope) {
       $scope.$watch('wizardReady', function () {
