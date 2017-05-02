@@ -36,15 +36,28 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     showReviewDetails: '@?',
     reviewTemplate: '@?'
   },
-  require: {
-    step: '^pfWizardStep'
-  },
   templateUrl: 'wizard/wizard-substep.html',
-  controller: function () {
+  controller: function ($scope) {
     'use strict';
     var ctrl = this;
 
     ctrl.$onInit = function () {
+      var findWizardStep = function (scope) {
+        var wizardStep;
+
+        if (scope) {
+          if (angular.isDefined(scope.wizardStep)) {
+            wizardStep = scope.wizardStep;
+          } else {
+            wizardStep = findWizardStep(scope.$parent);
+          }
+        }
+
+        return wizardStep;
+      };
+
+      ctrl.step = findWizardStep($scope);
+
       if (angular.isUndefined(ctrl.nextEnabled)) {
         ctrl.nextEnabled = true;
       }
@@ -66,11 +79,21 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
         ctrl.allowClickNav = true;
       }
 
+
+      ctrl.step.nextEnabled = ctrl.nextEnabled;
+      ctrl.step.prevEnabled = ctrl.prevEnabled;
+      ctrl.step.okToNavAway = ctrl.okToNavAway;
+      ctrl.step.allowClickNav = ctrl.allowClickNav;
+
       ctrl.title = ctrl.stepTitle;
       ctrl.step.addStep(ctrl);
     };
 
     ctrl.$onChanges = function (changesObj) {
+      if (!ctrl.step) {
+        return;
+      }
+
       if (changesObj.nextEnabled) {
         ctrl.step.nextEnabled = changesObj.nextEnabled.currentValue;
       }

@@ -25,9 +25,6 @@
  * @param {string=} reviewTemplate The template that should be used for the review details screen
  */
 angular.module('patternfly.wizard').component('pfWizardStep', {
-  require: {
-    wizard: '^pfWizard'
-  },
   transclude: true,
   bindings: {
     stepTitle: '@',
@@ -49,7 +46,7 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
     reviewTemplate: '@?'
   },
   templateUrl: 'wizard/wizard-step.html',
-  controller: function ($timeout) {
+  controller: function ($timeout, $scope) {
     'use strict';
 
     var ctrl = this,
@@ -86,12 +83,30 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
       return foundStep;
     };
 
+    var findWizard = function (scope) {
+      var wizard;
+      if (scope) {
+        if (angular.isDefined(scope.wizard)) {
+          wizard = scope.wizard;
+        } else {
+          wizard = findWizard(scope.$parent);
+        }
+      }
+
+      return wizard;
+    };
+
     ctrl.$onInit = function () {
       firstRun = true;
       ctrl.steps = [];
       ctrl.context = {};
       ctrl.title =  ctrl.stepTitle;
+      ctrl.wizard = findWizard($scope.$parent);
       ctrl.contentStyle = ctrl.wizard.contentStyle;
+
+      // Provide wizard step controls to sub-steps
+      $scope.wizardStep = this;
+
       ctrl.wizard.addStep(ctrl);
       ctrl.pageNumber = ctrl.wizard.getStepNumber(ctrl);
 
@@ -296,12 +311,10 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
       var goPrev = false;
 
       // Check if callback is a function
-      if (angular.isFunction (callback)) {
-        if (callback(ctrl.selectedStep)) {
-          if (index !== 0) {
-            ctrl.goTo(ctrl.getEnabledSteps()[index - 1]);
-            goPrev = true;
-          }
+      if (!angular.isFunction (callback) || callback(ctrl.selectedStep)) {
+        if (index !== 0) {
+          ctrl.goTo(ctrl.getEnabledSteps()[index - 1]);
+          goPrev = true;
         }
       }
       return goPrev;
