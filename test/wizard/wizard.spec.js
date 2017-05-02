@@ -202,4 +202,24 @@ describe('Directive:  pfWizard', function () {
     var selectedSectionTitle = element.find('.wizard-pf-row section.current').attr("step-title");
     expect(selectedSectionTitle).not.toBe('Second Step');
   });
+
+  it('should hide the sidebar when set', function () {
+    var modalHtml = $templateCache.get('test/wizard/wizard-container-hidden.html');
+    element = compileHtml(modalHtml, $scope);
+    $scope.$digest();
+
+    var stepsIndicator = element.find('.wizard-pf-sidebar');
+
+    expect(stepsIndicator.length).toBe(0);
+  });
+
+  it('should hide the header when set', function () {
+    var modalHtml = $templateCache.get('test/wizard/wizard-container-hidden.html');
+    element = compileHtml(modalHtml, $scope);
+    $scope.$digest();
+
+    var header = element.find('.modal-header');
+
+    expect(header.length).toBe(0);
+  });
 });
