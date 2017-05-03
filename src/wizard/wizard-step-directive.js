@@ -47,7 +47,6 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
       showReviewDetails: '@?',
       reviewTemplate: '@?'
     },
-    require: '^pf-wizard',
     templateUrl: 'wizard/wizard-step.html',
     controller: function ($scope, $timeout) {
       var firstRun = true;
@@ -113,8 +112,23 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
         return foundStep;
       };
 
+      var findWizard = function (scope) {
+        var wizard;
+        if (scope) {
+          if (angular.isDefined(scope.wizard)) {
+            wizard = scope.wizard;
+          } else {
+            wizard = findWizard(scope.$parent);
+          }
+        }
+
+        return wizard;
+      };
+
       $scope.steps = [];
       $scope.context = {};
+      $scope.wizard = findWizard($scope.$parent);
+      this.wizard = $scope.wizard;
       this.context = $scope.context;
 
       if (angular.isUndefined($scope.nextEnabled)) {
@@ -328,6 +342,9 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
         $scope.goTo(stepTo);
       };
 
+      // Provide wizard step controls to sub-steps
+      $scope.wizardStep = this;
+
       // Method used for next button within step
       $scope.next = function (callback) {
         var enabledSteps = $scope.getEnabledSteps();
@@ -387,14 +404,13 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
         };
       }
     },
-    link: function ($scope, $element, $attrs, wizard) {
+    link: function ($scope, $element, $attrs) {
       $scope.$watch($attrs.ngShow, function (value) {
-        $scope.pageNumber = wizard.getStepNumber($scope);
+        $scope.pageNumber = $scope.wizard.getStepNumber($scope);
       });
       $scope.title =  $scope.stepTitle;
-      $scope.contentStyle = wizard.contentStyle;
-      wizard.addStep($scope);
-      $scope.wizard = wizard;
+      $scope.contentStyle = $scope.wizard.contentStyle;
+      $scope.wizard.addStep($scope);
     }
   };
 });
