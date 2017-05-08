@@ -382,12 +382,10 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
         var goPrev = false;
 
         // Check if callback is a function
-        if (angular.isFunction (callback)) {
-          if (callback($scope.selectedStep)) {
-            if (index !== 0) {
-              $scope.goTo($scope.getEnabledSteps()[index - 1]);
-              goPrev = true;
-            }
+        if (!angular.isFunction (callback) || callback($scope.selectedStep)) {
+          if (index !== 0) {
+            $scope.goTo($scope.getEnabledSteps()[index - 1]);
+            goPrev = true;
           }
         }
 
