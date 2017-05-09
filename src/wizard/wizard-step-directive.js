@@ -348,33 +348,25 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
       // Method used for next button within step
       $scope.next = function (callback) {
         var enabledSteps = $scope.getEnabledSteps();
+        var goNext = false;
 
         // Save the step  you were on when next() was invoked
         var index = stepIdx($scope.selectedStep);
 
         // Check if callback is a function
-        if (angular.isFunction (callback)) {
-          if (callback($scope.selectedStep)) {
-            if (index === enabledSteps.length - 1) {
-              return false;
-            }
+        if (!angular.isFunction (callback) || callback($scope.selectedStep)) {
+
+          // Completed property set on scope which is used to add class/remove class from progress bar
+          $scope.selectedStep.completed = true;
+
+          if (index < enabledSteps.length - 1) {
             // Go to the next step
             $scope.goTo(enabledSteps[index + 1]);
-            return true;
+            goNext = true;
           }
-          return true;
         }
 
-        // Completed property set on scope which is used to add class/remove class from progress bar
-        $scope.selectedStep.completed = true;
-
-        // Check to see if this is the last step.  If it is next behaves the same as finish()
-        if (index === enabledSteps.length - 1) {
-          return false;
-        }
-        // Go to the next step
-        $scope.goTo(enabledSteps[index + 1]);
-        return true;
+        return goNext;
       };
 
       $scope.previous = function (callback) {
