@@ -9741,31 +9741,21 @@ angular.module('patternfly.wizard').directive('pfWizard', ["$window", function (
         }
 
         // Check if callback is a function
-        if (angular.isFunction(callback)) {
-          if (callback($scope.selectedStep)) {
-            if (index <= enabledSteps.length - 1) {
-              // Go to the next step
-              if (enabledSteps[index + 1].substeps) {
-                enabledSteps[index + 1].resetNav();
-              }
-            } else {
-              this.finish();
-              return;
-            }
+        if (!angular.isFunction(callback) || callback($scope.selectedStep)) {
+          // Completed property set on scope which is used to add class/remove class from progress bar
+          $scope.selectedStep.completed = true;
+
+          // Check to see if this is the last step.  If it is next behaves the same as finish()
+          if (index === enabledSteps.length - 1) {
+            this.finish();
           } else {
-            return;
+            // Go to the next step
+            if (enabledSteps[index + 1].substeps) {
+              enabledSteps[index + 1].resetNav();
+            }
+            // Go to the next step
+            $scope.goTo(enabledSteps[index + 1]);
           }
-        }
-
-        // Completed property set on scope which is used to add class/remove class from progress bar
-        $scope.selectedStep.completed = true;
-
-        // Check to see if this is the last step.  If it is next behaves the same as finish()
-        if (index === enabledSteps.length - 1) {
-          this.finish();
-        } else {
-          // Go to the next step
-          $scope.goTo(enabledSteps[index + 1]);
         }
       };
 
@@ -9779,15 +9769,7 @@ angular.module('patternfly.wizard').directive('pfWizard', ["$window", function (
         }
 
         // Check if callback is a function
-        if (angular.isFunction(callback)) {
-          if (callback($scope.selectedStep)) {
-            if (index === 0) {
-              throw new Error("Can't go back. It's already in step 0");
-            } else {
-              $scope.goTo($scope.getEnabledSteps()[index - 1]);
-            }
-          }
-        } else {
+        if (!angular.isFunction(callback) || callback($scope.selectedStep)) {
           if (index === 0) {
             throw new Error("Can't go back. It's already in step 0");
           } else {
@@ -10247,33 +10229,25 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
       // Method used for next button within step
       $scope.next = function (callback) {
         var enabledSteps = $scope.getEnabledSteps();
+        var goNext = false;
 
         // Save the step  you were on when next() was invoked
         var index = stepIdx($scope.selectedStep);
 
         // Check if callback is a function
-        if (angular.isFunction (callback)) {
-          if (callback($scope.selectedStep)) {
-            if (index === enabledSteps.length - 1) {
-              return false;
-            }
+        if (!angular.isFunction (callback) || callback($scope.selectedStep)) {
+
+          // Completed property set on scope which is used to add class/remove class from progress bar
+          $scope.selectedStep.completed = true;
+
+          if (index < enabledSteps.length - 1) {
             // Go to the next step
             $scope.goTo(enabledSteps[index + 1]);
-            return true;
+            goNext = true;
           }
-          return true;
         }
 
-        // Completed property set on scope which is used to add class/remove class from progress bar
-        $scope.selectedStep.completed = true;
-
-        // Check to see if this is the last step.  If it is next behaves the same as finish()
-        if (index === enabledSteps.length - 1) {
-          return false;
-        }
-        // Go to the next step
-        $scope.goTo(enabledSteps[index + 1]);
-        return true;
+        return goNext;
       };
 
       $scope.previous = function (callback) {
@@ -10281,12 +10255,10 @@ angular.module('patternfly.wizard').directive('pfWizardStep', function () {
         var goPrev = false;
 
         // Check if callback is a function
-        if (angular.isFunction (callback)) {
-          if (callback($scope.selectedStep)) {
-            if (index !== 0) {
-              $scope.goTo($scope.getEnabledSteps()[index - 1]);
-              goPrev = true;
-            }
+        if (!angular.isFunction (callback) || callback($scope.selectedStep)) {
+          if (index !== 0) {
+            $scope.goTo($scope.getEnabledSteps()[index - 1]);
+            goPrev = true;
           }
         }
 
