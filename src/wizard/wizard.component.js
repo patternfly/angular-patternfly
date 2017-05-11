@@ -21,6 +21,13 @@
   *
   * @param {string} title The wizard title displayed in the header
   * @param {boolean=} hideIndicators  Hides the step indicators in the header of the wizard
+  * @param {boolean=} hideSidebar  Hides page navigation sidebar on the wizard pages
+  * @param {boolean=} hideHeader Optional value to hide the title bar. Default is false.
+  * @param {boolean=} hideBackButton Optional value to hide the back button, useful in 2 step wizards. Default is false.
+  * @param {string=} stepClass Optional CSS class to be given to the steps page container. Used for the sidebar panel as well unless a sidebarClass is provided.
+  * @param {string=} sidebarClass Optional CSS class to be give to the sidebar panel. Only used if the stepClass is also provided.
+  * @param {string=} contentHeight The height the wizard content should be set to. This is used ONLY if the stepClass is not given. This defaults to 300px if the property is not supplied.
+  * @param {boolean=} hideIndicators  Hides the step indicators in the header of the wizard
   * @param {string=} currentStep The current step can be changed externally - this is the title of the step to switch the wizard to
   * @param {string=} cancelTitle The text to display on the cancel button
   * @param {string=} backTitle The text to display on the back button
@@ -33,7 +40,6 @@
   * @param {boolean=} wizardDone  Value that is set when the wizard is done
   * @param {string} loadingWizardTitle The text displayed when the wizard is loading
   * @param {string=} loadingSecondaryInformation Secondary descriptive information to display when the wizard is loading
-  * @param {string=} contentHeight The height the wizard content should be set to.  This defaults to 300px if the property is not supplied.
   * @param {boolean=} embedInPage Value that indicates wizard is embedded in a page (not a modal).  This moves the navigation buttons to the left hand side of the footer and removes the close button.
   * @param {function(step, index)=} onStepChanged Called when the wizard step is changed, passes in the step and the step index of the step changed to
   *
@@ -53,7 +59,8 @@
     next-callback="nextCallback"
     back-callback="backCallback"
     wizard-done="deployComplete || deployInProgress"
-    content-height="'600px'"
+    sidebar-class="example-wizard-sidebar"
+    step-class="example-wizard-step"
     loading-secondary-information="secondaryLoadInformation"
     on-step-changed="stepChanged(step, index)">
       <pf-wizard-step step-title="First Step" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
@@ -305,6 +312,12 @@ angular.module('patternfly.wizard').component('pfWizard', {
   bindings: {
     title: '@',
     hideIndicators: '=?',
+    hideSidebar: '@',
+    hideHeader: '@',
+    hideBackButton: '@',
+    sidebarClass: '@',
+    stepClass: '@',
+    contentHeight: '=?',
     currentStep: '<?',
     cancelTitle: '=?',
     backTitle: '=?',
@@ -317,12 +330,11 @@ angular.module('patternfly.wizard').component('pfWizard', {
     wizardDone: '=?',
     loadingWizardTitle: '=?',
     loadingSecondaryInformation: '=?',
-    contentHeight: '=?',
     embedInPage: '=?',
     onStepChanged: '&?'
   },
   templateUrl: 'wizard/wizard.html',
-  controller: function ($timeout) {
+  controller: function ($timeout, $scope) {
     'use strict';
     var ctrl = this,
       firstRun;
@@ -362,19 +374,32 @@ angular.module('patternfly.wizard').component('pfWizard', {
       firstRun = true;
       ctrl.steps = [];
       ctrl.context = {};
+      ctrl.hideHeader = ctrl.hideHeader === 'true';
+      ctrl.hideSidebar = ctrl.hideSidebar === 'true';
+      ctrl.hideBaackButton = ctrl.hideBackButton === 'true';
+
+      // If a step class is given use it for all steps
+      if (angular.isDefined(ctrl.stepClass)) {
+
+        // If a sidebarClass is given, us it for sidebar panel, if not, apply the stepsClass to the sidebar panel
+        if (angular.isUndefined(ctrl.sidebarClass)) {
+          ctrl.sidebarClass = ctrl.stepClass;
+        }
+      } else {
+        // No step claass give, setup the content style to allow scrolling and a fixed height
+        if (angular.isUndefined(ctrl.contentHeight)) {
+          ctrl.contentHeight = '300px';
+        }
+        ctrl.contentStyle = {
+          'height': ctrl.contentHeight,
+          'max-height': ctrl.contentHeight,
+          'overflow-y': 'auto'
+        };
+      }
 
       if (angular.isUndefined(ctrl.wizardReady)) {
         ctrl.wizardReady = true;
       }
-
-      if (angular.isUndefined(ctrl.contentHeight)) {
-        ctrl.contentHeight = '300px';
-      }
-      ctrl.contentStyle = {
-        'height': ctrl.contentHeight,
-        'max-height': ctrl.contentHeight,
-        'overflow-y': 'auto'
-      };
 
       if (!ctrl.cancelTitle) {
         ctrl.cancelTitle = "Cancel";
@@ -468,6 +493,14 @@ angular.module('patternfly.wizard').component('pfWizard', {
       }
     };
 
+    ctrl.allowStepIndicatorClick = function (step) {
+      return step.allowClickNav &&
+        !ctrl.wizardDone &&
+        ctrl.selectedStep.okToNavAway &&
+        (ctrl.selectedStep.nextEnabled || (step.stepPriority < ctrl.selectedStep.stepPriority)) &&
+        (ctrl.selectedStep.prevEnabled || (step.stepPriority > ctrl.selectedStep.stepPriority));
+    };
+
     ctrl.stepClick = function (step) {
       if (step.allowClickNav) {
         ctrl.goTo(step, true);
@@ -550,13 +583,13 @@ angular.module('patternfly.wizard').component('pfWizard', {
       // Check if callback is a function
       if (angular.isFunction(callback)) {
         if (callback(ctrl.selectedStep)) {
-          if (index === enabledSteps.length - 1) {
-            ctrl.finish();
-          } else {
+          if (index <= enabledSteps.length - 1) {
             // Go to the next step
             if (enabledSteps[index + 1].substeps) {
               enabledSteps[index + 1].resetNav();
             }
+          } else {
+            ctrl.finish();
           }
         } else {
           return;
@@ -585,13 +618,12 @@ angular.module('patternfly.wizard').component('pfWizard', {
       }
 
       // Check if callback is a function
-      if (angular.isFunction(callback)) {
-        if (callback(ctrl.selectedStep)) {
-          if (index === 0) {
-            throw new Error("Can't go back. It's already in step 0");
-          } else {
-            ctrl.goTo(ctrl.getEnabledSteps()[index - 1]);
-          }
+      if (!angular.isFunction(callback) || callback(ctrl.selectedStep)) {
+
+        if (index === 0) {
+          throw new Error("Can't go back. It's already in step 0");
+        } else {
+          ctrl.goTo(ctrl.getEnabledSteps()[index - 1]);
         }
       }
     };
@@ -621,5 +653,8 @@ angular.module('patternfly.wizard').component('pfWizard', {
       //go to first step
       ctrl.goToStep(0);
     };
+
+    // Provide wizard controls to steps and sub-steps
+    $scope.wizard = this;
   }
 });

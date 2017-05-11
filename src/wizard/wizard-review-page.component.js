@@ -15,16 +15,27 @@ angular.module('patternfly.wizard').component('pfWizardReviewPage', {
     shown: '<',
     wizardData: "<"
   },
-  require: {
-    wizard: '^pfWizard'
-  },
   templateUrl: 'wizard/wizard-review-page.html',
-  controller: function () {
+  controller: function ($scope) {
     'use strict';
     var ctrl = this;
 
+    var findWizard = function (scope) {
+      var wizard;
+      if (scope) {
+        if (angular.isDefined(scope.wizard)) {
+          wizard = scope.wizard;
+        } else {
+          wizard = findWizard(scope.$parent);
+        }
+      }
+
+      return wizard;
+    };
+
     ctrl.$onInit = function () {
       ctrl.reviewSteps = [];
+      ctrl.wizard = findWizard($scope.$parent);
     };
 
     ctrl.$onChanges = function (changesObj) {

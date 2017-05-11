@@ -23,3 +23,14 @@
 .wizard-pf-cancel-inline {
   margin-left: 25px;
 }
+
+.wizard-pf-steps-indicator li a.disabled {
+  cursor: default;
+  &:hover {
+    .wizard-pf-step-number {
+      background-color: @color-pf-white;
+      border-color: @color-pf-black-400;
+      color: @color-pf-black-400;
+    }
+  }
+}
