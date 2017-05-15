@@ -21,6 +21,7 @@
     "angular-mocks": "1.3.0 - 1.5.*",
     "angular-ui-router": "^0.3.2",
     "express": "3.4.4",
+    "grunt-cli": "1.2.0",
     "grunt": "0.4.5",
     "grunt-angular-templates": "0.5.7",
     "grunt-available-tasks": "0.4.3",
@@ -57,13 +58,24 @@
     "c3": "~0.4.11",
     "components-jqueryui": "components/jqueryui#1.12.1",
     "d3": "~3.5.17",
-    "datatables.net": "^1.10.11",
+    "datatables.net": "^1.10.12",
     "datatables.net-select": "~1.2.0",
     "jquery": "~2.1.4",
     "moment": "~2.14.1"
   },
   "scripts": {
-    "test": "grunt test"
+    "clean":"grunt clean",
+    "build": "grunt build",
+    "watch":"grunt watch",
+    "ngdocs": "grunt ngdocs",
+    "ngdocs:view": "grunt ngdocs:view",
+    "ngdocs:publish": "grunt ngdocs:publish",
+    "lint": "grunt lint",
+    "test": "grunt test",
+    "check": "grunt check",
+    "help": "grunt help",
+    "server": "grunt server",
+    "start": "grunt server"
   },
   "repository": {
     "type": "git",
