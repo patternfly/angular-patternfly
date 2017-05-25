@@ -4,7 +4,10 @@
   "version": "4.0.0-rc.1",
   "license": "Apache-2.0",
   "description": "Angular extension of the PatternFly project.",
-  "keywords": ["angular", "patternfly"],
+  "keywords": [
+    "angular",
+    "patternfly"
+  ],
   "main": "index.js",
   "homepage": "https://github.com/patternfly/angular-patternfly",
   "dependencies": {
@@ -59,7 +62,7 @@
     "d3": "~3.5.17",
     "datatables.net": "^1.10.11",
     "datatables.net-select": "~1.2.0",
-    "jquery": "~2.1.4",
+    "jquery": "~3.2.1",
     "moment": "~2.14.1"
   },
   "scripts": {
