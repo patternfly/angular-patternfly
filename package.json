@@ -1,7 +1,7 @@
 {
   "author": "Red Hat",
   "name": "angular-patternfly",
-  "version": "3.24.0",
+  "version": "3.25.0",
   "license": "Apache-2.0",
   "description": "Angular extension of the PatternFly project.",
   "keywords": [
@@ -18,7 +18,7 @@
     "angular-ui-bootstrap": "0.14.x",
     "jquery": "^2.2.4",
     "lodash": "3.x",
-    "patternfly": "3.25.0"
+    "patternfly": "~3.25.0"
   },
   "devDependencies": {
     "express": "3.4.4",
@@ -48,7 +48,7 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "matchdep": "0.3.0",
     "nsp": "^2.6.1",
-    "patternfly-eng-release": "3.25.1"
+    "patternfly-eng-release": "~3.25.0"
   },
   "scripts": {
     "test": "grunt test"
