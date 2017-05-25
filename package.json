@@ -14,7 +14,7 @@
     "angular-ui-bootstrap": "2.3.x",
     "angular-svg-base-fix": "2.0.0",
     "lodash-amd": "4.x",
-    "patternfly": "~4.0.0-rc.1"
+    "patternfly": "3.25.0"
   },
   "devDependencies": {
     "angular-dragdrop": "1.0.13",

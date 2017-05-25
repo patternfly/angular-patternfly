@@ -47,7 +47,7 @@
     "datatables.net": "^1.10.12",
     "datatables.net-select": "~1.2.0",
     "lodash": "4.x",
-    "patternfly": "~4.0.0-rc.1"
+    "patternfly": "3.25.0"
   },
   "devDependencies": {
     "angular-mocks": "1.5.*",
