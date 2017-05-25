@@ -550,7 +550,7 @@ angular.module('patternfly.navigation').component('pfVerticalNavigation', {
       checkNavState();
 
       // Need to bind to resize event
-      angular.element($window).bind('resize', function () {
+      angular.element($window).on('resize', function () {
         checkNavState();
       });
     };
@@ -562,4 +562,3 @@ angular.module('patternfly.navigation').component('pfVerticalNavigation', {
     };
   },
 });
-
