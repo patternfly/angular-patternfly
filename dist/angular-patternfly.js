@@ -1709,7 +1709,7 @@ angular.module('patternfly.charts').directive('pfHeatmap', ["$compile", "$window
         setStyles();
       });
 
-      angular.element($window).bind('resize', function () {
+      angular.element($window).on('resize', function () {
         setSizes();
         redraw();
       });
@@ -3787,7 +3787,7 @@ angular.module('patternfly.form').directive('pfRemainingCharsCount', ["$timeout"
         checkCharactersRemaining();
       });
 
-      $element.bind('keypress', function (event) {
+      $element.on('keypress', function (event) {
         // Once the charsMaxLimit has been met or exceeded, prevent all keypresses from working
         if (blockInputAtMaxLimit && $element.val().length >= charsMaxLimit) {
           // Except backspace
@@ -5313,7 +5313,7 @@ angular.module('patternfly.navigation').directive('pfApplicationLauncher', [
         initBodyElement();
         checkNavState();
 
-        angular.element($window).bind('resize', function () {
+        angular.element($window).on('resize', function () {
           checkNavState();
           $timeout(function () {
             try {
@@ -7633,7 +7633,7 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', ["$window", "$t
       }, 100);
 
       // Update on window resizing
-      angular.element($window).bind('resize', function () {
+      angular.element($window).on('resize', function () {
         setCollapseHeights();
       });
     }
