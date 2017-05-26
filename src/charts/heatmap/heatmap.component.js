@@ -362,7 +362,7 @@ angular.module('patternfly.charts').component('pfHeatmap', {
       ctrl.showLegend = ctrl.showLegend || (ctrl.showLegend === undefined);
       ctrl.loadingDone = false;
 
-      angular.element($window).bind('resize', function () {
+      angular.element($window).on('resize', function () {
         setSizes();
         redraw();
       });
