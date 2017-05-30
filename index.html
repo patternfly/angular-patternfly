@@ -39,6 +39,8 @@
       addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});
 
       
+         addTag('link', {rel: 'stylesheet', href: 'css/jquery.dataTables.css', type: 'text/css'}, sync);
+      
          addTag('link', {rel: 'stylesheet', href: 'css/patternfly.css', type: 'text/css'}, sync);
       
          addTag('link', {rel: 'stylesheet', href: 'css/patternfly-additions.css', type: 'text/css'}, sync);
@@ -56,27 +58,31 @@
       
         addTag('script', {src: 'grunt-scripts/jquery.js'}, sync);
       
-        addTag('script', {src: 'grunt-scripts/bootstrap.js'}, sync);
+        addTag('script', {src: 'grunt-scripts/jquery-ui.min.js'}, sync);
       
-        addTag('script', {src: 'grunt-scripts/bootstrap-combobox.js'}, sync);
+        addTag('script', {src: 'grunt-scripts/jquery.dataTables.js'}, sync);
       
-        addTag('script', {src: 'grunt-scripts/bootstrap-datepicker.js'}, sync);
+        addTag('script', {src: 'grunt-scripts/dataTables.select.js'}, sync);
       
         addTag('script', {src: 'grunt-scripts/moment.js'}, sync);
-      
-        addTag('script', {src: 'grunt-scripts/bootstrap-datetimepicker.js'}, sync);
-      
-        addTag('script', {src: 'grunt-scripts/bootstrap-select.js'}, sync);
-      
-        addTag('script', {src: 'grunt-scripts/bootstrap-treeview.js'}, sync);
       
         addTag('script', {src: 'grunt-scripts/c3.js'}, sync);
       
         addTag('script', {src: 'grunt-scripts/d3.js'}, sync);
       
-        addTag('script', {src: 'grunt-scripts/patternfly.js'}, sync);
+        addTag('script', {src: 'grunt-scripts/patternfly-settings.js'}, sync);
+      
+        addTag('script', {src: 'grunt-scripts/patternfly-settings-colors.js'}, sync);
+      
+        addTag('script', {src: 'grunt-scripts/patternfly-settings-charts.js'}, sync);
       
         addTag('script', {src: 'grunt-scripts/angular.js'}, sync);
+      
+        addTag('script', {src: 'grunt-scripts/angular-dragdrop.js'}, sync);
+      
+        addTag('script', {src: 'grunt-scripts/angular-datatables.min.js'}, sync);
+      
+        addTag('script', {src: 'grunt-scripts/angular-datatables.select.min.js'}, sync);
       
         addTag('script', {src: 'grunt-scripts/angular-sanitize.js'}, sync);
       
@@ -257,7 +263,7 @@
 
         <div id="loading" ng-show="loading">Loading...</div>
 
-        <div class="home" ng-show="breadcrumb[breadcrumb.length-1].name === 'API Documentation'">
+        <div class="home" ng-show="(breadcrumb[breadcrumb.length-1].name === 'API Documentation') || (partialTitle.indexOf('Page Not Found') !== -1)">
           <h1>Welcome to Angular PatternFly!<h1>
           <img src="img/patternfly-orb.svg" alt="PatternFly logo" />
           <h3>Angular PatternFly contains custom AngularJS directives which utilize the PatternFly Refererence Implementation.<br/>PatternFly is a community of designers and developers collaborating to build a UI framework for enterprise web applications.</h3>
