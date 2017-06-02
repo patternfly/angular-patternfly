@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/07337f3/src/views/listview/list-view.component.js#L443" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/7ea7c41/src/views/listview/list-view.component.js#L443" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -6,7 +6,7 @@
 <div><h2 id="description">Description</h2>
 <div class="description"><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Component for rendering a list view.
 Pass a customScope object containing any scope variables/functions you need to access from the transcluded source, access these
-via &#39;customScope&#39; in your transcluded hmtl.
+via &#39;$ctrl.customScope&#39; in your transcluded hmtl.
 <br><br>
 If using expanding rows, use a list-expanded-content element containing expandable content for each row.  Item data can be accessed inside list-expanded-content by using $parent.item.property.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.</p>
 </div></div>
@@ -64,7 +64,7 @@ If using expanding rows, use a list-expanded-content element containing expandab
 </ul></div></td></tr><tr><td>hideMenuForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (item)</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>function(item) Used to hide all menu actions for a particular item</p>
 </div></td></tr><tr><td>menuClassForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (item)</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>function(item) Used to specify a class for an item&#39;s dropdown kebab</p>
 </div></td></tr><tr><td>updateMenuActionForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>function(action, item) Used to update a menu action based on the current item</p>
-</div></td></tr><tr><td>customScope</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Object containing any variables/functions used by the transcluded html, access via customScope.<xxx></p>
+</div></td></tr><tr><td>customScope</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Object containing any variables/functions used by the transcluded html, access via $ctrl.customScope.<xxx></p>
 </div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
