@@ -82,6 +82,37 @@ module.exports = function (grunt) {
           src: ['canvas-dot-grid.png'],
           dest: 'dist/imgs',
           expand: true
+        },
+        distless: {
+          src: ['styles/**/*.less', 'src/**/*.less'],
+          dest: 'dist/less',
+          expand: true,
+          flatten: true
+        },
+        distlessDependencies: {
+          src: ['node_modules/patternfly/dist/less/color-variables.less'],
+          dest: 'dist/less/dependencies/patternfly',
+          expand: true,
+          flatten: true
+        }
+      },
+      'string-replace': {
+        dist: {
+          files: [{
+            cwd: 'dist/less/',
+            src: ['angular-patternfly.less'],
+            dest: 'dist/less',
+            expand: true
+          }],
+          options: {
+            replacements: [{
+              pattern: /\.\.\/src\/(.*?)+\//g,
+              replacement: ''
+            },{
+              pattern: '../node_modules/patternfly/dist/less',
+              replacement: 'dependencies/patternfly'
+            }]
+          }
         }
       },
       less: {
@@ -298,7 +329,7 @@ module.exports = function (grunt) {
       }
     });
 
-    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:img', 'copy:distimg']);
+    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:img', 'copy:distimg', 'copy:distless', 'copy:distlessDependencies']);
 
     // You can specify which modules to build as arguments of the build task.
     grunt.registerTask('build', 'Create bootstrap build files', function () {
@@ -318,13 +349,13 @@ module.exports = function (grunt) {
         concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'string-replace', 'ngdocs', 'clean:templates']);
     });
 
     // Runs all the tasks of build with the exception of tests
     grunt.registerTask('deploy', 'Prepares the project for deployment. Does not run unit tests', function () {
       var concatSrc = 'src/**/*.js';
-      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'string-replace', 'ngdocs', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);
@@ -333,7 +364,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['karma']);
     grunt.registerTask('check', ['lint', 'test']);
     grunt.registerTask('help', ['availabletasks']);
-    grunt.registerTask('server', ['ngdocs:view']);
+    grunt.registerTask('serve', ['ngdocs:view']);
     grunt.registerTask('ngdocs:publish', ['remove:published', 'copy:publish']);
 
   }
