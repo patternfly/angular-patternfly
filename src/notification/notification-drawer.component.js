@@ -26,7 +26,7 @@
  * @param {string} subheadingInclude Include src for the sub-heading area for each notification group, access the group via notificationGroup
  * @param {string} notificationBodyInclude Include src for the notification body for each notification, access the notification via notification
  * @param {string} notificationFooterInclude Include src for the notification footer for each notification, access the notification via notification
- * @param {object} customScope Object containing any variables/functions used by the included src, access via customScope.<xxx>
+ * @param {object} customScope Object containing any variables/functions used by the included src, access via $ctrl.customScope.<xxx>
  *
  * @example
  <example module="patternfly.notification" deps="patternfly.utils, patternfly.filters, patternfly.sort, patternfly.views">
