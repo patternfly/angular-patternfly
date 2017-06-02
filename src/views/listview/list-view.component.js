@@ -6,7 +6,7 @@
  * @description
  *   Component for rendering a list view.
  *   Pass a customScope object containing any scope variables/functions you need to access from the transcluded source, access these
- *   via 'customScope' in your transcluded hmtl.
+ *   via '$ctrl.customScope' in your transcluded hmtl.
  *   <br><br>
  *   If using expanding rows, use a list-expanded-content element containing expandable content for each row.  Item data can be accessed inside list-expanded-content by using $parent.item.property.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.
  *
@@ -54,7 +54,7 @@
  * @param {function (item))} hideMenuForItemFn function(item) Used to hide all menu actions for a particular item
  * @param {function (item))} menuClassForItemFn function(item) Used to specify a class for an item's dropdown kebab
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
- * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via customScope.<xxx>
+ * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via $ctrl.customScope.<xxx>
  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
