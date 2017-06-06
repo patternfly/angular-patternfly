@@ -63,12 +63,6 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       if (ctrl.config.resultsCount === undefined) {
         ctrl.config.resultsCount = 0;
       }
-      if (ctrl.config.selectedCount === undefined) {
-        ctrl.config.selectedCount = 0;
-      }
-      if (ctrl.config.totalCount === undefined) {
-        ctrl.config.totalCount = 0;
-      }
     }
 
     function clearFilter (item) {
