@@ -7344,12 +7344,6 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       if (ctrl.config.resultsCount === undefined) {
         ctrl.config.resultsCount = 0;
       }
-      if (ctrl.config.selectedCount === undefined) {
-        ctrl.config.selectedCount = 0;
-      }
-      if (ctrl.config.totalCount === undefined) {
-        ctrl.config.totalCount = 0;
-      }
     }
 
     function clearFilter (item) {
@@ -15969,7 +15963,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
 
   $templateCache.put('filters/filter-results.html',
-    "<div class=filter-pf><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{$ctrl.config.resultsCount}} Results</h5><p ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a><span class=\"pficon pficon-close\" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p><div ng-if=\"$ctrl.config.totalCount !== 0\" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div><!-- /col --></div><!-- /row --></div>"
+    "<div class=filter-pf><div class=\"row toolbar-pf-results\"><div class=col-sm-12><h5>{{$ctrl.config.resultsCount}} Results</h5><p ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{filter.value}} <a><span class=\"pficon pficon-close\" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p><div ng-if=\"$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined\" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div><!-- /col --></div><!-- /row --></div>"
   );
 
 
