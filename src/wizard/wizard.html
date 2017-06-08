@@ -32,7 +32,6 @@
     <div ng-if="!$ctrl.hideBackButton" class="tooltip-wrapper" uib-tooltip="{{$ctrl.prevTooltip}}" tooltip-placement="left">
       <pf-wiz-previous id="backButton" class="btn btn-default" ng-disabled="!$ctrl.wizardReady || $ctrl.wizardDone || !$ctrl.selectedStep.prevEnabled || $ctrl.firstStep"
               callback="$ctrl.backCallback">
-        <span class="i fa fa-angular-left"></span>
         {{$ctrl.backTitle}}
       </pf-wiz-previous>
     </div>
@@ -40,7 +39,6 @@
       <pf-wiz-next id="nextButton" class="btn btn-primary wizard-pf-next" ng-disabled="!$ctrl.wizardReady || !$ctrl.selectedStep.nextEnabled"
               callback="$ctrl.nextCallback">
         {{$ctrl.nextTitle}}
-        <span class="i fa fa-angular-right"></span>
       </pf-wiz-next>
     </div>
     <pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline" ng-disabled="$ctrl.wizardDone" ng-click="$ctrl.onCancel()" ng-if="$ctrl.embedInPage">{{$ctrl.cancelTitle}}</pf-wiz-cancel>
