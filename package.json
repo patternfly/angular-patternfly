@@ -16,7 +16,7 @@
     "angular-sanitize": "1.5.*",
     "angular-ui-bootstrap": "2.3.x",
     "angular-svg-base-fix": "2.0.0",
-    "lodash-amd": "4.x",
+    "lodash": "4.x",
     "patternfly": "3.25.0"
   },
   "devDependencies": {
