@@ -263,12 +263,28 @@ describe('Directive:  pfWizard', function () {
     expect(sidebarPanel.length).toBe(3);
   });
 
+  it('should show the back button when not specified', function () {
+    setupWizard('test/wizard/wizard-container.html');
+
+    var backButton = element.find('.wizard-pf-footer #backButton');
+    expect(backButton.length).toBe(1);
+  });
+
   it('should hide the back button when specified', function () {
+    $scope.hideBackButton = true;
     setupWizard('test/wizard/wizard-container-hide-back.html');
     $timeout.flush();
     $timeout.flush();
 
     var backButton = element.find('.wizard-pf-footer #backButton');
     expect(backButton.length).toBe(0);
+  });
+
+  it('should not hide the back button when specified', function () {
+    $scope.hideBackButton = false;
+    setupWizard('test/wizard/wizard-container-hide-back.html');
+
+    var backButton = element.find('.wizard-pf-footer #backButton');
+    expect(backButton.length).toBe(1);
   });
 });
