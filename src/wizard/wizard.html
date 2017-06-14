@@ -28,21 +28,25 @@
     <div class="wizard-pf-position-override" ng-transclude ></div>
   </div>
   <div class="modal-footer wizard-pf-footer wizard-pf-position-override" ng-class="{'wizard-pf-footer-inline': $ctrl.embedInPage}">
-    <pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel" ng-disabled="$ctrl.wizardDone" ng-click="$ctrl.onCancel()" ng-if="!$ctrl.embedInPage">{{$ctrl.cancelTitle}}</pf-wiz-cancel>
+    <pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel"
+                   ng-class="{'wizard-pf-cancel-no-back': $ctrl.hideBackButton}"
+                   ng-disabled="$ctrl.wizardDone" ng-click="$ctrl.onCancel()"
+                   ng-if="!$ctrl.embedInPage">{{$ctrl.cancelTitle}}</pf-wiz-cancel>
     <div ng-if="!$ctrl.hideBackButton" class="tooltip-wrapper" uib-tooltip="{{$ctrl.prevTooltip}}" tooltip-placement="left">
-      <pf-wiz-previous id="backButton" class="btn btn-default" ng-disabled="!$ctrl.wizardReady || $ctrl.wizardDone || !$ctrl.selectedStep.prevEnabled || $ctrl.firstStep"
-              callback="$ctrl.backCallback">
-        <span class="i fa fa-angular-left"></span>
-        {{$ctrl.backTitle}}
-      </pf-wiz-previous>
+      <pf-wiz-previous id="backButton"
+                       class="btn btn-default"
+                       ng-disabled="!$ctrl.wizardReady || $ctrl.wizardDone || !$ctrl.selectedStep.prevEnabled || $ctrl.firstStep"
+                       callback="$ctrl.backCallback">{{$ctrl.backTitle}}</pf-wiz-previous>
     </div>
     <div class="tooltip-wrapper" uib-tooltip="{{$ctrl.nextTooltip}}" tooltip-placement="left">
-      <pf-wiz-next id="nextButton" class="btn btn-primary wizard-pf-next" ng-disabled="!$ctrl.wizardReady || !$ctrl.selectedStep.nextEnabled"
-              callback="$ctrl.nextCallback">
-        {{$ctrl.nextTitle}}
-        <span class="i fa fa-angular-right"></span>
-      </pf-wiz-next>
+      <pf-wiz-next id="nextButton"
+                   class="btn btn-primary wizard-pf-next"
+                   ng-disabled="!$ctrl.wizardReady || !$ctrl.selectedStep.nextEnabled"
+                   callback="$ctrl.nextCallback">{{$ctrl.nextTitle}}</pf-wiz-next>
     </div>
-    <pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline" ng-disabled="$ctrl.wizardDone" ng-click="$ctrl.onCancel()" ng-if="$ctrl.embedInPage">{{$ctrl.cancelTitle}}</pf-wiz-cancel>
+    <pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline"
+                   ng-disabled="$ctrl.wizardDone"
+                   ng-click="$ctrl.onCancel()"
+                   ng-if="$ctrl.embedInPage">{{$ctrl.cancelTitle}}</pf-wiz-cancel>
   </div>
 </div>

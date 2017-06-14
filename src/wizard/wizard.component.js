@@ -376,7 +376,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
       ctrl.context = {};
       ctrl.hideHeader = ctrl.hideHeader === 'true';
       ctrl.hideSidebar = ctrl.hideSidebar === 'true';
-      ctrl.hideBaackButton = ctrl.hideBackButton === 'true';
+      ctrl.hideBackButton = ctrl.hideBackButton === 'true';
 
       // If a step class is given use it for all steps
       if (angular.isDefined(ctrl.stepClass)) {
@@ -414,6 +414,18 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
     ctrl.$onChanges = function (changesObj) {
       var step;
+
+      if (changesObj.hideHeader) {
+        ctrl.hideHeader = ctrl.hideHeader === 'true';
+      }
+
+      if (changesObj.hideSidebar) {
+        ctrl.hideSidebar = ctrl.hideSidebar === 'true';
+      }
+
+      if (changesObj.hideBackButton) {
+        ctrl.hideBackButton = ctrl.hideBackButton === 'true';
+      }
 
       if (changesObj.wizardReady && changesObj.wizardReady.currentValue) {
         ctrl.goTo(ctrl.getEnabledSteps()[0]);
