@@ -399,9 +399,7 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       $scope.steps = [];
       $scope.context = {};
       this.context = $scope.context;
-      $scope.hideHeader = $scope.hideHeader === 'true';
       this.hideSidebar = $scope.hideSidebar === 'true';
-      $scope.hideBaackButton = $scope.hideBackButton === 'true';
 
       // If a step class is given use it for all steps
       if (angular.isDefined($scope.stepClass)) {
@@ -702,6 +700,16 @@ angular.module('patternfly.wizard').directive('pfWizard', function ($window) {
       $scope.wizard = this;
     },
     link: function ($scope) {
+      $scope.$watch('hideBackButton', function () {
+        $scope.hideBackButton = $scope.hideBackButton === 'true' || $scope.hideBackButton === true;
+      });
+      $scope.$watch('hideHeader', function () {
+        $scope.hideHeader = $scope.hideHeader === 'true' || $scope.hideHeader === true;
+      });
+      $scope.$watch('hideSidebar', function () {
+        $scope.hideSidebar = $scope.hideSidebar === 'true' || $scope.hideSidebar === true;
+      });
+
       $scope.$watch('wizardReady', function () {
         if ($scope.wizardReady) {
           $scope.goTo($scope.getEnabledSteps()[0]);

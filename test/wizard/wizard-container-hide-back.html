@@ -7,7 +7,7 @@
   next-callback="nextCallback"
   back-callback="backCallback"
   current-step="currentStep"
-  hide-back-button="true"
+  hide-back-button="{{hideBackButton}}"
   wizard-done="deployComplete || deployInProgress"
   loading-secondary-information="secondaryLoadInformation">
   <div ng-include="'test/wizard/wizard-test-steps.html'"></div>

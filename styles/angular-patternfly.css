@@ -480,3 +480,7 @@ accordion > .panel-group .panel-open .panel-title > a:before {
   border-color: #bbb;
   color: #bbb;
 }
+
+.wizard-pf-footer .btn-cancel.wizard-pf-cancel-no-back {
+  margin-right: 0;
+}
