@@ -43,7 +43,7 @@
         <pf-table-view config="tableConfig"
                        empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
-                       colummns="colummns"
+                       columns="columns"
                        items="items"
                        action-buttons="tableActionButtons"
                        menu-actions="tableMenuActions">
@@ -82,7 +82,7 @@
     function ($scope, pfViewUtils, $filter) {
       $scope.actionsText = "";
 
-      $scope.colummns = [
+      $scope.columns = [
         { header: "Name", itemField: "name" },
         { header: "Age", itemField: "age"},
         { header: "Address", itemField: "address" },
