@@ -42,7 +42,7 @@ angular.module('patternfly.table').component('pfTableView', {
         $log.debug("$onInit");
       }
 
-      if (angular.isDefined(ctrl.colummns)) {
+      if (angular.isDefined(ctrl.colummns) && angular.isUndefined(ctrl.columns)) {
         ctrl.columns = ctrl.colummns;
       }
       if (angular.isUndefined(ctrl.dtOptions)) {
