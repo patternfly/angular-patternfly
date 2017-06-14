@@ -2,7 +2,8 @@ angular.module('patternfly.table').component('pfTableView', {
   bindings: {
     config: '<?',
     dtOptions: '<?',
-    colummns: '<',
+    colummns: '<?',
+    columns: '<?',
     items: '<',
     actionButtons: '<?',
     menuActions: '<?',
@@ -41,6 +42,9 @@ angular.module('patternfly.table').component('pfTableView', {
         $log.debug("$onInit");
       }
 
+      if (angular.isDefined(ctrl.colummns)) {
+        ctrl.columns = ctrl.colummns;
+      }
       if (angular.isUndefined(ctrl.dtOptions)) {
         ctrl.dtOptions = {};
       }
@@ -79,7 +83,7 @@ angular.module('patternfly.table').component('pfTableView', {
       // lodash-amd a-pf is using
 
       if (!validSelectionMatchProp()) {
-        angular.forEach(ctrl.colummns, function (col) {
+        angular.forEach(ctrl.columns, function (col) {
           if (props.length === 0) {
             props = col.itemField;
           } else {
@@ -88,7 +92,7 @@ angular.module('patternfly.table').component('pfTableView', {
         });
         throw new Error("pfTableView - " +
           "config.selectionMatchProp '" + ctrl.config.selectionMatchProp +
-          "' does not match any property in 'config.colummns'! Please set config.selectionMatchProp " +
+          "' does not match any property in 'config.columns'! Please set config.selectionMatchProp " +
           "to one of these properties: " + props);
       }
 
@@ -342,7 +346,7 @@ angular.module('patternfly.table').component('pfTableView', {
 
     ctrl.isColItemFld = function (key) {
       var retVal = false;
-      var tableCol = $filter('filter')(ctrl.colummns, {itemField: key});
+      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
 
       if (tableCol && tableCol.length === 1) {
         retVal = true;
