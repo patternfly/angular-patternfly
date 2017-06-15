@@ -160,10 +160,10 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
       }, 100);
 
       // Update on window resizing
-      $element.bind('resize', function () {
+      $element.on('resize', function () {
         setCollapseHeights();
       });
-      angular.element($window).bind('resize', function () {
+      angular.element($window).on('resize', function () {
         setCollapseHeights();
       });
     }

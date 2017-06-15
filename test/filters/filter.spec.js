@@ -159,4 +159,20 @@ describe('Directive:  pfFilter', function () {
     expect(activeFilters.length).toBe(0);
     expect(clearButtons.length).toBe(0);
   });
-})
+
+  it('should not show selected results when selectedCount and totalCount are undefined', function() {
+    $scope.filterConfig.selectedCount = undefined;
+    $scope.filterConfig.totalCount = undefined;
+    $scope.$digest();
+
+    expect(element.find('.pf-table-view-selected-label').length).toBe(0);
+  });
+
+  it('should show selected results and totalCount are defined', function() {
+    $scope.filterConfig.selectedCount = 0;
+    $scope.filterConfig.totalCount = 10;
+    $scope.$digest();
+
+    expect(element.find('.pf-table-view-selected-label').text()).toContain('0 of 10 selected');
+  });
+});

@@ -119,7 +119,7 @@
       </div>
       <div class="col-md-12" ng-show="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
-                       colummns="colummns"
+                       columns="columns"
                        items="items"
                        empty-state-config="emptyStateConfig">
         </pf-table-view>
@@ -156,7 +156,7 @@
     function ($scope, pfViewUtils, $filter) {
       $scope.filtersText = '';
 
-      $scope.colummns = [
+      $scope.columns = [
         { header: "Name", itemField: "name" },
         { header: "Age", itemField: "age"},
         { header: "Address", itemField: "address" },

@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "4.0.0-rc.1",
+  "version": "4.0.0",
   "authors": [
     "Red Hat"
   ],
@@ -11,22 +11,22 @@
   ],
   "license": "Apache-2.0",
   "ignore": [
-    "node_modules",
+    "**/.*",
+    "docs",
     "lib",
-    "Gruntfile.js",
-    "package.json",
-    ".bowerrc",
-    ".editorconfig",
-    ".gitignore",
-    ".jshintrc",
-    "karma.conf.js",
-    "server.js",
     "misc",
+    "node_modules",
+    "scripts",
     "src",
-    "README.md",
-    "bower.json",
-    ".bower.json",
-    "grunt-ngdocs-index.tmpl"
+    "/styles",
+    "test",
+    "deploy_key.enc",
+    "eslint.yaml",
+    "grunt-ngdocs-index.tmpl",
+    "Gruntfile.js",
+    "/index.js",
+    "npm-shrinkwrap.json",
+    "/server.js"
   ],
   "main": [
     "dist/angular-patternfly.js",
@@ -47,7 +47,7 @@
     "datatables.net": "^1.10.12",
     "datatables.net-select": "~1.2.0",
     "lodash": "4.x",
-    "patternfly": "~4.0.0-rc.1"
+    "patternfly": "3.25.0"
   },
   "devDependencies": {
     "angular-mocks": "1.5.*",
@@ -64,8 +64,5 @@
         "media/images/sort_desc_disabled.png"
       ]
     }
-  },
-  "resolutions": {
-    "jquery": "~2.1.4"
   }
 }
