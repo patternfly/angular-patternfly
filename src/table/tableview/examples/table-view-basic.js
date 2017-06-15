@@ -42,7 +42,7 @@
           config="config"
           empty-state-config="emptyStateConfig"
           dt-options="dtOptions"
-          colummns="colummns"
+          columns="columns"
           items="items"
           action-buttons="actionButtons"
           menu-actions="menuActions">
@@ -77,7 +77,7 @@
           order: [[2, "asc"]],
         };
 
-        $scope.colummns = [
+        $scope.columns = [
           { header: "Name", itemField: "name" },
           { header: "Address", itemField: "address"},
           { header: "City", itemField: "city" },

@@ -11165,7 +11165,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           config="config"
           empty-state-config="emptyStateConfig"
           dt-options="dtOptions"
-          colummns="colummns"
+          columns="columns"
           items="items"
           action-buttons="actionButtons"
           menu-actions="menuActions">
@@ -11200,7 +11200,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
           order: [[2, "asc"]],
         };
 
-        $scope.colummns = [
+        $scope.columns = [
           { header: "Name", itemField: "name" },
           { header: "Address", itemField: "address"},
           { header: "City", itemField: "city" },
@@ -11379,7 +11379,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         <pf-table-view config="tableConfig"
                        empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
-                       colummns="colummns"
+                       columns="columns"
                        items="items"
                        action-buttons="tableActionButtons"
                        menu-actions="tableMenuActions">
@@ -11418,7 +11418,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     function ($scope, pfViewUtils, $filter) {
       $scope.actionsText = "";
 
-      $scope.colummns = [
+      $scope.columns = [
         { header: "Name", itemField: "name" },
         { header: "Age", itemField: "age"},
         { header: "Address", itemField: "address" },
@@ -11803,7 +11803,8 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
   bindings: {
     config: '<?',
     dtOptions: '<?',
-    colummns: '<',
+    colummns: '<?',
+    columns: '<?',
     items: '<',
     actionButtons: '<?',
     menuActions: '<?',
@@ -11842,6 +11843,9 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         $log.debug("$onInit");
       }
 
+      if (angular.isDefined(ctrl.colummns) && angular.isUndefined(ctrl.columns)) {
+        ctrl.columns = ctrl.colummns;
+      }
       if (angular.isUndefined(ctrl.dtOptions)) {
         ctrl.dtOptions = {};
       }
@@ -11880,7 +11884,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       // lodash-amd a-pf is using
 
       if (!validSelectionMatchProp()) {
-        angular.forEach(ctrl.colummns, function (col) {
+        angular.forEach(ctrl.columns, function (col) {
           if (props.length === 0) {
             props = col.itemField;
           } else {
@@ -11889,7 +11893,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         });
         throw new Error("pfTableView - " +
           "config.selectionMatchProp '" + ctrl.config.selectionMatchProp +
-          "' does not match any property in 'config.colummns'! Please set config.selectionMatchProp " +
+          "' does not match any property in 'config.columns'! Please set config.selectionMatchProp " +
           "to one of these properties: " + props);
       }
 
@@ -12143,7 +12147,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 
     ctrl.isColItemFld = function (key) {
       var retVal = false;
-      var tableCol = $filter('filter')(ctrl.colummns, {itemField: key});
+      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
 
       if (tableCol && tableCol.length === 1) {
         retVal = true;
@@ -12345,7 +12349,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       </div>
       <div class="col-md-12" ng-show="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
-                       colummns="colummns"
+                       columns="columns"
                        items="items"
                        empty-state-config="emptyStateConfig">
         </pf-table-view>
@@ -12382,7 +12386,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     function ($scope, pfViewUtils, $filter) {
       $scope.filtersText = '';
 
-      $scope.colummns = [
+      $scope.columns = [
         { header: "Name", itemField: "name" },
         { header: "Age", itemField: "age"},
         { header: "Address", itemField: "address" },
@@ -16107,7 +16111,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('table/tableview/table-view.html',
-    "<div class=container-fluid><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.colummns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)>{{ value }}</td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></div>"
+    "<div class=container-fluid><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.columns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)>{{ value }}</td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></div>"
   );
 
 }]);
