@@ -90,7 +90,7 @@
           <list-expanded-content>
            <div class="row">
             <div class="col-md-3">
-              <div pf-donut-pct-chart config="exampleChartConfig" data="{'used': '350','total': '1000'}" center-label="'Percent Used'"></div>
+              <pf-donut-pct-chart config="exampleChartConfig" data="{'used': '350','total': '1000'}" center-label="'Percent Used'"></pf-donut-pct-chart>
             </div>
             <div class="col-md-9">
                <dl class="dl-horizontal">
