@@ -13,13 +13,13 @@ describe('Directive: pfC3Chart', function() {
   beforeEach(function() {
     $scope.myChart = "myChartId";
     $scope.chartConfig = {};
-    element = '<div pf-c3-chart id="myChart" config="chartConfig"></div>';
+    element = '<pf-c3-chart id="myChart" config="chartConfig"></pf-c3-chart>';
     element = $compile(element)($scope);
     $scope.$digest();
   });
 
   it("chart should find empty template", function() {
-    expect(angular.element(element).html()).toBe("");
+    expect(angular.element(element).html()).toBe('<div id=""></div>');
   });
 
 });

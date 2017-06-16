@@ -52,7 +52,7 @@ describe('Component: pfCard', function() {
 
     it("should hide the top border", function() {
 
-      element = compileCard('<div pf-card head-title="My card title" sub-title="My card subtitle title" show-top-border="false">Inner content goes here</div>', $scope);
+      element = compileCard('<pf-card head-title="My card title" sub-title="My card subtitle title" show-top-border="false">Inner content goes here</pf-card>', $scope);
 
       // showTopBorder set to false, results in not having the .card-pf-accented class
       cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-accented');
@@ -192,7 +192,7 @@ describe('Component: pfCard', function() {
         'position' : 'header'
       };
 
-      element = compileCard('<pf-card pf-card head-title="title" footer="{}" filter="filterConfig">Inner content</pf-card>', $scope);
+      element = compileCard('<pf-card head-title="title" footer="{}" filter="filterConfig">Inner content</pf-card>', $scope);
 
       // should NOT find any filters in the footer
       cardClass = angular.element(element).find('.card-pf-footer').find('a');
