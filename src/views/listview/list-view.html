@@ -13,12 +13,12 @@
          dnd-moved="$ctrl.dragMoved()"
          dnd-dragend="$ctrl.dragEnd()"
          ng-class="{'drag-original': $ctrl.isDragOriginal(item), 'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}">
-      <div class="list-group-item-header">
+      <div class="list-group-item-header" ng-class="{'list-group-item-not-selectable' : !$ctrl.config.selectItems && (!$ctrl.config.useExpandingRows || $ctrl.config.compoundExpansionOnly)}">
         <div class="list-view-pf-dnd-drag-items" ng-if="$ctrl.config.dragEnabled === true">
           <div pf-transclude="parent" class="list-view-pf-main-info"></div>
         </div>
         <div ng-class="{'list-view-pf-dnd-original-items': $ctrl.config.dragEnabled === true}">
-          <div class="list-view-pf-expand" ng-if="$ctrl.config.useExpandingRows">
+          <div class="list-view-pf-expand" ng-if="$ctrl.config.useExpandingRows && !$ctrl.config.compoundExpansionOnly">
             <span class="fa fa-angle-right" ng-show="!item.disableRowExpansion" ng-click="$ctrl.toggleItemExpansion(item)" ng-class="{'fa-angle-down': item.isExpanded}"></span>
             <span class="pf-expand-placeholder" ng-show="item.disableRowExpansion"></span>
           </div>
