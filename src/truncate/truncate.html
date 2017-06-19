@@ -1,0 +1,13 @@
+<span>
+  <span ng-if="!$ctrl.expanded && ctrl.truncated">
+    <span ng-attr-title="{{$ctrl.content}}" class="">
+      <span ng-bind-html="$ctrl.truncatedContent"></span>&hellip;
+    </span>
+    <a ng-href="" ng-click="$ctrl.expanded = true" class="nowrap">{{$ctrl.expandCopy||'See All'}}</a>
+  </span>
+
+  <span ng-if="$ctrl.expanded || !$ctrl.truncated">
+    <a ng-if="!$ctrl.expandable && $ctrl.prettifyJson" ng-href="" ng-click="$ctrl.expanded = false" class="nowrap pull-right">{{$ctrl.collapseCopy||'Collapse'}}</a>
+    <span ng-bind-html="$ctrl.content" class=""></span>
+  </span>
+</span>
