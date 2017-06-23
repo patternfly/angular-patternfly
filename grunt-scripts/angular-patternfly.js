@@ -13880,6 +13880,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
  *   via '$ctrl.customScope' in your transcluded hmtl.
  *   <br><br>
  *   If using expanding rows, use a list-expanded-content element containing expandable content for each row.  Item data can be accessed inside list-expanded-content by using $parent.item.property.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.
+ *   Setting compoundExpanion requires the applicatiot to set/unset the items' isExpanded field and to handle the contents in the list-expanded-content element based on what is expanded.
  *
  * @param {array} items Array of items to display in the list view. If an item in the array has a 'rowClass' field, the value of this field will be used as a class specified on the row (list-group-item).
  * @param {object} config Configuration settings for the list view:
@@ -13893,6 +13894,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
  * <li>.dragStart              - ( function(item) ) Function to call when the drag operation started, default is none
  * <li>.multiSelect            - (boolean) Allow multiple row selections, selectItems must also be set, not applicable when dblClick is true. Default is false
  * <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
+ * <li>.compoundExpansionOnly  - (boolean) Use compound row expansion only. Hides the row expander and pointer cursor on the row while allowing the row to expand via transcluded items functionality, only valid if useExpandRows is true.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
  * <li>.selectedItems          - (array) Current set of selected items
  * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
@@ -13930,7 +13932,28 @@ angular.module('patternfly.views').component('pfEmptyState', {
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
-    <div ng-controller="ViewCtrl" class="row example-container">
+     <div ng-controller="ViewCtrl" style="background-color: #fff; margin: -20px;">
+       <ul class="nav nav-tabs">
+         <li ng-class="{'active': viewType === 'basic'}"><a href="#" ng-click="setView('basic')">Basic (w/ Options)</a></li>
+         <li ng-class="{'active': viewType === 'compound'}"><a href="#" ng-click="setView('compound')">Compound Expansion</a></li>
+       </ul>
+       <div ng-if="viewType === 'basic'" ng-include="'basic.html'"></div>
+       <div ng-if="viewType === 'compound'" ng-include="'compound.html'"></div>
+     </div>
+  </file>
+  <file name="view.js">
+   angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
+      function ($scope) {
+        $scope.viewType = 'basic';
+
+        $scope.setView = function(viewType) {
+          $scope.viewType = viewType;
+        };
+      }
+    ]);
+  </file>
+  <file name="basic.html">
+     <div ng-controller="BasicCtrl" class="row example-container">
       <div class="col-md-12 list-view-container example-list-view">
         <pf-list-view id="exampleListView"
                           config="config"
@@ -14052,8 +14075,8 @@ angular.module('patternfly.views').component('pfEmptyState', {
     </div>
   </file>
 
-  <file name="script.js">
- angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateCache',
+  <file name="basic.js">
+   angular.module('patternfly.views').controller('BasicCtrl', ['$scope', '$templateCache',
       function ($scope, $templateCache) {
         $scope.eventText = '';
         var handleSelect = function (item, e) {
@@ -14309,9 +14332,259 @@ angular.module('patternfly.views').component('pfEmptyState', {
       }
     ]);
   </file>
+  <file name="compound.html">
+   <div ng-controller="CompoundExanspansionCtrl" class="row example-container">
+     <div class="col-md-12 list-view-container example-list-view">
+       <pf-list-view id="exampleListView"
+       config="config"
+       items="items"
+       action-buttons="actionButtons"
+       enable-button-for-item-fn="enableButtonForItemFn"
+       menu-actions="menuActions"
+       update-menu-action-for-item-fn="updateMenuActionForItemFn"
+       menu-class-for-item-fn="getMenuClass"
+       hide-menu-for-item-fn="hideMenuActions"
+       custom-scope="customScope">
+         <div class="list-view-pf-left">
+           <span class="{{item.typeIcon}} list-view-pf-icon-sm"></span>
+         </div>
+         <div class="list-view-pf-body">
+           <div class="list-view-pf-description">
+             <div class="list-group-item-heading">
+               Event One
+             </div>
+             <div class="list-group-item-text">
+               The following snippet of text is <a href="#">rendered as link text</a>.
+             </div>
+           </div>
+           <div class="list-view-pf-additional-info">
+             <div class="list-view-pf-additional-info-item">
+               <div class="list-view-pf-expand" ng-click="$ctrl.customScope.toggleExpandItemField(item, 'hosts')">
+                 <span class="fa fa-angle-right" ng-class="{'fa-angle-down': $ctrl.customScope.isItemExpanded(item, 'hosts')}"></span>
+                 <span class="pficon pficon-screen"></span>
+                 <strong>{{item.hostCount}}</strong> Hosts
+               </div>
+             </div>
+             <div class="list-view-pf-additional-info-item">
+               <div class="list-view-pf-expand" ng-click="$ctrl.customScope.toggleExpandItemField(item, 'clusters')">
+                 <span class="fa fa-angle-right" ng-class="{'fa-angle-down': $ctrl.customScope.isItemExpanded(item, 'clusters')}"></span>
+                 <span class="pficon pficon-cluster"></span>
+                 <strong>{{item.clusterCount}}</strong> Clusters
+               </div>
+             </div>
+             <div class="list-view-pf-additional-info-item">
+               <div class="list-view-pf-expand" ng-click="$ctrl.customScope.toggleExpandItemField(item, 'nodes')">
+                 <span class="fa fa-angle-right" ng-class="{'fa-angle-down': $ctrl.customScope.isItemExpanded(item, 'nodes')}"></span>
+                 <span class="pficon pficon-container-node"></span>
+                 <strong>{{item.nodeCount}}</strong> Nodes
+               </div>
+             </div>
+             <div class="list-view-pf-additional-info-item">
+               <div class="list-view-pf-expand" ng-click="$ctrl.customScope.toggleExpandItemField(item, 'images')">
+                 <span class="fa fa-angle-right" ng-class="{'fa-angle-down': $ctrl.customScope.isItemExpanded(item, 'images')}"></span>
+                 <span class="pficon pficon-image"></span>
+                 <strong>{{item.imageCount}}</strong> Images
+               </div>
+             </div>
+           </div>
+         </div>
+         <list-expanded-content>
+           <div class="close">
+             <span class="pficon pficon-close" ng-click="$parent.$ctrl.customScope.collapseItem($parent.item)"></span>
+           </div>
+           <div ng-if="$parent.item.expandField === 'hosts'" ng-include="'views/listview/examples/hosts-content.html'"></div>
+           <div ng-if="$parent.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
+           <div ng-if="$parent.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
+           <div ng-if="$parent.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
+         </list-expanded-content>
+       </pf-list-view>
+     </div>
+     <hr class="col-md-12">
+     <div class="col-md-12">
+       <label style="font-weight:normal;vertical-align:center;">Events: </label>
+     </div>
+     <div class="col-md-12">
+       <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+     </div>
+   </div>
+  </file>
+
+  <file name="counpund.js">
+    angular.module('patternfly.views').controller('CompoundExanspansionCtrl', ['$scope', '$templateCache',
+      function ($scope, $templateCache) {
+        $scope.eventText = '';
+        var handleCheckBoxChange = function (item, selected, e) {
+          $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;
+        };
+
+        $scope.enableButtonForItemFn = function(action, item) {
+          return !((action.name ==='Action 2') && (item.name === "Frank Livingston")) &&
+                 !(action.name === 'Start' && item.started);
+        };
+
+        $scope.updateMenuActionForItemFn = function(action, item) {
+          if (action.name === 'Another Action') {
+            action.isVisible = (item.name !== "John Smith");
+          }
+        };
+
+        $scope.customScope = {
+          toggleExpandItemField: function(item, field) {
+            if (item.isExpanded && item.expandField === field) {
+              item.isExpanded = false;
+            } else {
+              item.isExpanded = true;
+              item.expandField = field;
+            }
+          },
+          collapseItem: function(item) {
+            item.isExpanded = false;
+          },
+          isItemExpanded: function(item, field) {
+            return item.isExpanded && item.expandField === field;
+          }
+        };
+
+        $scope.selectType = 'checkbox';
+        $scope.showDisabled = false;
+
+        $scope.config = {
+         selectionMatchProp: 'name',
+         selectedItems: [],
+         itemsAvailable: true,
+         showSelectBox: true,
+         useExpandingRows: true,
+         compoundExpansionOnly: true,
+         onCheckBoxChange: handleCheckBoxChange
+        };
+
+        $scope.items = [
+          {
+            name: "Event One",
+            typeIcon: "fa fa-plane ",
+            hostCount: 8,
+            clusterCount: 6,
+            nodeCount: 10,
+            imageCount: 8
+          },
+          {
+            name: "Event Tow",
+            typeIcon: "fa fa-magic ",
+            hostCount: 8,
+            clusterCount: 6,
+            nodeCount: 10,
+            imageCount: 8
+          },
+          {
+            name: "Event Three",
+            typeIcon: "fa fa-gamepad ",
+            hostCount: 8,
+            clusterCount: 6,
+            nodeCount: 10,
+            imageCount: 8
+          },
+          {
+            name: "Event Four",
+            typeIcon: "fa fa-linux ",
+            hostCount: 8,
+            clusterCount: 6,
+            nodeCount: 10,
+            imageCount: 8
+          },
+          {
+            name: "Event Five",
+            typeIcon: "fa fa-briefcase ",
+            hostCount: 8,
+            clusterCount: 6,
+            nodeCount: 10,
+            imageCount: 8
+          },
+          {
+            name: "Event Six",
+            typeIcon: "fa fa-coffee ",
+            hostCount: 8,
+            clusterCount: 6,
+            nodeCount: 10,
+            imageCount: 8
+          },
+        ];
+
+        $scope.getMenuClass = function (item) {
+          var menuClass = "";
+          if (item.name === "Jim Brown") {
+            menuClass = 'red';
+          }
+          return menuClass;
+        };
+
+        $scope.hideMenuActions = function (item) {
+          return (item.name === "Marie Edwards");
+        };
+
+        var performAction = function (action, item) {
+          $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
+        };
+
+        var startServer = function (action, item) {
+          $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
+          item.started = true;
+        };
+
+        var buttonInclude = '<span class="fa fa-plus"></span>{{actionButton.name}}';
+        $templateCache.put('my-button-template', buttonInclude);
+
+        var startButtonInclude = '<span ng-disabled="item.started">{{item.started ? "Starting" : "Start"}}</span>';
+        $templateCache.put('start-button-template', startButtonInclude);
+
+        $scope.actionButtons = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          }
+        ];
+        $scope.menuActions = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ];
+      }
+    ]);
+  </file>
 </example>
  */
-angular.module('patternfly.views').component('pfListView', {
+;angular.module('patternfly.views').component('pfListView', {
   bindings: {
     config: '=?',
     items: '=',
@@ -14453,7 +14726,7 @@ angular.module('patternfly.views').component('pfListView', {
       var alreadySelected;
       var selectionChanged = false;
       var continueEvent = true;
-      var enableRowExpansion = ctrl.config && ctrl.config.useExpandingRows && item && !item.disableRowExpansion;
+      var enableRowExpansion = ctrl.config && ctrl.config.useExpandingRows && !ctrl.config.compoundExpansionOnly && item && !item.disableRowExpansion;
 
       // Ignore disabled item clicks completely
       if (ctrl.checkDisabled(item)) {
@@ -16139,8 +16412,28 @@ angular.module('patternfly.wizard').component('pfWizard', {
   );
 
 
+  $templateCache.put('views/listview/examples/clusters-content.html',
+    "<div class=row><div class=col-md-3><ul><li>Cluster 1</li><li>Cluster 2</li><li>Cluster 3</li><li>Cluster 4</li><li>Cluster 5</li><li>Cluster 6</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
+  );
+
+
+  $templateCache.put('views/listview/examples/hosts-content.html',
+    "<div class=row><div class=col-md-3><ul><li>Host 1</li><li>Host 2</li><li>Host 3</li><li>Host 4</li><li>Host 5</li><li>Host 6</li><li>Host 7</li><li>Host 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
+  );
+
+
+  $templateCache.put('views/listview/examples/images-content.html',
+    "<div class=row><div class=col-md-3><ul><li>Image 1</li><li>Image 2</li><li>Image 3</li><li>Image 4</li><li>Image 5</li><li>Image 6</li><li>Image 7</li><li>Image 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
+  );
+
+
+  $templateCache.put('views/listview/examples/nodes-content.html',
+    "<div class=row><div class=col-md-3><ul><li>Node 1</li><li>Node 2</li><li>Node 3</li><li>Node 4</li><li>Node 5</li><li>Node 6</li><li>Node 7</li><li>Node 8</li><li>Node 9</li><li>Node 10</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
+  );
+
+
   $templateCache.put('views/listview/list-view.html',
-    "<span><div class=\"list-group list-view-pf list-view-pf-view\" dnd-list=$ctrl.items ng-class=\"{'list-view-pf-dnd': $ctrl.config.dragEnabled === true}\" ng-if=\"$ctrl.config.itemsAvailable !== false\"><div class=dndPlaceholder></div><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in $ctrl.items track by $index\" dnd-draggable=item dnd-effect-allowed=move dnd-disable-if=\"$ctrl.config.dragEnabled !== true\" dnd-dragstart=$ctrl.dragStart(item) dnd-moved=$ctrl.dragMoved() dnd-dragend=$ctrl.dragEnd() ng-class=\"{'drag-original': $ctrl.isDragOriginal(item), 'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}\"><div class=list-group-item-header><div class=list-view-pf-dnd-drag-items ng-if=\"$ctrl.config.dragEnabled === true\"><div pf-transclude=parent class=list-view-pf-main-info></div></div><div ng-class=\"{'list-view-pf-dnd-original-items': $ctrl.config.dragEnabled === true}\"><div class=list-view-pf-expand ng-if=$ctrl.config.useExpandingRows><span class=\"fa fa-angle-right\" ng-show=!item.disableRowExpansion ng-click=$ctrl.toggleItemExpansion(item) ng-class=\"{'fa-angle-down': item.isExpanded}\"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"($ctrl.actionButtons && $ctrl.actionButtons.length > 0) || ($ctrl.menuActions && $ctrl.menuActions.length > 0)\"><button class=\"btn {{actionButton.class || 'btn-default'}}\" ng-repeat=\"actionButton in $ctrl.actionButtons\" title={{actionButton.title}} ng-class=\"{'disabled' : $ctrl.checkDisabled(item) || !$ctrl.enableButtonForItem(actionButton, item)}\" ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class=\"{{$ctrl.dropdownClass}} pull-right dropdown-kebab-pf {{$ctrl.getMenuClassForItem(item)}} {{$ctrl.hideMenuForItem(item) ? 'invisible' : ''}}\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': $ctrl.checkDisabled(item)}\" ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"></div></div><div class=\"list-group-item-container container-fluid\" ng-transclude=expandedContent ng-if=\"$ctrl.config.useExpandingRows && item.isExpanded\"></div></div></div></div><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></span>"
+    "<span><div class=\"list-group list-view-pf list-view-pf-view\" dnd-list=$ctrl.items ng-class=\"{'list-view-pf-dnd': $ctrl.config.dragEnabled === true}\" ng-if=\"$ctrl.config.itemsAvailable !== false\"><div class=dndPlaceholder></div><div class=\"list-group-item {{item.rowClass}}\" ng-repeat=\"item in $ctrl.items track by $index\" dnd-draggable=item dnd-effect-allowed=move dnd-disable-if=\"$ctrl.config.dragEnabled !== true\" dnd-dragstart=$ctrl.dragStart(item) dnd-moved=$ctrl.dragMoved() dnd-dragend=$ctrl.dragEnd() ng-class=\"{'drag-original': $ctrl.isDragOriginal(item), 'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item), 'list-view-pf-expand-active': item.isExpanded}\"><div class=list-group-item-header ng-class=\"{'list-group-item-not-selectable' : !$ctrl.config.selectItems && (!$ctrl.config.useExpandingRows || $ctrl.config.compoundExpansionOnly)}\"><div class=list-view-pf-dnd-drag-items ng-if=\"$ctrl.config.dragEnabled === true\"><div pf-transclude=parent class=list-view-pf-main-info></div></div><div ng-class=\"{'list-view-pf-dnd-original-items': $ctrl.config.dragEnabled === true}\"><div class=list-view-pf-expand ng-if=\"$ctrl.config.useExpandingRows && !$ctrl.config.compoundExpansionOnly\"><span class=\"fa fa-angle-right\" ng-show=!item.disableRowExpansion ng-click=$ctrl.toggleItemExpansion(item) ng-class=\"{'fa-angle-down': item.isExpanded}\"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change=\"$ctrl.checkBoxChange(item)\"></div><div class=list-view-pf-actions ng-if=\"($ctrl.actionButtons && $ctrl.actionButtons.length > 0) || ($ctrl.menuActions && $ctrl.menuActions.length > 0)\"><button class=\"btn {{actionButton.class || 'btn-default'}}\" ng-repeat=\"actionButton in $ctrl.actionButtons\" title={{actionButton.title}} ng-class=\"{'disabled' : $ctrl.checkDisabled(item) || !$ctrl.enableButtonForItem(actionButton, item)}\" ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class=\"{{$ctrl.dropdownClass}} pull-right dropdown-kebab-pf {{$ctrl.getMenuClassForItem(item)}} {{$ctrl.hideMenuForItem(item) ? 'invisible' : ''}}\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight_{{$index}} ng-class=\"{'disabled': $ctrl.checkDisabled(item)}\" ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click=\"$ctrl.itemClick($event, item)\" ng-dblclick=\"$ctrl.dblClick($event, item)\"></div></div><div class=\"list-group-item-container container-fluid\" ng-transclude=expandedContent ng-if=\"$ctrl.config.useExpandingRows && item.isExpanded\"></div></div></div></div><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></span>"
   );
 
 }]);
