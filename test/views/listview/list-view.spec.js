@@ -576,6 +576,30 @@ describe('Component:  pfDataList', function () {
     expect(items.length).toBe(1);
   });
 
+  it('should not show the expansion icon when using compound expansion', function () {
+    var items;
+    $scope.listConfig.useExpandingRows = true;
+    $scope.listConfig.compoundExpansionOnly = true;
+    $scope.$digest();
+
+    items = element.find('.list-view-pf-expand .fa-angle-right');
+    expect(items.length).toBe(0);
+  });
+
+  it('should not expand rows by clicking the main-info section when using compound expansion', function () {
+    var items;
+    $scope.listConfig.useExpandingRows = true;
+    $scope.listConfig.compoundExpansionOnly = true;
+
+    $scope.$digest();
+
+    items = element.find('.list-view-pf-main-info');
+    eventFire(items[0], 'click');
+
+    var openItem = element.find('.list-group-item-container');
+    expect(openItem.length).toBe(0);
+  });
+
   it('should show the empty state when specified', function () {
     $scope.listConfig.itemsAvailable = false;
     $scope.$digest();
