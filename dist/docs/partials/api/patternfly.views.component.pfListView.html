@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/list-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/fffcc52/src/views/listview/list-view.component.js#L443" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/examples/list-view.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/ab08e22/src/views/listview/examples/list-view.js#L716" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -8,7 +8,8 @@
 Pass a customScope object containing any scope variables/functions you need to access from the transcluded source, access these
 via &#39;$ctrl.customScope&#39; in your transcluded hmtl.
 <br><br>
-If using expanding rows, use a list-expanded-content element containing expandable content for each row.  Item data can be accessed inside list-expanded-content by using $parent.item.property.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.</p>
+If using expanding rows, use a list-expanded-content element containing expandable content for each row.  Item data can be accessed inside list-expanded-content by using $parent.item.property.  For each item in the items array, the expansion can be disabled by setting disableRowExpansion to true on the item.
+Setting compoundExpanion requires the applicatiot to set/unset the items&#39; isExpanded field and to handle the contents in the list-expanded-content element based on what is expanded.</p>
 </div></div>
 <h2 id="usage">Usage</h2>
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-list-view
@@ -35,6 +36,7 @@ If using expanding rows, use a list-expanded-content element containing expandab
 <li>.dragStart              - ( function(item) ) Function to call when the drag operation started, default is none
 <li>.multiSelect            - (boolean) Allow multiple row selections, selectItems must also be set, not applicable when dblClick is true. Default is false
 <li>.useExpandingRows       - (boolean) Allow row expansion for each list item.
+<li>.compoundExpansionOnly  - (boolean) Use compound row expansion only. Hides the row expander and pointer cursor on the row while allowing the row to expand via transcluded items functionality, only valid if useExpandRows is true.
 <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
 <li>.selectedItems          - (array) Current set of selected items
 <li>.itemsAvailable         - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
@@ -69,11 +71,24 @@ If using expanding rows, use a list-expanded-content element containing expandab
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils script.js" source-edit-html="index.html-79" source-edit-css="" source-edit-js="script.js-80" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils view.js basic.js counpund.js" source-edit-html="index.html-79 basic.html compound.html" source-edit-css="" source-edit-js="view.js basic.js counpund.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-79" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils script.js"></pre>
+<pre class="prettyprint linenums" ng-set-text="index.html-79" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils view.js basic.js counpund.js"></pre>
 <script type="text/ng-template" id="index.html-79">
-  <div ng-controller="ViewCtrl" class="row example-container">
+   <div ng-controller="ViewCtrl" style="background-color: #fff; margin: -20px;">
+     <ul class="nav nav-tabs">
+       <li ng-class="{'active': viewType === 'basic'}"><a href="#" ng-click="setView('basic')">Basic (w/ Options)</a></li>
+       <li ng-class="{'active': viewType === 'compound'}"><a href="#" ng-click="setView('compound')">Compound Expansion</a></li>
+     </ul>
+     <div ng-if="viewType === 'basic'" ng-include="'basic.html'"></div>
+     <div ng-if="viewType === 'compound'" ng-include="'compound.html'"></div>
+   </div>
+</script>
+</div>
+<div class="tab-pane" title="basic.html">
+<pre class="prettyprint linenums" ng-set-text="basic.html"></pre>
+<script type="text/ng-template" id="basic.html">
+   <div ng-controller="BasicCtrl" class="row example-container">
     <div class="col-md-12 list-view-container example-list-view">
       <pf-list-view id="exampleListView"
                         config="config"
@@ -195,10 +210,103 @@ If using expanding rows, use a list-expanded-content element containing expandab
   </div>
 </script>
 </div>
-<div class="tab-pane" title="script.js">
-<pre class="prettyprint linenums" ng-set-text="script.js-80"></pre>
-<script type="text/ng-template" id="script.js-80">
-angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateCache',
+<div class="tab-pane" title="compound.html">
+<pre class="prettyprint linenums" ng-set-text="compound.html"></pre>
+<script type="text/ng-template" id="compound.html">
+ <div ng-controller="CompoundExanspansionCtrl" class="row example-container">
+   <div class="col-md-12 list-view-container example-list-view">
+     <pf-list-view id="exampleListView"
+     config="config"
+     items="items"
+     action-buttons="actionButtons"
+     enable-button-for-item-fn="enableButtonForItemFn"
+     menu-actions="menuActions"
+     update-menu-action-for-item-fn="updateMenuActionForItemFn"
+     menu-class-for-item-fn="getMenuClass"
+     hide-menu-for-item-fn="hideMenuActions"
+     custom-scope="customScope">
+       <div class="list-view-pf-left">
+         <span class="{{item.typeIcon}} list-view-pf-icon-sm"></span>
+       </div>
+       <div class="list-view-pf-body">
+         <div class="list-view-pf-description">
+           <div class="list-group-item-heading">
+             Event One
+           </div>
+           <div class="list-group-item-text">
+             The following snippet of text is <a href="#">rendered as link text</a>.
+           </div>
+         </div>
+         <div class="list-view-pf-additional-info">
+           <div class="list-view-pf-additional-info-item">
+             <div class="list-view-pf-expand" ng-click="$ctrl.customScope.toggleExpandItemField(item, 'hosts')">
+               <span class="fa fa-angle-right" ng-class="{'fa-angle-down': $ctrl.customScope.isItemExpanded(item, 'hosts')}"></span>
+               <span class="pficon pficon-screen"></span>
+               <strong>{{item.hostCount}}</strong> Hosts
+             </div>
+           </div>
+           <div class="list-view-pf-additional-info-item">
+             <div class="list-view-pf-expand" ng-click="$ctrl.customScope.toggleExpandItemField(item, 'clusters')">
+               <span class="fa fa-angle-right" ng-class="{'fa-angle-down': $ctrl.customScope.isItemExpanded(item, 'clusters')}"></span>
+               <span class="pficon pficon-cluster"></span>
+               <strong>{{item.clusterCount}}</strong> Clusters
+             </div>
+           </div>
+           <div class="list-view-pf-additional-info-item">
+             <div class="list-view-pf-expand" ng-click="$ctrl.customScope.toggleExpandItemField(item, 'nodes')">
+               <span class="fa fa-angle-right" ng-class="{'fa-angle-down': $ctrl.customScope.isItemExpanded(item, 'nodes')}"></span>
+               <span class="pficon pficon-container-node"></span>
+               <strong>{{item.nodeCount}}</strong> Nodes
+             </div>
+           </div>
+           <div class="list-view-pf-additional-info-item">
+             <div class="list-view-pf-expand" ng-click="$ctrl.customScope.toggleExpandItemField(item, 'images')">
+               <span class="fa fa-angle-right" ng-class="{'fa-angle-down': $ctrl.customScope.isItemExpanded(item, 'images')}"></span>
+               <span class="pficon pficon-image"></span>
+               <strong>{{item.imageCount}}</strong> Images
+             </div>
+           </div>
+         </div>
+       </div>
+       <list-expanded-content>
+         <div class="close">
+           <span class="pficon pficon-close" ng-click="$parent.$ctrl.customScope.collapseItem($parent.item)"></span>
+         </div>
+         <div ng-if="$parent.item.expandField === 'hosts'" ng-include="'views/listview/examples/hosts-content.html'"></div>
+         <div ng-if="$parent.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
+         <div ng-if="$parent.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
+         <div ng-if="$parent.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
+       </list-expanded-content>
+     </pf-list-view>
+   </div>
+   <hr class="col-md-12">
+   <div class="col-md-12">
+     <label style="font-weight:normal;vertical-align:center;">Events: </label>
+   </div>
+   <div class="col-md-12">
+     <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+   </div>
+ </div>
+</script>
+</div>
+<div class="tab-pane" title="view.js">
+<pre class="prettyprint linenums" ng-set-text="view.js"></pre>
+<script type="text/ng-template" id="view.js">
+ angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
+    function ($scope) {
+      $scope.viewType = 'basic';
+
+      $scope.setView = function(viewType) {
+        $scope.viewType = viewType;
+      };
+    }
+  ]);
+</script>
+</div>
+<div class="tab-pane" title="basic.js">
+<pre class="prettyprint linenums" ng-set-text="basic.js"></pre>
+<script type="text/ng-template" id="basic.js">
+ angular.module('patternfly.views').controller('BasicCtrl', ['$scope', '$templateCache',
     function ($scope, $templateCache) {
       $scope.eventText = '';
       var handleSelect = function (item, e) {
@@ -455,7 +563,183 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope', '$templateC
   ]);
 </script>
 </div>
+<div class="tab-pane" title="counpund.js">
+<pre class="prettyprint linenums" ng-set-text="counpund.js"></pre>
+<script type="text/ng-template" id="counpund.js">
+  angular.module('patternfly.views').controller('CompoundExanspansionCtrl', ['$scope', '$templateCache',
+    function ($scope, $templateCache) {
+      $scope.eventText = '';
+      var handleCheckBoxChange = function (item, selected, e) {
+        $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;
+      };
+
+      $scope.enableButtonForItemFn = function(action, item) {
+        return !((action.name ==='Action 2') && (item.name === "Frank Livingston")) &&
+               !(action.name === 'Start' && item.started);
+      };
+
+      $scope.updateMenuActionForItemFn = function(action, item) {
+        if (action.name === 'Another Action') {
+          action.isVisible = (item.name !== "John Smith");
+        }
+      };
+
+      $scope.customScope = {
+        toggleExpandItemField: function(item, field) {
+          if (item.isExpanded && item.expandField === field) {
+            item.isExpanded = false;
+          } else {
+            item.isExpanded = true;
+            item.expandField = field;
+          }
+        },
+        collapseItem: function(item) {
+          item.isExpanded = false;
+        },
+        isItemExpanded: function(item, field) {
+          return item.isExpanded && item.expandField === field;
+        }
+      };
+
+      $scope.selectType = 'checkbox';
+      $scope.showDisabled = false;
+
+      $scope.config = {
+       selectionMatchProp: 'name',
+       selectedItems: [],
+       itemsAvailable: true,
+       showSelectBox: true,
+       useExpandingRows: true,
+       compoundExpansionOnly: true,
+       onCheckBoxChange: handleCheckBoxChange
+      };
+
+      $scope.items = [
+        {
+          name: "Event One",
+          typeIcon: "fa fa-plane ",
+          hostCount: 8,
+          clusterCount: 6,
+          nodeCount: 10,
+          imageCount: 8
+        },
+        {
+          name: "Event Tow",
+          typeIcon: "fa fa-magic ",
+          hostCount: 8,
+          clusterCount: 6,
+          nodeCount: 10,
+          imageCount: 8
+        },
+        {
+          name: "Event Three",
+          typeIcon: "fa fa-gamepad ",
+          hostCount: 8,
+          clusterCount: 6,
+          nodeCount: 10,
+          imageCount: 8
+        },
+        {
+          name: "Event Four",
+          typeIcon: "fa fa-linux ",
+          hostCount: 8,
+          clusterCount: 6,
+          nodeCount: 10,
+          imageCount: 8
+        },
+        {
+          name: "Event Five",
+          typeIcon: "fa fa-briefcase ",
+          hostCount: 8,
+          clusterCount: 6,
+          nodeCount: 10,
+          imageCount: 8
+        },
+        {
+          name: "Event Six",
+          typeIcon: "fa fa-coffee ",
+          hostCount: 8,
+          clusterCount: 6,
+          nodeCount: 10,
+          imageCount: 8
+        },
+      ];
+
+      $scope.getMenuClass = function (item) {
+        var menuClass = "";
+        if (item.name === "Jim Brown") {
+          menuClass = 'red';
+        }
+        return menuClass;
+      };
+
+      $scope.hideMenuActions = function (item) {
+        return (item.name === "Marie Edwards");
+      };
+
+      var performAction = function (action, item) {
+        $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
+      };
+
+      var startServer = function (action, item) {
+        $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
+        item.started = true;
+      };
+
+      var buttonInclude = '<span class="fa fa-plus"></span>{{actionButton.name}}';
+      $templateCache.put('my-button-template', buttonInclude);
+
+      var startButtonInclude = '<span ng-disabled="item.started">{{item.started ? "Starting" : "Start"}}</span>';
+      $templateCache.put('start-button-template', startButtonInclude);
+
+      $scope.actionButtons = [
+        {
+          name: 'Action',
+          title: 'Perform an action',
+          actionFn: performAction
+        }
+      ];
+      $scope.menuActions = [
+        {
+          name: 'Action',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Another Action',
+          title: 'Do something else',
+          actionFn: performAction
+        },
+        {
+          name: 'Disabled Action',
+          title: 'Unavailable action',
+          actionFn: performAction,
+          isDisabled: true
+        },
+        {
+          name: 'Something Else',
+          title: '',
+          actionFn: performAction
+        },
+        {
+          isSeparator: true
+        },
+        {
+          name: 'Grouped Action 1',
+          title: 'Do something',
+          actionFn: performAction
+        },
+        {
+          name: 'Grouped Action 2',
+          title: 'Do something similar',
+          actionFn: performAction
+        }
+      ];
+    }
+  ]);
+</script>
+</div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-79" ng-eval-javascript="script.js-80"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-79" ng-eval-javascript="view.js basic.js counpund.js"></div>
 </div></div>
 </div>

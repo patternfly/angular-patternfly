@@ -513,6 +513,9 @@ pf-topology {
 .toast-pf .dropdown-menu > li > a {
   cursor: pointer;
 }
+.list-group-item-header.list-group-item-not-selectable {
+  cursor: inherit;
+}
 .pf-table-view-selected-label {
   float: right;
   line-height: 40px;
