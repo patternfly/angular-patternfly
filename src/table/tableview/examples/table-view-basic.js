@@ -34,180 +34,201 @@
   *   </ul>
   * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
   * @example
- <example module="patternfly.tableview.demo">
- <file name="index.html">
- <div ng-controller="TableCtrl" class="row example-container">
-   <div class="col-md-12">
-     <pf-table-view id="exampleTableView"
-          config="config"
-          empty-state-config="emptyStateConfig"
-          dt-options="dtOptions"
-          columns="columns"
-          items="items"
-          action-buttons="actionButtons"
-          menu-actions="menuActions">
-     </pf-table-view>
-   </div>
-   <div class="col-md-12" style="padding-top: 12px;">
-     <div class="form-group">
-       <label class="checkbox-inline">
-         <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
-       </label>
-     </div>
-   </div>
-   <hr class="col-md-12">
-   <div class="col-md-12">
-         <div class="col-md-12" style="padding-top: 12px;">
-           <label style="font-weight:normal;vertical-align:center;">Events: </label>
-         </div>
-         <div class="col-md-12">
-           <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
-         </div>
-   </div>
- </file>
-
- <file name="modules.js">
-   angular.module('patternfly.tableview.demo', ['patternfly.views','patternfly.table']);
- </file>
-
- <file name="script.js">
- angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope',
- function ($scope) {
-        $scope.dtOptions = {
-          order: [[2, "asc"]],
-        };
-
-        $scope.columns = [
-          { header: "Name", itemField: "name" },
-          { header: "Address", itemField: "address"},
-          { header: "City", itemField: "city" },
-          { header: "State", itemField: "state"}
-        ];
-
-        $scope.items = [
-          {
-            name: "Fred Flintstone",
-            address: "20 Dinosaur Way",
-            city: "Bedrock",
-            state: "Washingstone"
-          },
-          {
-            name: "John Smith",
-            address: "415 East Main Street",
-            city: "Norfolk",
-            state: "Virginia",
-          },
-          {
-            name: "Frank Livingston",
-            address: "234 Elm Street",
-            city: "Pittsburgh",
-            state: "Pennsylvania"
-          },
-          {
-            name: "Linda McGovern",
-            address: "22 Oak Street",
-            city: "Denver",
-            state: "Colorado"
-          },
-          {
-            name: "Jim Brown",
-            address: "72 Bourbon Way",
-            city: "Nashville",
-            state: "Tennessee"
-          },
-          {
-            name: "Holly Nichols",
-            address: "21 Jump Street",
-            city: "Hollywood",
-            state: "California"
-          },
-          {
-            name: "Marie Edwards",
-            address: "17 Cross Street",
-            city: "Boston",
-            state: "Massachusetts"
-          },
-          {
-            name: "Pat Thomas",
-            address: "50 Second Street",
-            city: "New York",
-            state: "New York"
-          },
-        ];
-
-        $scope.eventText = "";
-
-        $scope.config = {
-          onCheckBoxChange: handleCheckBoxChange,
-          selectionMatchProp: "name",
-          itemsAvailable: true
-        };
-
-        $scope.emptyStateConfig = {
-          icon: 'pficon-warning-triangle-o',
-          title: 'No Items Available',
-          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
-          helpLink: {
-             label: 'For more information please see',
-             urlLabel: 'pfExample',
-             url : '#/api/patternfly.views.component:pfEmptyState'
-          }
-        };
-
-        function handleCheckBoxChange (item) {
-          $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;
-        };
-
-        var performAction = function (action, item) {
-          $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
-        };
-
-        $scope.actionButtons = [
-          {
-            name: 'Action',
-            title: 'Perform an action',
-            actionFn: performAction
-          }
-        ];
-
-        $scope.menuActions = [
-          {
-            name: 'Action',
-            title: 'Perform an action',
-            actionFn: performAction
-          },
-          {
-            name: 'Another Action',
-            title: 'Do something else',
-            actionFn: performAction
-          },
-          {
-            name: 'Disabled Action',
-            title: 'Unavailable action',
-            actionFn: performAction,
-            isDisabled: true
-          },
-          {
-            name: 'Something Else',
-            title: '',
-            actionFn: performAction
-          },
-          {
-            isSeparator: true
-          },
-          {
-            name: 'Grouped Action 1',
-            title: 'Do something',
-            actionFn: performAction
-          },
-          {
-            name: 'Grouped Action 2',
-            title: 'Do something similar',
-            actionFn: performAction
-          }
-        ];
-      }
-    ]);
+  <example module="patternfly.tableview.demo">
+  <file name="index.html">
+  <div ng-controller="TableCtrl" class="row example-container">
+    <div class="col-md-12">
+      <pf-table-view id="exampleTableView"
+            config="config"
+            empty-state-config="emptyStateConfig"
+            dt-options="dtOptions"
+            columns="columns"
+            items="items"
+            action-buttons="actionButtons"
+            menu-actions="menuActions">
+      </pf-table-view>
+    </div>
+    <div class="col-md-12" style="padding-top: 12px;">
+      <div class="form-group">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+        </label>
+      </div>
+    </div>
+    <hr class="col-md-12">
+    <div class="col-md-12">
+          <div class="col-md-12" style="padding-top: 12px;">
+            <label style="font-weight:normal;vertical-align:center;">Events: </label>
+          </div>
+          <div class="col-md-12">
+            <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+          </div>
+    </div>
   </file>
+
+  <file name="module.js">
+    angular.module('patternfly.tableview.demo', ['patternfly.views','patternfly.table']);
+  </file>
+
+  <file name="controller.js">
+  angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope', 'itemsService',
+  function ($scope, itemsService) {
+          $scope.dtOptions = {
+            order: [[2, "asc"]],
+          };
+
+          $scope.columns = [
+            { header: "Name", itemField: "name" },
+            { header: "Address", itemField: "address"},
+            { header: "City", itemField: "city" },
+            { header: "State", itemField: "state"}
+          ];
+
+          $scope.items = null;
+
+          $scope.eventText = "";
+
+          $scope.config = {
+            onCheckBoxChange: handleCheckBoxChange,
+            selectionMatchProp: "name",
+            itemsAvailable: true
+          };
+
+          $scope.emptyStateConfig = {
+            icon: 'pficon-warning-triangle-o',
+            title: 'No Items Available',
+            info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+            helpLink: {
+              label: 'For more information please see',
+              urlLabel: 'pfExample',
+              url : '#/api/patternfly.views.component:pfEmptyState'
+            }
+          };
+
+          function handleCheckBoxChange (item) {
+            $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;
+          };
+
+          var performAction = function (action, item) {
+            $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
+          };
+
+          $scope.actionButtons = [
+            {
+              name: 'Action',
+              title: 'Perform an action',
+              actionFn: performAction
+            }
+          ];
+
+          $scope.menuActions = [
+            {
+              name: 'Action',
+              title: 'Perform an action',
+              actionFn: performAction
+            },
+            {
+              name: 'Another Action',
+              title: 'Do something else',
+              actionFn: performAction
+            },
+            {
+              name: 'Disabled Action',
+              title: 'Unavailable action',
+              actionFn: performAction,
+              isDisabled: true
+            },
+            {
+              name: 'Something Else',
+              title: '',
+              actionFn: performAction
+            },
+            {
+              isSeparator: true
+            },
+            {
+              name: 'Grouped Action 1',
+              title: 'Do something',
+              actionFn: performAction
+            },
+            {
+              name: 'Grouped Action 2',
+              title: 'Do something similar',
+              actionFn: performAction
+            }
+          ];
+
+          (function init() {
+            itemsService.getItems()
+              .then(items => $scope.items = items);
+          })();
+        }
+      ]);
+    </file>
+
+  <file name="service.js">
+    angular.module('patternfly.tableview.demo').service('itemsService', ['$q', function($q) {
+
+      this.getItems = function() {
+        return $q((resolve, reject) => {
+          setTimeout(function() {
+            let items = [
+              {
+              name: "Fred Flintstone",
+              address: "20 Dinosaur Way",
+              city: "Bedrock",
+              state: "Washingstone"
+              },
+              {
+              name: "John Smith",
+              address: "415 East Main Street",
+              city: "Norfolk",
+              state: "Virginia",
+              },
+              {
+              name: "Frank Livingston",
+              address: "234 Elm Street",
+              city: "Pittsburgh",
+              state: "Pennsylvania"
+              },
+              {
+              name: "Linda McGovern",
+              address: "22 Oak Street",
+              city: "Denver",
+              state: "Colorado"
+              },
+              {
+              name: "Jim Brown",
+              address: "72 Bourbon Way",
+              city: "Nashville",
+              state: "Tennessee"
+              },
+              {
+              name: "Holly Nichols",
+              address: "21 Jump Street",
+              city: "Hollywood",
+              state: "California"
+              },
+              {
+              name: "Marie Edwards",
+              address: "17 Cross Street",
+              city: "Boston",
+              state: "Massachusetts"
+              },
+              {
+              name: "Pat Thomas",
+              address: "50 Second Street",
+              city: "New York",
+              state: "New York"
+              },
+            ];
+            resolve(items);
+          }, 10);
+        });
+      }
+
+    }]);
+  </file>
+
 </example>
 */
