@@ -95,10 +95,6 @@ angular.module('patternfly.table').component('pfTableView', {
           "' does not match any property in 'config.columns'! Please set config.selectionMatchProp " +
           "to one of these properties: " + props);
       }
-
-      if (ctrl.items.length === 0) {
-        ctrl.config.itemsAvailable = false;
-      }
     };
 
     ctrl.dtInstanceCallback = function (_dtInstance) {
@@ -121,6 +117,9 @@ angular.module('patternfly.table').component('pfTableView', {
           $log.debug("...updateConfigOptions");
         }
         ctrl.updateConfigOptions();
+      }
+      if (changesObj.items && changesObj.items.currentValue) {
+        ctrl.config.itemsAvailable = changesObj.items.currentValue.length > 0;
       }
     };
 
@@ -165,17 +164,15 @@ angular.module('patternfly.table').component('pfTableView', {
 
       // add checkbox col, not sortable
       ctrl.dtColumnDefs = [ DTColumnDefBuilder.newColumnDef(i++).notSortable() ];
-      // add column def. for each property of an item
-      item = ctrl.items[0];
-      for (prop in item) {
-        if (item.hasOwnProperty(prop) && ctrl.isColItemFld(prop)) {
-          ctrl.dtColumnDefs.push(DTColumnDefBuilder.newColumnDef(i++));
-          // Determine selectionMatchProp column number
-          if (ctrl.config.selectionMatchProp === prop) {
-            ctrl.selectionMatchPropColNum = (i - 1);
-          }
-        }
-      }
+
+      // add column definitions
+      _.forEach(ctrl.columns, function (column) {
+        ctrl.dtColumnDefs.push(DTColumnDefBuilder.newColumnDef(i++));
+      });
+
+      // Determine selectionMatchProp column number (add 1 due to the checkbox column)
+      ctrl.selectionMatchPropColNum = _.findIndex(ctrl.columns, ['itemField', ctrl.config.selectionMatchProp]) + 1;
+
       // add actions col.
       if (ctrl.actionButtons && ctrl.actionButtons.length > 0) {
         for (actnBtns = 1; actnBtns <= ctrl.actionButtons.length; actnBtns++) {
@@ -203,22 +200,9 @@ angular.module('patternfly.table').component('pfTableView', {
     }
 
     function validSelectionMatchProp () {
-      var retVal = false, prop;
-      var item = ctrl.items[0];
-
-      if (!ctrl.items || ctrl.items.length === 0) {
-        return true;    //ok to pass in empty items array
-      }
-
-      for (prop in item) {
-        if (item.hasOwnProperty(prop)) {   //need this 'if' for eslint
-          if (ctrl.config.selectionMatchProp === prop) {
-            retVal = true;
-          }
-        }
-      }
-      return retVal;
+      return _.find(ctrl.columns, ['itemField', ctrl.config.selectionMatchProp]) !== undefined;
     }
+
     /*
      *   Checkbox Selections
      */
@@ -244,16 +228,9 @@ angular.module('patternfly.table').component('pfTableView', {
     };
 
     function getItemFromRow (matchPropValue) {
-      var item, retVals;
-      var filterObj = {};
-      filterObj[ctrl.config.selectionMatchProp] = matchPropValue;
-      retVals = $filter('filter')(ctrl.items, filterObj);
-
-      if (retVals && retVals.length === 1) {
-        item = retVals[0];
-      }
-
-      return item;
+      return _.find(ctrl.items, function (item) {
+        return _.toString(item[ctrl.config.selectionMatchProp]) === _.toString(matchPropValue);
+      });
     }
 
     function selectRowsByChecked () {
