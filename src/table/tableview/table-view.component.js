@@ -33,7 +33,8 @@ angular.module('patternfly.table').component('pfTableView', {
 
     ctrl.defaultConfig = {
       selectionMatchProp: 'uuid',
-      onCheckBoxChange: null
+      onCheckBoxChange: null,
+      showCheckboxes: true
     };
 
     ctrl.$onInit = function () {
@@ -160,18 +161,22 @@ angular.module('patternfly.table').component('pfTableView', {
 
     function setColumnDefs () {
       var i = 0, actnBtns = 1;
-      var item, prop;
+      var item, prop, offset;
+      ctrl.dtColumnDefs = [];
 
       // add checkbox col, not sortable
-      ctrl.dtColumnDefs = [ DTColumnDefBuilder.newColumnDef(i++).notSortable() ];
+      if (ctrl.config.showCheckboxes) {
+        ctrl.dtColumnDefs.push(DTColumnDefBuilder.newColumnDef(i++).notSortable());
+      }
 
       // add column definitions
       _.forEach(ctrl.columns, function (column) {
         ctrl.dtColumnDefs.push(DTColumnDefBuilder.newColumnDef(i++));
       });
 
-      // Determine selectionMatchProp column number (add 1 due to the checkbox column)
-      ctrl.selectionMatchPropColNum = _.findIndex(ctrl.columns, ['itemField', ctrl.config.selectionMatchProp]) + 1;
+      // Determine selectionMatchProp column number (add offset due to the checkbox column)
+      offset = ctrl.config.showCheckboxes ? 1 : 0;
+      ctrl.selectionMatchPropColNum = _.findIndex(ctrl.columns, ['itemField', ctrl.config.selectionMatchProp]) + offset;
 
       // add actions col.
       if (ctrl.actionButtons && ctrl.actionButtons.length > 0) {
@@ -234,43 +239,45 @@ angular.module('patternfly.table').component('pfTableView', {
     }
 
     function selectRowsByChecked () {
-      $timeout(function () {
-        var oTable, rows, checked;
+      if (ctrl.config.showCheckboxes) {
+        $timeout(function () {
+          var oTable, rows, checked;
 
-        oTable = ctrl.dtInstance.DataTable;
+          oTable = ctrl.dtInstance.DataTable;
 
-        if (ctrl.debug) {
-          $log.debug("  selectRowsByChecked");
-        }
+          if (ctrl.debug) {
+            $log.debug("  selectRowsByChecked");
+          }
 
-        if (angular.isUndefined(oTable)) {
-          return;
-        }
+          if (angular.isUndefined(oTable)) {
+            return;
+          }
 
-        if (ctrl.debug) {
-          $log.debug("  ...oTable defined");
-        }
+          if (ctrl.debug) {
+            $log.debug("  ...oTable defined");
+          }
 
-        // deselect all
-        rows = oTable.rows();
-        rows.deselect();
+          // deselect all
+          rows = oTable.rows();
+          rows.deselect();
 
-        // select those with checked checkboxes
-        rows = oTable.rows( function ( idx, data, node ) {
-          //         row      td     input type=checkbox
-          checked = node.children[0].children[0].checked;
-          return checked;
+          // select those with checked checkboxes
+          rows = oTable.rows( function ( idx, data, node ) {
+            //         row      td     input type=checkbox
+            checked = node.children[0].children[0].checked;
+            return checked;
+          });
+
+          if (ctrl.debug) {
+            $log.debug("   ... #checkedRows = " + rows[0].length);
+          }
+
+          if (rows[0].length > 0) {
+            rows.select();
+          }
+          setSelectAllCheckbox();
         });
-
-        if (ctrl.debug) {
-          $log.debug("   ... #checkedRows = " + rows[0].length);
-        }
-
-        if (rows[0].length > 0) {
-          rows.select();
-        }
-        setSelectAllCheckbox();
-      });
+      }
     }
 
     function setSelectAllCheckbox () {

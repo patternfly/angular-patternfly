@@ -12,6 +12,7 @@
   *   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is 'uuid'
   *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
   *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
+  *   <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
   * </ul>
   * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
   * @param {array} items Array of items to display in the table view.
@@ -37,7 +38,7 @@
   <example module="patternfly.tableview.demo">
   <file name="index.html">
   <div ng-controller="TableCtrl" class="row example-container">
-    <div class="col-md-12">
+    <div class="col-md-12" ng-if="showComponent">
       <pf-table-view id="exampleTableView"
             config="config"
             empty-state-config="emptyStateConfig"
@@ -52,6 +53,11 @@
       <div class="form-group">
         <label class="checkbox-inline">
           <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="config.showCheckboxes" ng-change="addNewComponentToDOM()">Show Checkboxes</input>
         </label>
       </div>
     </div>
@@ -71,8 +77,8 @@
   </file>
 
   <file name="controller.js">
-  angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope', 'itemsService',
-  function ($scope, itemsService) {
+  angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope', '$timeout', 'itemsService',
+  function ($scope, $timeout, itemsService) {
           $scope.dtOptions = {
             order: [[2, "asc"]],
           };
@@ -91,7 +97,8 @@
           $scope.config = {
             onCheckBoxChange: handleCheckBoxChange,
             selectionMatchProp: "name",
-            itemsAvailable: true
+            itemsAvailable: true,
+            showCheckboxes: true
           };
 
           $scope.emptyStateConfig = {
@@ -157,6 +164,13 @@
               actionFn: performAction
             }
           ];
+
+          $scope.showComponent = true;
+
+          $scope.addNewComponentToDOM = function () {
+            $scope.showComponent = false;
+            $timeout(() => $scope.showComponent = true);
+          };
 
           (function init() {
             itemsService.getItems()
