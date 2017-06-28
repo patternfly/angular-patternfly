@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/7e787d4/src/table/tableview/examples/table-view-basic.js#L235" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - Basic</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/7f8be6b/src/table/tableview/examples/table-view-basic.js#L249" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - Basic</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.table</code>
 </span>
 </div>
@@ -24,6 +24,7 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
   <li>.itemsAvailable      - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
+  <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
 </ul></div></td></tr><tr><td>dtOptions</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional angular-datatables DTOptionsBuilder configuration object.  See <a href="http://l-lin.github.io/angular-datatables/archives/#/api">angular-datatables: DTOptionsBuilder</a></p>
 </div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Array of items to display in the table view.</p>
 </div></td></tr><tr><td>columns</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Array of table column information to display in the table&#39;s header row</p>
@@ -49,7 +50,7 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
 <pre class="prettyprint linenums" ng-set-text="index.html-63" ng-html-wrap-loaded="patternfly.tableview.demo angular.js module.js controller.js service.js"></pre>
 <script type="text/ng-template" id="index.html-63">
 <div ng-controller="TableCtrl" class="row example-container">
-  <div class="col-md-12">
+  <div class="col-md-12" ng-if="showComponent">
     <pf-table-view id="exampleTableView"
           config="config"
           empty-state-config="emptyStateConfig"
@@ -64,6 +65,11 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
     <div class="form-group">
       <label class="checkbox-inline">
         <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="config.showCheckboxes" ng-change="addNewComponentToDOM()">Show Checkboxes</input>
       </label>
     </div>
   </div>
@@ -87,8 +93,8 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
 <div class="tab-pane" title="controller.js">
 <pre class="prettyprint linenums" ng-set-text="controller.js"></pre>
 <script type="text/ng-template" id="controller.js">
-angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope', 'itemsService',
-function ($scope, itemsService) {
+angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope', '$timeout', 'itemsService',
+function ($scope, $timeout, itemsService) {
         $scope.dtOptions = {
           order: [[2, "asc"]],
         };
@@ -107,7 +113,8 @@ function ($scope, itemsService) {
         $scope.config = {
           onCheckBoxChange: handleCheckBoxChange,
           selectionMatchProp: "name",
-          itemsAvailable: true
+          itemsAvailable: true,
+          showCheckboxes: true
         };
 
         $scope.emptyStateConfig = {
@@ -173,6 +180,13 @@ function ($scope, itemsService) {
             actionFn: performAction
           }
         ];
+
+        $scope.showComponent = true;
+
+        $scope.addNewComponentToDOM = function () {
+          $scope.showComponent = false;
+          $timeout(() => $scope.showComponent = true);
+        };
 
         (function init() {
           itemsService.getItems()
