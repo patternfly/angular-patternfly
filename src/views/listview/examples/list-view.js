@@ -480,7 +480,7 @@
          <div class="list-view-pf-body">
            <div class="list-view-pf-description">
              <div class="list-group-item-heading">
-               Event One
+               {{item.name}}
              </div>
              <div class="list-group-item-text">
                The following snippet of text is <a href="#">rendered as link text</a>.
@@ -521,10 +521,7 @@
            <div class="close">
              <span class="pficon pficon-close" ng-click="$parent.$ctrl.customScope.collapseItem($parent.item)"></span>
            </div>
-           <div ng-if="$parent.item.expandField === 'hosts'" ng-include="'views/listview/examples/hosts-content.html'"></div>
-           <div ng-if="$parent.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
-           <div ng-if="$parent.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
-           <div ng-if="$parent.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
+          <item-expansion item="$parent.item"></item-expansion>
          </list-expanded-content>
        </pf-list-view>
      </div>
@@ -537,7 +534,6 @@
      </div>
    </div>
   </file>
-
   <file name="counpund.js">
     angular.module('patternfly.views').controller('CompoundExanspansionCtrl', ['$scope', '$templateCache',
       function ($scope, $templateCache) {
@@ -597,7 +593,7 @@
             imageCount: 8
           },
           {
-            name: "Event Tow",
+            name: "Event Two",
             typeIcon: "fa fa-magic ",
             hostCount: 8,
             clusterCount: 6,
@@ -711,5 +707,23 @@
       }
     ]);
   </file>
-</example>
+  <file name="itemExpansion.js">
+    angular.module('patternfly.views').component('itemExpansion', {
+      bindings: {
+        item: '<',
+      },
+      templateUrl: 'itemExpansion.html',
+      controller: function () {
+        'use strict';
+        var ctrl = this;
+      }
+    });
+  </file>
+  <file name="itemExpansion.html">
+   <div ng-if="$ctrl.item.expandField === 'hosts'" ng-include="'views/listview/examples/hosts-content.html'"></div>
+   <div ng-if="$ctrl.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
+   <div ng-if="$ctrl.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
+   <div ng-if="$ctrl.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
+ </file>
+ </example>
  */
