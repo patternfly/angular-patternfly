@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/examples/list-view.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/7f8be6b/src/views/listview/examples/list-view.js#L716" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/examples/list-view.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/460d760/src/views/listview/examples/list-view.js#L730" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -71,9 +71,9 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils view.js basic.js counpund.js" source-edit-html="index.html-78 basic.html compound.html" source-edit-css="" source-edit-js="view.js basic.js counpund.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils view.js basic.js counpund.js itemExpansion.js" source-edit-html="index.html-78 basic.html compound.html itemExpansion.html" source-edit-css="" source-edit-js="view.js basic.js counpund.js itemExpansion.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-78" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils view.js basic.js counpund.js"></pre>
+<pre class="prettyprint linenums" ng-set-text="index.html-78" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils view.js basic.js counpund.js itemExpansion.js"></pre>
 <script type="text/ng-template" id="index.html-78">
    <div ng-controller="ViewCtrl" style="background-color: #fff; margin: -20px;">
      <ul class="nav nav-tabs">
@@ -231,7 +231,7 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
        <div class="list-view-pf-body">
          <div class="list-view-pf-description">
            <div class="list-group-item-heading">
-             Event One
+             {{item.name}}
            </div>
            <div class="list-group-item-text">
              The following snippet of text is <a href="#">rendered as link text</a>.
@@ -272,10 +272,7 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
          <div class="close">
            <span class="pficon pficon-close" ng-click="$parent.$ctrl.customScope.collapseItem($parent.item)"></span>
          </div>
-         <div ng-if="$parent.item.expandField === 'hosts'" ng-include="'views/listview/examples/hosts-content.html'"></div>
-         <div ng-if="$parent.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
-         <div ng-if="$parent.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
-         <div ng-if="$parent.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
+        <item-expansion item="$parent.item"></item-expansion>
        </list-expanded-content>
      </pf-list-view>
    </div>
@@ -287,6 +284,15 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
      <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
    </div>
  </div>
+</script>
+</div>
+<div class="tab-pane" title="itemExpansion.html">
+<pre class="prettyprint linenums" ng-set-text="itemExpansion.html"></pre>
+<script type="text/ng-template" id="itemExpansion.html">
+ <div ng-if="$ctrl.item.expandField === 'hosts'" ng-include="'views/listview/examples/hosts-content.html'"></div>
+ <div ng-if="$ctrl.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
+ <div ng-if="$ctrl.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
+ <div ng-if="$ctrl.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
 </script>
 </div>
 <div class="tab-pane" title="view.js">
@@ -624,7 +630,7 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
           imageCount: 8
         },
         {
-          name: "Event Tow",
+          name: "Event Two",
           typeIcon: "fa fa-magic ",
           hostCount: 8,
           clusterCount: 6,
@@ -739,7 +745,22 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
   ]);
 </script>
 </div>
+<div class="tab-pane" title="itemExpansion.js">
+<pre class="prettyprint linenums" ng-set-text="itemExpansion.js"></pre>
+<script type="text/ng-template" id="itemExpansion.js">
+  angular.module('patternfly.views').component('itemExpansion', {
+    bindings: {
+      item: '<',
+    },
+    templateUrl: 'itemExpansion.html',
+    controller: function () {
+      'use strict';
+      var ctrl = this;
+    }
+  });
+</script>
+</div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-78" ng-eval-javascript="view.js basic.js counpund.js"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-78" ng-eval-javascript="view.js basic.js counpund.js itemExpansion.js"></div>
 </div></div>
 </div>

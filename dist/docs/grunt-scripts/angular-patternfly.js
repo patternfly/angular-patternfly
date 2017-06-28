@@ -14384,7 +14384,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
          <div class="list-view-pf-body">
            <div class="list-view-pf-description">
              <div class="list-group-item-heading">
-               Event One
+               {{item.name}}
              </div>
              <div class="list-group-item-text">
                The following snippet of text is <a href="#">rendered as link text</a>.
@@ -14425,10 +14425,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
            <div class="close">
              <span class="pficon pficon-close" ng-click="$parent.$ctrl.customScope.collapseItem($parent.item)"></span>
            </div>
-           <div ng-if="$parent.item.expandField === 'hosts'" ng-include="'views/listview/examples/hosts-content.html'"></div>
-           <div ng-if="$parent.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
-           <div ng-if="$parent.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
-           <div ng-if="$parent.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
+          <item-expansion item="$parent.item"></item-expansion>
          </list-expanded-content>
        </pf-list-view>
      </div>
@@ -14441,7 +14438,6 @@ angular.module('patternfly.views').component('pfEmptyState', {
      </div>
    </div>
   </file>
-
   <file name="counpund.js">
     angular.module('patternfly.views').controller('CompoundExanspansionCtrl', ['$scope', '$templateCache',
       function ($scope, $templateCache) {
@@ -14501,7 +14497,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
             imageCount: 8
           },
           {
-            name: "Event Tow",
+            name: "Event Two",
             typeIcon: "fa fa-magic ",
             hostCount: 8,
             clusterCount: 6,
@@ -14615,7 +14611,25 @@ angular.module('patternfly.views').component('pfEmptyState', {
       }
     ]);
   </file>
-</example>
+  <file name="itemExpansion.js">
+    angular.module('patternfly.views').component('itemExpansion', {
+      bindings: {
+        item: '<',
+      },
+      templateUrl: 'itemExpansion.html',
+      controller: function () {
+        'use strict';
+        var ctrl = this;
+      }
+    });
+  </file>
+  <file name="itemExpansion.html">
+   <div ng-if="$ctrl.item.expandField === 'hosts'" ng-include="'views/listview/examples/hosts-content.html'"></div>
+   <div ng-if="$ctrl.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
+   <div ng-if="$ctrl.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
+   <div ng-if="$ctrl.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
+ </file>
+ </example>
  */
 ;angular.module('patternfly.views').component('pfListView', {
   bindings: {
@@ -16446,22 +16460,22 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
 
   $templateCache.put('views/listview/examples/clusters-content.html',
-    "<div class=row><div class=col-md-3><ul><li>Cluster 1</li><li>Cluster 2</li><li>Cluster 3</li><li>Cluster 4</li><li>Cluster 5</li><li>Cluster 6</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
+    "<div class=row><div class=col-md-12>Clusters for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Cluster 1</li><li>Cluster 2</li><li>Cluster 3</li><li>Cluster 4</li><li>Cluster 5</li><li>Cluster 6</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
   );
 
 
   $templateCache.put('views/listview/examples/hosts-content.html',
-    "<div class=row><div class=col-md-3><ul><li>Host 1</li><li>Host 2</li><li>Host 3</li><li>Host 4</li><li>Host 5</li><li>Host 6</li><li>Host 7</li><li>Host 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
+    "<div class=row><div class=col-md-12>Hosts for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Host 1</li><li>Host 2</li><li>Host 3</li><li>Host 4</li><li>Host 5</li><li>Host 6</li><li>Host 7</li><li>Host 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
   );
 
 
   $templateCache.put('views/listview/examples/images-content.html',
-    "<div class=row><div class=col-md-3><ul><li>Image 1</li><li>Image 2</li><li>Image 3</li><li>Image 4</li><li>Image 5</li><li>Image 6</li><li>Image 7</li><li>Image 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
+    "<div class=row><div class=col-md-12>Images for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Image 1</li><li>Image 2</li><li>Image 3</li><li>Image 4</li><li>Image 5</li><li>Image 6</li><li>Image 7</li><li>Image 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
   );
 
 
   $templateCache.put('views/listview/examples/nodes-content.html',
-    "<div class=row><div class=col-md-3><ul><li>Node 1</li><li>Node 2</li><li>Node 3</li><li>Node 4</li><li>Node 5</li><li>Node 6</li><li>Node 7</li><li>Node 8</li><li>Node 9</li><li>Node 10</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
+    "<div class=row><div class=col-md-12>Nodes for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Node 1</li><li>Node 2</li><li>Node 3</li><li>Node 4</li><li>Node 5</li><li>Node 6</li><li>Node 7</li><li>Node 8</li><li>Node 9</li><li>Node 10</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"
   );
 
 
