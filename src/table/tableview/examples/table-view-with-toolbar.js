@@ -11,7 +11,8 @@
  *   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is 'uuid'
  *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
- * </ul>
+ *   <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
+* </ul>
  * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
  * @param {array} items Array of items to display in the table view.
  * @param {array} columns Array of table column information to display in the table's header row
@@ -39,7 +40,7 @@
       <div class="col-md-12">
         <pf-toolbar id="exampleToolbar" config="toolbarConfig"></pf-toolbar>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12" ng-if="showComponent">
         <pf-table-view config="tableConfig"
                        empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
@@ -62,6 +63,11 @@
               <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
             </label> --!>
         </div>
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="tableConfig.showCheckboxes" ng-change="addNewComponentToDOM()">Show Checkboxes</input>
+          </label>
+        </div>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -78,8 +84,8 @@
   </file>
 
   <file name="script.js">
-  angular.module('patternfly.tableview.demo').controller('ViewCtrl', ['$scope', 'pfViewUtils', '$filter',
-    function ($scope, pfViewUtils, $filter) {
+  angular.module('patternfly.tableview.demo').controller('ViewCtrl', ['$scope', '$timeout', 'pfViewUtils', '$filter',
+    function ($scope, $timeout, pfViewUtils, $filter) {
       $scope.actionsText = "";
 
       $scope.columns = [
@@ -388,7 +394,8 @@
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
         selectionMatchProp: "name",
-        itemsAvailable: true
+        itemsAvailable: true,
+        showCheckboxes: true
       };
 
       $scope.emptyStateConfig = {
@@ -457,6 +464,13 @@
           $scope.toolbarConfig.filterConfig.totalCount = $scope.allItems.length;
           handleCheckBoxChange();
         }
+      };
+
+      $scope.showComponent = true;
+
+      $scope.addNewComponentToDOM = function () {
+        $scope.showComponent = false;
+        $timeout(() => $scope.showComponent = true);
       };
     }
   ]);

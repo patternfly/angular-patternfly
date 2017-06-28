@@ -68,7 +68,23 @@ describe('Component: pfTableView', function () {
 
   it('should show the correct number of items', function () {
     var rows = element.find('.table > tbody > tr');
-    expect(rows.length).toBe(5);
+    expect(rows.length).toBe($scope.items.length);
+  });
+
+  it('should show checkboxes for row selection', function () {
+    var headerCheckbox = element.find('.table > thead > tr > th > input[type="checkbox"]');
+    var bodyCheckboxes = element.find('.table > tbody > tr > td > input[type="checkbox"]');
+    expect(headerCheckbox.length).toBe(1);
+    expect(bodyCheckboxes.length).toBe($scope.items.length);
+  });
+
+  it('should not show checkboxes for row selection when "showCheckboxes" is false', function () {
+    $scope.config.showCheckboxes = false;
+    $scope.$digest();
+    var headerCheckbox = element.find('.table > thead > tr > th > input[type="checkbox"]');
+    var bodyCheckboxes = element.find('.table > tbody > tr > td > input[type="checkbox"]');
+    expect(headerCheckbox.length).toBe(0);
+    expect(bodyCheckboxes.length).toBe(0);
   });
 
 });

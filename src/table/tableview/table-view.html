@@ -4,14 +4,16 @@
          class="table-view-container table table-striped table-bordered table-hover dataTable">
     <thead>
       <tr role="row">
-        <th class="table-view-pf-select"><input type="checkbox" value="$ctrl.selectAll" ng-model="$ctrl.selectAll" ng-change="$ctrl.toggleAll()"/></th>
+        <th class="table-view-pf-select" ng-if="$ctrl.config.showCheckboxes">
+          <input type="checkbox" value="$ctrl.selectAll" ng-model="$ctrl.selectAll" ng-change="$ctrl.toggleAll()"/>
+        </th>
         <th ng-repeat="col in $ctrl.columns">{{col.header}}</th>
         <th ng-if="$ctrl.areActions()" colspan="{{$ctrl.calcActionsColspan()}}">Actions</th>
       </tr>
     </thead>
     <tbody>
     <tr role="row" ng-repeat="item in $ctrl.items track by $index">
-      <td class="table-view-pf-select">
+      <td class="table-view-pf-select" ng-if="$ctrl.config.showCheckboxes">
         <input type="checkbox" value="item.selected" ng-model="item.selected" ng-change="$ctrl.toggleOne(item)"/>
       </td>
       <td ng-repeat="(key, value) in item" ng-if="$ctrl.isColItemFld(key)">{{ value }}</td>
