@@ -33,6 +33,7 @@
  *     <li>.actionFn - (function(action)) Function to invoke when the action selected
  *   </ul>
  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
+  * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.tableview.demo">
   <file name="index.html">

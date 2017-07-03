@@ -58,6 +58,7 @@
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
  * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via $ctrl.customScope.<xxx>
  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
+* @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
@@ -93,7 +94,8 @@
                           menu-actions="menuActions"
                           update-menu-action-for-item-fn="updateMenuActionForItemFn"
                           menu-class-for-item-fn="getMenuClass"
-                          hide-menu-for-item-fn="hideMenuActions">
+                          hide-menu-for-item-fn="hideMenuActions"
+                          empty-state-action-buttons="emptyStateActionButtons">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
               {{item.name}}
@@ -317,6 +319,30 @@
              url : '#/api/patternfly.views.component:pfEmptyState'
           }
         };
+
+        $scope.emptyStateActionButtons = [
+          {
+            name: 'Main Action',
+            title: 'Perform an action',
+            actionFn: performAction,
+            type: 'main'
+          },
+          {
+            name: 'Secondary Action 1',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Secondary Action 2',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Secondary Action 3',
+            title: 'Perform an action',
+            actionFn: performAction
+          }
+        ];
 
         $scope.items = [
           {

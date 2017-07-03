@@ -34,6 +34,7 @@
   *     <li>.actionFn - (function(action)) Function to invoke when the action selected
   *   </ul>
   * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
+  * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
   * @example
   <example module="patternfly.tableview.demo">
   <file name="index.html">
@@ -46,7 +47,8 @@
             columns="columns"
             items="items"
             action-buttons="actionButtons"
-            menu-actions="menuActions">
+            menu-actions="menuActions"
+            empty-state-action-buttons="emptyStateActionButtons">
       </pf-table-view>
     </div>
     <div class="col-md-12" style="padding-top: 12px;">
@@ -111,6 +113,30 @@
               url : '#/api/patternfly.views.component:pfEmptyState'
             }
           };
+
+          $scope.emptyStateActionButtons = [
+            {
+              name: 'Main Action',
+              title: 'Perform an action',
+              actionFn: performAction,
+              type: 'main'
+            },
+            {
+              name: 'Secondary Action 1',
+              title: 'Perform an action',
+              actionFn: performAction
+            },
+            {
+              name: 'Secondary Action 2',
+              title: 'Perform an action',
+              actionFn: performAction
+            },
+            {
+              name: 'Secondary Action 3',
+              title: 'Perform an action',
+              actionFn: performAction
+            }
+          ];
 
           function handleCheckBoxChange (item) {
             $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;

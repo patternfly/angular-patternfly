@@ -11,7 +11,8 @@ angular.module('patternfly.views').component('pfListView', {
     actions: '=?',
     updateActionForItemFn: '=?',
     customScope: '=?',
-    emptyStateConfig: '=?'
+    emptyStateConfig: '=?',
+    emptyStateActionButtons: '=?'
   },
   transclude: {
     expandedContent: '?listExpandedContent'

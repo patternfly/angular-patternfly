@@ -7,7 +7,8 @@ angular.module('patternfly.table').component('pfTableView', {
     items: '<',
     actionButtons: '<?',
     menuActions: '<?',
-    emptyStateConfig: '=?'
+    emptyStateConfig: '=?',
+    emptyStateActionButtons: '=?'
   },
   templateUrl: 'table/tableview/table-view.html',
   controller: function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout) {
