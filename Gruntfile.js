@@ -283,6 +283,11 @@ module.exports = function (grunt) {
           cwd: 'src/',
           src: ['canvas-view/**/*.html'],
           dest: 'templates/canvas.js'
+        },
+        'patternfly.pagination': {
+          cwd: 'src/',
+          src: ['pagination/**/*.html'],
+          dest: 'templates/pagination.js'
         }
       },
       // ng-annotate tries to make the code safe for minification automatically
