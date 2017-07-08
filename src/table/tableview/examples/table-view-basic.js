@@ -103,6 +103,10 @@
             showCheckboxes: true
           };
 
+          var performEmptyStateAction = function (action) {
+            $scope.eventText = action.name + "\r\n" + $scope.eventText;
+          };
+
           $scope.emptyStateConfig = {
             icon: 'pficon-warning-triangle-o',
             title: 'No Items Available',
@@ -118,23 +122,23 @@
             {
               name: 'Main Action',
               title: 'Perform an action',
-              actionFn: performAction,
+              actionFn: performEmptyStateAction,
               type: 'main'
             },
             {
               name: 'Secondary Action 1',
               title: 'Perform an action',
-              actionFn: performAction
+              actionFn: performEmptyStateAction
             },
             {
               name: 'Secondary Action 2',
               title: 'Perform an action',
-              actionFn: performAction
+              actionFn: performEmptyStateAction
             },
             {
               name: 'Secondary Action 3',
               title: 'Perform an action',
-              actionFn: performAction
+              actionFn: performEmptyStateAction
             }
           ];
 
