@@ -1,0 +1,30 @@
+<form class="content-view-pf-pagination list-view-pf-pagination clearfix" id="form1">
+  <div class="form-group">
+    <div uib-dropdown class="btn-group">
+      <button uib-dropdown-toggle type="button" class="btn btn-default">
+        {{$ctrl.pageSize}}
+        <span class="caret"></span>
+      </button>
+      <ul uib-dropdown-menu  class="dropdown-menu">
+        <li ng-repeat="increment in $ctrl.pageSizeIncrements track by $index"
+            ng-class="{'selected': increment === $ctrl.pageSize}"
+            class="display-length-increment">
+          <a role="menuitem" ng-click="$ctrl.onPageSizeChange(increment)">{{increment}}</a></li>
+      </ul>
+    </div>
+    <span class="per-page-label">per page</span>
+  </div>
+  <div class="form-group">
+    <span><span class="pagination-pf-items-current">{{$ctrl.getStartIndex()}}-{{$ctrl.getEndIndex()}}</span> of <span class="pagination-pf-items-total">{{$ctrl.numTotalItems}}</span></span>
+    <ul class="pagination pagination-pf-back">
+      <li ng-class="{'disabled': $ctrl.pageNumber === 1}"><a title="First Page" ng-click="$ctrl.gotoFirstPage()" class="goto-first-page"><span class="i fa fa-angle-double-left"></span></a></li>
+      <li ng-class="{'disabled': $ctrl.pageNumber === 1}"><a title="Previous Page" ng-click="$ctrl.gotoPreviousPage()" class="goto-prev-page"><span class="i fa fa-angle-left"></span></a></li>
+    </ul>
+    <input class="pagination-pf-page" type="text" ng-model="$ctrl.pageNumber" ng-model-options="{ updateOn: 'blur' }" ng-change="$ctrl.onPageNumberChange()"/>
+    <span>of <span class="pagination-pf-pages">{{$ctrl.lastPageNumber}}</span></span>
+    <ul class="pagination pagination-pf-forward">
+      <li ng-class="{'disabled': $ctrl.pageNumber === $ctrl.lastPageNumber}"><a title="Next Page" ng-click="$ctrl.gotoNextPage()" class="goto-next-page"><span class="i fa fa-angle-right"></span></a></li>
+      <li ng-class="{'disabled': $ctrl.pageNumber === $ctrl.lastPageNumber}"><a title="Last Page" ng-click="$ctrl.gotoLastPage()" class="goto-last-page"><span class="i fa fa-angle-double-right"></span></a></li>
+    </ul>
+  </div>
+</form>
