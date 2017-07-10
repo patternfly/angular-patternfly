@@ -25,6 +25,7 @@ angular.module('patternfly.table').component('pfTableView', {
       destroy: true,
       order: [[1, "asc"]],
       dom: "t",
+      paging: false,
       select: {
         selector: 'td:first-child input[type="checkbox"]',
         style: 'multi'
@@ -46,9 +47,13 @@ angular.module('patternfly.table').component('pfTableView', {
       if (angular.isDefined(ctrl.colummns) && angular.isUndefined(ctrl.columns)) {
         ctrl.columns = ctrl.colummns;
       }
+
       if (angular.isUndefined(ctrl.dtOptions)) {
         ctrl.dtOptions = {};
+      } else if (angular.isDefined(ctrl.dtOptions.paginationType)) {
+        ctrl.dtOptions.paging = true;
       }
+
       if (angular.isUndefined(ctrl.config)) {
         ctrl.config = {};
       }

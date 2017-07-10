@@ -235,6 +235,30 @@
               city: "New York",
               state: "New York"
               },
+              {
+              name: "Mike Bird",
+              address: "50 Forth Street",
+              city: "New York",
+              state: "New York"
+              },
+              {
+              name: "Cheryl Taylor",
+              address: "2 Main Street",
+              city: "New York",
+              state: "New York"
+              },
+              {
+              name: "Ren DiLorenzo",
+              address: "10 Chase Lane",
+              city: "Boston",
+              state: "Massacusetts"
+              },
+              {
+              name: "Kim Livingston",
+              address: "5 Tree Hill Lane",
+              city: "Boston",
+              state: "Massacusetts"
+              }
             ];
             resolve(items);
           }, 10);
