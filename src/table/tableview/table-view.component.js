@@ -310,9 +310,9 @@ angular.module('patternfly.table').component('pfTableView', {
       var anNodes = document.querySelectorAll("#" + ctrl.tableId + "  tbody tr");
 
       for (i = 0; i < anNodes.length; ++i) {
-        rowData = oTable.fnGetData(anNodes[i]);
+        rowData = anNodes[i].cells;
         if (rowData !== null) {
-          visibleRows.push(rowData[ctrl.selectionMatchPropColNum]);
+          visibleRows.push(_.trim(rowData[ctrl.selectionMatchPropColNum].innerText));
         }
       }
 
@@ -342,6 +342,29 @@ angular.module('patternfly.table').component('pfTableView', {
       }
 
       return retVal;
+    };
+
+    ctrl.hasHTMLTemplate = function (key) {
+      var htmlTemplate = this.getHTMLTemplate(key);
+      return htmlTemplate.length > 0;
+    };
+
+    ctrl.getHTMLTemplate = function (key) {
+      var retVal = '';
+      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
+
+      if (tableCol && tableCol.length === 1 && tableCol[0].hasOwnProperty('htmlTemplate')) {
+        retVal = tableCol[0].htmlTemplate;
+      }
+      return retVal;
+    };
+
+    ctrl.handleColAction = function (key, value) {
+      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
+
+      if (tableCol && tableCol.length === 1 && tableCol[0].hasOwnProperty('colActionFn')) {
+        tableCol[0].colActionFn(value);
+      }
     };
 
     ctrl.areActions = function () {

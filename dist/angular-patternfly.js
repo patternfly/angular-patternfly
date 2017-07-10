@@ -11302,10 +11302,20 @@ angular.module('patternfly.pagination').component('pfPagination', {
   * </ul>
   * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
   * @param {array} items Array of items to display in the table view.
-  * @param {array} columns Array of table column information to display in the table's header row
+  * @param {array} columns Array of table column information to display in the table's header row and optionaly render the cells of a column.
   * <ul style='list-style-type: none'>
   *   <li>.header     - (string) Text label for a column header
   *   <li>.itemField    - (string) Item field to associate with a particular column.
+  *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
+  *        Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. 'key' is the item attribute name; which should equal the itemFld of a column.
+  *       'value' is the item[key] value.
+  *   <pre>
+  *     <script type="text/ng-template" id="name_template.html">
+  *       <a href="" ng-click="$ctrl.handleColAction(key, value)">{{value}}</a>
+  *     </script>
+  *   </pre>
+  *   <li>.colActionFn - (function) (optional) Callback function used for the column. 'value' is passed as a paramenter to the
+  *        callback function.
   * </ul>
   * @param {array} actionButtons List of action buttons in each row
   *   <ul style='list-style-type: none'>
@@ -11356,6 +11366,15 @@ angular.module('patternfly.pagination').component('pfPagination', {
             <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
           </div>
     </div>
+    <script type="text/ng-template" id="status_template.html">
+      <span ng-if="value === 'error'" class="pficon pficon-error-circle-o"></span>
+      <span ng-if="value === 'warning'" class="pficon pficon-warning-triangle-o"></span>
+      <span ng-if="value === 'ok'" class="pficon pficon-ok"></span>
+      {{value}}
+    </script>
+    <script type="text/ng-template" id="name_template.html">
+      <a href="" ng-click="$ctrl.handleColAction(key, value)">{{value}}</a>
+    </script>
   </file>
 
   <file name="module.js">
@@ -11370,7 +11389,8 @@ angular.module('patternfly.pagination').component('pfPagination', {
           };
 
           $scope.columns = [
-            { header: "Name", itemField: "name" },
+            { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
+            { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
             { header: "Address", itemField: "address"},
             { header: "City", itemField: "city" },
             { header: "State", itemField: "state"}
@@ -11405,6 +11425,10 @@ angular.module('patternfly.pagination').component('pfPagination', {
           var performAction = function (action, item) {
             $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
           };
+
+          function onNameClick (name) {
+            $scope.eventText = "You clicked on " + name + "\n" + $scope.eventText;
+          }
 
           $scope.actionButtons = [
             {
@@ -11474,48 +11498,56 @@ angular.module('patternfly.pagination').component('pfPagination', {
           setTimeout(function() {
             let items = [
               {
+              status: "error",
               name: "Fred Flintstone",
               address: "20 Dinosaur Way",
               city: "Bedrock",
               state: "Washingstone"
               },
               {
+              status: "error",
               name: "John Smith",
               address: "415 East Main Street",
               city: "Norfolk",
               state: "Virginia",
               },
               {
+              status: "warning",
               name: "Frank Livingston",
               address: "234 Elm Street",
               city: "Pittsburgh",
               state: "Pennsylvania"
               },
               {
+              status: "ok",
               name: "Linda McGovern",
               address: "22 Oak Street",
               city: "Denver",
               state: "Colorado"
               },
               {
+              status: "error",
               name: "Jim Brown",
               address: "72 Bourbon Way",
               city: "Nashville",
               state: "Tennessee"
               },
               {
+              status: "ok",
               name: "Holly Nichols",
               address: "21 Jump Street",
               city: "Hollywood",
               state: "California"
               },
               {
+              status: "error",
               name: "Marie Edwards",
               address: "17 Cross Street",
               city: "Boston",
               state: "Massachusetts"
               },
               {
+              status: "ok",
               name: "Pat Thomas",
               address: "50 Second Street",
               city: "New York",
@@ -11570,13 +11602,23 @@ angular.module('patternfly.pagination').component('pfPagination', {
  *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  *   <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
-* </ul>
+ * </ul>
  * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
  * @param {array} items Array of items to display in the table view.
- * @param {array} columns Array of table column information to display in the table's header row
+ * @param {array} columns Array of table column information to display in the table's header row and optionaly render the cells of a column.
  * <ul style='list-style-type: none'>
  *   <li>.header     - (string) Text label for a column header
  *   <li>.itemField    - (string) Item field to associate with a particular column.
+ *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
+ *        Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. 'key' is the item attribute name; which should equal the itemFld of a column.
+ *       'value' is the item[key] value.
+ *       <pre>
+ *         <script type="text/ng-template" id="name_template.html">
+ *           <a href="" ng-click="$ctrl.handleColAction(key, value)">{{value}}</a>
+ *         </script>
+ *       </pre>
+ *   <li>.colActionFn - (function) (optional) Callback function used for the column. 'value' is passed as a paramenter to the
+ *        callback function.
  * </ul>
  * @param {array} actionButtons List of action buttons in each row
  *   <ul style='list-style-type: none'>
@@ -11594,6 +11636,37 @@ angular.module('patternfly.pagination').component('pfPagination', {
  * @example
 <example module="patternfly.tableview.demo">
   <file name="index.html">
+    <style>
+      .truncate-text-container {
+          position: relative;
+          max-width: 100%;
+          padding: 0 !important;
+          display: -webkit-flex;
+          display: -moz-flex;
+          display: flex;
+          vertical-align: text-bottom !important;
+      }
+      .truncate-text-ellipsis {
+          position: absolute;
+          white-space: nowrap;
+          overflow-y: visible;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+          -ms-text-overflow: ellipsis;
+          -o-text-overflow: ellipsis;
+          max-width: 100%;
+          min-width: 0;
+          top: 0;
+          left: 0;
+      }
+      .truncate-text-container:after,
+      .truncate-text-ellipsis:after {
+          content: '-';
+          display: inline-block;
+          visibility: hidden;
+          width: 0;
+      }
+    </style>
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
         <pf-toolbar id="exampleToolbar" config="toolbarConfig"></pf-toolbar>
@@ -11634,6 +11707,22 @@ angular.module('patternfly.pagination').component('pfPagination', {
       <div class="col-md-12">
         <textarea rows="6" class="col-md-12">{{actionsText}}</textarea>
       </div>
+      <script type="text/ng-template" id="status_template.html">
+        <span ng-if="value === 'error'" class="pficon pficon-error-circle-o"></span>
+        <span ng-if="value === 'warning'" class="pficon pficon-warning-triangle-o"></span>
+        <span ng-if="value === 'ok'" class="pficon pficon-ok"></span>
+        {{value}}
+      </script>
+      <script type="text/ng-template" id="name_template.html">
+        <a href="" ng-click="$ctrl.handleColAction(key, value)">{{value}}</a>
+      </script>
+      <script type="text/ng-template" id="address_template.html">
+        <span class="truncate-text-container">
+          <span class="truncate-text-ellipsis" title="{{value}}">
+            {{value}}
+          </span>
+        </span>
+      </script>
     </div>
   </file>
 
@@ -11647,9 +11736,10 @@ angular.module('patternfly.pagination').component('pfPagination', {
       $scope.actionsText = "";
 
       $scope.columns = [
-        { header: "Name", itemField: "name" },
+        { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
+        { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
         { header: "Age", itemField: "age"},
-        { header: "Address", itemField: "address" },
+        { header: "Address", itemField: "address", htmlTemplate: "address_template.html" },
         { header: "BirthMonth", itemField: "birthMonth"}
       ];
 
@@ -11678,96 +11768,112 @@ angular.module('patternfly.pagination').component('pfPagination', {
 
       $scope.allItems = [
         {
+          status: "error",
           name: "Fred Flintstone",
           age: 57,
           address: "20 Dinosaur Way, Bedrock, Washingstone",
           birthMonth: 'February'
         },
         {
+          status: "ok",
           name: "John Smith",
           age: 23,
           address: "415 East Main Street, Norfolk, Virginia",
           birthMonth: 'October'
         },
         {
+          status: "warning",
           name: "Frank Livingston",
           age: 71,
           address: "234 Elm Street, Pittsburgh, Pennsylvania",
           birthMonth: 'March'
         },
         {
+          status: "ok",
           name: "Judy Green",
           age: 21,
           address: "2 Apple Boulevard, Cincinatti, Ohio",
           birthMonth: 'December'
         },
         {
+          status: "ok",
           name: "Pat Thomas",
           age: 19,
           address: "50 Second Street, New York, New York",
           birthMonth: 'February'
         },
         {
+          status: "error",
           name: "Linda McGovern",
           age: 32,
           address: "22 Oak Stree, Denver, Colorado",
           birthMonth: 'March'
         },
         {
+          status: "warning",
           name: "Jim Brown",
           age: 55,
           address: "72 Bourbon Way. Nashville. Tennessee",
           birthMonth: 'March'
         },
         {
+          status: "ok",
           name: "Holly Nichols",
           age: 34,
           address: "21 Jump Street, Hollywood, California",
           birthMonth: 'March'
         },
         {
+          status: "ok",
           name: "Wilma Flintstone",
           age: 47,
           address: "20 Dinosaur Way, Bedrock, Washingstone",
           birthMonth: 'February'
         },
         {
+          status: "warning",
           name: "Jane Smith",
           age: 22,
           address: "415 East Main Street, Norfolk, Virginia",
           birthMonth: 'April'
         },
         {
+          status: "error",
           name: "Liz Livingston",
           age: 65,
           address: "234 Elm Street, Pittsburgh, Pennsylvania",
           birthMonth: 'November'
         },
         {
+          status: "ok",
           name: "Jim Green",
           age: 23,
           address: "2 Apple Boulevard, Cincinatti, Ohio",
           birthMonth: 'January'
         },
         {
+          status: "ok",
           name: "Chris Thomas",
           age: 21,
           address: "50 Second Street, New York, New York",
           birthMonth: 'October'
         },
         {
+          status: "error",
           name: "Larry McGovern",
           age: 34,
           address: "22 Oak Stree, Denver, Colorado",
           birthMonth: 'September'
         },
         {
+          status: "warning",
           name: "July Brown",
           age: 51,
           address: "72 Bourbon Way. Nashville. Tennessee",
           birthMonth: 'May'
         },
         {
+          status: "error",
           name: "Henry Nichols",
           age: 36,
           address: "21 Jump Street, Hollywood, California",
@@ -11839,6 +11945,10 @@ angular.module('patternfly.pagination').component('pfPagination', {
         if (selectedItems) {
           $scope.toolbarConfig.filterConfig.selectedCount = selectedItems.length;
         }
+      }
+
+      function onNameClick (name) {
+         $scope.actionsText = "You clicked on " + name + "\n" + $scope.actionsText;
       }
 
       $scope.filterConfig = {
@@ -12347,9 +12457,9 @@ angular.module('patternfly.pagination').component('pfPagination', {
       var anNodes = document.querySelectorAll("#" + ctrl.tableId + "  tbody tr");
 
       for (i = 0; i < anNodes.length; ++i) {
-        rowData = oTable.fnGetData(anNodes[i]);
+        rowData = anNodes[i].cells;
         if (rowData !== null) {
-          visibleRows.push(rowData[ctrl.selectionMatchPropColNum]);
+          visibleRows.push(_.trim(rowData[ctrl.selectionMatchPropColNum].innerText));
         }
       }
 
@@ -12379,6 +12489,29 @@ angular.module('patternfly.pagination').component('pfPagination', {
       }
 
       return retVal;
+    };
+
+    ctrl.hasHTMLTemplate = function (key) {
+      var htmlTemplate = this.getHTMLTemplate(key);
+      return htmlTemplate.length > 0;
+    };
+
+    ctrl.getHTMLTemplate = function (key) {
+      var retVal = '';
+      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
+
+      if (tableCol && tableCol.length === 1 && tableCol[0].hasOwnProperty('htmlTemplate')) {
+        retVal = tableCol[0].htmlTemplate;
+      }
+      return retVal;
+    };
+
+    ctrl.handleColAction = function (key, value) {
+      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
+
+      if (tableCol && tableCol.length === 1 && tableCol[0].hasOwnProperty('colActionFn')) {
+        tableCol[0].colActionFn(value);
+      }
     };
 
     ctrl.areActions = function () {
@@ -16631,7 +16764,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('table/tableview/table-view.html',
-    "<div class=container-fluid><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.columns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)>{{ value }}</td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></div>"
+    "<div class=container-fluid><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.columns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"(key, value) in item\" ng-if=$ctrl.isColItemFld(key)><span ng-if=!$ctrl.hasHTMLTemplate(key)>{{value}}</span> <span ng-if=$ctrl.hasHTMLTemplate(key) ng-include=$ctrl.getHTMLTemplate(key)></span></td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig></pf-empty-state></div>"
   );
 
 }]);

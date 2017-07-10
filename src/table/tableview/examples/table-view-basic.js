@@ -16,10 +16,20 @@
   * </ul>
   * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
   * @param {array} items Array of items to display in the table view.
-  * @param {array} columns Array of table column information to display in the table's header row
+  * @param {array} columns Array of table column information to display in the table's header row and optionaly render the cells of a column.
   * <ul style='list-style-type: none'>
   *   <li>.header     - (string) Text label for a column header
   *   <li>.itemField    - (string) Item field to associate with a particular column.
+  *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
+  *        Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. 'key' is the item attribute name; which should equal the itemFld of a column.
+  *       'value' is the item[key] value.
+  *   <pre>
+  *     <script type="text/ng-template" id="name_template.html">
+  *       <a href="" ng-click="$ctrl.handleColAction(key, value)">{{value}}</a>
+  *     </script>
+  *   </pre>
+  *   <li>.colActionFn - (function) (optional) Callback function used for the column. 'value' is passed as a paramenter to the
+  *        callback function.
   * </ul>
   * @param {array} actionButtons List of action buttons in each row
   *   <ul style='list-style-type: none'>
@@ -70,6 +80,15 @@
             <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
           </div>
     </div>
+    <script type="text/ng-template" id="status_template.html">
+      <span ng-if="value === 'error'" class="pficon pficon-error-circle-o"></span>
+      <span ng-if="value === 'warning'" class="pficon pficon-warning-triangle-o"></span>
+      <span ng-if="value === 'ok'" class="pficon pficon-ok"></span>
+      {{value}}
+    </script>
+    <script type="text/ng-template" id="name_template.html">
+      <a href="" ng-click="$ctrl.handleColAction(key, value)">{{value}}</a>
+    </script>
   </file>
 
   <file name="module.js">
@@ -84,7 +103,8 @@
           };
 
           $scope.columns = [
-            { header: "Name", itemField: "name" },
+            { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
+            { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
             { header: "Address", itemField: "address"},
             { header: "City", itemField: "city" },
             { header: "State", itemField: "state"}
@@ -119,6 +139,10 @@
           var performAction = function (action, item) {
             $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
           };
+
+          function onNameClick (name) {
+            $scope.eventText = "You clicked on " + name + "\n" + $scope.eventText;
+          }
 
           $scope.actionButtons = [
             {
@@ -188,48 +212,56 @@
           setTimeout(function() {
             let items = [
               {
+              status: "error",
               name: "Fred Flintstone",
               address: "20 Dinosaur Way",
               city: "Bedrock",
               state: "Washingstone"
               },
               {
+              status: "error",
               name: "John Smith",
               address: "415 East Main Street",
               city: "Norfolk",
               state: "Virginia",
               },
               {
+              status: "warning",
               name: "Frank Livingston",
               address: "234 Elm Street",
               city: "Pittsburgh",
               state: "Pennsylvania"
               },
               {
+              status: "ok",
               name: "Linda McGovern",
               address: "22 Oak Street",
               city: "Denver",
               state: "Colorado"
               },
               {
+              status: "error",
               name: "Jim Brown",
               address: "72 Bourbon Way",
               city: "Nashville",
               state: "Tennessee"
               },
               {
+              status: "ok",
               name: "Holly Nichols",
               address: "21 Jump Street",
               city: "Hollywood",
               state: "California"
               },
               {
+              status: "error",
               name: "Marie Edwards",
               address: "17 Cross Street",
               city: "Boston",
               state: "Massachusetts"
               },
               {
+              status: "ok",
               name: "Pat Thomas",
               address: "50 Second Street",
               city: "New York",

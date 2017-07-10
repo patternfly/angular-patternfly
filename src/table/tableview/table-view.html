@@ -16,7 +16,12 @@
       <td class="table-view-pf-select" ng-if="$ctrl.config.showCheckboxes">
         <input type="checkbox" value="item.selected" ng-model="item.selected" ng-change="$ctrl.toggleOne(item)"/>
       </td>
-      <td ng-repeat="(key, value) in item" ng-if="$ctrl.isColItemFld(key)">{{ value }}</td>
+
+      <td ng-repeat="(key, value) in item" ng-if="$ctrl.isColItemFld(key)">
+        <span ng-if="!$ctrl.hasHTMLTemplate(key)">{{value}}</span>
+        <span ng-if="$ctrl.hasHTMLTemplate(key)" ng-include="$ctrl.getHTMLTemplate(key)"></span>
+      </td>
+
       <td ng-if="$ctrl.actionButtons && $ctrl.actionButtons.length > 0" class="table-view-pf-actions" ng-repeat="actionButton in $ctrl.actionButtons">
         <div class="table-view-pf-btn">
           <button class="btn btn-default" title="{{actionButton.title}}"
