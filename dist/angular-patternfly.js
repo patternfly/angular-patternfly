@@ -11358,6 +11358,30 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
               city: "New York",
               state: "New York"
               },
+              {
+              name: "Mike Bird",
+              address: "50 Forth Street",
+              city: "New York",
+              state: "New York"
+              },
+              {
+              name: "Cheryl Taylor",
+              address: "2 Main Street",
+              city: "New York",
+              state: "New York"
+              },
+              {
+              name: "Ren DiLorenzo",
+              address: "10 Chase Lane",
+              city: "Boston",
+              state: "Massacusetts"
+              },
+              {
+              name: "Kim Livingston",
+              address: "5 Tree Hill Lane",
+              city: "Boston",
+              state: "Massacusetts"
+              }
             ];
             resolve(items);
           }, 10);
@@ -11875,6 +11899,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       destroy: true,
       order: [[1, "asc"]],
       dom: "t",
+      paging: false,
       select: {
         selector: 'td:first-child input[type="checkbox"]',
         style: 'multi'
@@ -11896,9 +11921,13 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
       if (angular.isDefined(ctrl.colummns) && angular.isUndefined(ctrl.columns)) {
         ctrl.columns = ctrl.colummns;
       }
+
       if (angular.isUndefined(ctrl.dtOptions)) {
         ctrl.dtOptions = {};
+      } else if (angular.isDefined(ctrl.dtOptions.paginationType)) {
+        ctrl.dtOptions.paging = true;
       }
+
       if (angular.isUndefined(ctrl.config)) {
         ctrl.config = {};
       }
