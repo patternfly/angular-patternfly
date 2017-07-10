@@ -23,6 +23,10 @@ describe('Component: pfTableView', function () {
     scope.$digest();
   };
 
+  function onNameClick (name) {
+    $scope.result = "You clicked on " + name;
+  }
+
   beforeEach(function () {
     $scope.config = {
       selectionMatchProp: 'uuid'
@@ -30,7 +34,7 @@ describe('Component: pfTableView', function () {
 
     $scope.columns = [
       {itemField: 'uuid', header: 'ID'},
-      {itemField: 'name', header: 'Name'},
+      {itemField: 'name', header: 'Name', htmlTemplate: "name_template.html", colActionFn: onNameClick},
       {itemField: 'size', header: 'Size'},
       {itemField: 'capacity', header: 'Capacity'}
     ];
@@ -43,7 +47,10 @@ describe('Component: pfTableView', function () {
       {uuid: '5', name: 'Five', size: 6781425410, capacity: 7600000000}
     ];
 
-    var htmlTmp = '<pf-table-view config="config" columns="columns" items="items"></pf-table-view>';
+    var htmlTmp = '<pf-table-view config="config" columns="columns" items="items"></pf-table-view>' +
+      '<script type="text/ng-template" id="name_template.html">' +
+        '<span class="custom-template" ng-click="$ctrl.handleColAction(key, value)">{{value}}</span>' +
+      '</script>';
 
     compileHTML(htmlTmp, $scope);
   });
@@ -85,6 +92,13 @@ describe('Component: pfTableView', function () {
     var bodyCheckboxes = element.find('.table > tbody > tr > td > input[type="checkbox"]');
     expect(headerCheckbox.length).toBe(0);
     expect(bodyCheckboxes.length).toBe(0);
+  });
+
+  it('should use an htmlTemplate if one is configured', function () {
+    var nameLinks = element.find('.custom-template');
+    expect(nameLinks.length).toBe(5);
+    eventFire(nameLinks[0], 'click');
+    expect($scope.result).toBe('You clicked on One');
   });
 
 });
