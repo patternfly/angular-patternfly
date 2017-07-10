@@ -1020,3 +1020,9 @@ table.dataTable tbody td {
 .subtabs .nav-tabs-pf li {
   font-size: 14px;
 }
+.content-view-pf-pagination .form-group {
+  align-items: center;
+}
+.content-view-pf-pagination .form-group .per-page-label {
+  padding-left: 10px;
+}
