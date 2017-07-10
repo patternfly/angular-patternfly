@@ -63,6 +63,21 @@ angular.module('patternfly.navigation', ['ui.bootstrap']);
  */
 angular.module('patternfly.notification', ['patternfly.utils', 'ui.bootstrap']);
 ;/**
+ * @name  patternfly pagination
+ *
+ * @description
+ *   Pagination module for patternfly.
+ *
+ */
+angular.module('patternfly.pagination', ['ui.bootstrap'])
+  .filter('startFrom', function () {
+    'use strict';
+    return function (input, start) {
+      start = parseInt(start, 10);
+      return input.slice(start);
+    };
+  });
+;/**
  * @name  patternfly
  *
  * @description
@@ -76,6 +91,7 @@ angular.module('patternfly', [
   'patternfly.modals',
   'patternfly.navigation',
   'patternfly.notification',
+  'patternfly.pagination',
   'patternfly.select',
   'patternfly.sort',
   'patternfly.toolbars',
@@ -10767,6 +10783,153 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
 });
 ;/**
  * @ngdoc directive
+ * @name patternfly.pagination.component:pfPagination
+ * @restrict E
+ *
+ * @param {number} pageNumber The current page number
+ * @param {number} numTotalItems The total number of items in the data set.  When a filter is applied, update the <code>numTotalItems</code>
+ * accordingly.
+ * @param {Array<Number>} pageSizeIncrements (optional) Page size increments for the 'per page' dropdown.  If not
+ * specified, the default values are: [5, 10, 20, 40, 80, 100]
+ * @param {number} pageSize (optional) The initial page size to use.  If not specified, the default will be
+ * the first increment in the <code>pageSizeIncrements</code> array.
+ * @description
+ * Component for pagination controls used in various views (list, card, table)
+ *
+ * @example
+ <example module="patternfly.pagination">
+
+ <file name="index.html">
+   <div ng-controller="PageCtrl">
+     <div class="col-md-12">
+       <div ng-repeat="item in items | startFrom:(pageNumber - 1)*pageSize | limitTo:pageSize" class="col-md-12">
+         <div class="row">
+           <div class="col-md-3">
+             <span>{{item.id}}</span>
+           </div>
+           <div class="col-md-7">
+             <span>{{item.status}}</span>
+           </div>
+           <div class="col-md-2">
+             <span>{{item.value}}</span>
+           </div>
+         </div>
+       </div>
+     </div>
+     <pf-pagination
+         page-size="pageSize",
+         page-number="pageNumber"
+         num-total-items="numTotalItems">
+     </pf-pagination>
+   </div>
+ </file>
+ <file name="script.js">
+ angular.module( 'patternfly.pagination').controller( 'PageCtrl', function( $scope ) {
+   $scope.pageSize = 10;
+   $scope.pageNumber = 1;
+
+   $scope.items = [];
+   for(i = 1; i <= 126; i++) {
+      $scope.items.push({id: i, status: 'Ok', value: Math.floor(Math.random() * (1000 - 1 + 1)) + 1});
+   }
+
+   $scope.numTotalItems = $scope.items.length;
+ });
+ </file>
+ </example>
+ */
+angular.module('patternfly.pagination').component('pfPagination', {
+  transclude: true,
+  templateUrl: 'pagination/pagination.html',
+  bindings: {
+    pageNumber: '=',
+    numTotalItems: "<",
+    pageSizeIncrements: '<?',
+    pageSize: "=?"
+  },
+  controller: ["$scope", "$log", function ($scope, $log) {
+    'use strict';
+    var ctrl = this;
+
+    var defaultPageSizeIncrements = [5, 10, 20, 40, 80, 100];
+
+    ctrl.$onInit = function () {
+      if (angular.isUndefined(ctrl.pageSizeIncrements)) {
+        ctrl.pageSizeIncrements = defaultPageSizeIncrements;
+      }
+      if (angular.isUndefined(ctrl.pageSize)) {
+        ctrl.pageSize = ctrl.pageSizeIncrements[0];
+      }
+      ctrl.lastPageNumber = getLastPageNumber();
+    };
+
+    ctrl.$onChanges = function (changesObj) {
+      if (changesObj.numTotalItems && !changesObj.numTotalItems.isFirstChange()) {
+        ctrl.lastPageNumber = getLastPageNumber();
+      }
+    };
+
+    ctrl.onPageSizeChange = function (newPageSize) {
+      ctrl.pageSize = newPageSize;
+      ctrl.lastPageNumber = getLastPageNumber();
+      ctrl.gotoFirstPage();
+    };
+
+    ctrl.onPageNumberChange = function () {
+      ctrl.pageNumber = parseInt(ctrl.pageNumber, 10);
+      if (ctrl.pageNumber > ctrl.lastPageNumber) {
+        ctrl.pageNumber = ctrl.lastPageNumber;
+      } else if (ctrl.pageNumber < 1 || isNaN(ctrl.pageNumber)) {
+        ctrl.pageNumber = 1;
+      }
+    };
+
+    ctrl.gotoFirstPage = function () {
+      if (ctrl.pageNumber !== 1) {
+        ctrl.pageNumber = 1;
+      }
+    };
+
+    ctrl.gotoPreviousPage = function () {
+      if (ctrl.pageNumber !== 1) {
+        ctrl.pageNumber--;
+      }
+    };
+
+    ctrl.gotoNextPage = function () {
+      if (ctrl.pageNumber < ctrl.lastPageNumber) {
+        ctrl.pageNumber++;
+      }
+    };
+
+    ctrl.gotoLastPage = function () {
+      if (ctrl.pageNumber < ctrl.lastPageNumber) {
+        ctrl.pageNumber = ctrl.lastPageNumber;
+      }
+    };
+
+    ctrl.getStartIndex = function () {
+      return ctrl.pageSize * (ctrl.pageNumber - 1) + 1;
+    };
+
+    ctrl.getEndIndex = function () {
+      var numFullPages = Math.floor(ctrl.numTotalItems / ctrl.pageSize);
+      var numItemsOnLastPage = ctrl.numTotalItems - (numFullPages * ctrl.pageSize);
+      var numItemsOnPage = isLastPage() ? numItemsOnLastPage : ctrl.pageSize;
+      return ctrl.getStartIndex() + numItemsOnPage - 1;
+    };
+
+    function getLastPageNumber () {
+      return Math.ceil(ctrl.numTotalItems / ctrl.pageSize);
+    }
+
+    function isLastPage () {
+      return ctrl.pageNumber === ctrl.lastPageNumber;
+    }
+  }]
+});
+;/**
+ * @ngdoc directive
  * @name patternfly.select.component:pfSelect
  * @restrict E
  *
@@ -16437,6 +16600,14 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
   $templateCache.put('notification/toast-notification.html',
     "<div class=\"toast-pf alert alert-{{$ctrl.notificationType}}\" ng-class=\"{'alert-dismissable': $ctrl.showCloseButton}\" ng-mouseenter=$ctrl.handleEnter() ng-mouseleave=$ctrl.handleLeave()><div uib-dropdown class=\"pull-right dropdown-kebab-pf\" ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-link\" type=button id=dropdownKebabRight><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=dropdown-menu-right aria-labelledby=dropdownKebabRight><li ng-repeat=\"menuAction in $ctrl.menuActions\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': menuAction.isSeparator === true, 'disabled': menuAction.isDisabled === true}\"><a ng-if=\"menuAction.isSeparator !== true\" class=secondary-action title={{menuAction.title}} ng-click=$ctrl.handleMenuAction(menuAction)>{{menuAction.name}}</a></li></ul></div><button ng-if=$ctrl.showCloseButton type=button class=close aria-hidden=true ng-click=$ctrl.handleClose()><span class=\"pficon pficon-close\"></span></button><div class=\"pull-right toast-pf-action\" ng-if=$ctrl.actionTitle><a ng-click=$ctrl.handleAction()>{{$ctrl.actionTitle}}</a></div><span class=\"pficon pficon-ok\" ng-if=\"$ctrl.notificationType === 'success'\"></span> <span class=\"pficon pficon-info\" ng-if=\"$ctrl.notificationType === 'info'\"></span> <span class=\"pficon pficon-error-circle-o\" ng-if=\"$ctrl.notificationType === 'danger'\"></span> <span class=\"pficon pficon-warning-triangle-o\" ng-if=\"$ctrl.notificationType === 'warning'\"></span> <span ng-if=$ctrl.header><strong>{{$ctrl.header}}</strong> {{$ctrl.message}}</span> <span ng-if=!$ctrl.header>{{$ctrl.message}}</span></div>"
+  );
+
+}]);
+;angular.module('patternfly.pagination').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('pagination/pagination.html',
+    "<form class=\"content-view-pf-pagination list-view-pf-pagination clearfix\" id=form1><div class=form-group><div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class=\"btn btn-default\">{{$ctrl.pageSize}} <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu><li ng-repeat=\"increment in $ctrl.pageSizeIncrements track by $index\" ng-class=\"{'selected': increment === $ctrl.pageSize}\" class=display-length-increment><a role=menuitem ng-click=$ctrl.onPageSizeChange(increment)>{{increment}}</a></li></ul></div><span class=per-page-label>per page</span></div><div class=form-group><span><span class=pagination-pf-items-current>{{$ctrl.getStartIndex()}}-{{$ctrl.getEndIndex()}}</span> of <span class=pagination-pf-items-total>{{$ctrl.numTotalItems}}</span></span><ul class=\"pagination pagination-pf-back\"><li ng-class=\"{'disabled': $ctrl.pageNumber === 1}\"><a title=\"First Page\" ng-click=$ctrl.gotoFirstPage() class=goto-first-page><span class=\"i fa fa-angle-double-left\"></span></a></li><li ng-class=\"{'disabled': $ctrl.pageNumber === 1}\"><a title=\"Previous Page\" ng-click=$ctrl.gotoPreviousPage() class=goto-prev-page><span class=\"i fa fa-angle-left\"></span></a></li></ul><input class=pagination-pf-page ng-model=$ctrl.pageNumber ng-model-options=\"{ updateOn: 'blur' }\" ng-change=\"$ctrl.onPageNumberChange()\"> <span>of <span class=pagination-pf-pages>{{$ctrl.lastPageNumber}}</span></span><ul class=\"pagination pagination-pf-forward\"><li ng-class=\"{'disabled': $ctrl.pageNumber === $ctrl.lastPageNumber}\"><a title=\"Next Page\" ng-click=$ctrl.gotoNextPage() class=goto-next-page><span class=\"i fa fa-angle-right\"></span></a></li><li ng-class=\"{'disabled': $ctrl.pageNumber === $ctrl.lastPageNumber}\"><a title=\"Last Page\" ng-click=$ctrl.gotoLastPage() class=goto-last-page><span class=\"i fa fa-angle-double-right\"></span></a></li></ul></div></form>"
   );
 
 }]);

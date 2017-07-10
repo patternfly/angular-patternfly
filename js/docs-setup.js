@@ -302,6 +302,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.pagination.component:pfPagination",
+      "shortName": "pfPagination",
+      "type": "directive",
+      "moduleName": "patternfly.pagination",
+      "shortDescription": "Component for pagination controls used in various views (list, card, table)",
+      "keywords": "$scope angular api applied array card class col-md-12 col-md-2 col-md-3 col-md-7 component controller controls current data default directive dropdown filter floor function html increment increments initial item items js length limitto math module ng-controller ng-repeat num-total-items number numtotalitems page-number page-size pagectrl pagenumber pagesize pagesizeincrements pagination patternfly push random row script set size startfrom status table total update values views"
+    },
+    {
+      "section": "api",
       "id": "patternfly.select.component:pfSelect",
       "shortName": "pfSelect",
       "type": "directive",
