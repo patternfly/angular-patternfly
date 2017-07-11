@@ -24,6 +24,7 @@
  * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * </ul>
  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
+ * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @param {Array} items the data to be shown in the cards<br/>
  *
  * @example
@@ -41,7 +42,7 @@
    </style>
    <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <pf-card-view id="exampleCardView" config="config" empty-state-config="emptyStateConfig" items="items">
+       <pf-card-view id="exampleCardView" config="config" empty-state-config="emptyStateConfig" items="items" empty-state-action-buttons="emptyStateActionButtons">
          <div class="col-md-12">
            <span>{{item.name}}</span>
          </div>
@@ -193,6 +194,10 @@
           },
         ]
 
+        var performEmptyStateAction = function (action) {
+          $scope.eventText = action.name + "\r\n" + $scope.eventText;
+        };
+
         $scope.emptyStateConfig = {
           icon: 'pficon-warning-triangle-o',
           title: 'No Items Available',
@@ -203,6 +208,30 @@
              url : '#/api/patternfly.views.component:pfEmptyState'
           }
         };
+
+        $scope.emptyStateActionButtons = [
+          {
+            name: 'Main Action',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction,
+            type: 'main'
+          },
+          {
+            name: 'Secondary Action 1',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          },
+          {
+            name: 'Secondary Action 2',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          },
+          {
+            name: 'Secondary Action 3',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          }
+        ];
       }
  ]);
  </file>
@@ -212,6 +241,7 @@ angular.module('patternfly.views').component('pfCardView', {
   bindings: {
     config: '=?',
     emptyStateConfig: '=?',
+    emptyStateActionButtons: '=?',
     items: '=',
     eventId: '@id'
   },
