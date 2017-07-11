@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/examples/list-view.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/08cc924/src/views/listview/examples/list-view.js#L730" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/examples/list-view.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3b4df01/src/views/listview/examples/list-view.js#L760" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -22,7 +22,8 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
        menu-class-for-item-fn="{function (item))}"
        update-menu-action-for-item-fn="{function (action, item))}"
        custom-scope="{object}"
-       empty-state-config="{object}"&gt;
+       empty-state-config="{object}"
+       empty-state-action-buttons="{array}"&gt;
 &lt;/pf-list-view&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Array of items to display in the list view. If an item in the array has a &#39;rowClass&#39; field, the value of this field will be used as a class specified on the row (list-group-item).</p>
 </div></td></tr><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Configuration settings for the list view:</p>
@@ -68,12 +69,13 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
 </div></td></tr><tr><td>updateMenuActionForItemFn</td><td><a href="" class="label type-hint type-hint-function">function (action, item)</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>function(action, item) Used to update a menu action based on the current item</p>
 </div></td></tr><tr><td>customScope</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Object containing any variables/functions used by the transcluded html, access via $ctrl.customScope.<xxx></p>
 </div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr><tr><td>emptyStateActionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils view.js basic.js counpund.js itemExpansion.js" source-edit-html="index.html-80 basic.html compound.html itemExpansion.html" source-edit-css="" source-edit-js="view.js basic.js counpund.js itemExpansion.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils view.js basic.js compound.js itemExpansion.js" source-edit-html="index.html-80 basic.html compound.html itemExpansion.html" source-edit-css="" source-edit-js="view.js basic.js compound.js itemExpansion.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-80" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils view.js basic.js counpund.js itemExpansion.js"></pre>
+<pre class="prettyprint linenums" ng-set-text="index.html-80" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils view.js basic.js compound.js itemExpansion.js"></pre>
 <script type="text/ng-template" id="index.html-80">
    <div ng-controller="ViewCtrl" style="background-color: #fff; margin: -20px;">
      <ul class="nav nav-tabs">
@@ -99,7 +101,8 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
                         menu-actions="menuActions"
                         update-menu-action-for-item-fn="updateMenuActionForItemFn"
                         menu-class-for-item-fn="getMenuClass"
-                        hide-menu-for-item-fn="hideMenuActions">
+                        hide-menu-for-item-fn="hideMenuActions"
+                        empty-state-action-buttons="emptyStateActionButtons">
         <div class="list-view-pf-description">
           <div class="list-group-item-heading">
             {{item.name}}
@@ -414,6 +417,10 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
        onDblClick: handleDblClick
       };
 
+      var performEmptyStateAction = function (action) {
+        $scope.eventText = action.name + "\r\n" + $scope.eventText;
+      };
+
       $scope.emptyStateConfig = {
         icon: 'pficon-warning-triangle-o',
         title: 'No Items Available',
@@ -424,6 +431,30 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
            url : '#/api/patternfly.views.component:pfEmptyState'
         }
       };
+
+      $scope.emptyStateActionButtons = [
+        {
+          name: 'Main Action',
+          title: 'Perform an action',
+          actionFn: performEmptyStateAction,
+          type: 'main'
+        },
+        {
+          name: 'Secondary Action 1',
+          title: 'Perform an action',
+          actionFn: performEmptyStateAction
+        },
+        {
+          name: 'Secondary Action 2',
+          title: 'Perform an action',
+          actionFn: performEmptyStateAction
+        },
+        {
+          name: 'Secondary Action 3',
+          title: 'Perform an action',
+          actionFn: performEmptyStateAction
+        }
+      ];
 
       $scope.items = [
         {
@@ -569,9 +600,9 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
   ]);
 </script>
 </div>
-<div class="tab-pane" title="counpund.js">
-<pre class="prettyprint linenums" ng-set-text="counpund.js"></pre>
-<script type="text/ng-template" id="counpund.js">
+<div class="tab-pane" title="compound.js">
+<pre class="prettyprint linenums" ng-set-text="compound.js"></pre>
+<script type="text/ng-template" id="compound.js">
   angular.module('patternfly.views').controller('CompoundExanspansionCtrl', ['$scope', '$templateCache',
     function ($scope, $templateCache) {
       $scope.eventText = '';
@@ -761,6 +792,6 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
 </script>
 </div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-80" ng-eval-javascript="view.js basic.js counpund.js itemExpansion.js"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-80" ng-eval-javascript="view.js basic.js compound.js itemExpansion.js"></div>
 </div></div>
 </div>

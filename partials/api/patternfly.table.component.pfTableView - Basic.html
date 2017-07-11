@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/08cc924/src/table/tableview/examples/table-view-basic.js#L305" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - Basic</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3b4df01/src/table/tableview/examples/table-view-basic.js#L335" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - Basic</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.table</code>
 </span>
 </div>
@@ -16,7 +16,8 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
      columns="{array}"
      action-buttons="{array}"
      menu-actions="{array}"
-     empty-state-config="{object}"&gt;
+     empty-state-config="{object}"
+     empty-state-action-buttons="{array}"&gt;
    ...
 &lt;/ANY&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional configuration object</p>
@@ -52,6 +53,7 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
   <li>.title - (String) Optional title, used for the tooltip
   <li>.actionFn - (function(action)) Function to invoke when the action selected
 </ul></div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr><tr><td>emptyStateActionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><h4 id="example_source">Source</h4>
@@ -68,7 +70,8 @@ See <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a> for u
           columns="columns"
           items="items"
           action-buttons="actionButtons"
-          menu-actions="menuActions">
+          menu-actions="menuActions"
+          empty-state-action-buttons="emptyStateActionButtons">
     </pf-table-view>
   </div>
   <div class="col-md-12" style="padding-top: 12px;">
@@ -137,6 +140,10 @@ function ($scope, $timeout, itemsService) {
           showCheckboxes: true
         };
 
+        var performEmptyStateAction = function (action) {
+          $scope.eventText = action.name + "\r\n" + $scope.eventText;
+        };
+
         $scope.emptyStateConfig = {
           icon: 'pficon-warning-triangle-o',
           title: 'No Items Available',
@@ -147,6 +154,30 @@ function ($scope, $timeout, itemsService) {
             url : '#/api/patternfly.views.component:pfEmptyState'
           }
         };
+
+        $scope.emptyStateActionButtons = [
+          {
+            name: 'Main Action',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction,
+            type: 'main'
+          },
+          {
+            name: 'Secondary Action 1',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          },
+          {
+            name: 'Secondary Action 2',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          },
+          {
+            name: 'Secondary Action 3',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          }
+        ];
 
         function handleCheckBoxChange (item) {
           $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;
