@@ -2,18 +2,15 @@ describe('Component: pfPagination', function () {
   var $scope;
   var $compile;
   var element;
-  var performedAction;
-  var updateCount;
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.pagination', 'pagination/pagination.html', 'patternfly.table', 'table/tableview/table-view.html', 'views/empty-state.html');
+    module('patternfly.pagination', 'patternfly.table', 'pagination/pagination.html', 'table/tableview/table-view.html', 'views/empty-state.html');
   });
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
-    $timeout = _$timeout_;
   }));
 
   var compileHTML = function (markup, scope) {

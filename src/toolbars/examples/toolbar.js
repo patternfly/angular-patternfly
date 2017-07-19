@@ -117,13 +117,14 @@
           </div>
         </pf-card-view>
       </div>
-      <div class="col-md-12" ng-show="viewType == 'tableView'">
+      <div class="col-md-12" ng-if="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
                        columns="columns"
                        items="items"
                        empty-state-config="emptyStateConfig">
         </pf-table-view>
       </div>
+      <hr class="col-md-12">
       <div class="col-md-12" style="padding-top: 12px;">
         <div class="form-group">
           <label class="checkbox-inline">
@@ -131,7 +132,6 @@
           </label>
         </div>
       </div>
-      <hr class="col-md-12">
       <div class="col-md-12">
         <label class="events-label">Current Filters: </label>
       </div>
@@ -179,7 +179,6 @@
           $scope.dtOptions.dom = "t";
         }
       };
-
 
       $scope.allItems = [
         {

@@ -120,8 +120,8 @@ Note:
    <script src="node_modules/jquery/dist/jquery.js"></script>
    <script src="node_modules/datatables.net/js/jquery.dataTables.js"></script>
    <script src="node_modules/datatables.net-select/js/dataTables.select.js"></script>
-   <script src="node_modules/angular-datatables/dist/angular-datatables.min.js"></script>
-   <script src="node_modules/angular-datatables/dist/plugins/select/angular-datatables.select.min.js"></script>
+   <script src="node_modules/angularjs-datatables/dist/angular-datatables.min.js"></script>
+   <script src="node_modules/angularjs-datatables/dist/plugins/select/angular-datatables.select.min.js"></script>
    ```
 7. (optional) The 'patternfly.canvas' module is not a dependency in the default angular 'patternfly' module.
    In order to use pfCanvasEditor or pfCanvas, you must add 'patternfly.canvas' as a dependency in your application:
