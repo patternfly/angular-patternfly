@@ -40,11 +40,11 @@ describe('Component: pfTableView', function () {
     ];
 
     $scope.items = [
-      {uuid: '1', name: 'One', size: 291445030, capacity: 8200000000},
-      {uuid: '2', name: 'Two', size: 1986231544, capacity: 8700000000},
-      {uuid: '3', name: 'Three', size: 7864632, capacity: 7800000000},
-      {uuid: '4', name: 'Four', size: 8162410, capacity: 3200000000},
-      {uuid: '5', name: 'Five', size: 6781425410, capacity: 7600000000}
+      {name: 'One', capacity: 8200000000, uuid: '1', size: 291445030},
+      {name: 'Two', capacity: 8700000000, uuid: '2', size: 1986231544},
+      {name: 'Three', capacity: 7800000000, uuid: '3', size: 7864632},
+      {name: 'Four', capacity: 3200000000, uuid: '4', size: 8162410},
+      {name: 'Five', capacity: 7600000000, uuid: '5', size: 6781425410}
     ];
 
     var htmlTmp = '<pf-table-view config="config" columns="columns" items="items"></pf-table-view>' +
@@ -76,6 +76,19 @@ describe('Component: pfTableView', function () {
   it('should show the correct number of items', function () {
     var rows = element.find('.table > tbody > tr');
     expect(rows.length).toBe($scope.items.length);
+  });
+
+  it('should populate cells with correct data', function () {
+    var i, j, item, selector, expectedValue;
+    for (i = 0; i < $scope.items.length; i++) {
+      item = $scope.items[i];
+      for (j = 0; j < $scope.columns.length; j++) {
+        selector = '.table > tbody > tr:eq(' + i + ') > td:eq(' + (j + 1) + ')';
+        cellValue = element.find(selector).text().trim();
+        expectedValue = item[$scope.columns[j].itemField].toString();
+        expect(cellValue).toBe(expectedValue);
+      }
+    }
   });
 
   it('should show checkboxes for row selection', function () {
