@@ -17,7 +17,7 @@
         <input type="checkbox" value="item.selected" ng-model="item.selected" ng-change="$ctrl.toggleOne(item)"/>
       </td>
 
-      <td ng-repeat="(key, value) in item" ng-if="$ctrl.isColItemFld(key)">
+      <td ng-repeat="col in $ctrl.columns" ng-init="key = col.itemField; value = item[key]">
         <span ng-if="!$ctrl.hasHTMLTemplate(key)">{{value}}</span>
         <span ng-if="$ctrl.hasHTMLTemplate(key)" ng-include="$ctrl.getHTMLTemplate(key)"></span>
       </td>

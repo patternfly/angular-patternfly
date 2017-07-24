@@ -298,24 +298,28 @@
               state: "New York"
               },
               {
+              status: "ok",
               name: "Mike Bird",
               address: "50 Forth Street",
               city: "New York",
               state: "New York"
               },
               {
+              status: "ok",
               name: "Cheryl Taylor",
               address: "2 Main Street",
               city: "New York",
               state: "New York"
               },
               {
+              status: "ok",
               name: "Ren DiLorenzo",
               address: "10 Chase Lane",
               city: "Boston",
               state: "Massacusetts"
               },
               {
+              status: "ok",
               name: "Kim Livingston",
               address: "5 Tree Hill Lane",
               city: "Boston",
