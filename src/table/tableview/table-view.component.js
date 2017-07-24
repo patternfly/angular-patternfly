@@ -334,17 +334,6 @@ angular.module('patternfly.table').component('pfTableView', {
       }
     };
 
-    ctrl.isColItemFld = function (key) {
-      var retVal = false;
-      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
-
-      if (tableCol && tableCol.length === 1) {
-        retVal = true;
-      }
-
-      return retVal;
-    };
-
     ctrl.hasHTMLTemplate = function (key) {
       var htmlTemplate = this.getHTMLTemplate(key);
       return htmlTemplate.length > 0;
