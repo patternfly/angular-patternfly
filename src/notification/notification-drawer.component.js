@@ -11,7 +11,7 @@
  *   group must include an array of notifications to be shown for that group, the array MUST be called 'notifications'.
  *   You must provide the source for the heading, sub-heading, and notification body to show the content you desire for each.
  *   Pass a customScope object containing any scope variables/functions you need to access from the included source, access these
- *   via hanlders.<your handler> in your included source.
+ *   via handlers.<your handler> in your included source.
  *   <br><br>
  *
  * @param {boolean} drawerHidden Flag if the drawer is currently hidden
