@@ -15411,7 +15411,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
               e.preventDefault();
               $scope.$apply(function () {
                 // scope apply in button module
-                $scope.wizard[action.replace("pfWiz", "").toLowerCase()]($scope.callback);
+                $scope.wizard[action.replace("pfWiz", "").toLowerCase()](ctrl.callback);
               });
             });
           };
