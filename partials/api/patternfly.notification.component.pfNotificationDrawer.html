@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/notification/notification-drawer.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/a54e7b5/src/notification/notification-drawer.component.js#L475" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfNotificationDrawer</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/notification/examples/notification-drawer.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/38413e4/src/notification/examples/notification-drawer.js#L458" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfNotificationDrawer</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.notification</code>
 </span>
 </div>
@@ -7,11 +7,25 @@
 <div class="description"><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Component for rendering a notification drawer. This provides a common mechanism to handle how the notification
 drawer should look and behave without mandating the look of the notification group heading or notification body.
 <br><br>
-An array of notification groups must be passed to create each group in the drawer. Each notification
-group must include an array of notifications to be shown for that group, the array MUST be called &#39;notifications&#39;.
+The notification groups must be passed to create each group in the drawer. Each notification
+group must include a collection of notifications to be shown for that group, the collection MUST be called &#39;notifications&#39;.
+Each notification should have an &#39;unread&#39; field in order to style unread notifications and hide/show the Mark All Unread button if desired.
 You must provide the source for the heading, sub-heading, and notification body to show the content you desire for each.
 Pass a customScope object containing any scope variables/functions you need to access from the included source, access these
-via handlers.<your handler> in your included source.
+via handlers.<your handler> in your included source.</p>
+<p>Each notification group can add a &#39;noNotificationsText&#39; field to override the text specifically for that group. If not supplied the overall
+text given will be used for the group if that is supplied. Otherwise, the default empty message is displayed.</p>
+<p><br><br>
+  The pfNotificationDrawer has stylings pre-set from Patternfly (<a href="http://www.patternfly.org/">http://www.patternfly.org/</a>) for use within the
+  navbar-pf and navbar-pf-vertical containers. If neither is being used, the top and height should be set such that the
+  drawer will take up the entire viewport vertically. For instance:<br>
+  <p style="margin-left: 20px;">
+    .my-nav-container .drawer-pf {<br>
+    &nbsp;&nbsp;height: calc(~&quot;100vh - 46px&quot;);<br>
+    &nbsp;&nbsp;top: 26px;</br>
+    }
+  </p>
+  Note, this should be bottom aligned with the trigger, and leave a 20px at the bottom of the viewport.
 <br><br></p>
 </div></div>
 <h2 id="usage">Usage</h2>
@@ -21,6 +35,11 @@ via handlers.<your handler> in your included source.
        draw-expanded="{boolean}"
        drawer-title="{string}"
        notification-groups="{object}"
+       on-close="{function}"
+       show-mark-all-read="{boolean}"
+       on-mark-all-read="{function}"
+       show-clear-all="{boolean}"
+       on-clear-all="{function}"
        action-button-title="{string}"
        action-button-callback="{function}"
        title-include="{string}"
@@ -28,13 +47,19 @@ via handlers.<your handler> in your included source.
        subheading-include="{string}"
        notification-body-include="{string}"
        notification-footer-include="{string}"
+       no-notifications-text="{string}"
        custom-scope="{object}"&gt;
 &lt;/pf-notification-drawer&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>drawerHidden</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Flag if the drawer is currently hidden</p>
 </div></td></tr><tr><td>allowExpand</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Flag if the drawer can be expanded. Optional, default: false</p>
 </div></td></tr><tr><td>drawExpanded</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Flag if the drawer is expanded (only valid if allowExpand is true). Optional, default: false</p>
 </div></td></tr><tr><td>drawerTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Title to display for the drawer (leaving this blank will remove the provided expand capability)</p>
-</div></td></tr><tr><td>notificationGroups</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Array of notification groups to add to the drawer</p>
+</div></td></tr><tr><td>notificationGroups</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Collection notification groups to add to the drawer. Alternatively, a single group object can be given if categorization is not used.</p>
+</div></td></tr><tr><td>onClose</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>function() Callback for the close button. Close button is shown if this callback is supplied. Callback should set drawerHidden to true to close the drawer.</p>
+</div></td></tr><tr><td>showMarkAllRead</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Flag if the mark all read button should be shown, optional, default is false</p>
+</div></td></tr><tr><td>onMarkAllRead</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>function(notificationGroup) Callback method for the mark all read button (Optional)</p>
+</div></td></tr><tr><td>showClearAll</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Flag if the clear all button should be shown, optional, default is false</p>
+</div></td></tr><tr><td>onClearAll</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>function(notificationGroup) Callback method for the clear all button (Optional)</p>
 </div></td></tr><tr><td>actionButtonTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Text for the lower action button of the drawer (optional, if not specified there will be no action button)</p>
 </div></td></tr><tr><td>actionButtonCallback</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>function(notificationGroup) Callback method for action button for each group, the notificationGroup is passed (Optional)</p>
 </div></td></tr><tr><td>titleInclude</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Include src for the title area for the notification drawer, use this to customize the drawer title area</p>
@@ -42,14 +67,15 @@ via handlers.<your handler> in your included source.
 </div></td></tr><tr><td>subheadingInclude</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Include src for the sub-heading area for each notification group, access the group via notificationGroup</p>
 </div></td></tr><tr><td>notificationBodyInclude</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Include src for the notification body for each notification, access the notification via notification</p>
 </div></td></tr><tr><td>notificationFooterInclude</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Include src for the notification footer for each notification, access the notification via notification</p>
+</div></td></tr><tr><td>noNotificationsText</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Text to show when there are no notifications. Optional.</p>
 </div></td></tr><tr><td>customScope</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Object containing any variables/functions used by the included src, access via $ctrl.customScope.<xxx></p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.notification" source-edit-deps="angular.js patternfly.utils patternfly.filters patternfly.sort patternfly.views script.js" source-edit-html="index.html-49 heading.html subheading.html notification-footer.html notification-body.html" source-edit-css="" source-edit-js="script.js-50" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.notification.demo" source-edit-deps="angular.js patternfly.utils patternfly.filters patternfly.sort patternfly.views modules.js script.js" source-edit-html="index.html-47 heading.html subheading.html notification-footer.html notification-body.html" source-edit-css="" source-edit-js="modules.js script.js-48" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-49" ng-html-wrap-loaded="patternfly.notification angular.js patternfly.utils patternfly.filters patternfly.sort patternfly.views script.js"></pre>
-<script type="text/ng-template" id="index.html-49">
+<pre class="prettyprint linenums" ng-set-text="index.html-47" ng-html-wrap-loaded="patternfly.notification.demo angular.js patternfly.utils patternfly.filters patternfly.sort patternfly.views modules.js script.js"></pre>
+<script type="text/ng-template" id="index.html-47">
   <div ng-controller="DrawerCtrl" class="row example-container">
     <div class="col-md-12 pre-demo-text">
       <label>Click the notifications indicator to show the Notification Drawer: </label>
@@ -57,9 +83,10 @@ via handlers.<your handler> in your included source.
     <div class="navbar-pf-vertical">
       <nav class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-left navbar-iconic">
-          <li class="drawer-pf-trigger dropdown">
+          <li class="drawer-pf-trigger dropdown" ng-class="{'open': !hideDrawer}">
             <a class="nav-item-iconic drawer-pf-trigger-icon" ng-click="toggleShowDrawer()">
               <span class="fa fa-bell" title="Notifications"></span>
+              <span ng-if="unreadNotifications" class="badge"> </span>
             </a>
           </li>
         </ul>
@@ -68,7 +95,9 @@ via handlers.<your handler> in your included source.
     <div class="layout-pf-fixed">
       <div class="navbar-pf-vertical">
         <pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer" allow-expand="true"
-             action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"
+             notification-groups="groups" on-close="closeDrawer"
+             show-mark-all-read="true" on-mark-all-read="markAllRead"
+             show-clear-all="true" on-clear-all="clearAll"
              heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
              notification-footer-include="notification-footer.html" custom-scope="customScope">
         </pf-notification-drawer>
@@ -98,79 +127,63 @@ via handlers.<your handler> in your included source.
 <div class="tab-pane" title="notification-footer.html">
 <pre class="prettyprint linenums" ng-set-text="notification-footer.html"></pre>
 <script type="text/ng-template" id="notification-footer.html">
-  <a class="btn btn-link btn-block" role="button" ng-click="$ctrl.customScope.clearAll(notificationGroup)">
-    <span class="pficon pficon-close"></span>
-    <span> Clear All</span>
-  </a>
 </script>
 </div>
 <div class="tab-pane" title="notification-body.html">
 <pre class="prettyprint linenums" ng-set-text="notification-body.html"></pre>
 <script type="text/ng-template" id="notification-body.html">
-  <div ng-if="!drawerExpanded">
-    <div uib-dropdown class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
-      <button uib-dropdown-toggle class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span class="fa fa-ellipsis-v"></span>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
-        <li ng-repeat="action in notification.actions"
-            role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
-            ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
-          <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="$ctrl.customScope.handleAction(notification, action)">
-            {{action.name}}
-          </a>
-        </li>
-      </ul>
-    </div>
-    <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}" ng-click="$ctrl.customScope.markRead(notification)"></span>
-    <span class="drawer-pf-notification-message" ng-click="$ctrl.customScope.markRead(notification)">{{notification.message}}</span>
+  <div uib-dropdown class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
+    <button uib-dropdown-toggle class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <span class="fa fa-ellipsis-v"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
+      <li ng-repeat="action in notification.actions"
+          role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
+          ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
+        <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="$ctrl.customScope.handleAction(notification, action)">
+          {{action.name}}
+        </a>
+      </li>
+    </ul>
+  </div>
+ <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}" ng-click="$ctrl.customScope.markRead(notification)"></span>
+  <div class="drawer-pf-notification-content" ng-click="$ctrl.customScope.markRead(notification)">
+    <span class="drawer-pf-notification-message" tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip-placement="bottom" tooltip="{{notification.message}}">
+     {{notification.message}}
+    </span>
     <div class="drawer-pf-notification-info" ng-click="$ctrl.customScope.markRead(notification)">
       <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
       <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
     </div>
   </div>
-  <div ng-if="drawerExpanded" class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <span class="pull-left {{$ctrl.customScope.getNotficationStatusIconClass(notification)}}"></span>
-        <span class="drawer-pf-notification-message notification-message"
-              tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip-placement="bottom" tooltip="{{notification.message}}">
-              {{notification.message}}
-        </span>
-      </div>
-      <div class="col-sm-6">
-        <div class="drawer-pf-notification-info">
-          <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
-          <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>
-        </div>
-        <div class="dropdown pull-right dropdown-kebab-pf" ng-if="notification.actions && notification.actions.length > 0">
-          <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="fa fa-ellipsis-v"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">
-            <li ng-repeat="action in notification.actions"
-                role="{{action.isSeparator === true ? 'separator' : 'menuitem'}}"
-                ng-class="{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}">
-              <a ng-if="action.isSeparator !== true" class="secondary-action" title="{{action.title}}" ng-click="$ctrl.customScope.handleAction(notification, action)">
-                {{action.name}}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+</script>
+</div>
+<div class="tab-pane" title="modules.js">
+<pre class="prettyprint linenums" ng-set-text="modules.js"></pre>
+<script type="text/ng-template" id="modules.js">
+  angular.module('patternfly.notification.demo', ['patternfly.notification','patternfly.views']);
 </script>
 </div>
 <div class="tab-pane" title="script.js">
-<pre class="prettyprint linenums" ng-set-text="script.js-50"></pre>
-<script type="text/ng-template" id="script.js-50">
-  angular.module('patternfly.notification').controller('DrawerCtrl', ['$scope',
+<pre class="prettyprint linenums" ng-set-text="script.js-48"></pre>
+<script type="text/ng-template" id="script.js-48">
+  angular.module('patternfly.notification.demo').controller('DrawerCtrl', ['$scope',
     function ($scope) {
       var currentTime = (new Date()).getTime();
+
+      var updateUnreadStatus = function() {
+        $scope.unreadNotifications = _.find($scope.groups, function(group) {
+          return _.find(group.notifications, {unread: true});
+        });
+      };
+
       $scope.hideDrawer = true;
       $scope.toggleShowDrawer = function () {
         $scope.hideDrawer = !$scope.hideDrawer;
+      };
+
+      $scope.closeDrawer = function() {
+        $scope.hideDrawer = true;
       };
 
       var menuActions = [
@@ -212,7 +225,7 @@ via handlers.<your handler> in your included source.
           notifications: [
             {
               unread: true,
-              message: "A New Event! Huzzah! Bold",
+              message: "A New Event! Huzzah! Bold.",
               status: 'info',
               actions: menuActions,
               timeStamp: currentTime - (1 * 60 * 60 * 1000)
@@ -319,44 +332,9 @@ via handlers.<your handler> in your included source.
         },
         {
           heading: "Notification Tab 3",
-          subHeading: "3 New Events",
-          notifications: [
-            {
-              unread: true,
-              message: "A New Event! Huzzah! Bold",
-              status: 'ok',
-              actions: menuActions,
-              timeStamp: currentTime - (1 * 60 * 60 * 1000)
-            },
-            {
-              unread: true,
-              message: "Another Event Notification",
-              status: 'warning',
-              actions: menuActions,
-              timeStamp: currentTime - (2 * 60 * 60 * 1000)
-            },
-            {
-              unread: false,
-              message: "Another Event Notification",
-              status: 'info',
-              actions: menuActions,
-              timeStamp: currentTime - (10 * 60 * 60 * 1000)
-            },
-            {
-              unread: false,
-              message: "Another Event Notification",
-              status: 'ok',
-              actions: menuActions,
-              timeStamp: currentTime - (12 * 60 * 60 * 1000)
-            },
-            {
-              unread: true,
-              message: "Another Event Notification",
-              status: 'error',
-              actions: menuActions,
-              timeStamp: currentTime - (240 * 60 * 60 * 1000)
-            }
-          ]
+          subHeading: "0 New Events",
+          notifications: [],
+          noNotificationsText: "No Tab 3 notifications found."
         },
         {
           heading: "Notification Tab 4",
@@ -439,16 +417,30 @@ via handlers.<your handler> in your included source.
               timeStamp: currentTime - (240 * 60 * 60 * 1000)
             }
           ]
-        }
+        },
+        {
+          heading: "Notification Tab 6",
+          subHeading: "0 New Events",
+          notifications: []
+        },
       ];
 
+      updateUnreadStatus();
       $scope.actionsText = "";
-      $scope.actionButtonCB = function (group) {
-        $scope.actionsText = "Action Button clicked: " + group.heading + "\n" + $scope.actionsText;
-        group.notifications.forEach(function(nextNotification) {
+
+      $scope.markAllRead = function (group) {
+        $scope.actionsText = "Mark all read: " + group.heading + "\n" + $scope.actionsText;
+        angular.forEach(group.notifications, function(nextNotification) {
           nextNotification.unread = false;
         });
         group.subHeading =  "0 New Events";
+        updateUnreadStatus();
+      };
+
+      $scope.clearAll = function (group) {
+        $scope.actionsText = "Clear all: " + group.heading + "\n" + $scope.actionsText;
+        group.notifications = [];
+        group.subHeading = "0 New Events";
       };
 
       //
@@ -472,18 +464,13 @@ via handlers.<your handler> in your included source.
         }
         return retClass;
       };
+
       $scope.customScope.handleAction = function (notification, action) {
         if (action.isDisabled) {
           return;
         }
         var newText = notification.message + " - " + action.name;
         $scope.actionsText = newText + "\n" + $scope.actionsText;
-      };
-      $scope.customScope.clearAll = function (group) {
-        var newText = group.heading + " - Clear All";
-        $scope.actionsText = newText + "\n" + $scope.actionsText;
-        group.notifications = [];
-        group.subHeading = "0 New Events";
       };
 
       $scope.customScope.markRead = function (notification) {
@@ -492,20 +479,22 @@ via handlers.<your handler> in your included source.
           $scope.actionsText = "Mark notification read" + "\n" + $scope.actionsText;
           var notificationGroup = $scope.groups.find(function(group) {
             return group.notifications.find(function(nextNotification) {
-              return notification == nextNotification;
+              return notification === nextNotification;
             });
           });
           var unread = notificationGroup.notifications.filter(function(nextNotification) {
             return nextNotification.unread;
           });
           notificationGroup.subHeading =  unread.length + " New Events";
+          updateUnreadStatus();
         }
       };
+
     }
   ]);
 </script>
 </div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.notification" ng-set-html="index.html-49" ng-eval-javascript="script.js-50"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.notification.demo" ng-set-html="index.html-47" ng-eval-javascript="modules.js script.js-48"></div>
 </div></div>
 </div>
