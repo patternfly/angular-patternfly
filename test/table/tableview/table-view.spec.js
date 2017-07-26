@@ -162,4 +162,38 @@ describe('Component: pfTableView', function () {
     expect(angular.element(element.find('.pagination-pf-page')).val().trim()).toBe('2');
     expect(angular.element(element.find('.pagination-pf-pages')).text().trim()).toBe('4');
   });
+
+  it('should goto a specific page when inputted', function () {
+    paginationSetup();
+
+    var ctrl = element.isolateScope().$ctrl;
+    spyOn(ctrl, 'updatePageNumber');
+
+    angular.element(element.find('.pagination-pf-page ')).val('3').trigger('input').blur();
+    $scope.$digest();
+
+    expect(ctrl.updatePageNumber).toHaveBeenCalled();
+    expect(angular.element(element.find('.pagination-pf-items-current')).text().trim()).toBe('5-6');
+    expect(angular.element(element.find('.pagination-pf-items-total')).text().trim()).toBe('7');
+    expect(angular.element(element.find('.pagination-pf-page')).val().trim()).toBe('3');
+    expect(angular.element(element.find('.pagination-pf-pages')).text().trim()).toBe('4');
+  });
+
+  it('should change the page size when selected from dropdown', function() {
+    var ctrl = element.isolateScope().$ctrl;
+    spyOn(ctrl, 'updatePageSize');
+
+    //Get pageSizeDropdown
+    var pageSizeDropdown = element.find('div[uib-dropdown]');
+    expect(pageSizeDropdown.length).toBe(1);
+
+    //Change pageSizeDropdown to 10
+    pageSizeDropdown.find('button').click();
+    var pageSizeLinks = pageSizeDropdown.find('a');
+    expect(pageSizeLinks.length).toBe(3);
+    pageSizeLinks[1].click();  // switch to 10 items per page
+    $scope.$digest();
+
+    expect(ctrl.updatePageSize).toHaveBeenCalled();
+  });
 });

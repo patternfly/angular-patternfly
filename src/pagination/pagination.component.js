@@ -141,14 +141,14 @@ angular.module('patternfly.pagination').component('pfPagination', {
     };
 
     ctrl.getStartIndex = function () {
-      return ctrl.pageSize * (ctrl.pageNumber - 1) + 1;
+      return ctrl.numTotalItems ? ctrl.pageSize * (ctrl.pageNumber - 1) + 1 : 0;
     };
 
     ctrl.getEndIndex = function () {
       var numFullPages = Math.floor(ctrl.numTotalItems / ctrl.pageSize);
       var numItemsOnLastPage = ctrl.numTotalItems - (numFullPages * ctrl.pageSize) || ctrl.pageSize;
       var numItemsOnPage = isLastPage() ? numItemsOnLastPage : ctrl.pageSize;
-      return ctrl.getStartIndex() + numItemsOnPage - 1;
+      return ctrl.numTotalItems ? ctrl.getStartIndex() + numItemsOnPage - 1 : 0;
     };
 
     function updatePageNumber (newPageNumber) {

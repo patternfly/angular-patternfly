@@ -177,7 +177,9 @@ angular.module('patternfly.table').component('pfTableView', {
     ctrl.updatePageNumber = function (event) {
       if (ctrl.dtInstance) {
         ctrl.pageConfig.pageNumber = event.pageNumber;
-        ctrl.dtInstance.dataTable.fnPageChange(ctrl.pageConfig.pageNumber - 1);
+        if (ctrl.dtInstance && ctrl.dtInstance.dataTable) {
+          ctrl.dtInstance.dataTable.fnPageChange(ctrl.pageConfig.pageNumber - 1);
+        }
       }
     };
 
