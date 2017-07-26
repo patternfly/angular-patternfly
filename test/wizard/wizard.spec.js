@@ -68,11 +68,15 @@ describe('Component:  pfWizard', function () {
 
     $scope.data = {};
 
+    $scope.wasNextCalled = false;
     $scope.nextCallback = function () {
+      $scope.wasNextCalled = true;
       return true;
     };
 
+    $scope.wasBackCalled = false;
     $scope.backCallback = function () {
+      $scope.wasBackCalled = true;
       return true;
     };
 
@@ -148,6 +152,23 @@ describe('Component:  pfWizard', function () {
     eventFire(nextButton[0], 'click');
     var stepIndicator = element.find('.wizard-pf-sidebar .list-group-item.active .wizard-pf-substep-number');
     expect(stepIndicator.text()).toBe('1B.');
+  });
+
+  it('should call the next callback and back callback when buttons are clicked', function () {
+    setupWizard('test/wizard/wizard-container.html');
+    var nextButton = element.find('.wizard-pf-next');
+    var nameBox = element.find('#new-name');
+    nameBox.val('test').triggerHandler('input');
+
+    expect($scope.wasNextCalled).toBe(false);
+    eventFire(nextButton[0], 'click');
+    expect($scope.wasNextCalled).toBe(true);
+
+    var backButton = element.find('#backButton');
+
+    expect($scope.wasBackCalled).toBe(false);
+    eventFire(backButton[0], 'click');
+    expect($scope.wasBackCalled).toBe(true);
   });
 
   it('should have allowed moving back to first page after input and allowed navigation', function () {
