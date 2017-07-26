@@ -7,9 +7,9 @@ describe('Component:  pfNotificationDrawer', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.notification', 'patternfly.utils', 'notification/notification-drawer.html', 'test/notification/title.html',
+    module('patternfly.notification', 'patternfly.utils', 'patternfly.views', 'notification/notification-drawer.html', 'test/notification/title.html',
            'test/notification/heading.html', 'test/notification/subheading.html', 'test/notification/notification-body.html',
-           'test/notification/notification-footer.html');
+           'test/notification/notification-footer.html', 'views/empty-state.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -278,12 +278,34 @@ describe('Component:  pfNotificationDrawer', function () {
             timeStamp: currentTime - (240 * 60 * 60 * 1000)
           }
         ]
+      },
+      {
+        heading: "Group 6"
+      },
+      {
+        heading: "Group 7",
+        noNotificationsText: 'Nothing'
       }
     ];
 
     $scope.actionButtonClicked = '';
     $scope.actionButtonCB = function (group) {
       $scope.actionButtonClicked = group.heading;
+    };
+
+    $scope.closed = false;
+    $scope.closeCB = function () {
+      $scope.closed = true;
+    };
+
+    $scope.allReadGroup = '';
+    $scope.markAllReadCB = function(group) {
+      $scope.allReadGroup = group.heading;
+    };
+
+    $scope.clearAllGroup = '';
+    $scope.clearAllCB = function(group) {
+      $scope.clearAllGroup = group.heading;
     };
 
     //
@@ -316,6 +338,7 @@ describe('Component:  pfNotificationDrawer', function () {
 
     var htmlTmp = '<pf-notification-drawer drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
                   '     action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups"' +
+                  '     on-close="closeCB"' +
                   '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
                   '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
                   '</pf-notification-drawer>';
@@ -334,7 +357,7 @@ describe('Component:  pfNotificationDrawer', function () {
 
   it('should have the correct headings', function () {
     var heading = element.find('.heading-class');
-    expect(heading.length).toBe(5);
+    expect(heading.length).toBe($scope.groups.length);
     expect(angular.element(heading[0]).text()).toBe("Group 1");
     expect(angular.element(heading[1]).text()).toBe("Group 2");
     expect(angular.element(heading[2]).text()).toBe("Group 3");
@@ -344,7 +367,7 @@ describe('Component:  pfNotificationDrawer', function () {
 
   it('should have the correct sub headings', function () {
     var subheading = element.find('.subheading-class');
-    expect(subheading.length).toBe(5);
+    expect(subheading.length).toBe($scope.groups.length);
     expect(angular.element(subheading[0]).text()).toBe("1 New Events");
     expect(angular.element(subheading[1]).text()).toBe("2 New Events");
     expect(angular.element(subheading[2]).text()).toBe("3 New Events");
@@ -354,7 +377,7 @@ describe('Component:  pfNotificationDrawer', function () {
 
   it('should have the correct notification footer', function () {
     var footers = element.find('.footer-class');
-    expect(footers.length).toBe(5);
+    expect(footers.length).toBe($scope.groups.length);
 
     expect($scope.actionPerformed).toBeUndefined();
     expect($scope.actionItem).toBeUndefined();
@@ -399,7 +422,7 @@ describe('Component:  pfNotificationDrawer', function () {
 
   it ('should toggle showing notifications when the header is clicked', function () {
     var collapseLinks = element.find('.panel-heading .panel-title a');
-    expect(collapseLinks.length).toBe(5);
+    expect(collapseLinks.length).toBe($scope.groups.length);
 
     var collapsedPanels = element.find('.collapse.in');
     expect(collapsedPanels.length).toBe(0);
@@ -419,7 +442,7 @@ describe('Component:  pfNotificationDrawer', function () {
 
   it ('should invoke the action button callback when the action button is clicked', function () {
     var collapseElements = element.find('.panel-collapse.collapse');
-    expect(collapseElements.length).toBe(5);
+    expect(collapseElements.length).toBe($scope.groups.length);
 
     var actionButton = angular.element(collapseElements[1]).find('.drawer-pf-action .btn-link');
     expect(actionButton.length).toBe(1);
@@ -481,5 +504,123 @@ describe('Component:  pfNotificationDrawer', function () {
 
     expandedDrawer = element.find('.drawer-pf.drawer-pf-expanded');
     expect(expandedDrawer.length).toBe(1);
+  });
+
+  it ('should except a single object with notification children', function() {
+    var htmlTmp = '<pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
+      '     action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups[0]"' +
+      '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
+      '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
+      '</pf-notification-drawer>';
+
+    compileHTML(htmlTmp, $scope);
+
+    var heading = element.find('.heading-class');
+    expect(heading.length).toBe(1);
+    expect(angular.element(heading[0]).text()).toBe("Group 1");
+
+    var notifications = element.find('.drawer-pf-notification');
+    expect(notifications.length).toBe(9);
+  });
+
+  it ('should notify on close button click', function() {
+    var closeButton = element.find('.drawer-pf-close');
+    expect(closeButton.length).toBe(1);
+
+    expect($scope.closed).toBe(false);
+
+    eventFire(closeButton[0], 'click');
+    $scope.$digest();
+
+    expect($scope.closed).toBe(true);
+  });
+
+  it ('should show mark all read button for groups with unread notifications when specified', function() {
+    var actionButtons = element.find('.drawer-pf-action-link .btn-link');
+    expect(actionButtons.length) .toBe(0);
+
+    var htmlTmp = '<pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
+      '     show-mark-all-read="true" on-mark-all-read="markAllReadCB" notification-groups="groups"' +
+      '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
+      '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
+      '</pf-notification-drawer>';
+
+    compileHTML(htmlTmp, $scope);
+
+    actionButtons = element.find('.drawer-pf-action-link .btn-link');
+    expect(actionButtons.length).toBe(5);
+
+    expect($scope.allReadGroup).toBe('');
+
+    eventFire(actionButtons[1], 'click');
+    $scope.$digest();
+
+    expect($scope.allReadGroup).toBe('Group 2');
+  });
+
+  it ('should show clear all button for groups with notifications when specified', function() {
+    var actionButtons = element.find('.drawer-pf-action-link .btn-link');
+    expect(actionButtons.length) .toBe(0);
+
+    var htmlTmp = '<pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
+      '     show-clear-all="true" on-clear-all="clearAllCB" notification-groups="groups"' +
+      '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
+      '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
+      '</pf-notification-drawer>';
+
+    compileHTML(htmlTmp, $scope);
+
+    actionButtons = element.find('.drawer-pf-action-link .btn-link');
+    expect(actionButtons.length).toBe(5);
+
+    expect($scope.clearAllGroup).toBe('');
+
+    eventFire(actionButtons[1], 'click');
+    $scope.$digest();
+
+    expect($scope.clearAllGroup).toBe('Group 2');
+  });
+
+  it ('should show the empty state pattern when no notifications exist', function() {
+    var htmlTmp = '<pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
+      '     show-clear-all="true" on-clear-all="clearAllCB"' +
+      '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
+      '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
+      '</pf-notification-drawer>';
+
+    compileHTML(htmlTmp, $scope);
+
+    var emptyStates = element.find('.blank-slate-pf');
+    expect(emptyStates.length).toBe(1);
+
+    var title = angular.element(emptyStates[0]).find('#title').html();
+    expect(_.trim(title)).toBe('There are no notifications to display.');
+  });
+
+  it ('should show the empty state pattern with the specified message when no notifications exist', function() {
+    var htmlTmp = '<pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
+      '     show-clear-all="true" on-clear-all="clearAllCB" no-notifications-text="Nothing"' +
+      '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
+      '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
+      '</pf-notification-drawer>';
+
+    compileHTML(htmlTmp, $scope);
+
+    var emptyStates = element.find('.blank-slate-pf');
+    expect(emptyStates.length).toBe(1);
+
+    var title = angular.element(emptyStates[0]).find('#title').html();
+    expect(_.trim(title)).toBe('Nothing');
+  });
+
+  it ('should show the empty state pattern when no notifications exist for a group', function() {
+    var emptyStates = element.find('.blank-slate-pf');
+    expect(emptyStates.length).toBe(2);
+
+    var title = angular.element(emptyStates[0]).find('#title').html();
+    expect(_.trim(title)).toBe('There are no notifications to display.');
+
+    title = angular.element(emptyStates[1]).find('#title').html();
+    expect(_.trim(title)).toBe('Nothing');
   });
 });
