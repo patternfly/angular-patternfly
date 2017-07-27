@@ -7,12 +7,14 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
     onThresholdChange: '&'
   },
   templateUrl: 'charts/donut/donut-pct-chart.html',
-  controller: function (pfUtils, $element, $timeout) {
+  controller: function (pfUtils, $scope) {
     'use strict';
     var ctrl = this, prevData;
+    ctrl.$id = $scope.$id;
 
     ctrl.$onInit = function () {
-      ctrl.donutChartId = 'donutPctChart';
+      ctrl.donutChartId = 'donutPctChart' + ctrl.$id;
+
       if (ctrl.config.chartId) {
         ctrl.donutChartId = ctrl.config.chartId + ctrl.donutChartId;
       }
@@ -22,6 +24,10 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
 
     ctrl.updateAvailable = function () {
       ctrl.data.available = ctrl.data.total - ctrl.data.used;
+    };
+
+    ctrl.updatePercentage = function () {
+      ctrl.data.percent = Math.round(ctrl.data.used / ctrl.data.total * 100.0);
     };
 
     ctrl.getStatusColor = function (used, thresholds) {
@@ -127,6 +133,7 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
 
       ctrl.config = pfUtils.merge(patternfly.c3ChartDefaults().getDefaultDonutConfig(), ctrl.config);
       ctrl.updateAvailable();
+      ctrl.updatePercentage();
       ctrl.config.data = pfUtils.merge(ctrl.config.data, ctrl.getDonutData());
       ctrl.config.color = ctrl.statusDonutColor(ctrl);
       ctrl.config.tooltip = ctrl.donutTooltip();
