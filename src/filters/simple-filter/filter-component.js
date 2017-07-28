@@ -18,8 +18,17 @@ angular.module('patternfly.filters').component('pfFilter', {
     };
 
     function filterExists (filter) {
-      var foundFilter = _.find(ctrl.config.appliedFilters, {title: filter.title, value: filter.value});
-      return foundFilter !== undefined;
+      return angular.isDefined(_.find(ctrl.config.appliedFilters, {title: filter.title, value: filter.value}));
+    }
+
+    function findDuplicateCategory (field, value) {
+      var duplicateValue;
+
+      function searchAppliedFilters (item) {
+        return _.includes(item.value, _.split(value, field.filterDelimiter, 1)) ? duplicateValue = item : null;
+      }
+
+      return _.some(ctrl.config.appliedFilters, searchAppliedFilters) ? duplicateValue : null;
     }
 
     function enforceSingleSelect (filter) {
@@ -33,10 +42,15 @@ angular.module('patternfly.filters').component('pfFilter', {
         type: field.filterType,
         value: value
       };
+
       if (!filterExists(newFilter)) {
 
         if (newFilter.type === 'select') {
           enforceSingleSelect(newFilter);
+        }
+
+        if (field.filterType === 'complex-select' && !field.filterMultiselect && findDuplicateCategory(field, value)) {
+          _.remove(ctrl.config.appliedFilters, findDuplicateCategory(field, value));
         }
 
         ctrl.config.appliedFilters.push(newFilter);

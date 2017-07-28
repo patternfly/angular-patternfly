@@ -41,6 +41,24 @@ describe('Directive:  pfFilter', function () {
           placeholder: 'Filter by Birth Month',
           filterType: 'select',
           filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        },
+        {
+          id: 'car',
+          title:  'Car',
+          placeholder: 'Filter by Car Make',
+          filterType: 'complex-select',
+          filterValues: ['Subaru', 'Toyota'],
+          filterDelimiter: '-',
+          filterCategoriesPlaceholder: 'Filter by Car Model',
+          filterCategories: {subaru: {
+            id: 'subaru',
+            title:  'Subaru',
+            filterValues: ['Outback', 'Crosstrek', 'Impreza']},
+            toyota: {
+              id: 'toyota',
+              title:  'Toyota',
+              filterValues: ['Prius', 'Corolla', 'Echo']}
+          }
         }
       ],
       resultsCount: 5,
@@ -54,7 +72,7 @@ describe('Directive:  pfFilter', function () {
 
   it('should have correct number of filter fields', function () {
     var fields = element.find('.filter-field');
-    expect(fields.length).toBe(3);
+    expect(fields.length).toBe(4);
   });
 
   it('should have correct number of results', function () {
@@ -102,6 +120,20 @@ describe('Directive:  pfFilter', function () {
 
     var items = filterSelect.find('li');
     expect(items.length).toBe($scope.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
+  });
+
+  it ('should add a dropdown complex-select when a select type is chosen', function() {
+    var filterSelect = element.find('.filter-select');
+    var fields = element.find('.filter-field');
+
+    expect(filterSelect.length).toBe(0);
+    eventFire(fields[3], 'click');
+    $scope.$digest();
+    filterSelect = element.find('.filter-select');
+    expect(filterSelect.length).toBe(2);
+
+    var items = filterSelect.find('li');
+    expect(items.length).toBe($scope.filterConfig.fields[3].filterValues.length + 2); // +2 for the null category and value
   });
 
   it ('should clear a filter when the close button is clicked', function () {
