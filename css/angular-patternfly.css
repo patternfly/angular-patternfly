@@ -543,6 +543,9 @@ table.dataTable thead .sorting_desc {
 table.dataTable thead .sorting {
   background-image: none !important;
 }
+table.dataTable tbody tr.selected span a {
+  color: #fff;
+}
 table.dataTable tbody th {
   padding: 2px 10px 3px;
 }
