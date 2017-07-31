@@ -13,7 +13,16 @@
  *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  *   <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
  * </ul>
- * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
+ * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object. Note: paginationType, displayLength, and dom:"p" are no longer being used for pagination, but are allowed for backward compatibility.
+ * Please switch to prefered 'pageConfig' settings for pf pagination controls.
+ * Other dtOptions can still be used, such as 'order' See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
+ * @param {object} pageConfig Optional pagination configuration object.  Since all properties are optional it is ok to specify: 'pageConfig = {}' to indicate that you want to
+ * use pagination with the default parameters.
+ * <ul style='list-style-type: none'>
+ *   <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+ *   <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of "Items per Page".  Default is 10 items per page
+ *   <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the 'per page' dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
+ * </ul>
  * @param {array} items Array of items to display in the table view.
  * @param {array} columns Array of table column information to display in the table's header row and optionaly render the cells of a column.
  * <ul style='list-style-type: none'>
@@ -86,24 +95,23 @@
         <pf-table-view config="tableConfig"
                        empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
+                       page-config="pageConfig"
                        columns="columns"
                        items="items"
                        action-buttons="tableActionButtons"
                        menu-actions="tableMenuActions">
         </pf-table-view>
       </div>
+      <hr class="col-md-12">
       <div class="col-md-12">
         <div class="form-group">
           <label class="checkbox-inline">
             <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
           </label>
-          <!-- //[WIP] issues dynamically changing displayLength and turning on/off pagination
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
-            </label>
-            <label>
-              <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
-            </label> --!>
+          <!-- TODO: I don't know why this comment is neccesary, but if I remove it I get error:
+               Error: [$compile:ctreq] Controller 'tabbable', required by directive 'tabPane', can't be found!
+               I've wasted too much time trying to fix this!  Something to do with ngDoc's <file> directives
+          --!>
         </div>
         <div class="form-group">
           <label class="checkbox-inline">
@@ -111,7 +119,6 @@
           </label>
         </div>
       </div>
-      <hr class="col-md-12">
       <div class="col-md-12">
         <label class="actions-label">Actions: </label>
       </div>
@@ -154,28 +161,22 @@
         { header: "BirthMonth", itemField: "birthMonth"}
       ];
 
-      $scope.dtOptions = {
-        paginationType: 'full',
-        displayLength: 10,
-        dom: "tp"
-      };
+      // dtOptions paginationType, displayLength, and dom:"p" are no longer being
+      // used, but are allowed for backward compatibility.
+      // Please switch to prefered 'pageConfig' settings for pf pagination controls
+      // Other dtOptions can still be used, such as 'order'
+      // $scope.dtOptions = {
+      //  paginationType: 'full',
+      //  displayLength: 10,
+      //  dom: "tp"
+      // }
 
-      // [WIP] attempt to dyamically change displayLength (#rows) and turn on/off pagination controls
-      // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
-
-      $scope.usePagination = true;
-      $scope.togglePagination = function () {
-        $scope.usePagination = !$scope.usePagination;
-        console.log("---> togglePagination: " + $scope.usePagination);
-        if($scope.usePagination) {
-          $scope.dtOptions.displayLength = 3;
-          $scope.dtOptions.dom = "tp";
-          console.log("---> use pagination: " + $scope.dtOptions.displayLength + ":" + $scope.dtOptions.dom);
-        } else {
-          $scope.dtOptions.displayLength = undefined;
-          $scope.dtOptions.dom = "t";
-        }
-      };
+      // New pagination config settings
+      $scope.pageConfig = {
+        pageNumber: 1,
+        pageSize: 10,
+        pageSizeIncrements: [5, 10, 15]
+      }
 
       $scope.allItems = [
         {
@@ -305,6 +306,8 @@
           match = item.address.match(filter.value) !== null;
         } else if (filter.id === 'birthMonth') {
           match = item.birthMonth === filter.value;
+        } else if (filter.id === 'status') {
+          match = item.status === filter.value;
         }
         return match;
       };
@@ -364,6 +367,13 @@
 
       $scope.filterConfig = {
         fields: [
+          {
+            id: 'status',
+            title:  'Status',
+            placeholder: 'Filter by Status...',
+            filterType: 'select',
+            filterValues: ['error', 'warning', 'ok']
+          },
           {
             id: 'name',
             title:  'Name',

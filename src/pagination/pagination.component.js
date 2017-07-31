@@ -34,7 +34,7 @@
        </div>
      </div>
      <pf-pagination
-         page-size="pageSize",
+         page-size="pageSize"
          page-number="pageNumber"
          num-total-items="numTotalItems">
      </pf-pagination>
@@ -59,10 +59,12 @@ angular.module('patternfly.pagination').component('pfPagination', {
   transclude: true,
   templateUrl: 'pagination/pagination.html',
   bindings: {
-    pageNumber: '=',
+    pageNumber: '=?',
     numTotalItems: "<",
     pageSizeIncrements: '<?',
-    pageSize: "=?"
+    pageSize: "=?",
+    updatePageSize: "&",
+    updatePageNumber: "&"
   },
   controller: function ($scope, $log) {
     'use strict';
@@ -71,6 +73,9 @@ angular.module('patternfly.pagination').component('pfPagination', {
     var defaultPageSizeIncrements = [5, 10, 20, 40, 80, 100];
 
     ctrl.$onInit = function () {
+      if (angular.isUndefined(ctrl.pageNumber)) {
+        ctrl.pageNumber = 1;
+      }
       if (angular.isUndefined(ctrl.pageSizeIncrements)) {
         ctrl.pageSizeIncrements = defaultPageSizeIncrements;
       }
@@ -83,6 +88,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
     ctrl.$onChanges = function (changesObj) {
       if (changesObj.numTotalItems && !changesObj.numTotalItems.isFirstChange()) {
         ctrl.lastPageNumber = getLastPageNumber();
+        ctrl.gotoFirstPage();
       }
     };
 
@@ -90,51 +96,71 @@ angular.module('patternfly.pagination').component('pfPagination', {
       ctrl.pageSize = newPageSize;
       ctrl.lastPageNumber = getLastPageNumber();
       ctrl.gotoFirstPage();
+      if (ctrl.updatePageSize) {
+        ctrl.updatePageSize({
+          $event: {
+            pageSize: newPageSize
+          }
+        });
+      }
     };
 
     ctrl.onPageNumberChange = function () {
-      ctrl.pageNumber = parseInt(ctrl.pageNumber, 10);
-      if (ctrl.pageNumber > ctrl.lastPageNumber) {
-        ctrl.pageNumber = ctrl.lastPageNumber;
-      } else if (ctrl.pageNumber < 1 || isNaN(ctrl.pageNumber)) {
-        ctrl.pageNumber = 1;
+      var newPageNumber = parseInt(ctrl.pageNumber, 10);
+      if (newPageNumber > ctrl.lastPageNumber) {
+        updatePageNumber(ctrl.lastPageNumber);
+      } else if (newPageNumber < 1 || isNaN(ctrl.pageNumber)) {
+        updatePageNumber(1);
+      } else {
+        updatePageNumber(newPageNumber);
       }
     };
 
     ctrl.gotoFirstPage = function () {
       if (ctrl.pageNumber !== 1) {
-        ctrl.pageNumber = 1;
+        updatePageNumber(1);
       }
     };
 
     ctrl.gotoPreviousPage = function () {
       if (ctrl.pageNumber !== 1) {
-        ctrl.pageNumber--;
+        updatePageNumber(ctrl.pageNumber - 1);
       }
     };
 
     ctrl.gotoNextPage = function () {
       if (ctrl.pageNumber < ctrl.lastPageNumber) {
-        ctrl.pageNumber++;
+        updatePageNumber(ctrl.pageNumber + 1);
       }
     };
 
     ctrl.gotoLastPage = function () {
       if (ctrl.pageNumber < ctrl.lastPageNumber) {
-        ctrl.pageNumber = ctrl.lastPageNumber;
+        updatePageNumber(ctrl.lastPageNumber);
       }
     };
 
     ctrl.getStartIndex = function () {
-      return ctrl.pageSize * (ctrl.pageNumber - 1) + 1;
+      return ctrl.numTotalItems ? ctrl.pageSize * (ctrl.pageNumber - 1) + 1 : 0;
     };
 
     ctrl.getEndIndex = function () {
       var numFullPages = Math.floor(ctrl.numTotalItems / ctrl.pageSize);
-      var numItemsOnLastPage = ctrl.numTotalItems - (numFullPages * ctrl.pageSize);
+      var numItemsOnLastPage = ctrl.numTotalItems - (numFullPages * ctrl.pageSize) || ctrl.pageSize;
       var numItemsOnPage = isLastPage() ? numItemsOnLastPage : ctrl.pageSize;
-      return ctrl.getStartIndex() + numItemsOnPage - 1;
+      return ctrl.numTotalItems ? ctrl.getStartIndex() + numItemsOnPage - 1 : 0;
     };
+
+    function updatePageNumber (newPageNumber) {
+      ctrl.pageNumber = newPageNumber;
+      if (ctrl.updatePageNumber) {
+        ctrl.updatePageNumber({
+          $event: {
+            pageNumber: ctrl.pageNumber
+          }
+        });
+      }
+    }
 
     function getLastPageNumber () {
       return Math.ceil(ctrl.numTotalItems / ctrl.pageSize);

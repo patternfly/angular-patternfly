@@ -61,6 +61,7 @@
             empty-state-action-buttons="emptyStateActionButtons">
       </pf-table-view>
     </div>
+    <hr class="col-md-12">
     <div class="col-md-12" style="padding-top: 12px;">
       <div class="form-group">
         <label class="checkbox-inline">
@@ -73,7 +74,6 @@
         </label>
       </div>
     </div>
-    <hr class="col-md-12">
     <div class="col-md-12">
           <div class="col-md-12" style="padding-top: 12px;">
             <label style="font-weight:normal;vertical-align:center;">Events: </label>
@@ -298,14 +298,14 @@
               state: "New York"
               },
               {
-              status: "ok",
+              status: "warning",
               name: "Mike Bird",
               address: "50 Forth Street",
               city: "New York",
               state: "New York"
               },
               {
-              status: "ok",
+              status: "error",
               name: "Cheryl Taylor",
               address: "2 Main Street",
               city: "New York",
