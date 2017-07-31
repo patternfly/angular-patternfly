@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/toolbars/examples/toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/29fdf26/src/toolbars/examples/toolbar.js#L516" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfToolbar</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/toolbars/examples/toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/0ea5acb/src/toolbars/examples/toolbar.js#L515" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfToolbar</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.toolbars</code>
 </span>
 </div>
@@ -123,13 +123,14 @@
         </div>
       </pf-card-view>
     </div>
-    <div class="col-md-12" ng-show="viewType == 'tableView'">
+    <div class="col-md-12" ng-if="viewType == 'tableView'">
       <pf-table-view config="tableConfig"
                      columns="columns"
                      items="items"
                      empty-state-config="emptyStateConfig">
       </pf-table-view>
     </div>
+    <hr class="col-md-12">
     <div class="col-md-12" style="padding-top: 12px;">
       <div class="form-group">
         <label class="checkbox-inline">
@@ -137,7 +138,6 @@
         </label>
       </div>
     </div>
-    <hr class="col-md-12">
     <div class="col-md-12">
       <label class="events-label">Current Filters: </label>
     </div>
@@ -189,7 +189,6 @@ angular.module('patternfly.toolbars.demo').controller('ViewCtrl', ['$scope', 'pf
         $scope.dtOptions.dom = "t";
       }
     };
-
 
     $scope.allItems = [
       {

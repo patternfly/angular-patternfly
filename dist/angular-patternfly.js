@@ -124,7 +124,7 @@ angular.module('patternfly.sort', ['ui.bootstrap']);
  *   Table module for patternfly.
  *
  */
-angular.module('patternfly.table', ['datatables', 'patternfly.utils', 'patternfly.filters', 'patternfly.sort']);
+angular.module('patternfly.table', ['datatables', 'patternfly.pagination', 'patternfly.utils', 'patternfly.filters', 'patternfly.sort']);
 ;/**
  * @name  patternfly toolbars
  *
@@ -10838,7 +10838,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
        </div>
      </div>
      <pf-pagination
-         page-size="pageSize",
+         page-size="pageSize"
          page-number="pageNumber"
          num-total-items="numTotalItems">
      </pf-pagination>
@@ -10863,10 +10863,12 @@ angular.module('patternfly.pagination').component('pfPagination', {
   transclude: true,
   templateUrl: 'pagination/pagination.html',
   bindings: {
-    pageNumber: '=',
+    pageNumber: '=?',
     numTotalItems: "<",
     pageSizeIncrements: '<?',
-    pageSize: "=?"
+    pageSize: "=?",
+    updatePageSize: "&",
+    updatePageNumber: "&"
   },
   controller: ["$scope", "$log", function ($scope, $log) {
     'use strict';
@@ -10875,6 +10877,9 @@ angular.module('patternfly.pagination').component('pfPagination', {
     var defaultPageSizeIncrements = [5, 10, 20, 40, 80, 100];
 
     ctrl.$onInit = function () {
+      if (angular.isUndefined(ctrl.pageNumber)) {
+        ctrl.pageNumber = 1;
+      }
       if (angular.isUndefined(ctrl.pageSizeIncrements)) {
         ctrl.pageSizeIncrements = defaultPageSizeIncrements;
       }
@@ -10887,6 +10892,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
     ctrl.$onChanges = function (changesObj) {
       if (changesObj.numTotalItems && !changesObj.numTotalItems.isFirstChange()) {
         ctrl.lastPageNumber = getLastPageNumber();
+        ctrl.gotoFirstPage();
       }
     };
 
@@ -10894,51 +10900,71 @@ angular.module('patternfly.pagination').component('pfPagination', {
       ctrl.pageSize = newPageSize;
       ctrl.lastPageNumber = getLastPageNumber();
       ctrl.gotoFirstPage();
+      if (ctrl.updatePageSize) {
+        ctrl.updatePageSize({
+          $event: {
+            pageSize: newPageSize
+          }
+        });
+      }
     };
 
     ctrl.onPageNumberChange = function () {
-      ctrl.pageNumber = parseInt(ctrl.pageNumber, 10);
-      if (ctrl.pageNumber > ctrl.lastPageNumber) {
-        ctrl.pageNumber = ctrl.lastPageNumber;
-      } else if (ctrl.pageNumber < 1 || isNaN(ctrl.pageNumber)) {
-        ctrl.pageNumber = 1;
+      var newPageNumber = parseInt(ctrl.pageNumber, 10);
+      if (newPageNumber > ctrl.lastPageNumber) {
+        updatePageNumber(ctrl.lastPageNumber);
+      } else if (newPageNumber < 1 || isNaN(ctrl.pageNumber)) {
+        updatePageNumber(1);
+      } else {
+        updatePageNumber(newPageNumber);
       }
     };
 
     ctrl.gotoFirstPage = function () {
       if (ctrl.pageNumber !== 1) {
-        ctrl.pageNumber = 1;
+        updatePageNumber(1);
       }
     };
 
     ctrl.gotoPreviousPage = function () {
       if (ctrl.pageNumber !== 1) {
-        ctrl.pageNumber--;
+        updatePageNumber(ctrl.pageNumber - 1);
       }
     };
 
     ctrl.gotoNextPage = function () {
       if (ctrl.pageNumber < ctrl.lastPageNumber) {
-        ctrl.pageNumber++;
+        updatePageNumber(ctrl.pageNumber + 1);
       }
     };
 
     ctrl.gotoLastPage = function () {
       if (ctrl.pageNumber < ctrl.lastPageNumber) {
-        ctrl.pageNumber = ctrl.lastPageNumber;
+        updatePageNumber(ctrl.lastPageNumber);
       }
     };
 
     ctrl.getStartIndex = function () {
-      return ctrl.pageSize * (ctrl.pageNumber - 1) + 1;
+      return ctrl.numTotalItems ? ctrl.pageSize * (ctrl.pageNumber - 1) + 1 : 0;
     };
 
     ctrl.getEndIndex = function () {
       var numFullPages = Math.floor(ctrl.numTotalItems / ctrl.pageSize);
-      var numItemsOnLastPage = ctrl.numTotalItems - (numFullPages * ctrl.pageSize);
+      var numItemsOnLastPage = ctrl.numTotalItems - (numFullPages * ctrl.pageSize) || ctrl.pageSize;
       var numItemsOnPage = isLastPage() ? numItemsOnLastPage : ctrl.pageSize;
-      return ctrl.getStartIndex() + numItemsOnPage - 1;
+      return ctrl.numTotalItems ? ctrl.getStartIndex() + numItemsOnPage - 1 : 0;
     };
+
+    function updatePageNumber (newPageNumber) {
+      ctrl.pageNumber = newPageNumber;
+      if (ctrl.updatePageNumber) {
+        ctrl.updatePageNumber({
+          $event: {
+            pageNumber: ctrl.pageNumber
+          }
+        });
+      }
+    }
 
     function getLastPageNumber () {
       return Math.ceil(ctrl.numTotalItems / ctrl.pageSize);
@@ -11368,6 +11394,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
             empty-state-action-buttons="emptyStateActionButtons">
       </pf-table-view>
     </div>
+    <hr class="col-md-12">
     <div class="col-md-12" style="padding-top: 12px;">
       <div class="form-group">
         <label class="checkbox-inline">
@@ -11380,7 +11407,6 @@ angular.module('patternfly.pagination').component('pfPagination', {
         </label>
       </div>
     </div>
-    <hr class="col-md-12">
     <div class="col-md-12">
           <div class="col-md-12" style="padding-top: 12px;">
             <label style="font-weight:normal;vertical-align:center;">Events: </label>
@@ -11605,14 +11631,14 @@ angular.module('patternfly.pagination').component('pfPagination', {
               state: "New York"
               },
               {
-              status: "ok",
+              status: "warning",
               name: "Mike Bird",
               address: "50 Forth Street",
               city: "New York",
               state: "New York"
               },
               {
-              status: "ok",
+              status: "error",
               name: "Cheryl Taylor",
               address: "2 Main Street",
               city: "New York",
@@ -11658,7 +11684,16 @@ angular.module('patternfly.pagination').component('pfPagination', {
  *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  *   <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
  * </ul>
- * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
+ * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object. Note: paginationType, displayLength, and dom:"p" are no longer being used for pagination, but are allowed for backward compatibility.
+ * Please switch to prefered 'pageConfig' settings for pf pagination controls.
+ * Other dtOptions can still be used, such as 'order' See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
+ * @param {object} pageConfig Optional pagination configuration object.  Since all properties are optional it is ok to specify: 'pageConfig = {}' to indicate that you want to
+ * use pagination with the default parameters.
+ * <ul style='list-style-type: none'>
+ *   <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+ *   <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of "Items per Page".  Default is 10 items per page
+ *   <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the 'per page' dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
+ * </ul>
  * @param {array} items Array of items to display in the table view.
  * @param {array} columns Array of table column information to display in the table's header row and optionaly render the cells of a column.
  * <ul style='list-style-type: none'>
@@ -11731,24 +11766,23 @@ angular.module('patternfly.pagination').component('pfPagination', {
         <pf-table-view config="tableConfig"
                        empty-state-config="emptyStateConfig"
                        dt-options="dtOptions"
+                       page-config="pageConfig"
                        columns="columns"
                        items="items"
                        action-buttons="tableActionButtons"
                        menu-actions="tableMenuActions">
         </pf-table-view>
       </div>
+      <hr class="col-md-12">
       <div class="col-md-12">
         <div class="form-group">
           <label class="checkbox-inline">
             <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
           </label>
-          <!-- //[WIP] issues dynamically changing displayLength and turning on/off pagination
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
-            </label>
-            <label>
-              <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
-            </label> --!>
+          <!-- TODO: I don't know why this comment is neccesary, but if I remove it I get error:
+               Error: [$compile:ctreq] Controller 'tabbable', required by directive 'tabPane', can't be found!
+               I've wasted too much time trying to fix this!  Something to do with ngDoc's <file> directives
+          --!>
         </div>
         <div class="form-group">
           <label class="checkbox-inline">
@@ -11756,7 +11790,6 @@ angular.module('patternfly.pagination').component('pfPagination', {
           </label>
         </div>
       </div>
-      <hr class="col-md-12">
       <div class="col-md-12">
         <label class="actions-label">Actions: </label>
       </div>
@@ -11799,28 +11832,22 @@ angular.module('patternfly.pagination').component('pfPagination', {
         { header: "BirthMonth", itemField: "birthMonth"}
       ];
 
-      $scope.dtOptions = {
-        paginationType: 'full',
-        displayLength: 10,
-        dom: "tp"
-      };
+      // dtOptions paginationType, displayLength, and dom:"p" are no longer being
+      // used, but are allowed for backward compatibility.
+      // Please switch to prefered 'pageConfig' settings for pf pagination controls
+      // Other dtOptions can still be used, such as 'order'
+      // $scope.dtOptions = {
+      //  paginationType: 'full',
+      //  displayLength: 10,
+      //  dom: "tp"
+      // }
 
-      // [WIP] attempt to dyamically change displayLength (#rows) and turn on/off pagination controls
-      // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
-
-      $scope.usePagination = true;
-      $scope.togglePagination = function () {
-        $scope.usePagination = !$scope.usePagination;
-        console.log("---> togglePagination: " + $scope.usePagination);
-        if($scope.usePagination) {
-          $scope.dtOptions.displayLength = 3;
-          $scope.dtOptions.dom = "tp";
-          console.log("---> use pagination: " + $scope.dtOptions.displayLength + ":" + $scope.dtOptions.dom);
-        } else {
-          $scope.dtOptions.displayLength = undefined;
-          $scope.dtOptions.dom = "t";
-        }
-      };
+      // New pagination config settings
+      $scope.pageConfig = {
+        pageNumber: 1,
+        pageSize: 10,
+        pageSizeIncrements: [5, 10, 15]
+      }
 
       $scope.allItems = [
         {
@@ -11950,6 +11977,8 @@ angular.module('patternfly.pagination').component('pfPagination', {
           match = item.address.match(filter.value) !== null;
         } else if (filter.id === 'birthMonth') {
           match = item.birthMonth === filter.value;
+        } else if (filter.id === 'status') {
+          match = item.status === filter.value;
         }
         return match;
       };
@@ -12009,6 +12038,13 @@ angular.module('patternfly.pagination').component('pfPagination', {
 
       $scope.filterConfig = {
         fields: [
+          {
+            id: 'status',
+            title:  'Status',
+            placeholder: 'Filter by Status...',
+            filterType: 'select',
+            filterValues: ['error', 'warning', 'ok']
+          },
           {
             id: 'name',
             title:  'Name',
@@ -12210,6 +12246,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
     items: '<',
     actionButtons: '<?',
     menuActions: '<?',
+    pageConfig: '=?',
     emptyStateConfig: '=?',
     emptyStateActionButtons: '=?'
   },
@@ -12254,8 +12291,45 @@ angular.module('patternfly.pagination').component('pfPagination', {
 
       if (angular.isUndefined(ctrl.dtOptions)) {
         ctrl.dtOptions = {};
-      } else if (angular.isDefined(ctrl.dtOptions.paginationType)) {
+      } else {
+        // Switch dtOption pagination properties to new pagination schema
+        if (angular.isDefined(ctrl.dtOptions.paginationType)) {
+          ctrl.dtOptions.paging = true;
+          if (angular.isUndefined(ctrl.pageConfig)) {
+            ctrl.pageConfig = {};
+          }
+          if (angular.isUndefined(ctrl.pageConfig.pageNumber)) {
+            ctrl.pageConfig.pageNumber = 1;
+          }
+        }
+        if (angular.isDefined(ctrl.dtOptions.displayLength)) {
+          ctrl.dtOptions.paging = true;
+          if (angular.isUndefined(ctrl.pageConfig)) {
+            ctrl.pageConfig = {};
+          }
+          if (angular.isUndefined(ctrl.pageConfig.pageSize)) {
+            ctrl.pageConfig.pageSize = ctrl.dtOptions.displayLength;
+          }
+        }
+        if (angular.isDefined(ctrl.dtOptions.dom)) {
+          if (ctrl.dtOptions.dom.indexOf("p") !== -1) {
+            // No longer show angular-datatables pagination controls
+            ctrl.dtOptions.dom = ctrl.dtOptions.dom.replace(/p/gi, "");
+          }
+        }
+      }
+
+      // Use new paging schema to set dtOptions paging properties
+      if (angular.isDefined(ctrl.pageConfig)) {
         ctrl.dtOptions.paging = true;
+        ctrl.pageConfig.numTotalItems = ctrl.items.length;
+        if (angular.isUndefined(ctrl.pageConfig.pageSize)) {
+          ctrl.pageConfig.pageSize = 10;
+        }
+        ctrl.dtOptions.displayLength = ctrl.pageConfig.pageSize;
+        if (angular.isUndefined(ctrl.pageConfig.pageNumber)) {
+          ctrl.pageConfig.pageNumber = 1;
+        }
       }
 
       if (angular.isUndefined(ctrl.config)) {
@@ -12333,6 +12407,21 @@ angular.module('patternfly.pagination').component('pfPagination', {
       }
     };
 
+    ctrl.updatePageSize = function (event) {
+      ctrl.pageConfig.pageSize = event.pageSize;
+      ctrl.dtOptions.displayLength = ctrl.pageConfig.pageSize;
+      ctrl.pageConfig.pageNumber = 1;    // goto first page after pageSize/displayLength change
+    };
+
+    ctrl.updatePageNumber = function (event) {
+      if (ctrl.dtInstance) {
+        ctrl.pageConfig.pageNumber = event.pageNumber;
+        if (ctrl.dtInstance && ctrl.dtInstance.dataTable) {
+          ctrl.dtInstance.dataTable.fnPageChange(ctrl.pageConfig.pageNumber - 1);
+        }
+      }
+    };
+
     ctrl.$doCheck = function () {
       if (ctrl.debug) {
         $log.debug("$doCheck");
@@ -12348,10 +12437,13 @@ angular.module('patternfly.pagination').component('pfPagination', {
         if (ctrl.debug) {
           $log.debug("  items !== prevItems");
         }
+        if (ctrl.items) {
+          ctrl.config.itemsAvailable = ctrl.items.length > 0;
+        }
+        if (angular.isDefined(ctrl.pageConfig) && angular.isDefined(ctrl.pageConfig.numTotalItems)) {
+          ctrl.pageConfig.numTotalItems = ctrl.items.length;
+        }
         prevItems = angular.copy(ctrl.items);
-        //$timeout(function () {
-        selectRowsByChecked();
-        //});
       }
     };
 
@@ -12401,9 +12493,14 @@ angular.module('patternfly.pagination').component('pfPagination', {
     function listenForDraw () {
       var oTable;
       var dtInstance = ctrl.dtInstance;
+
       if (dtInstance && dtInstance.dataTable) {
         oTable = dtInstance.dataTable;
+        if (angular.isDefined(ctrl.pageConfig) && angular.isDefined(ctrl.pageConfig.pageNumber)) {
+          oTable.fnPageChange(ctrl.pageConfig.pageNumber - 1);
+        }
         ctrl.tableId = oTable[0].id;
+        oTable.off('draw.dt');
         oTable.on('draw.dt', function () {
           if (ctrl.debug) {
             $log.debug("--> redraw");
@@ -12433,6 +12530,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
           }
         }
       });
+      selectRowsByChecked();
     };
 
     ctrl.toggleOne = function (item) {
@@ -12751,13 +12849,14 @@ angular.module('patternfly.pagination').component('pfPagination', {
           </div>
         </pf-card-view>
       </div>
-      <div class="col-md-12" ng-show="viewType == 'tableView'">
+      <div class="col-md-12" ng-if="viewType == 'tableView'">
         <pf-table-view config="tableConfig"
                        columns="columns"
                        items="items"
                        empty-state-config="emptyStateConfig">
         </pf-table-view>
       </div>
+      <hr class="col-md-12">
       <div class="col-md-12" style="padding-top: 12px;">
         <div class="form-group">
           <label class="checkbox-inline">
@@ -12765,7 +12864,6 @@ angular.module('patternfly.pagination').component('pfPagination', {
           </label>
         </div>
       </div>
-      <hr class="col-md-12">
       <div class="col-md-12">
         <label class="events-label">Current Filters: </label>
       </div>
@@ -12813,7 +12911,6 @@ angular.module('patternfly.pagination').component('pfPagination', {
           $scope.dtOptions.dom = "t";
         }
       };
-
 
       $scope.allItems = [
         {
@@ -16871,7 +16968,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('table/tableview/table-view.html',
-    "<div class=container-fluid><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.columns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"col in $ctrl.columns\" ng-init=\"key = col.itemField; value = item[key]\"><span ng-if=!$ctrl.hasHTMLTemplate(key)>{{value}}</span> <span ng-if=$ctrl.hasHTMLTemplate(key) ng-include=$ctrl.getHTMLTemplate(key)></span></td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></div>"
+    "<div class=container-fluid><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.columns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"col in $ctrl.columns\" ng-init=\"key = col.itemField; value = item[key]\"><span ng-if=!$ctrl.hasHTMLTemplate(key)>{{value}}</span> <span ng-if=$ctrl.hasHTMLTemplate(key) ng-include=$ctrl.getHTMLTemplate(key)></span></td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-pagination ng-if=\"$ctrl.dtOptions.paging && $ctrl.config.itemsAvailable === true\" page-size=$ctrl.pageConfig.pageSize page-number=$ctrl.pageConfig.pageNumber num-total-items=$ctrl.pageConfig.numTotalItems page-size-increments=$ctrl.pageConfig.pageSizeIncrements update-page-size=$ctrl.updatePageSize($event) update-page-number=$ctrl.updatePageNumber($event)></pf-pagination><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></div>"
   );
 
 }]);

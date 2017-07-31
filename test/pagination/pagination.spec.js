@@ -2,18 +2,15 @@ describe('Component: pfPagination', function () {
   var $scope;
   var $compile;
   var element;
-  var performedAction;
-  var updateCount;
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.pagination', 'pagination/pagination.html', 'patternfly.table', 'table/tableview/table-view.html', 'views/empty-state.html');
+    module('patternfly.pagination', 'patternfly.table', 'pagination/pagination.html', 'table/tableview/table-view.html', 'views/empty-state.html');
   });
 
-  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
-    $timeout = _$timeout_;
   }));
 
   var compileHTML = function (markup, scope) {
@@ -133,15 +130,47 @@ describe('Component: pfPagination', function () {
     var htmlTmp = '<pf-pagination page-size="pageSize" page-number="pageNumber" num-total-items="numTotalItems"></pf-pagination>';
     compileHTML(htmlTmp, $scope);
 
+    var ctrl = element.isolateScope().$ctrl;
+    spyOn(ctrl, 'updatePageNumber');
+
     // On first page, goto prev and first page buttons should be disabled
     expect(element.find('.disabled').length).toBe(2);
 
     angular.element(element.find('.pagination-pf-page ')).val('7').trigger('input').blur();
     $scope.$digest();
 
+    expect(ctrl.updatePageNumber).toHaveBeenCalled();
     expect(angular.element(element.find('.pagination-pf-items-current')).text().trim()).toBe('61-70');
     expect(angular.element(element.find('.pagination-pf-items-total')).text().trim()).toBe('126');
     expect(angular.element(element.find('.pagination-pf-page')).val().trim()).toBe('7');
     expect(angular.element(element.find('.pagination-pf-pages')).text().trim()).toBe('13');
+  });
+
+  it('should change the page size when selected from dropdown', function() {
+    $scope.pageSize = 10;
+    $scope.pageNumber = 1;
+    $scope.numTotalItems = 126;
+    var htmlTmp = '<pf-pagination page-size="pageSize" page-number="pageNumber" num-total-items="numTotalItems"></pf-pagination>';
+    compileHTML(htmlTmp, $scope);
+
+    var ctrl = element.isolateScope().$ctrl;
+    spyOn(ctrl, 'updatePageSize');
+
+    //Get pageSizeDropdown
+    var pageSizeDropdown = element.find('div[uib-dropdown]');
+    expect(pageSizeDropdown.length).toBe(1);
+
+    //Change pageSizeDropdown to 20
+    pageSizeDropdown.find('button').click();
+    var pageSizeLinks = pageSizeDropdown.find('a');
+    expect(pageSizeLinks.length).toBe(6);
+    pageSizeLinks[2].click();  // switch to 20 items per page
+    $scope.$digest();
+
+    expect(ctrl.updatePageSize).toHaveBeenCalled();
+    expect(angular.element(element.find('.pagination-pf-items-current')).text().trim()).toBe('1-20');
+    expect(angular.element(element.find('.pagination-pf-items-total')).text().trim()).toBe('126');
+    expect(angular.element(element.find('.pagination-pf-page')).val().trim()).toBe('1');
+    expect(angular.element(element.find('.pagination-pf-pages')).text().trim()).toBe('7');
   });
 });

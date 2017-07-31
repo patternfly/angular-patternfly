@@ -7,6 +7,7 @@ angular.module('patternfly.table').component('pfTableView', {
     items: '<',
     actionButtons: '<?',
     menuActions: '<?',
+    pageConfig: '=?',
     emptyStateConfig: '=?',
     emptyStateActionButtons: '=?'
   },
@@ -51,8 +52,45 @@ angular.module('patternfly.table').component('pfTableView', {
 
       if (angular.isUndefined(ctrl.dtOptions)) {
         ctrl.dtOptions = {};
-      } else if (angular.isDefined(ctrl.dtOptions.paginationType)) {
+      } else {
+        // Switch dtOption pagination properties to new pagination schema
+        if (angular.isDefined(ctrl.dtOptions.paginationType)) {
+          ctrl.dtOptions.paging = true;
+          if (angular.isUndefined(ctrl.pageConfig)) {
+            ctrl.pageConfig = {};
+          }
+          if (angular.isUndefined(ctrl.pageConfig.pageNumber)) {
+            ctrl.pageConfig.pageNumber = 1;
+          }
+        }
+        if (angular.isDefined(ctrl.dtOptions.displayLength)) {
+          ctrl.dtOptions.paging = true;
+          if (angular.isUndefined(ctrl.pageConfig)) {
+            ctrl.pageConfig = {};
+          }
+          if (angular.isUndefined(ctrl.pageConfig.pageSize)) {
+            ctrl.pageConfig.pageSize = ctrl.dtOptions.displayLength;
+          }
+        }
+        if (angular.isDefined(ctrl.dtOptions.dom)) {
+          if (ctrl.dtOptions.dom.indexOf("p") !== -1) {
+            // No longer show angular-datatables pagination controls
+            ctrl.dtOptions.dom = ctrl.dtOptions.dom.replace(/p/gi, "");
+          }
+        }
+      }
+
+      // Use new paging schema to set dtOptions paging properties
+      if (angular.isDefined(ctrl.pageConfig)) {
         ctrl.dtOptions.paging = true;
+        ctrl.pageConfig.numTotalItems = ctrl.items.length;
+        if (angular.isUndefined(ctrl.pageConfig.pageSize)) {
+          ctrl.pageConfig.pageSize = 10;
+        }
+        ctrl.dtOptions.displayLength = ctrl.pageConfig.pageSize;
+        if (angular.isUndefined(ctrl.pageConfig.pageNumber)) {
+          ctrl.pageConfig.pageNumber = 1;
+        }
       }
 
       if (angular.isUndefined(ctrl.config)) {
@@ -130,6 +168,21 @@ angular.module('patternfly.table').component('pfTableView', {
       }
     };
 
+    ctrl.updatePageSize = function (event) {
+      ctrl.pageConfig.pageSize = event.pageSize;
+      ctrl.dtOptions.displayLength = ctrl.pageConfig.pageSize;
+      ctrl.pageConfig.pageNumber = 1;    // goto first page after pageSize/displayLength change
+    };
+
+    ctrl.updatePageNumber = function (event) {
+      if (ctrl.dtInstance) {
+        ctrl.pageConfig.pageNumber = event.pageNumber;
+        if (ctrl.dtInstance && ctrl.dtInstance.dataTable) {
+          ctrl.dtInstance.dataTable.fnPageChange(ctrl.pageConfig.pageNumber - 1);
+        }
+      }
+    };
+
     ctrl.$doCheck = function () {
       if (ctrl.debug) {
         $log.debug("$doCheck");
@@ -145,10 +198,13 @@ angular.module('patternfly.table').component('pfTableView', {
         if (ctrl.debug) {
           $log.debug("  items !== prevItems");
         }
+        if (ctrl.items) {
+          ctrl.config.itemsAvailable = ctrl.items.length > 0;
+        }
+        if (angular.isDefined(ctrl.pageConfig) && angular.isDefined(ctrl.pageConfig.numTotalItems)) {
+          ctrl.pageConfig.numTotalItems = ctrl.items.length;
+        }
         prevItems = angular.copy(ctrl.items);
-        //$timeout(function () {
-        selectRowsByChecked();
-        //});
       }
     };
 
@@ -198,9 +254,14 @@ angular.module('patternfly.table').component('pfTableView', {
     function listenForDraw () {
       var oTable;
       var dtInstance = ctrl.dtInstance;
+
       if (dtInstance && dtInstance.dataTable) {
         oTable = dtInstance.dataTable;
+        if (angular.isDefined(ctrl.pageConfig) && angular.isDefined(ctrl.pageConfig.pageNumber)) {
+          oTable.fnPageChange(ctrl.pageConfig.pageNumber - 1);
+        }
         ctrl.tableId = oTable[0].id;
+        oTable.off('draw.dt');
         oTable.on('draw.dt', function () {
           if (ctrl.debug) {
             $log.debug("--> redraw");
@@ -230,6 +291,7 @@ angular.module('patternfly.table').component('pfTableView', {
           }
         }
       });
+      selectRowsByChecked();
     };
 
     ctrl.toggleOne = function (item) {

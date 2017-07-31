@@ -5,4 +5,4 @@
  *   Table module for patternfly.
  *
  */
-angular.module('patternfly.table', ['datatables', 'patternfly.utils', 'patternfly.filters', 'patternfly.sort']);
+angular.module('patternfly.table', ['datatables', 'patternfly.pagination', 'patternfly.utils', 'patternfly.filters', 'patternfly.sort']);

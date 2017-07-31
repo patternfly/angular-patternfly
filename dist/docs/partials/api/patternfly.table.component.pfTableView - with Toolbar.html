@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-with-toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/29fdf26/src/table/tableview/examples/table-view-with-toolbar.js#L559" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - with Toolbar</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-with-toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/0ea5acb/src/table/tableview/examples/table-view-with-toolbar.js#L569" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - with Toolbar</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.table</code>
 </span>
 </div>
@@ -11,6 +11,7 @@ Please see <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a
 <div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pf-table-view - with -toolbar
      config="{object}"
      dt-options="{object}"
+     page-config="{object}"
      items="{array}"
      columns="{array}"
      action-buttons="{array}"
@@ -25,8 +26,16 @@ Please see <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a
   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
   <li>.itemsAvailable      - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
   <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
-</ul></div></td></tr><tr><td>dtOptions</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Optional angular-datatables DTOptionsBuilder configuration object.  See <a href="http://l-lin.github.io/angular-datatables/archives/#/api">angular-datatables: DTOptionsBuilder</a></p>
-</div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Array of items to display in the table view.</p>
+</ul></div></td></tr><tr><td>dtOptions</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Optional angular-datatables DTOptionsBuilder configuration object. Note: paginationType, displayLength, and dom:&quot;p&quot; are no longer being used for pagination, but are allowed for backward compatibility.
+Please switch to prefered &#39;pageConfig&#39; settings for pf pagination controls.
+Other dtOptions can still be used, such as &#39;order&#39; See <a href="http://l-lin.github.io/angular-datatables/archives/#/api">angular-datatables: DTOptionsBuilder</a></p>
+</div></td></tr><tr><td>pageConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Optional pagination configuration object.  Since all properties are optional it is ok to specify: &#39;pageConfig = {}&#39; to indicate that you want to
+use pagination with the default parameters.</p>
+<ul style='list-style-type: none'>
+  <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+  <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of &quot;Items per Page&quot;.  Default is 10 items per page
+  <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the &#39;per page&#39; dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
+</ul></div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Array of items to display in the table view.</p>
 </div></td></tr><tr><td>columns</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Array of table column information to display in the table&#39;s header row and optionaly render the cells of a column.</p>
 <ul style='list-style-type: none'>
   <li>.header     - (string) Text label for a column header
@@ -99,24 +108,23 @@ Please see <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a
       <pf-table-view config="tableConfig"
                      empty-state-config="emptyStateConfig"
                      dt-options="dtOptions"
+                     page-config="pageConfig"
                      columns="columns"
                      items="items"
                      action-buttons="tableActionButtons"
                      menu-actions="tableMenuActions">
       </pf-table-view>
     </div>
+    <hr class="col-md-12">
     <div class="col-md-12">
       <div class="form-group">
         <label class="checkbox-inline">
           <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
         </label>
-        <!-- //[WIP] issues dynamically changing displayLength and turning on/off pagination
-          <label class="checkbox-inline">
-            <input type="checkbox" ng-model="usePagination" ng-change="togglePagination()">Use Pagination</input>
-          </label>
-          <label>
-            <input ng-model="dtOptions.displayLength" ng-disabled="!usePagination" style="width: 24px; padding-left: 6px;"> # Rows Per Page</input>
-          </label> --!>
+        <!-- TODO: I don't know why this comment is neccesary, but if I remove it I get error:
+             Error: [$compile:ctreq] Controller 'tabbable', required by directive 'tabPane', can't be found!
+             I've wasted too much time trying to fix this!  Something to do with ngDoc's <file> directives
+        --!>
       </div>
       <div class="form-group">
         <label class="checkbox-inline">
@@ -124,7 +132,6 @@ Please see <a href="#/api/patternfly.toolbars.componenet:pfToolbar">pfToolbar</a
         </label>
       </div>
     </div>
-    <hr class="col-md-12">
     <div class="col-md-12">
       <label class="actions-label">Actions: </label>
     </div>
@@ -171,28 +178,22 @@ angular.module('patternfly.tableview.demo').controller('ViewCtrl', ['$scope', '$
       { header: "BirthMonth", itemField: "birthMonth"}
     ];
 
-    $scope.dtOptions = {
-      paginationType: 'full',
-      displayLength: 10,
-      dom: "tp"
-    };
+    // dtOptions paginationType, displayLength, and dom:"p" are no longer being
+    // used, but are allowed for backward compatibility.
+    // Please switch to prefered 'pageConfig' settings for pf pagination controls
+    // Other dtOptions can still be used, such as 'order'
+    // $scope.dtOptions = {
+    //  paginationType: 'full',
+    //  displayLength: 10,
+    //  dom: "tp"
+    // }
 
-    // [WIP] attempt to dyamically change displayLength (#rows) and turn on/off pagination controls
-    // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
-
-    $scope.usePagination = true;
-    $scope.togglePagination = function () {
-      $scope.usePagination = !$scope.usePagination;
-      console.log("---> togglePagination: " + $scope.usePagination);
-      if($scope.usePagination) {
-        $scope.dtOptions.displayLength = 3;
-        $scope.dtOptions.dom = "tp";
-        console.log("---> use pagination: " + $scope.dtOptions.displayLength + ":" + $scope.dtOptions.dom);
-      } else {
-        $scope.dtOptions.displayLength = undefined;
-        $scope.dtOptions.dom = "t";
-      }
-    };
+    // New pagination config settings
+    $scope.pageConfig = {
+      pageNumber: 1,
+      pageSize: 10,
+      pageSizeIncrements: [5, 10, 15]
+    }
 
     $scope.allItems = [
       {
@@ -322,6 +323,8 @@ angular.module('patternfly.tableview.demo').controller('ViewCtrl', ['$scope', '$
         match = item.address.match(filter.value) !== null;
       } else if (filter.id === 'birthMonth') {
         match = item.birthMonth === filter.value;
+      } else if (filter.id === 'status') {
+        match = item.status === filter.value;
       }
       return match;
     };
@@ -381,6 +384,13 @@ angular.module('patternfly.tableview.demo').controller('ViewCtrl', ['$scope', '$
 
     $scope.filterConfig = {
       fields: [
+        {
+          id: 'status',
+          title:  'Status',
+          placeholder: 'Filter by Status...',
+          filterType: 'select',
+          filterValues: ['error', 'warning', 'ok']
+        },
         {
           id: 'name',
           title:  'Name',
