@@ -1,4 +1,4 @@
-describe('Directive: pfC3Chart', function() {
+describe('Component: pfC3Chart', function() {
   var $scope, $compile, element;
 
   beforeEach(module(
@@ -16,6 +16,11 @@ describe('Directive: pfC3Chart', function() {
     element = '<pf-c3-chart id="myChart" config="chartConfig"></pf-c3-chart>';
     element = $compile(element)($scope);
     $scope.$digest();
+  });
+
+  it("should have access to a global PatternFly object & method", function() {
+    expect(window.patternfly).toBeDefined();
+    expect(window.patternfly.c3ChartDefaults()).toBeDefined();
   });
 
   it("chart should find empty template", function() {

@@ -205,6 +205,10 @@ describe('Component: pfTopology', function() {
     d3.selectAll('pf-topology').remove();
   });
 
+  it("should have access to a global d3 object", function() {
+    expect(window.d3).toBeDefined();
+  });
+
   it("should create an svg internally", function() {
     var element = compileTopology('<div><pf-topology items="data.items" relations="data.relations" kinds="kinds" icons="data.icons" nodes="nodes" item-selected="itemSelected(item)" search-text="searchText" show-labels="showLabels" tooltip-function="tooltip(node)"></pf-topology></div>', $scope);
     expect(element.find('svg')).not.toBe(undefined);

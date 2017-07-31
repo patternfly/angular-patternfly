@@ -1,4 +1,4 @@
-describe('Directive: pfUtilizationBarChart', function() {
+describe('Component: pfUtilizationBarChart', function() {
   var $scope, $compile, $sanitize, element, utilizationBar, title, subTitle;
 
   beforeEach(module(

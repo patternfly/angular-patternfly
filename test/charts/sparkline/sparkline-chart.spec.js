@@ -40,6 +40,11 @@ describe('Component: pfSparklineChart', function() {
     return element;
   };
 
+  it("should have access to a global PatternFly object & method", function() {
+    expect(window.patternfly).toBeDefined();
+    expect(window.patternfly.c3ChartDefaults()).toBeDefined();
+  });
+
   it("should not show axis by default", function() {
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data"></pf-sparkline-chart>',$scope);
 

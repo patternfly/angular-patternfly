@@ -35,7 +35,7 @@ rules:
   vars-on-top: 2
   no-debugger: 2
   no-cond-assign: 2
-  no-console: 2
+  no-console: 1
   no-extra-semi: 2
   no-irregular-whitespace: 2
   dot-notation:

@@ -1,4 +1,4 @@
-describe('Directive: pfHeatmapLegend', function() {
+describe('Component: pfHeatmapLegend', function() {
   var $scope, $compile, element, legendItem, legendText;
 
   beforeEach(module(
