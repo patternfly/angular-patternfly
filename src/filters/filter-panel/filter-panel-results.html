@@ -1,0 +1,29 @@
+<span class="filter-pf">
+  <span class="toolbar-pf-results">
+    <h5>
+      {{$ctrl.config.resultsCount}}
+      <span ng-if="$ctrl.config.appliedFilters.length"> of {{$ctrl.config.totalCount}}</span>
+      {{$ctrl.config.resultsLabel === undefined ? "Results" : $ctrl.config.resultsLabel}}
+    </h5>
+    <p ng-if="$ctrl.config.appliedFilters.length">Active filters:</p>
+    <ul class="list-inline">
+      <li ng-repeat="filter in $ctrl.config.appliedFilters">
+        <span ng-if="filter.values.length === 1" class="active-filter label label-info single-label">
+          <span class="pf-filter-label-category">{{filter.title}}:</span> {{filter.values[0]}}
+          <a><span ng-click="$ctrl.clearFilter(filter, filter.values[0])" class="pficon pficon-close"></span></a>
+        </span>
+        <span ng-if="filter.values.length > 1" class="active-filter label pf-filter-label-category">
+          {{filter.title}}:
+          <ul class="list-inline category-values">
+            <li ng-repeat="value in filter.values">
+              <span class="active-filter label label-info">{{value}}
+                <a><span ng-click="$ctrl.clearFilter(filter, value)" class="pficon pficon-close"></span></a>
+              </span>
+            </li>
+          </ul>
+        </span>
+      </li>
+    </ul>
+    <p><a class="clear-filters" ng-click="$ctrl.clearAllFilters()" ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p>
+  </span>
+</span>

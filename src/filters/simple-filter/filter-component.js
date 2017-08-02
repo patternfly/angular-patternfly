@@ -2,7 +2,7 @@ angular.module('patternfly.filters').component('pfFilter', {
   bindings: {
     config: '='
   },
-  templateUrl: 'filters/filter.html',
+  templateUrl: 'filters/simple-filter/filter.html',
   controller: function () {
     'use strict';
 
