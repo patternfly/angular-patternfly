@@ -29,7 +29,7 @@ angular.module('patternfly.filters').component('pfFilterResults', {
   bindings: {
     config: '='
   },
-  templateUrl: 'filters/filter-results.html',
+  templateUrl: 'filters/simple-filter/filter-results.html',
   controller: function () {
     'use strict';
 

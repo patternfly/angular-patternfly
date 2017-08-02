@@ -26,7 +26,7 @@ angular.module('patternfly.filters').component('pfFilterFields', {
     config: '=',
     addFilterFn: '<'
   },
-  templateUrl: 'filters/filter-fields.html',
+  templateUrl: 'filters/simple-filter/filter-fields.html',
   controller: function () {
     'use strict';
 

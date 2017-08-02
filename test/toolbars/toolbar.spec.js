@@ -8,7 +8,7 @@ describe('Directive:  pfToolbar', function () {
   // load the controller's module
   beforeEach(function () {
     module('patternfly.toolbars', 'patternfly.views', 'patternfly.filters', 'toolbars/toolbar.html',
-      'filters/filter.html', 'filters/filter-fields.html', 'filters/filter-results.html',
+      'filters/simple-filter/filter.html', 'filters/simple-filter/filter-fields.html', 'filters/simple-filter/filter-results.html',
       'sort/sort.html');
   });
 

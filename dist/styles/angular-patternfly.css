@@ -497,6 +497,76 @@ pf-topology {
   border-color: #0076b7 !important;
   color: #fff !important;
 }
+pf-filter-panel .dropdown > .dropdown-menu,
+pf-filter-panel .input-group-btn > .dropdown-menu {
+  margin-top: 5px;
+}
+pf-filter-panel input:-moz-placeholder {
+  font-style: italic;
+  padding-left: 10px;
+}
+pf-filter-panel input::-moz-placeholder {
+  font-style: italic;
+  padding-left: 10px;
+}
+pf-filter-panel input:-ms-input-placeholder {
+  font-style: italic;
+  padding-left: 10px;
+}
+pf-filter-panel input::-webkit-input-placeholder {
+  font-style: italic;
+  padding-left: 10px;
+}
+pf-filter-panel .filter-panel-container {
+  padding: 10px;
+}
+pf-filter-panel .filter-panel-container .keyword-filter {
+  margin-bottom: 10px;
+}
+pf-filter-panel .filter-panel-container ul {
+  list-style-type: none;
+  padding-left: 16px;
+}
+pf-filter-panel .filter-panel-container .category {
+  font-size: 15px;
+  font-weight: 400;
+}
+pf-filter-panel .filter-panel-container .category .category-option-label {
+  font-size: 12px;
+  vertical-align: text-bottom;
+}
+pf-filter-panel .list-inline > li {
+  padding-right: 0;
+}
+pf-filter-panel .toolbar-pf-results {
+  border-top: none;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+pf-filter-panel .toolbar-pf-results .single-label {
+  padding: 6px;
+}
+pf-filter-panel .toolbar-pf-results .single-label .pf-filter-label-category {
+  background-color: #00659c;
+  font-weight: 700;
+  padding-right: 2px;
+  padding-left: 0;
+}
+pf-filter-panel .toolbar-pf-results .single-label .pficon-close {
+  padding-right: 6px;
+}
+pf-filter-panel .toolbar-pf-results p {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.pf-filter-label-category {
+  background-color: #39a5dc;
+  font-weight: 700;
+  padding: 6px;
+}
+.pf-filter-label-category .category-values {
+  padding-left: 4px;
+}
 .sort-pf .btn-link {
   color: #252525;
   font-size: 16px;
