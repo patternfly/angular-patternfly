@@ -176,6 +176,24 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.filters.component:pfFilterPanel",
+      "shortName": "pfFilterPanel",
+      "type": "directive",
+      "moduleName": "patternfly.filters",
+      "shortDescription": "The Filter Panel is opened and closed by clicking on the Filter button.  It can contain any HTML desired by",
+      "keywords": "$scope allitems angular api application applied appliedfilter appliedfilters applyfilters array bar based button call called category category-option-label category1 category2 categoryone categorytwo cfme-row-column changed changedfilter changedfilterid changedfiltervalue changes checkbox checkboxes class clear cleared clicked clicking clicks closed col-md-12 col-md-2 col-md-4 comparisons component config configuration constructing controller createappliedfilter current currently default delete denote desired developer directive display events-label example-container examplefilter false filter filter-panel-container filterchanged filterconfig filtering filteritems filterpanelmodel filters filterstext filtertype filtervalues find foo foreach function hitting html input isdefined item items js keywoard keyword keyword-filter label length link list list-style-type match matches matchesfilter matchesfilters module newappliedfilters ng-change ng-controller ng-if ng-keypress ng-model ng-repeat null number onfilterchange onkeywordkeypress opened optional panel passed patternfly placeholder push regexp remove render repsonsible resetfilterpanelmodel responsible result resultscount resultslabel return returned row script selected set sets settings single store stored style tag tags text title total totalcount triggered true type units unselect updatefilterpanelmodel user val1 val2 val3 values var viewctrl"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.filters.component:pfFilterPanelResults",
+      "shortName": "pfFilterPanelResults",
+      "type": "directive",
+      "moduleName": "patternfly.filters",
+      "shortDescription": "Component for the filter panel results",
+      "keywords": "api applied appliedfilters call changedfilterid changedfiltervalue changes clear cleared clicked clicking clicks comparisons component config configuration current currently default denote directive display filter filters function items label link list list-style-type number onfilterchange optional panel patternfly render result resultscount resultslabel returned set settings style tag tags title total totalcount triggered units user values"
+    },
+    {
+      "section": "api",
       "id": "patternfly.filters.component:pfFilterResults",
       "shortName": "pfFilterResults",
       "type": "directive",
