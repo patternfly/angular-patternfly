@@ -61,13 +61,20 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
       groupClass: '@'
     },
     link: function ($scope, $element, $attrs) {
+      var contentElementHeight = function (contentElement) {
+        var contentHeight = contentElement.offsetHeight;
+        contentHeight += parseInt(getComputedStyle(contentElement).marginTop);
+        contentHeight += parseInt(getComputedStyle(contentElement).marginBottom);
+
+        return contentHeight;
+      };
+
       var setBodyScrollHeight = function (parentElement, bodyHeight) {
         // Set the max-height for the fixed height components
         var collapsePanels = parentElement[0].querySelectorAll('.panel-collapse');
         var collapsePanel;
         var scrollElement;
         var panelContents;
-        var nextContent;
         var innerHeight;
         var scroller;
 
@@ -78,24 +85,21 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
 
           if (angular.isDefined($scope.scrollSelector)) {
             scroller = angular.element(collapsePanel[0].querySelector($scope.scrollSelector));
-            if (scroller.length === 1) {
+            if (scroller.length) {
               scrollElement = angular.element(scroller[0]);
+
               panelContents = collapsePanel.children();
               angular.forEach(panelContents, function (contentElement) {
-                nextContent = angular.element(contentElement);
-
                 // Get the height of all the non-scroll element contents
-                if (nextContent[0] !== scrollElement[0]) {
-                  innerHeight += nextContent[0].offsetHeight;
-                  innerHeight += parseInt(getComputedStyle(nextContent[0]).marginTop);
-                  innerHeight += parseInt(getComputedStyle(nextContent[0]).marginBottom);
+                if (contentElement !== scrollElement[0]) {
+                  innerHeight += contentElementHeight(contentElement);
                 }
               });
             }
           }
 
-          // set the max-height
-          angular.element(scrollElement).css('max-height', (bodyHeight - innerHeight) + 'px');
+          // Make sure we have enough height to be able to scroll the contents if necessary
+          angular.element(scrollElement).css('max-height', Math.max((bodyHeight - innerHeight), 25) + 'px');
           angular.element(scrollElement).css('overflow-y', 'auto');
         });
       };
@@ -104,7 +108,6 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
         var height, openPanel, contentHeight, bodyHeight, overflowY = 'hidden';
         var parentElement = angular.element($element[0].querySelector('.panel-group'));
         var headings = angular.element(parentElement).children();
-        var headingElement;
 
         height = parentElement[0].clientHeight;
 
@@ -118,10 +121,7 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
         contentHeight = 0;
 
         angular.forEach(headings, function (heading) {
-          headingElement = angular.element(heading);
-          contentHeight += headingElement.prop('offsetHeight');
-          contentHeight += parseInt(getComputedStyle(headingElement[0]).marginTop);
-          contentHeight += parseInt(getComputedStyle(headingElement[0]).marginBottom);
+          contentHeight += contentElementHeight(heading);
         });
 
         // Determine the height remaining for opened collapse panels
@@ -148,6 +148,8 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
         });
       };
 
+      var debounceResize = _.debounce(setCollapseHeights, 150, { maxWait: 250 });
+
       if ($scope.groupHeight) {
         angular.element($element[0].querySelector('.panel-group')).css('height', $scope.groupHeight);
       }
@@ -161,10 +163,11 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', function ($wind
 
       // Update on window resizing
       $element.on('resize', function () {
-        setCollapseHeights();
+        debounceResize();
       });
+
       angular.element($window).on('resize', function () {
-        setCollapseHeights();
+        debounceResize();
       });
     }
   };

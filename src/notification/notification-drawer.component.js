@@ -51,6 +51,12 @@ angular.module('patternfly.notification').component('pfNotificationDrawer', {
       });
     };
 
+    var updateAccordionSizing = function () {
+      $timeout(function () {
+        angular.element($window).triggerHandler('resize');
+      }, 100);
+    };
+
     ctrl.toggleCollapse = function (selectedGroup) {
       if (selectedGroup.open) {
         selectedGroup.open = false;
@@ -59,6 +65,7 @@ angular.module('patternfly.notification').component('pfNotificationDrawer', {
           group.open = false;
         });
         selectedGroup.open = true;
+        updateAccordionSizing();
       }
     };
 
@@ -82,12 +89,20 @@ angular.module('patternfly.notification').component('pfNotificationDrawer', {
     ctrl.$onChanges = function (changesObj) {
       if (changesObj.notificationGroups) {
         setupGroups();
+        updateAccordionSizing();
       }
 
-      if (changesObj.drawerHidden) {
-        $timeout(function () {
-          angular.element($window).triggerHandler('resize');
-        }, 100);
+      if (!ctrl.drawerHidden &&
+        (changesObj.drawerHidden ||
+        changesObj.showMarkAllRead ||
+        changesObj.showClearAll ||
+        changesObj.actionButtonTitle ||
+        changesObj.titleInclude ||
+        changesObj.headingInclude ||
+        changesObj.subheadingInclude ||
+        changesObj.notificationBodyInclude ||
+        changesObj.notificationFooterInclude)) {
+        updateAccordionSizing();
       }
     };
 
