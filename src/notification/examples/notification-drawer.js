@@ -111,7 +111,7 @@
        </li>
      </ul>
    </div>
-  <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}" ng-click="$ctrl.customScope.markRead(notification)"></span>
+   <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}" ng-click="$ctrl.customScope.markRead(notification)"></span>
    <div class="drawer-pf-notification-content" ng-click="$ctrl.customScope.markRead(notification)">
      <span class="drawer-pf-notification-message" tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip-placement="bottom" tooltip="{{notification.message}}">
       {{notification.message}}
