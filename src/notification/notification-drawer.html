@@ -19,16 +19,15 @@
           <span class="panel-counter" ng-include src="$ctrl.subheadingInclude"></span>
         </div>
         <div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}">
-          <div ng-if="$ctrl.hasNotifications(notificationGroup)">
-            <div class="panel-body">
-              <div class="drawer-pf-notification" ng-class="{unread: notification.unread, 'expanded-notification': $ctrl.drawerExpanded}"
-                   ng-repeat="notification in notificationGroup.notifications" ng-include src="$ctrl.notificationBodyInclude">
-              </div>
-              <div ng-if="notificationGroup.isLoading" class="drawer-pf-loading text-center">
-                <span class="spinner spinner-xs spinner-inline"></span> Loading More
-              </div>
+          <div ng-if="$ctrl.hasNotifications(notificationGroup)" class="panel-body">
+            <div class="drawer-pf-notification" ng-class="{unread: notification.unread, 'expanded-notification': $ctrl.drawerExpanded}"
+                 ng-repeat="notification in notificationGroup.notifications" ng-include src="$ctrl.notificationBodyInclude">
             </div>
-            <div class="drawer-pf-action">
+            <div ng-if="notificationGroup.isLoading" class="drawer-pf-loading text-center">
+              <span class="spinner spinner-xs spinner-inline"></span> Loading More
+            </div>
+          </div>
+          <div ng-if="($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)" class="drawer-pf-action">
             <span class="drawer-pf-action-link" ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)">
               <button class="btn btn-link" ng-click="$ctrl.onMarkAllRead(notificationGroup)">Mark All Read</button>
             </span>
@@ -38,10 +37,9 @@
                 Clear All
               </button>
             </span>
-            </div>
-            <div class="drawer-pf-action" ng-if="$ctrl.actionButtonTitle">
-              <a class="btn btn-link btn-block" ng-click="$ctrl.actionButtonCallback(notificationGroup)">{{$ctrl.actionButtonTitle}}</a>
-            </div>
+          </div>
+          <div ng-if="$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)" class="drawer-pf-action">
+            <a class="btn btn-link btn-block" ng-click="$ctrl.actionButtonCallback(notificationGroup)">{{$ctrl.actionButtonTitle}}</a>
           </div>
           <div ng-if="!$ctrl.hasNotifications(notificationGroup)">
             <div class="panel-body">

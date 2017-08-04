@@ -9910,7 +9910,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
        </li>
      </ul>
    </div>
-  <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}" ng-click="$ctrl.customScope.markRead(notification)"></span>
+   <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}" ng-click="$ctrl.customScope.markRead(notification)"></span>
    <div class="drawer-pf-notification-content" ng-click="$ctrl.customScope.markRead(notification)">
      <span class="drawer-pf-notification-message" tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip-placement="bottom" tooltip="{{notification.message}}">
       {{notification.message}}
@@ -10417,6 +10417,12 @@ angular.module( 'patternfly.notification' ).component('pfInlineNotification', {
       });
     };
 
+    var updateAccordionSizing = function () {
+      $timeout(function () {
+        angular.element($window).triggerHandler('resize');
+      }, 100);
+    };
+
     ctrl.toggleCollapse = function (selectedGroup) {
       if (selectedGroup.open) {
         selectedGroup.open = false;
@@ -10425,6 +10431,7 @@ angular.module( 'patternfly.notification' ).component('pfInlineNotification', {
           group.open = false;
         });
         selectedGroup.open = true;
+        updateAccordionSizing();
       }
     };
 
@@ -10448,12 +10455,20 @@ angular.module( 'patternfly.notification' ).component('pfInlineNotification', {
     ctrl.$onChanges = function (changesObj) {
       if (changesObj.notificationGroups) {
         setupGroups();
+        updateAccordionSizing();
       }
 
-      if (changesObj.drawerHidden) {
-        $timeout(function () {
-          angular.element($window).triggerHandler('resize');
-        }, 100);
+      if (!ctrl.drawerHidden &&
+        (changesObj.drawerHidden ||
+        changesObj.showMarkAllRead ||
+        changesObj.showClearAll ||
+        changesObj.actionButtonTitle ||
+        changesObj.titleInclude ||
+        changesObj.headingInclude ||
+        changesObj.subheadingInclude ||
+        changesObj.notificationBodyInclude ||
+        changesObj.notificationFooterInclude)) {
+        updateAccordionSizing();
       }
     };
 
@@ -13870,13 +13885,20 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', ["$window", "$t
       groupClass: '@'
     },
     link: function ($scope, $element, $attrs) {
+      var contentElementHeight = function (contentElement) {
+        var contentHeight = contentElement.offsetHeight;
+        contentHeight += parseInt(getComputedStyle(contentElement).marginTop);
+        contentHeight += parseInt(getComputedStyle(contentElement).marginBottom);
+
+        return contentHeight;
+      };
+
       var setBodyScrollHeight = function (parentElement, bodyHeight) {
         // Set the max-height for the fixed height components
         var collapsePanels = parentElement[0].querySelectorAll('.panel-collapse');
         var collapsePanel;
         var scrollElement;
         var panelContents;
-        var nextContent;
         var innerHeight;
         var scroller;
 
@@ -13887,24 +13909,21 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', ["$window", "$t
 
           if (angular.isDefined($scope.scrollSelector)) {
             scroller = angular.element(collapsePanel[0].querySelector($scope.scrollSelector));
-            if (scroller.length === 1) {
+            if (scroller.length) {
               scrollElement = angular.element(scroller[0]);
+
               panelContents = collapsePanel.children();
               angular.forEach(panelContents, function (contentElement) {
-                nextContent = angular.element(contentElement);
-
                 // Get the height of all the non-scroll element contents
-                if (nextContent[0] !== scrollElement[0]) {
-                  innerHeight += nextContent[0].offsetHeight;
-                  innerHeight += parseInt(getComputedStyle(nextContent[0]).marginTop);
-                  innerHeight += parseInt(getComputedStyle(nextContent[0]).marginBottom);
+                if (contentElement !== scrollElement[0]) {
+                  innerHeight += contentElementHeight(contentElement);
                 }
               });
             }
           }
 
-          // set the max-height
-          angular.element(scrollElement).css('max-height', (bodyHeight - innerHeight) + 'px');
+          // Make sure we have enough height to be able to scroll the contents if necessary
+          angular.element(scrollElement).css('max-height', Math.max((bodyHeight - innerHeight), 25) + 'px');
           angular.element(scrollElement).css('overflow-y', 'auto');
         });
       };
@@ -13913,7 +13932,6 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', ["$window", "$t
         var height, openPanel, contentHeight, bodyHeight, overflowY = 'hidden';
         var parentElement = angular.element($element[0].querySelector('.panel-group'));
         var headings = angular.element(parentElement).children();
-        var headingElement;
 
         height = parentElement[0].clientHeight;
 
@@ -13927,10 +13945,7 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', ["$window", "$t
         contentHeight = 0;
 
         angular.forEach(headings, function (heading) {
-          headingElement = angular.element(heading);
-          contentHeight += headingElement.prop('offsetHeight');
-          contentHeight += parseInt(getComputedStyle(headingElement[0]).marginTop);
-          contentHeight += parseInt(getComputedStyle(headingElement[0]).marginBottom);
+          contentHeight += contentElementHeight(heading);
         });
 
         // Determine the height remaining for opened collapse panels
@@ -13957,6 +13972,8 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', ["$window", "$t
         });
       };
 
+      var debounceResize = _.debounce(setCollapseHeights, 150, { maxWait: 250 });
+
       if ($scope.groupHeight) {
         angular.element($element[0].querySelector('.panel-group')).css('height', $scope.groupHeight);
       }
@@ -13970,10 +13987,11 @@ angular.module('patternfly.utils').directive('pfFixedAccordion', ["$window", "$t
 
       // Update on window resizing
       $element.on('resize', function () {
-        setCollapseHeights();
+        debounceResize();
       });
+
       angular.element($window).on('resize', function () {
-        setCollapseHeights();
+        debounceResize();
       });
     }
   };
@@ -17452,7 +17470,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
 
   $templateCache.put('notification/notification-drawer.html',
-    "<div class=drawer-pf ng-class=\"{'hide': $ctrl.drawerHidden, 'drawer-pf-expanded': $ctrl.drawerExpanded}\"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a ng-if=$ctrl.allowExpand class=\"drawer-pf-toggle-expand fa fa-angle-double-left\" ng-click=$ctrl.toggleExpandDrawer()></a> <a ng-if=$ctrl.onClose class=\"drawer-pf-close pficon pficon-close\" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in $ctrl.notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}\"><div ng-if=$ctrl.hasNotifications(notificationGroup)><div class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread, 'expanded-notification': $ctrl.drawerExpanded}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div class=drawer-pf-action><span class=drawer-pf-action-link ng-if=\"$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)\"><button class=\"btn btn-link\" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class=\"btn btn-link\" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class=\"pficon pficon-close\"></span> Clear All</button></span></div><div class=drawer-pf-action ng-if=$ctrl.actionButtonTitle><a class=\"btn btn-link btn-block\" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>"
+    "<div class=drawer-pf ng-class=\"{'hide': $ctrl.drawerHidden, 'drawer-pf-expanded': $ctrl.drawerExpanded}\"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a ng-if=$ctrl.allowExpand class=\"drawer-pf-toggle-expand fa fa-angle-double-left\" ng-click=$ctrl.toggleExpandDrawer()></a> <a ng-if=$ctrl.onClose class=\"drawer-pf-close pficon pficon-close\" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in $ctrl.notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}\"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread, 'expanded-notification': $ctrl.drawerExpanded}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div ng-if=\"($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)\" class=drawer-pf-action><span class=drawer-pf-action-link ng-if=\"$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)\"><button class=\"btn btn-link\" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class=\"btn btn-link\" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class=\"pficon pficon-close\"></span> Clear All</button></span></div><div ng-if=\"$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)\" class=drawer-pf-action><a class=\"btn btn-link btn-block\" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>"
   );
 
 
