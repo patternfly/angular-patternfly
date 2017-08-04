@@ -1,7 +1,7 @@
 {
   "author": "Red Hat",
   "name": "angular-patternfly",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "license": "Apache-2.0",
   "description": "Angular extension of the PatternFly project.",
   "keywords": [
@@ -53,7 +53,7 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "matchdep": "0.3.0",
     "nsp": "^2.6.1",
-    "patternfly-eng-release": ">=3.26.2"
+    "patternfly-eng-release": "3.26.2"
   },
   "optionalDependencies": {
     "angularjs-datatables": "^0.5.7",
