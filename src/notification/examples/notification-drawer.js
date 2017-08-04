@@ -32,7 +32,7 @@
  *
  * @param {boolean} drawerHidden Flag if the drawer is currently hidden
  * @param {boolean} allowExpand Flag if the drawer can be expanded. Optional, default: false
- * @param {boolean} drawExpanded Flag if the drawer is expanded (only valid if allowExpand is true). Optional, default: false
+ * @param {boolean} drawerExpanded Flag if the drawer is expanded (only valid if allowExpand is true). Optional, default: false
  * @param {string}  drawerTitle  Title to display for the drawer (leaving this blank will remove the provided expand capability)
  * @param {object} notificationGroups Collection notification groups to add to the drawer. Alternatively, a single group object can be given if categorization is not used.
  * @param {function} onClose function() Callback for the close button. Close button is shown if this callback is supplied. Callback should set drawerHidden to true to close the drawer.
