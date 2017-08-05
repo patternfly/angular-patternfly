@@ -2,6 +2,13 @@ language: node_js
 node_js:
   - '4'
 
+cache:
+  directories:
+    - node_modules
+
+notifications:
+  email: false
+
 env:
   global:
     - ENCRYPTION_LABEL: "aa286ccd339e"
@@ -11,14 +18,21 @@ env:
 
 before_install:
   - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
-  - if [[ -n ${NPM_TOKEN} ]]; then echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc; fi
   - npm install -g bower grunt-cli
-  - npm install git+https://github.com/patternfly/patternfly-eng-release.git
+  - npm install patternfly-eng-release
+  - npm install semantic-release
 
 install: true
 
 script:
+  - if [[ -n "$NPM_TOKEN" && -n "$GH_TOKEN" ]]; then npm run semantic-release-pre; fi
   - sh -x ./node_modules/patternfly-eng-release/scripts/_build.sh -a
 
 after_success:
+  - npm prune
+  - npm run semantic-release
   - ./scripts/publish-ghpages.sh -t docs
+
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/

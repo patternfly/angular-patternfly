@@ -53,7 +53,8 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "matchdep": "0.3.0",
     "nsp": "^2.6.1",
-    "patternfly-eng-release": "3.26.6"
+    "patternfly-eng-release": "^3.26.9",
+    "semantic-release": "^6.3.6"
   },
   "optionalDependencies": {
     "angularjs-datatables": "^0.5.7",
@@ -67,10 +68,17 @@
     "jquery": "~3.2.1",
     "moment": "~2.14.1"
   },
+  "release": {
+    "branch": "master-dist",
+    "debug": false,
+    "verifyConditions": {
+      "path": "./node_modules/semantic-release/src/lib/plugin-noop.js"
+    }
+  },
   "scripts": {
-    "clean":"grunt clean",
+    "clean": "grunt clean",
     "build": "grunt build",
-    "watch":"grunt watch",
+    "watch": "grunt watch",
     "ngdocs": "grunt ngdocs",
     "ngdocs:view": "grunt ngdocs:view",
     "ngdocs:publish": "grunt ngdocs:publish",
@@ -79,7 +87,9 @@
     "check": "grunt check",
     "help": "grunt help",
     "serve": "grunt serve",
-    "start": "grunt serve"
+    "start": "grunt serve",
+    "semantic-release": "npm publish && semantic-release post",
+    "semantic-release-pre": "semantic-release pre"
   },
   "repository": {
     "type": "git",

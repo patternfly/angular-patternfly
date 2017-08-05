@@ -208,33 +208,38 @@ After executing this tasks you'll be able to access the documentation at [http:/
 $ npm run ngdocs:view -- --port=8002
 ```
 
-## Releasing
+## Git Commit Guidelines
 
-Angular PatternFly is released through Bower and npm. To release a new version version of Angular PatternFly, edit `bower.json` and `package.json` accordingly.
+PatternFly uses a semantic release process to automate npm and bower package publishing, based on the following commit message format.
 
-Update the version listed in `bower.json` by editing the file and changing the line:
-```
-"version": "<new_version>"
-```
+Each commit message consists of a **header**, a **body** and a **footer**.  The header has a special
+format that includes a **type**, a **scope** and a **subject** ([full explanation](https://github.com/stevemao/conventional-changelog-angular/blob/master/convention.md)):
 
-Update the patternfly reference version listed in `bower.json` by editing the file and changing the line below. Angular patternfly has a dependency on the patternfly reference implementation so the major and minor version numbers of the two project should be the same:
 ```
-"patternfly": "<new_version>"
-```
-
-
-Update the version listed in `package.json` by editing the file and changing the line:
-```
-"version": "<new_version>"
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
 ```
 
-Commit the version bump:
-```shell
-$ git commit -m "Version bump to <new_version>"
+##### Patch Release
+
+```
+fix(pencil): stop graphite breaking when too much pressure applied
 ```
 
-Publish a new set of release notes with ```new version``` as the tag version:
-https://github.com/patternfly/angular-patternfly/releases/new
+##### Feature Release
+
+```
+feat(pencil): add 'graphiteWidth' option
+```
+
+##### Breaking Release
+
+```
+perf(pencil): remove graphiteWidth option
+```
 
 ## Contributing
 
