@@ -7583,14 +7583,14 @@ angular.module('patternfly.filters').component('pfFilterPanelResults', {
     function clearFilter (filter, value) {
       var changedFilterId = filter.id;
 
-      var changedFilterValue = _.pull(filter.values, value)[0];
+      _.pull(filter.values, value);
 
       if (filter.values.length === 0) {
         _.pull(ctrl.config.appliedFilters, filter);
       }
 
       if (ctrl.config.onFilterChange) {
-        ctrl.config.onFilterChange(ctrl.config.appliedFilters, changedFilterId, changedFilterValue);
+        ctrl.config.onFilterChange(ctrl.config.appliedFilters, changedFilterId, value);
       }
     }
 
