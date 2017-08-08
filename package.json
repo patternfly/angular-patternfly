@@ -53,7 +53,7 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "matchdep": "0.3.0",
     "nsp": "^2.6.1",
-    "patternfly-eng-release": "3.26.2"
+    "patternfly-eng-release": "3.26.6"
   },
   "optionalDependencies": {
     "angularjs-datatables": "^0.5.7",
