@@ -25,7 +25,6 @@ before_install:
 install: true
 
 script:
-  - if [[ -n "$NPM_TOKEN" && -n "$GH_TOKEN" ]]; then npm run semantic-release-pre; fi
   - sh -x ./node_modules/patternfly-eng-release/scripts/_build.sh -a
 
 after_success:
