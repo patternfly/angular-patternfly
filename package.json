@@ -53,7 +53,7 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "matchdep": "0.3.0",
     "nsp": "^2.6.1",
-    "patternfly-eng-release": "^3.26.11",
+    "patternfly-eng-release": "^3.26.12",
     "semantic-release": "^6.3.6"
   },
   "optionalDependencies": {
