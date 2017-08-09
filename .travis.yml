@@ -20,7 +20,6 @@ before_install:
   - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
   - npm install -g bower grunt-cli
   - npm install patternfly-eng-release
-  - npm install semantic-release
 
 install: true
 
@@ -30,6 +29,7 @@ script:
 after_success:
   - npm prune
   - npm run semantic-release
+  - sh -x ./scripts/semantic-release/_publish-webjar.sh -a
   - ./scripts/publish-ghpages.sh -t docs
 
 branches:
