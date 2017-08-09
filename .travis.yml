@@ -29,7 +29,7 @@ script:
 after_success:
   - npm prune
   - npm run semantic-release
-  - sh -x ./scripts/semantic-release/_publish-webjar.sh -a
+  - sh -x ./node_modules/patternfly-eng-release/scripts/semantic-release/_publish-webjar.sh -a
   - ./scripts/publish-ghpages.sh -t docs
 
 branches:
