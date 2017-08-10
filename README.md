@@ -48,14 +48,24 @@ $ npm run help
 
 Note:
 
-1. Add Angular and Angular-PatternFly as dependencies for your project and you'll receive all the libraries you'll need:
+1. Add Angular-PatternFly as dependencies for your project and you'll receive all the libraries you'll need:
     ```shell
-    $ npm install angular --save
     $ npm install angular-patternfly --save
     ```
 2. Add the core Patternfly CSS and script includes to your HTML file(s):
 
     Please see:  https://github.com/patternfly/patternfly/blob/master/QUICKSTART.md
+    
+    Alternatively, the minimum you will need:
+
+       <!-- PatternFly Styles -->
+       <!-- Note: No other CSS files are needed regardless of what other JS packages located in patternfly/components that you decide to pull in -->
+       <link rel="stylesheet" href="node_modules/angular-patternfly/node_modules/patternfly/dist/css/patternfly.min.css">
+       <link rel="stylesheet" href="node_modules/angular-patternfly/node_modules/patternfly/dist/css/patternfly-additions.min.css">
+
+       <!-- Patternfly required settings (no jquery or further JS dependencies required by this include) -->
+       <script src="node_modules/angular-patternfly/node_modules/patternfly/dist/js/patternfly_settings.min.js"></script>
+
 
 3. Add the following CSS include to your HTML file(s):
 
@@ -67,21 +77,17 @@ Note:
 
     ```html
     <!-- Angular -->
-    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-patternfly/node_modules/angular/angular.min.js"></script>
     
     <!-- Angular-Bootstrap -->
-    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
-    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+    <script src="node_modules/angular-patternfly/node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+    <script src="node_modules/angular-patternfly/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
     
     <!-- Angular-Sanitize -->
-    <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="node_modules/angular-patternfly/node_modules/angular-sanitize/angular-sanitize.min.js"></script>
     
     <!-- Angular-PatternFly  -->
     <script src="node_modules/angular-patternfly/dist/angular-patternfly.min.js"></script>
-    
-    <!-- C3, D3 - Charting Libraries. Only required if you are using the 'patternfly.charts' module-->
-    <script src="node_modules/patternfly/node_modules/c3/c3.min.js"></script>
-    <script src="node_modules/patternfly/node_modules/d3/d3.min.js"></script>
     ```
 
 5. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
@@ -96,6 +102,13 @@ Note:
     ]);
     ```
 
+    And script includes to your HTML file:
+    ```html
+    <!-- C3, D3 - Charting Libraries. -->
+    <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/c3/c3.min.js"></script>
+    <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/d3/d3.min.js"></script>
+    ````
+
 6. (optional) The 'patternfly.table' module is not a dependency in the default angular 'patternfly' module.
    In order to use pfTableView, you must add 'patternfly.table' as a dependency in your application:
    
@@ -108,18 +121,24 @@ Note:
     ]);
     ```
 
+   Add the npm dependency:
+    ```shell
+    $ npm install angularjs-datatables --save
+    ```
+
    Add the following CSS includes to your HTML file(s):
+
    
     ```html
     <!-- Place before any patternfly css -->
-    <link rel="stylesheet" href="node_modules/datatables.net-dt/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="node_modules/angular-patternfly/node_modules/datatables.net-dt/css/jquery.dataTables.css" />
     ```
    Add the following Javascript includes to your HTML file(s):
    
    ```html
-   <script src="node_modules/jquery/dist/jquery.js"></script>
-   <script src="node_modules/datatables.net/js/jquery.dataTables.js"></script>
-   <script src="node_modules/datatables.net-select/js/dataTables.select.js"></script>
+   <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/jquery/dist/jquery.js"></script>
+   <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/datatables.net/js/jquery.dataTables.js"></script>
+   <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/datatables.net-select/js/dataTables.select.js"></script>
    <script src="node_modules/angularjs-datatables/dist/angular-datatables.min.js"></script>
    <script src="node_modules/angularjs-datatables/dist/plugins/select/angular-datatables.select.min.js"></script>
    ```
@@ -135,18 +154,25 @@ Note:
     ]);
     ```
 
+   Add the npm dependencies:
+   ```shell
+   $ npm install components-jqueryui --save
+   $ npm install angular-dragdrop --save
+   $ npm install angular-svg-base-fix --save
+   ```
+
    Add the following Javascript includes to your HTML file(s):
    
-    ```html
+   ```html
     <!-- jquery before angular.js -->
-    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/components-jqueryui/jquery-ui.min.js"></script>
-    
-    <script src="node_modules/angular/angular.js"></script>
-    
-    <!-- angular-dragdrop after angular.js -->
+
+    <!-- angular-dragdrop and angular-svg-base-fix after angular.js -->
     <script src="node_modules/angular-dragdrop/src/angular-dragdrop.js"></script>
+    <script src="node_modules/angular-svg-base-fix/src/svgBaseFix.js"></script>
     ```
+
    Also, the canvas background grid image is located in 'node_modules/angular-patternfly/dist/imgs/canvas-dot-grid.png'
    please copy this image to your application's main images directory and reference it by overridding the '.canvas' css
    class:
@@ -164,7 +190,7 @@ Note:
 
 In order to use Angular-Patternfly in a Webpack-bundled application there are some things you need to keep in mind:
 
-#### Create an alias for the jQuery module
+#### Create an alias for the jQuery module (if using JQuery dependency)
 
 In order to let Webpack find the correct jQuery module when assembling all the dependencies you need to create an alias for it in the webpack.conf.js file:
 ```
@@ -258,7 +284,7 @@ Applying a unit test, or an update to a unit test, is a contribution requirement
 If you're unfamiliar with Angular unit testing, or just need a refresher, here
 are the overall [Angular 1x guidelines](https://docs.angularjs.org/guide/unit-testing).
  
-You can access the Angular PatternFly unit test ```spec``` files uner the ```test``` directory.
+You can access the Angular PatternFly unit test ```spec``` files under the ```test``` directory.
 
 To get started, some basic guidelines:
 * Provide a clear statement of what the component does. This encompasses what is expected, and what is produced.
