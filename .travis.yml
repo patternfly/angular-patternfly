@@ -24,11 +24,17 @@ before_install:
 install: true
 
 script:
+  - 'if [[ -n "$NPM_TOKEN" && -n "$GH_TOKEN" && "$TRAVIS_BRANCH" = "master-dist" ]]; then
+       npm run semantic-release-pre;
+     fi'
   - sh -x ./node_modules/patternfly-eng-release/scripts/_build.sh -a
 
 after_success:
-  - npm prune
-  - npm run semantic-release
+  - 'if [[ -n "$NPM_TOKEN" && -n "$GH_TOKEN" && "$TRAVIS_BRANCH" = "master-dist" ]]; then
+       npm prune;
+       npm run semantic-release-publish;
+       npm run semantic-release-post;
+     fi'
   - sh -x ./node_modules/patternfly-eng-release/scripts/semantic-release/_publish-webjar.sh -a
   - ./scripts/publish-ghpages.sh -t docs
 
