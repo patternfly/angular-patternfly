@@ -1,4 +1,4 @@
-# Angular-PatternFly Community Meeting - August 17, 2017
+# Angular-PatternFly Community Meeting - August 17, 2017 10AM EST
 During this meeting we will talk about the problems we are facing with PatternFly 3 CSS.  We'll share our plan for a new CSS architecture for the next PatternFly to gather feedback.
 
 ## Call in information:
