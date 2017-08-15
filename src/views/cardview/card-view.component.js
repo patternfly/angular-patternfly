@@ -23,6 +23,13 @@
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
  * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
  * </ul>
+ * @param {object} pageConfig Optional pagination configuration object.  Since all properties are optional it is ok to specify: 'pageConfig = {}' to indicate that you want to
+ * use pagination with the default parameters.
+ * <ul style='list-style-type: none'>
+ *   <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+ *   <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of "Items per Page".  Default is 10 items per page
+ *   <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the 'per page' dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
+ * </ul>
  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
  * @param {Array} items the data to be shown in the cards<br/>
@@ -42,7 +49,12 @@
    </style>
    <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
      <div class="col-md-12">
-       <pf-card-view id="exampleCardView" config="config" empty-state-config="emptyStateConfig" items="items" empty-state-action-buttons="emptyStateActionButtons">
+       <pf-card-view id="exampleCardView"
+           config="config"
+           page-config="pageConfig"
+           empty-state-config="emptyStateConfig"
+           items="items"
+           empty-state-action-buttons="emptyStateActionButtons">
          <div class="col-md-12">
            <span>{{item.name}}</span>
          </div>
@@ -93,6 +105,9 @@
            <label class="checkbox-inline">
              <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
            </label>
+           <label class="checkbox-inline">
+             <input type="checkbox" ng-model="showPagination" ng-change="togglePagination()">Show Pagination</input>
+           </label>
          </div>
        </form>
      </div>
@@ -108,6 +123,7 @@
  <file name="script.js">
  angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
  function ($scope) {
+        $scope.showPagination = false;
         $scope.eventText = '';
         var handleSelect = function (item, e) {
           $scope.eventText = item.name + ' selected\n' + $scope.eventText;
@@ -124,6 +140,15 @@
         var handleCheckBoxChange = function (item, selected, e) {
           $scope.eventText = item.name + ' checked: ' + item.selected + '\n' + $scope.eventText;
         };
+        $scope.togglePagination = function () {
+          if ($scope.showPagination) {
+            $scope.pageConfig = {
+               pageSize: 5
+            }
+          } else {
+            delete $scope.pageConfig;
+          }
+        };
 
         var checkDisabledItem = function(item) {
           return $scope.showDisabled && (item.name === "John Smith");
@@ -138,7 +163,7 @@
             $scope.config.selectItems = true;
             $scope.config.showSelectBox = false;
           } else {
-            $scope.config.selectItems = false
+            $scope.config.selectItems = false;
             $scope.config.showSelectBox = false;
           }
         };
@@ -192,7 +217,55 @@
             city: "New York",
             state: "New York"
           },
-        ]
+          {
+            name: "Betty Rubble",
+            address: "30 Dinosaur Way",
+            city: "Bedrock",
+            state: "Washingstone"
+          },
+          {
+            name: "Martha Smith",
+            address: "415 East Main Street",
+            city: "Norfolk",
+            state: "Virginia"
+          },
+          {
+            name: "Liz Livingston",
+            address: "234 Elm Street",
+            city: "Pittsburgh",
+            state: "Pennsylvania"
+          },
+          {
+            name: "Howard McGovern",
+            address: "22 Oak Street",
+            city: "Denver",
+            state: "Colorado"
+          },
+          {
+            name: "Joyce Brown",
+            address: "72 Bourbon Way",
+            city: "Nashville",
+            state: "Tennessee"
+          },
+          {
+            name: "Mike Nichols",
+            address: "21 Jump Street",
+            city: "Hollywood",
+            state: "California"
+          },
+          {
+            name: "Mark Edwards",
+            address: "17 Cross Street",
+            city: "Boston",
+            state: "Massachusetts"
+          },
+          {
+            name: "Chris Thomas",
+            address: "50 Second Street",
+            city: "New York",
+            state: "New York"
+          }
+        ];
 
         var performEmptyStateAction = function (action) {
           $scope.eventText = action.name + "\r\n" + $scope.eventText;
@@ -240,6 +313,7 @@
 angular.module('patternfly.views').component('pfCardView', {
   bindings: {
     config: '=?',
+    pageConfig: '=?',
     emptyStateConfig: '=?',
     emptyStateActionButtons: '=?',
     items: '=',
@@ -250,6 +324,8 @@ angular.module('patternfly.views').component('pfCardView', {
   controller: function () {
     'use strict';
     var ctrl = this;
+    var prevPageConfig, prevItems;
+
     ctrl.defaultConfig = {
       selectItems: false,
       multiSelect: false,
@@ -262,7 +338,8 @@ angular.module('patternfly.views').component('pfCardView', {
       onSelectionChange: null,
       onCheckBoxChange: null,
       onClick: null,
-      onDblClick: null
+      onDblClick: null,
+      itemsAvailable: true
     };
 
     ctrl.itemClick = function (e, item) {
@@ -349,15 +426,62 @@ angular.module('patternfly.views').component('pfCardView', {
       return ctrl.config.checkDisabled && ctrl.config.checkDisabled(item);
     };
 
+    function setPagination () {
+      if (angular.isUndefined(ctrl.pageConfig)) {
+        ctrl.pageConfig = {
+          pageNumber: 1,
+          pageSize: ctrl.items.length,
+          numTotalItems: ctrl.items.length,
+          showPaginationControls: false
+        };
+      } else {
+        if (angular.isUndefined(ctrl.pageConfig.showPaginationControls)) {
+          ctrl.pageConfig.showPaginationControls = true;
+        }
+        if (!angular.isNumber(ctrl.pageConfig.pageNumber)) {
+          ctrl.pageConfig.pageNumber = 1;
+        }
+        if (!angular.isNumber(ctrl.pageConfig.pageSize)) {
+          ctrl.pageConfig.pageSize = 10;
+        }
+        if (!angular.isNumber(ctrl.pageConfig.numTotalItems)) {
+          ctrl.pageConfig.numTotalItems = ctrl.items.length;
+        }
+        // if not showing pagination, keep pageSize equal to numTotalItems
+        if (!ctrl.pageConfig.showPaginationControls) {
+          ctrl.pageConfig.pageSize = ctrl.pageConfig.numTotalItems;
+        }
+      }
+      prevPageConfig = angular.copy(ctrl.pageConfig);
+    }
+
     ctrl.$onInit = function () {
-      // Setting bound variables to new variables loses it's binding
-      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
-      // Instead, use _.defaults to update the existing variable
+
       _.defaults(ctrl.config, ctrl.defaultConfig);
+
       if (ctrl.config.selectItems && ctrl.config.showSelectBox) {
         throw new Error('pfCardView - ' +
           'Illegal use of pfCardView component! ' +
           'Cannot allow both select box and click selection in the same card view.');
+      }
+
+      prevItems = angular.copy(ctrl.items);
+      setPagination();
+    };
+
+
+    ctrl.$doCheck = function () {
+      if (!angular.equals(ctrl.pageConfig, prevPageConfig)) {
+        setPagination();
+      }
+      if (!angular.equals(ctrl.items, prevItems)) {
+        if (ctrl.items) {
+          ctrl.config.itemsAvailable = ctrl.items.length > 0;
+        }
+        if (angular.isDefined(ctrl.pageConfig)) {
+          ctrl.pageConfig.numTotalItems = ctrl.items.length;
+        }
+        prevItems = angular.copy(ctrl.items);
       }
     };
   }
