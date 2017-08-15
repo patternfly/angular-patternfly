@@ -28,7 +28,8 @@
  * <ul style='list-style-type: none'>
  *   <li>.header     - (string) Text label for a column header
  *   <li>.itemField    - (string) Item field to associate with a particular column.
- *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
+ *   <li>.templateFn - (function) (optional) Template function used to render each cell of the column. Pro: more performant than `htmlTemplate`. Con: doesn't support AngularJS directives in the template, therefore it doesn't support things like ng-click. Example: <pre>templateFn: value => `<span class="text-danger">${value}</span>`</pre>
+ *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Pro: supports AngularJS directives in the template. Con: poor performance on large tables. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
  *        Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. 'key' is the item attribute name; which should equal the itemFld of a column.
  *       'value' is the item[key] value.
  *       <pre>
@@ -39,6 +40,7 @@
  *   <li>.colActionFn - (function) (optional) Callback function used for the column. 'value' is passed as a paramenter to the
  *        callback function.
  * </ul>
+ * <p><strong>Tip:</strong> For templating, use `tempateFn` unless you really need to use AngularJS directives. `templateFn` performs better than `htmlTemplate`.</p>
  * @param {array} actionButtons List of action buttons in each row
  *   <ul style='list-style-type: none'>
  *     <li>.name - (String) The name of the action, displayed on the button
@@ -154,11 +156,34 @@
       $scope.actionsText = "";
 
       $scope.columns = [
-        { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
-        { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
-        { header: "Age", itemField: "age"},
-        { header: "Address", itemField: "address", htmlTemplate: "address_template.html" },
-        { header: "BirthMonth", itemField: "birthMonth"}
+        {
+          header: "Status",
+          itemField: "status",
+          htmlTemplate: "status_template.html"
+        },
+        {
+          header: "Name",
+          itemField: "name",
+          htmlTemplate: "name_template.html",
+          colActionFn: onNameClick
+        },
+        {
+          header: "Age",
+          itemField: "age",
+          templateFn: function(value) {
+            var className = value > 30 ? 'text-success' : 'text-warning';
+            return '<span class="' + className + '">' + value + '</span>';
+          }
+        },
+        {
+          header: "Address",
+          itemField: "address",
+          htmlTemplate: "address_template.html"
+        },
+        {
+          header: "BirthMonth",
+          itemField: "birthMonth"
+        }
       ];
 
       // dtOptions paginationType, displayLength, and dom:"p" are no longer being
