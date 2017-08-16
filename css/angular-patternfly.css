@@ -480,6 +480,17 @@ pf-topology {
 .filter-pf a {
   cursor: pointer;
 }
+.filter-pf .input-group .input-group-btn .dropdown-menu > .selected > a {
+  background-color: #0088ce !important;
+  border-color: #0076b7 !important;
+  color: #fff !important;
+}
+.filter-pf .category-select {
+  display: flex;
+}
+.filter-pf .category-select-value {
+  border-left-width: 0 !important;
+}
 .filter-pf.filter-fields .form-group {
   padding-left: 0;
   width: 275px;
@@ -491,11 +502,6 @@ pf-topology {
   font-size: 12px;
   font-style: italic;
   font-weight: 400;
-}
-.input-group .input-group-btn .dropdown-menu > .selected > a {
-  background-color: #0088ce !important;
-  border-color: #0076b7 !important;
-  color: #fff !important;
 }
 pf-filter-panel .dropdown > .dropdown-menu,
 pf-filter-panel .input-group-btn > .dropdown-menu {
