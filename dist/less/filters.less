@@ -2,6 +2,21 @@
   a {
     cursor: pointer;
   }
+  .input-group {
+    .input-group-btn {
+      .dropdown-menu>.selected>a {
+        background-color: @color-pf-blue !important;
+        border-color: #0076b7 !important;
+        color: @color-pf-white !important;
+      }
+    }
+  }
+  .category-select{
+    display: flex;
+  }
+  .category-select-value{
+    border-left-width: 0 !important;
+  }
 }
 .filter-pf.filter-fields {
   .form-group {
@@ -17,15 +32,6 @@
     font-size: 12px;
     font-style: italic;
     font-weight: 400;
-  }
-}
-.input-group {
-  .input-group-btn {
-    .dropdown-menu>.selected>a {
-      background-color: @color-pf-blue !important;
-      border-color: #0076b7 !important;
-      color: @color-pf-white !important;
-    }
   }
 }
 
