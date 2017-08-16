@@ -14,8 +14,12 @@
  * <li>.id          - (String) Optional unique Id for the filter field, useful for comparisons
  * <li>.title       - (String) The title to display for the filter field
  * <li>.placeholder - (String) Text to display when no filter value has been entered
- * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a single select box)
- * <li>.filterValues - (Array) List of valid select values used when filterType is 'select'
+ * <li>.filterMultiselect - (Boolean) In `complex-select`, allow selection of multiple values per category. Optional, default is `false`
+ * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a single select box or 'complex-select' for a category select box)
+ * <li>.filterValues - (Array) List of valid select values used when filterType is 'select' or 'complex-select' (in where these values serve as case insensitve keys for .filterCategories objects)
+ * <li>.filterCategories - (Array of (Objects)) For 'complex-select' only, array of objects whoes keys (case insensitive) match the .filterValues, these objects include each of the filter fields above (sans .placeholder)
+ * <li>.filterCategoriesPlaceholder - (String) Text to display in `complex-select` category value select when no filter value has been entered, Optional
+ * <li>.filterDelimiter - (String) Delimiter separating 'complex-select' category and value. Optional, default is a space, ' '
  * </ul>
  * <li>.appliedFilters - (Array) List of the currently applied filters
  * <li>.resultsCount   - (int) The number of results returned after the current applied filters have been applied
@@ -45,6 +49,9 @@
             <div class="col-md-2">
               <span>{{item.birthMonth}}</span>
             </div>
+            <div class="col-md-4">
+              <span>{{item.car}}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -67,27 +74,33 @@
           {
             name: "Fred Flintstone",
             address: "20 Dinosaur Way, Bedrock, Washingstone",
-            birthMonth: 'February'
+            birthMonth: 'February',
+            car: 'Toyota-Echo'
           },
           {
             name: "John Smith",
             address: "415 East Main Street, Norfolk, Virginia",
-            birthMonth: 'October'
+            birthMonth: 'October',
+            car: 'Subaru-Outback'
+
           },
           {
             name: "Frank Livingston",
             address: "234 Elm Street, Pittsburgh, Pennsylvania",
-            birthMonth: 'March'
+            birthMonth: 'March',
+            car: 'Toyota-Prius'
           },
           {
             name: "Judy Green",
             address: "2 Apple Boulevard, Cincinatti, Ohio",
-            birthMonth: 'December'
+            birthMonth: 'December',
+            car: 'Subaru-Impreza'
           },
           {
             name: "Pat Thomas",
             address: "50 Second Street, New York, New York",
-            birthMonth: 'February'
+            birthMonth: 'February',
+            car: 'Subaru-Outback'
           }
         ];
         $scope.items = $scope.allItems;
@@ -102,6 +115,8 @@
             match = item.address.match(re) !== null;
           } else if (filter.id === 'birthMonth') {
             match = item.birthMonth === filter.value;
+          } else if (filter.id === 'car') {
+            match = item.car === filter.value;
           }
           return match;
         };
@@ -160,6 +175,24 @@
               placeholder: 'Filter by Birth Month',
               filterType: 'select',
               filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            },
+           {
+              id: 'car',
+              title:  'Car',
+              placeholder: 'Filter by Car Make',
+              filterType: 'complex-select',
+              filterValues: ['Subaru', 'Toyota'],
+              filterDelimiter: '-',
+              filterCategoriesPlaceholder: 'Filter by Car Model',
+              filterCategories: {subaru: {
+                id: 'subaru',
+                title:  'Subaru',
+                filterValues: ['Outback', 'Crosstrek', 'Impreza']},
+                toyota: {
+                id: 'toyota',
+                title:  'Toyota',
+                filterValues: ['Prius', 'Corolla', 'Echo']}
+                }
             }
           ],
           resultsCount: $scope.items.length,
