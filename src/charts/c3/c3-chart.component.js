@@ -99,7 +99,7 @@
             chartData.bindto = '#' + $attrs.id;
             // always re-generate donut pct chart because it's colors
             // change based on data and thresholds
-            if (!chart || $attrs.id.indexOf('donutPctChart')) {
+            if (!chart || $attrs.id.includes('donutPctChart')) {
               chart = c3.generate(chartData);
             } else {
               //if chart is already created, then we only need to re-load data
