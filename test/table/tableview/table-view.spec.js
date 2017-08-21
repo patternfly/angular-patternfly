@@ -33,7 +33,7 @@ describe('Component: pfTableView', function () {
       {itemField: 'uuid', header: 'ID'},
       {itemField: 'name', header: 'Name', htmlTemplate: "name_template.html", colActionFn: onNameClick},
       {itemField: 'size', header: 'Size'},
-      {itemField: 'capacity', header: 'Capacity'}
+      {itemField: 'capacity', header: 'Capacity', templateFn: function(value) { return '<span class="custom-template2">' + value + '</span>' }}
     ];
 
     $scope.items = [
@@ -146,6 +146,17 @@ describe('Component: pfTableView', function () {
     expect(nameLinks.length).toBe(5);
     eventFire(nameLinks[0], 'click');
     expect($scope.result).toBe('You clicked on One');
+  });
+
+  it('should use a template function if one is configured', function () {
+    basicSetup();
+    var customSpans = element.find('.custom-template2');
+    expect(customSpans.length).toBe(5);
+    customSpans.each(function(i) {
+      var result = $(this).parent().html();
+      var expected = '<span class="custom-template2">' + $scope.items[i].capacity + '</span>';
+      expect(result).toBe(expected);
+    });
   });
 
   it('should not show pagination controls by default', function () {
