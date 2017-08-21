@@ -11892,7 +11892,8 @@ angular.module('patternfly.pagination').component('pfPagination', {
   * <ul style='list-style-type: none'>
   *   <li>.header     - (string) Text label for a column header
   *   <li>.itemField    - (string) Item field to associate with a particular column.
-  *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
+  *   <li>.templateFn - (function) (optional) Template function used to render each cell of the column. Pro: more performant than `htmlTemplate`. Con: doesn't support AngularJS directives in the template, therefore it doesn't support things like ng-click. Example: <pre>templateFn: value => `<span class="text-danger">${value}</span>`</pre>
+  *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Pro: supports AngularJS directives in the template. Con: poor performance on large tables. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
   *        Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. 'key' is the item attribute name; which should equal the itemFld of a column.
   *       'value' is the item[key] value.
   *   <pre>
@@ -11903,6 +11904,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
   *   <li>.colActionFn - (function) (optional) Callback function used for the column. 'value' is passed as a paramenter to the
   *        callback function.
   * </ul>
+  * <p><strong>Tip:</strong> For templating, use `tempateFn` unless you really need to use AngularJS directives. `templateFn` performs better than `htmlTemplate`.</p>
   * @param {array} actionButtons List of action buttons in each row
   *   <ul style='list-style-type: none'>
   *     <li>.name - (String) The name of the action, displayed on the button
@@ -11980,7 +11982,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
             { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
             { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
             { header: "Address", itemField: "address"},
-            { header: "City", itemField: "city" },
+            { header: "City", itemField: "city", templateFn: function(value) { return '<span class="text-success">' + value + '</span>' } },
             { header: "State", itemField: "state"}
           ];
 
@@ -12238,7 +12240,8 @@ angular.module('patternfly.pagination').component('pfPagination', {
  * <ul style='list-style-type: none'>
  *   <li>.header     - (string) Text label for a column header
  *   <li>.itemField    - (string) Item field to associate with a particular column.
- *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
+ *   <li>.templateFn - (function) (optional) Template function used to render each cell of the column. Pro: more performant than `htmlTemplate`. Con: doesn't support AngularJS directives in the template, therefore it doesn't support things like ng-click. Example: <pre>templateFn: value => `<span class="text-danger">${value}</span>`</pre>
+ *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Pro: supports AngularJS directives in the template. Con: poor performance on large tables. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
  *        Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. 'key' is the item attribute name; which should equal the itemFld of a column.
  *       'value' is the item[key] value.
  *       <pre>
@@ -12249,6 +12252,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
  *   <li>.colActionFn - (function) (optional) Callback function used for the column. 'value' is passed as a paramenter to the
  *        callback function.
  * </ul>
+ * <p><strong>Tip:</strong> For templating, use `tempateFn` unless you really need to use AngularJS directives. `templateFn` performs better than `htmlTemplate`.</p>
  * @param {array} actionButtons List of action buttons in each row
  *   <ul style='list-style-type: none'>
  *     <li>.name - (String) The name of the action, displayed on the button
@@ -12364,11 +12368,34 @@ angular.module('patternfly.pagination').component('pfPagination', {
       $scope.actionsText = "";
 
       $scope.columns = [
-        { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
-        { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
-        { header: "Age", itemField: "age"},
-        { header: "Address", itemField: "address", htmlTemplate: "address_template.html" },
-        { header: "BirthMonth", itemField: "birthMonth"}
+        {
+          header: "Status",
+          itemField: "status",
+          htmlTemplate: "status_template.html"
+        },
+        {
+          header: "Name",
+          itemField: "name",
+          htmlTemplate: "name_template.html",
+          colActionFn: onNameClick
+        },
+        {
+          header: "Age",
+          itemField: "age",
+          templateFn: function(value) {
+            var className = value > 30 ? 'text-success' : 'text-warning';
+            return '<span class="' + className + '">' + value + '</span>';
+          }
+        },
+        {
+          header: "Address",
+          itemField: "address",
+          htmlTemplate: "address_template.html"
+        },
+        {
+          header: "BirthMonth",
+          itemField: "birthMonth"
+        }
       ];
 
       // dtOptions paginationType, displayLength, and dom:"p" are no longer being
@@ -12790,7 +12817,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
     emptyStateActionButtons: '=?'
   },
   templateUrl: 'table/tableview/table-view.html',
-  controller: ["DTOptionsBuilder", "DTColumnDefBuilder", "$element", "pfUtils", "$log", "$filter", "$timeout", function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout) {
+  controller: ["DTOptionsBuilder", "DTColumnDefBuilder", "$element", "pfUtils", "$log", "$filter", "$timeout", "$sce", function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout, $sce) {
     'use strict';
     var ctrl = this, prevDtOptions, prevItems;
 
@@ -13174,21 +13201,6 @@ angular.module('patternfly.pagination').component('pfPagination', {
       }
     };
 
-    ctrl.hasHTMLTemplate = function (key) {
-      var htmlTemplate = this.getHTMLTemplate(key);
-      return htmlTemplate.length > 0;
-    };
-
-    ctrl.getHTMLTemplate = function (key) {
-      var retVal = '';
-      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
-
-      if (tableCol && tableCol.length === 1 && tableCol[0].hasOwnProperty('htmlTemplate')) {
-        retVal = tableCol[0].htmlTemplate;
-      }
-      return retVal;
-    };
-
     ctrl.handleColAction = function (key, value) {
       var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
 
@@ -13267,6 +13279,10 @@ angular.module('patternfly.pagination').component('pfPagination', {
         ctrl.dropdownClass = 'dropup';
       }
     }
+
+    ctrl.trustAsHtml = function (html) {
+      return $sce.trustAsHtml(html);
+    };
   }]
 });
 ;/**
@@ -17584,7 +17600,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   'use strict';
 
   $templateCache.put('table/tableview/table-view.html',
-    "<div class=container-fluid><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.columns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"col in $ctrl.columns\" ng-init=\"key = col.itemField; value = item[key]\"><span ng-if=!$ctrl.hasHTMLTemplate(key)>{{value}}</span> <span ng-if=$ctrl.hasHTMLTemplate(key) ng-include=$ctrl.getHTMLTemplate(key)></span></td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-pagination ng-if=\"$ctrl.dtOptions.paging && $ctrl.config.itemsAvailable === true\" page-size=$ctrl.pageConfig.pageSize page-number=$ctrl.pageConfig.pageNumber num-total-items=$ctrl.pageConfig.numTotalItems page-size-increments=$ctrl.pageConfig.pageSizeIncrements update-page-size=$ctrl.updatePageSize($event) update-page-number=$ctrl.updatePageNumber($event)></pf-pagination><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></div>"
+    "<div class=container-fluid><table ng-if=\"$ctrl.config.itemsAvailable !== false\" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class=\"table-view-container table table-striped table-bordered table-hover dataTable\"><thead><tr role=row><th class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change=\"$ctrl.toggleAll()\"></th><th ng-repeat=\"col in $ctrl.columns\">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat=\"item in $ctrl.items track by $index\"><td class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=item.selected ng-model=item.selected ng-change=\"$ctrl.toggleOne(item)\"></td><td ng-repeat=\"col in $ctrl.columns\" ng-init=\"key = col.itemField; value = item[key]\"><span ng-if=\"!col.htmlTemplate && !col.templateFn\">{{value}}</span> <span ng-if=col.htmlTemplate ng-include=col.htmlTemplate></span> <span ng-if=col.templateFn ng-bind-html=$ctrl.trustAsHtml(col.templateFn(value))></span></td><td ng-if=\"$ctrl.actionButtons && $ctrl.actionButtons.length > 0\" class=table-view-pf-actions ng-repeat=\"actionButton in $ctrl.actionButtons\"><div class=table-view-pf-btn><button class=\"btn btn-default\" title={{actionButton.title}} ng-click=\"$ctrl.handleButtonAction(actionButton, item)\"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\" class=\"table-view-pf-actions list-group-item-header\"><div uib-dropdown class=\"{{$ctrl.dropdownClass}} dropdown-kebab-pf\" id=kebab_{{$index}} ng-if=\"$ctrl.menuActions && $ctrl.menuActions.length > 0\"><button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\" type=button id=dropdownKebabRight_{{$index}} ng-click=\"$ctrl.setupActions(item, $event)\"><span class=\"fa fa-ellipsis-v\"></span></button><ul uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right {{$index}}\" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat=\"menuAction in $ctrl.menuActions\" ng-if=\"menuAction.isVisible !== false\" role=\"{{menuAction.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': (menuAction.isSeparator === true), 'disabled': (menuAction.isDisabled === true)}\"><a ng-if=\"menuAction.isSeparator !== true\" title={{menuAction.title}} ng-click=\"$ctrl.handleMenuAction(menuAction, item)\">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-pagination ng-if=\"$ctrl.dtOptions.paging && $ctrl.config.itemsAvailable === true\" page-size=$ctrl.pageConfig.pageSize page-number=$ctrl.pageConfig.pageNumber num-total-items=$ctrl.pageConfig.numTotalItems page-size-increments=$ctrl.pageConfig.pageSizeIncrements update-page-size=$ctrl.updatePageSize($event) update-page-number=$ctrl.updatePageNumber($event)></pf-pagination><pf-empty-state ng-if=\"$ctrl.config.itemsAvailable === false\" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></div>"
   );
 
 }]);
