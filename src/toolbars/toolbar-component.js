@@ -76,7 +76,7 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
     }
 
     function enforceSingleSelect (filter) {
-      _.remove(ctrl.config.appliedFilters, {title: filter.title});
+      _.remove(ctrl.config.filterConfig.appliedFilters, {title: filter.title});
     }
 
     function addFilter (field, value) {
@@ -86,7 +86,7 @@ angular.module('patternfly.toolbars').component('pfToolbar', {
         value: value
       };
       if (!filterExists(newFilter)) {
-        if (newFilter.type === 'select') {
+        if (field.filterType === 'select') {
           enforceSingleSelect(newFilter);
         }
         ctrl.config.filterConfig.appliedFilters.push(newFilter);
