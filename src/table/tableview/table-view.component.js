@@ -12,7 +12,7 @@ angular.module('patternfly.table').component('pfTableView', {
     emptyStateActionButtons: '=?'
   },
   templateUrl: 'table/tableview/table-view.html',
-  controller: function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout) {
+  controller: function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout, $sce) {
     'use strict';
     var ctrl = this, prevDtOptions, prevItems;
 
@@ -396,21 +396,6 @@ angular.module('patternfly.table').component('pfTableView', {
       }
     };
 
-    ctrl.hasHTMLTemplate = function (key) {
-      var htmlTemplate = this.getHTMLTemplate(key);
-      return htmlTemplate.length > 0;
-    };
-
-    ctrl.getHTMLTemplate = function (key) {
-      var retVal = '';
-      var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
-
-      if (tableCol && tableCol.length === 1 && tableCol[0].hasOwnProperty('htmlTemplate')) {
-        retVal = tableCol[0].htmlTemplate;
-      }
-      return retVal;
-    };
-
     ctrl.handleColAction = function (key, value) {
       var tableCol = $filter('filter')(ctrl.columns, {itemField: key});
 
@@ -489,5 +474,9 @@ angular.module('patternfly.table').component('pfTableView', {
         ctrl.dropdownClass = 'dropup';
       }
     }
+
+    ctrl.trustAsHtml = function (html) {
+      return $sce.trustAsHtml(html);
+    };
   }
 });

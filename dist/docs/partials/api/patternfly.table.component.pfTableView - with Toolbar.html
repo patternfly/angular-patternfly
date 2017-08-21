@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-with-toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/ff78e17/src/table/tableview/examples/table-view-with-toolbar.js#L569" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - with Toolbar</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-with-toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/dd0b784/src/table/tableview/examples/table-view-with-toolbar.js#L594" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - with Toolbar</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.table</code>
 </span>
 </div>
@@ -37,10 +37,11 @@ use pagination with the default parameters.</p>
   <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the &#39;per page&#39; dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
 </ul></div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Array of items to display in the table view.</p>
 </div></td></tr><tr><td>columns</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Array of table column information to display in the table&#39;s header row and optionaly render the cells of a column.</p>
-<ul style='list-style-type: none'>
+<p><ul style='list-style-type: none'>
   <li>.header     - (string) Text label for a column header
   <li>.itemField    - (string) Item field to associate with a particular column.
-  <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Ex: htmlTemplate=&quot;name_template.html&quot;.  The template will be used to render each cell of the column.
+  <li>.templateFn - (function) (optional) Template function used to render each cell of the column. Pro: more performant than <code>htmlTemplate</code>. Con: doesn&#39;t support AngularJS directives in the template, therefore it doesn&#39;t support things like ng-click. Example: <pre class="prettyprint linenums">templateFn: value =&gt; `&lt;span class="text-danger"&gt;${value}&lt;/span&gt;`</pre>
+  <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Pro: supports AngularJS directives in the template. Con: poor performance on large tables. Ex: htmlTemplate=&quot;name_template.html&quot;.  The template will be used to render each cell of the column.
        Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. &#39;key&#39; is the item attribute name; which should equal the itemFld of a column.
       &#39;value&#39; is the item[key] value.
       <pre class="prettyprint linenums">
@@ -50,7 +51,8 @@ use pagination with the default parameters.</p>
       </pre>
   <li>.colActionFn - (function) (optional) Callback function used for the column. &#39;value&#39; is passed as a paramenter to the
        callback function.
-</ul></div></td></tr><tr><td>actionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>List of action buttons in each row</p>
+</ul></p>
+<p><strong>Tip:</strong> For templating, use <code>tempateFn</code> unless you really need to use AngularJS directives. <code>templateFn</code> performs better than <code>htmlTemplate</code>.</p></div></td></tr><tr><td>actionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>List of action buttons in each row</p>
 <ul style='list-style-type: none'>
   <li>.name - (String) The name of the action, displayed on the button
   <li>.title - (String) Optional title, used for the tooltip
@@ -171,11 +173,34 @@ angular.module('patternfly.tableview.demo').controller('ViewCtrl', ['$scope', '$
     $scope.actionsText = "";
 
     $scope.columns = [
-      { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
-      { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
-      { header: "Age", itemField: "age"},
-      { header: "Address", itemField: "address", htmlTemplate: "address_template.html" },
-      { header: "BirthMonth", itemField: "birthMonth"}
+      {
+        header: "Status",
+        itemField: "status",
+        htmlTemplate: "status_template.html"
+      },
+      {
+        header: "Name",
+        itemField: "name",
+        htmlTemplate: "name_template.html",
+        colActionFn: onNameClick
+      },
+      {
+        header: "Age",
+        itemField: "age",
+        templateFn: function(value) {
+          var className = value > 30 ? 'text-success' : 'text-warning';
+          return '<span class="' + className + '">' + value + '</span>';
+        }
+      },
+      {
+        header: "Address",
+        itemField: "address",
+        htmlTemplate: "address_template.html"
+      },
+      {
+        header: "BirthMonth",
+        itemField: "birthMonth"
+      }
     ];
 
     // dtOptions paginationType, displayLength, and dom:"p" are no longer being
