@@ -13877,7 +13877,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
     }
 
     function enforceSingleSelect (filter) {
-      _.remove(ctrl.config.appliedFilters, {title: filter.title});
+      _.remove(ctrl.config.filterConfig.appliedFilters, {title: filter.title});
     }
 
     function addFilter (field, value) {
@@ -13887,7 +13887,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
         value: value
       };
       if (!filterExists(newFilter)) {
-        if (newFilter.type === 'select') {
+        if (field.filterType === 'select') {
           enforceSingleSelect(newFilter);
         }
         ctrl.config.filterConfig.appliedFilters.push(newFilter);
