@@ -79,7 +79,7 @@ angular.module('patternfly.filters').component('pfFilterFields', {
           }
         } else {
           ctrl.addFilterFn(ctrl.currentField, filterValue);
-          ctrl.currentValue = null;
+          ctrl.currentValue = filterValue;
         }
       }
     }
