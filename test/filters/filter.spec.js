@@ -40,24 +40,24 @@ describe('Directive:  pfFilter', function () {
           title:  'Birth Month',
           placeholder: 'Filter by Birth Month',
           filterType: 'select',
-          filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+          filterValues: [{title:'January', id:'jan'}, {title:'Feb', id:'February'}, 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         },
         {
           id: 'car',
           title:  'Car',
           placeholder: 'Filter by Car Make',
           filterType: 'complex-select',
-          filterValues: ['Subaru', 'Toyota'],
+          filterValues: [{title:'Subaru', id:'subie'}, 'Toyota'],
           filterDelimiter: '-',
           filterCategoriesPlaceholder: 'Filter by Car Model',
-          filterCategories: {subaru: {
-            id: 'subaru',
+          filterCategories: {subie: {
+            id: 'subie',
             title:  'Subaru',
-            filterValues: ['Outback', 'Crosstrek', 'Impreza']},
+            filterValues: [{title:'Outback', id:'out'}, 'Crosstrek', 'Impreza']},
             toyota: {
               id: 'toyota',
               title:  'Toyota',
-              filterValues: ['Prius', 'Corolla', 'Echo']}
+              filterValues: [{title:'Prius', id:'pri'}, 'Corolla', 'Echo']}
           }
         }
       ],

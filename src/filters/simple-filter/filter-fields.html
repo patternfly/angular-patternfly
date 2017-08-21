@@ -31,9 +31,10 @@
               {{$ctrl.currentField.placeholder}}
             </a>
           </li>
-          <li ng-repeat="filterValue in $ctrl.currentField.filterValues" ng-class="{'selected': filterValue === $ctrl.currentValue}">
-            <a role="menuitem" tabindex="-1" ng-click="$ctrl.selectValue(filterValue)">
-              {{filterValue}}
+          <li ng-repeat="filterValue in $ctrl.currentField.filterValues"
+              ng-class="{'selected': (filterValue === $ctrl.currentValue || filterValue.id === $ctrl.currentValue)}">
+            <a role="menuitem" tabindex="-1" ng-click="$ctrl.selectValue(filterValue.id || filterValue)">
+              {{filterValue.title || filterValue}}
             </a>
           </li>
         </ul>
@@ -52,9 +53,10 @@
               {{$ctrl.currentField.placeholder}}
             </a>
           </li>
-          <li ng-repeat="filterCategory in $ctrl.currentField.filterValues" ng-class="{'selected': filterCategory === $ctrl.filterCategory}">
-            <a role="menuitem" tabindex="-1" ng-click="$ctrl.selectValue(filterCategory, 'filter-category')">
-              {{filterCategory}}
+          <li ng-repeat="filterCategory in $ctrl.currentField.filterValues"
+              ng-class="{'selected': (filterCategory === $ctrl.filterCategory || filterCategory.id === $ctrl.filterCategory)}">
+            <a role="menuitem" tabindex="-1" ng-click="$ctrl.selectValue(filterCategory.id ||filterCategory, 'filter-category')">
+              {{filterCategory.title ||filterCategory}}
             </a>
           </li>
         </ul>
@@ -71,9 +73,10 @@
               {{$ctrl.currentField.filterCategoriesPlaceholder}}
             </a>
           </li>
-          <li ng-repeat="filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.toLowerCase()].filterValues" ng-class="{'selected': filterValue === $ctrl.filterValue}">
-            <a role="menuitem" tabindex="-1" ng-click="$ctrl.selectValue(filterValue, 'filter-value')">
-              {{filterValue}}
+          <li ng-repeat="filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.toLowerCase()].filterValues"
+              ng-class="{'selected': (filterValue === $ctrl.filterValue || filterValue.id === $ctrl.filterValue)}">
+            <a role="menuitem" tabindex="-1" ng-click="$ctrl.selectValue(filterValue.id || filterValue, 'filter-value')">
+              {{filterValue.title || filterValue}}
             </a>
           </li>
         </ul>
