@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.toolbars.componenet:pfToolbar
+ * @name patternfly.toolbars.component:pfToolbar
  * @restrict E
  *
  * @description
