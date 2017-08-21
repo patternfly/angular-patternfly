@@ -4,7 +4,7 @@
  *
  * @description
  * Example configuring a table view with a toolbar.<br><br>
- * Please see {@link patternfly.toolbars.componenet:pfToolbar pfToolbar} for use in Toolbar View Switcher
+ * Please see {@link patternfly.toolbars.component:pfToolbar pfToolbar} for use in Toolbar View Switcher
  *
  * @param {object} config Optional configuration object
  * <ul style='list-style-type: none'>
