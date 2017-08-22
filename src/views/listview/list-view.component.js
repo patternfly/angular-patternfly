@@ -1,6 +1,7 @@
 angular.module('patternfly.views').component('pfListView', {
   bindings: {
     config: '=?',
+    pageConfig: '=?',
     items: '=',
     actionButtons: '=?',
     enableButtonForItemFn: '=?',
@@ -21,6 +22,7 @@ angular.module('patternfly.views').component('pfListView', {
   controller: function ($window, $element) {
     'use strict';
     var ctrl = this;
+    var prevPageConfig, prevItems;
 
     var setDropMenuLocation = function (parentDiv) {
       var dropButton = parentDiv.querySelector('.dropdown-toggle');
@@ -55,7 +57,8 @@ angular.module('patternfly.views').component('pfListView', {
       onSelectionChange: null,
       onCheckBoxChange: null,
       onClick: null,
-      onDblClick: null
+      onDblClick: null,
+      itemsAvailable: true
     };
 
 
@@ -229,11 +232,42 @@ angular.module('patternfly.views').component('pfListView', {
       return ctrl.config.checkDisabled && ctrl.config.checkDisabled(item);
     };
 
+    function setPagination () {
+      if (angular.isUndefined(ctrl.pageConfig)) {
+        ctrl.pageConfig = {
+          pageNumber: 1,
+          pageSize: ctrl.items.length,
+          numTotalItems: ctrl.items.length,
+          showPaginationControls: false
+        };
+      } else {
+        if (angular.isUndefined(ctrl.pageConfig.showPaginationControls)) {
+          ctrl.pageConfig.showPaginationControls = true;
+        }
+        if (!angular.isNumber(ctrl.pageConfig.pageNumber)) {
+          ctrl.pageConfig.pageNumber = 1;
+        }
+        if (!angular.isNumber(ctrl.pageConfig.pageSize)) {
+          ctrl.pageConfig.pageSize = 10;
+        }
+        if (!angular.isNumber(ctrl.pageConfig.numTotalItems)) {
+          ctrl.pageConfig.numTotalItems = ctrl.items.length;
+        }
+        // if not showing pagination, keep pageSize equal to numTotalItems
+        if (!ctrl.pageConfig.showPaginationControls) {
+          ctrl.pageConfig.pageSize = ctrl.pageConfig.numTotalItems;
+        }
+      }
+      prevPageConfig = angular.copy(ctrl.pageConfig);
+    }
+
     ctrl.$onInit = function () {
-      // Setting bound variables to new variables loses it's binding
-      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
-      // Instead, use _.defaults to update the existing variable
+      if (angular.isUndefined(ctrl.config)) {
+        ctrl.config = {};
+      }
+
       _.defaults(ctrl.config, ctrl.defaultConfig);
+
       if (!ctrl.config.selectItems) {
         ctrl.config.selectedItems = [];
       }
@@ -244,6 +278,23 @@ angular.module('patternfly.views').component('pfListView', {
         throw new Error('pfListView - ' +
           'Illegal use of pListView component! ' +
           'Cannot allow both select box and click selection in the same list view.');
+      }
+      prevItems = angular.copy(ctrl.items);
+      setPagination();
+    };
+
+    ctrl.$doCheck = function () {
+      if (!angular.equals(ctrl.pageConfig, prevPageConfig)) {
+        setPagination();
+      }
+      if (!angular.equals(ctrl.items, prevItems)) {
+        if (ctrl.items) {
+          ctrl.config.itemsAvailable = ctrl.items.length > 0;
+        }
+        if (angular.isDefined(ctrl.pageConfig)) {
+          ctrl.pageConfig.numTotalItems = ctrl.items.length;
+        }
+        prevItems = angular.copy(ctrl.items);
       }
     };
 

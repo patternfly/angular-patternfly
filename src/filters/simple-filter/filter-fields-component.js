@@ -88,6 +88,8 @@ angular.module('patternfly.filters').component('pfFilterFields', {
       if (keyEvent.which === 13) {
         ctrl.addFilterFn(ctrl.currentField, ctrl.currentValue);
         ctrl.currentValue = undefined;
+        keyEvent.stopPropagation();
+        keyEvent.preventDefault();
       }
     }
 

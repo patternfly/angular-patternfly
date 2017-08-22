@@ -191,20 +191,34 @@ describe('Component: pfTableView', function () {
   });
 
   it('should change the page size when selected from dropdown', function() {
+    paginationSetup();
+
     var ctrl = element.isolateScope().$ctrl;
     spyOn(ctrl, 'updatePageSize');
+
+    // initially on page 2, showing 2 rows 3 and 4
+    expect(angular.element(element.find('.pagination-pf-items-current')).text().trim()).toBe('3-4');
 
     //Get pageSizeDropdown
     var pageSizeDropdown = element.find('div[uib-dropdown]');
     expect(pageSizeDropdown.length).toBe(1);
+
+    var selectedPageSize = pageSizeDropdown.find('.display-length-increment.selected');
+    expect(selectedPageSize.length).toBe(1);
+    expect(angular.element(selectedPageSize).text().trim()).toBe('2', 'selected pageSize should be 2');
 
     //Change pageSizeDropdown to 10
     pageSizeDropdown.find('button').click();
     var pageSizeLinks = pageSizeDropdown.find('a');
     expect(pageSizeLinks.length).toBe(3);
     pageSizeLinks[1].click();  // switch to 10 items per page
-    $scope.$digest();
+    element.isolateScope().$digest();
 
     expect(ctrl.updatePageSize).toHaveBeenCalled();
+
+    selectedPageSize = pageSizeDropdown.find('.display-length-increment.selected');
+    expect(selectedPageSize.length).toBe(1);
+    expect(angular.element(selectedPageSize).text().trim()).toBe('10', 'selected pageSize should be 10');
+    expect(angular.element(element.find('.pagination-pf-items-current')).text().trim()).toBe('1-7');
   });
 });
