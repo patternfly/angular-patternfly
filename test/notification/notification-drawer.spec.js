@@ -593,7 +593,7 @@ describe('Component:  pfNotificationDrawer', function () {
     var emptyStates = element.find('.blank-slate-pf');
     expect(emptyStates.length).toBe(1);
 
-    var title = angular.element(emptyStates[0]).find('#title').html();
+    var title = angular.element(emptyStates[0]).find('.blank-state-pf-title').html();
     expect(_.trim(title)).toBe('There are no notifications to display.');
   });
 
@@ -609,7 +609,7 @@ describe('Component:  pfNotificationDrawer', function () {
     var emptyStates = element.find('.blank-slate-pf');
     expect(emptyStates.length).toBe(1);
 
-    var title = angular.element(emptyStates[0]).find('#title').html();
+    var title = angular.element(emptyStates[0]).find('.blank-state-pf-title').html();
     expect(_.trim(title)).toBe('Nothing');
   });
 
@@ -617,10 +617,10 @@ describe('Component:  pfNotificationDrawer', function () {
     var emptyStates = element.find('.blank-slate-pf');
     expect(emptyStates.length).toBe(2);
 
-    var title = angular.element(emptyStates[0]).find('#title').html();
+    var title = angular.element(emptyStates[0]).find('.blank-state-pf-title').html();
     expect(_.trim(title)).toBe('There are no notifications to display.');
 
-    title = angular.element(emptyStates[1]).find('#title').html();
+    title = angular.element(emptyStates[1]).find('.blank-state-pf-title').html();
     expect(_.trim(title)).toBe('Nothing');
   });
 });
