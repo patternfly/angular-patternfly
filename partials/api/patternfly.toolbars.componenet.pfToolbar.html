@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/toolbars/examples/toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/cf207ff/src/toolbars/examples/toolbar.js#L515" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfToolbar</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/toolbars/examples/toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/07ec6d3/src/toolbars/examples/toolbar.js#L547" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfToolbar</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.toolbars</code>
 </span>
 </div>
@@ -86,8 +86,9 @@
        </actions>
       </pf-toolbar>
     </div>
-    <div class="col-md-12" ng-if="viewType == 'listView'">
+    <div class="col-md-12" ng-if="viewType == 'listView' && showComponent">
       <pf-list-view config="listConfig"
+                    page-config="pageConfig"
                     items="items"
                     empty-state-config="emptyStateConfig">
         <div class="list-view-pf-description">
@@ -108,8 +109,9 @@
         </div>
       </pf-list-view>
     </div>
-    <div class="col-md-12" ng-if="viewType == 'cardView'">
+    <div class="col-md-12" ng-if="viewType == 'cardView' && showComponent">
       <pf-card-view config="listConfig"
+                    page-config="pageConfig"
                     items="items"
                     empty-state-config="emptyStateConfig">
         <div class="col-md-12">
@@ -123,8 +125,9 @@
         </div>
       </pf-card-view>
     </div>
-    <div class="col-md-12" ng-if="viewType == 'tableView'">
+    <div class="col-md-12" ng-if="viewType == 'tableView' && showComponent">
       <pf-table-view config="tableConfig"
+                     page-config="pageConfig"
                      columns="columns"
                      items="items"
                      empty-state-config="emptyStateConfig">
@@ -135,6 +138,9 @@
       <div class="form-group">
         <label class="checkbox-inline">
           <input type="checkbox" ng-model="listConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="showPagination" ng-change="togglePagination()">Show Pagination</input>
         </label>
       </div>
     </div>
@@ -162,9 +168,10 @@
 <div class="tab-pane" title="script.js">
 <pre class="prettyprint linenums" ng-set-text="script.js-71"></pre>
 <script type="text/ng-template" id="script.js-71">
-angular.module('patternfly.toolbars.demo').controller('ViewCtrl', ['$scope', 'pfViewUtils', '$filter',
-  function ($scope, pfViewUtils, $filter) {
+angular.module('patternfly.toolbars.demo').controller('ViewCtrl', ['$scope', '$timeout', 'pfViewUtils', '$filter',
+  function ($scope, $timeout, pfViewUtils, $filter) {
     $scope.filtersText = '';
+    $scope.showPagination = false;
 
     $scope.columns = [
       { header: "Name", itemField: "name" },
@@ -172,23 +179,6 @@ angular.module('patternfly.toolbars.demo').controller('ViewCtrl', ['$scope', 'pf
       { header: "Address", itemField: "address" },
       { header: "BirthMonth", itemField: "birthMonth"}
     ];
-
-    // attempt to dyamically turn on/off pagination controls
-    // See: issues turning on/off pagination. see: https://datatables.net/manual/tech-notes/3
-
-    $scope.usePagination = true;
-    $scope.togglePagination = function () {
-      $scope.usePagination = !$scope.usePagination;
-      console.log("---> togglePagination: " + $scope.usePagination);
-      if($scope.usePagination) {
-        $scope.dtOptions.displayLength = 3;
-        $scope.dtOptions.dom = "tp";
-        console.log("---> use pagination: " + $scope.dtOptions.displayLength + ":" + $scope.dtOptions.dom);
-      } else {
-        $scope.dtOptions.displayLength = undefined;
-        $scope.dtOptions.dom = "t";
-      }
-    };
 
     $scope.allItems = [
       {
@@ -238,6 +228,30 @@ angular.module('patternfly.toolbars.demo').controller('ViewCtrl', ['$scope', 'pf
         age: 34,
         address: "21 Jump Street, Hollywood, California",
         birthMonth: 'March'
+      },
+      {
+        name: "Chris Thomas",
+        age: 21,
+        address: "50 Second Street, New York, New York",
+        birthMonth: 'April'
+      },
+      {
+        name: "Jeff McGovern",
+        age: 30,
+        address: "22 Oak Stree, Denver, Colorado",
+        birthMonth: 'November'
+      },
+      {
+        name: "Jessica Brown",
+        age: 50,
+        address: "72 Bourbon Way. Nashville. Tennessee",
+        birthMonth: 'January'
+      },
+      {
+        name: "Dave Nichols",
+        age: 32,
+        address: "21 Jump Street, Hollywood, California",
+        birthMonth: 'June'
       }
     ];
     $scope.items = $scope.allItems;
@@ -517,6 +531,24 @@ angular.module('patternfly.toolbars.demo').controller('ViewCtrl', ['$scope', 'pf
         $scope.toolbarConfig.filterConfig.selectedCount = selectedItems.length;
       }
     }
+
+    $scope.togglePagination = function () {
+      if ($scope.showPagination) {
+        $scope.pageConfig = {
+           pageSize: 5
+        }
+      } else {
+        delete $scope.pageConfig;
+      }
+      $scope.addNewComponentToDOM();
+    };
+
+    $scope.showComponent = true;
+
+    $scope.addNewComponentToDOM = function () {
+      $scope.showComponent = false;
+      $timeout(() => $scope.showComponent = true);
+    };
   }
 ]);
 </script>
