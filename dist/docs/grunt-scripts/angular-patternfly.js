@@ -7430,26 +7430,26 @@ angular.module('patternfly.charts').component('pfUtilizationTrendChart', {
             name: "John Smith",
             address: "415 East Main Street, Norfolk, Virginia",
             birthMonth: 'October',
-            car: 'Subaru-Outback'
+            car: 'subie-out'
 
           },
           {
             name: "Frank Livingston",
             address: "234 Elm Street, Pittsburgh, Pennsylvania",
             birthMonth: 'March',
-            car: 'Toyota-Prius'
+            car: 'Toyota-pri'
           },
           {
             name: "Judy Green",
             address: "2 Apple Boulevard, Cincinatti, Ohio",
             birthMonth: 'December',
-            car: 'Subaru-Impreza'
+            car: 'subie-Impreza'
           },
           {
             name: "Pat Thomas",
             address: "50 Second Street, New York, New York",
-            birthMonth: 'February',
-            car: 'Subaru-Outback'
+            birthMonth: 'jan',
+            car: 'subie-Crosstrek'
           }
         ];
         $scope.items = $scope.allItems;
@@ -7523,24 +7523,24 @@ angular.module('patternfly.charts').component('pfUtilizationTrendChart', {
               title:  'Birth Month',
               placeholder: 'Filter by Birth Month',
               filterType: 'select',
-              filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+              filterValues: [{title:'January', id:'jan'}, {title:'Feb', id:'February'}, 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
             },
            {
               id: 'car',
               title:  'Car',
               placeholder: 'Filter by Car Make',
               filterType: 'complex-select',
-              filterValues: ['Subaru', 'Toyota'],
+              filterValues: [{title:'Subaru', id:'subie'}, 'Toyota'],
               filterDelimiter: '-',
               filterCategoriesPlaceholder: 'Filter by Car Model',
-              filterCategories: {subaru: {
-                id: 'subaru',
+              filterCategories: {subie: {
+                id: 'subie',
                 title:  'Subaru',
-                filterValues: ['Outback', 'Crosstrek', 'Impreza']},
+                filterValues: [{title:'Outback', id:'out'}, 'Crosstrek', 'Impreza']},
                 toyota: {
                 id: 'toyota',
                 title:  'Toyota',
-                filterValues: ['Prius', 'Corolla', 'Echo']}
+                filterValues: [{title:'Prius', id:'pri'}, 'Corolla', 'Echo']}
                 }
             }
           ],
@@ -7792,7 +7792,7 @@ angular.module('patternfly.filters').component('pfFilterFields', {
           }
         } else {
           ctrl.addFilterFn(ctrl.currentField, filterValue);
-          ctrl.currentValue = null;
+          ctrl.currentValue = filterValue;
         }
       }
     }
@@ -17898,7 +17898,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
 
   $templateCache.put('filters/simple-filter/filter-fields.html',
-    "<div class=\"filter-pf filter-fields\"><div class=\"input-group form-group\"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class=\"btn btn-default filter-fields\" uib-tooltip=\"Filter by\" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in $ctrl.config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"$ctrl.currentField.filterType !== 'select' && $ctrl.currentField.filterType !== 'complex-select'\"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress=\"$ctrl.onValueKeyPress($event)\"></div><div ng-if=\"$ctrl.currentField.filterType === 'select'\"><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\"><span class=\"filter-option pull-left\">{{$ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat=\"filterValue in $ctrl.currentField.filterValues\" ng-class=\"{'selected': filterValue === $ctrl.currentValue}\"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue}}</a></li></ul></div></div><div ng-if=\"$ctrl.currentField.filterType === 'complex-select'\" class=category-select><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\"><span class=\"filter-option pull-left\">{{$ctrl.filterCategory || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat=\"filterCategory in $ctrl.currentField.filterValues\" ng-class=\"{'selected': filterCategory === $ctrl.filterCategory}\"><a role=menuitem tabindex=-1 ng-click=\"$ctrl.selectValue(filterCategory, 'filter-category')\">{{filterCategory}}</a></li></ul></div><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle category-select-value\"><span class=\"filter-option pull-left\">{{$ctrl.filterValue || $ctrl.currentField.filterCategoriesPlaceholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.filterCategoriesPlaceholder}}</a></li><li ng-repeat=\"filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.toLowerCase()].filterValues\" ng-class=\"{'selected': filterValue === $ctrl.filterValue}\"><a role=menuitem tabindex=-1 ng-click=\"$ctrl.selectValue(filterValue, 'filter-value')\">{{filterValue}}</a></li></ul></div></div></div></div>"
+    "<div class=\"filter-pf filter-fields\"><div class=\"input-group form-group\"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class=\"btn btn-default filter-fields\" uib-tooltip=\"Filter by\" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in $ctrl.config.fields\"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if=\"$ctrl.currentField.filterType !== 'select' && $ctrl.currentField.filterType !== 'complex-select'\"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress=\"$ctrl.onValueKeyPress($event)\"></div><div ng-if=\"$ctrl.currentField.filterType === 'select'\"><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\"><span class=\"filter-option pull-left\">{{$ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat=\"filterValue in $ctrl.currentField.filterValues\" ng-class=\"{'selected': (filterValue === $ctrl.currentValue || filterValue.id === $ctrl.currentValue)}\"><a role=menuitem tabindex=-1 ng-click=\"$ctrl.selectValue(filterValue.id || filterValue)\">{{filterValue.title || filterValue}}</a></li></ul></div></div><div ng-if=\"$ctrl.currentField.filterType === 'complex-select'\" class=category-select><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle\"><span class=\"filter-option pull-left\">{{$ctrl.filterCategory || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat=\"filterCategory in $ctrl.currentField.filterValues\" ng-class=\"{'selected': (filterCategory === $ctrl.filterCategory || filterCategory.id === $ctrl.filterCategory)}\"><a role=menuitem tabindex=-1 ng-click=\"$ctrl.selectValue(filterCategory.id ||filterCategory, 'filter-category')\">{{filterCategory.title ||filterCategory}}</a></li></ul></div><div class=\"btn-group bootstrap-select form-control filter-select\" uib-dropdown><button type=button uib-dropdown-toggle class=\"btn btn-default dropdown-toggle category-select-value\"><span class=\"filter-option pull-left\">{{$ctrl.filterValue || $ctrl.currentField.filterCategoriesPlaceholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.filterCategoriesPlaceholder}}</a></li><li ng-repeat=\"filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.toLowerCase()].filterValues\" ng-class=\"{'selected': (filterValue === $ctrl.filterValue || filterValue.id === $ctrl.filterValue)}\"><a role=menuitem tabindex=-1 ng-click=\"$ctrl.selectValue(filterValue.id || filterValue, 'filter-value')\">{{filterValue.title || filterValue}}</a></li></ul></div></div></div></div>"
   );
 
 

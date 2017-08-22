@@ -81,26 +81,26 @@
             name: "John Smith",
             address: "415 East Main Street, Norfolk, Virginia",
             birthMonth: 'October',
-            car: 'Subaru-Outback'
+            car: 'subie-out'
 
           },
           {
             name: "Frank Livingston",
             address: "234 Elm Street, Pittsburgh, Pennsylvania",
             birthMonth: 'March',
-            car: 'Toyota-Prius'
+            car: 'Toyota-pri'
           },
           {
             name: "Judy Green",
             address: "2 Apple Boulevard, Cincinatti, Ohio",
             birthMonth: 'December',
-            car: 'Subaru-Impreza'
+            car: 'subie-Impreza'
           },
           {
             name: "Pat Thomas",
             address: "50 Second Street, New York, New York",
-            birthMonth: 'February',
-            car: 'Subaru-Outback'
+            birthMonth: 'jan',
+            car: 'subie-Crosstrek'
           }
         ];
         $scope.items = $scope.allItems;
@@ -174,24 +174,24 @@
               title:  'Birth Month',
               placeholder: 'Filter by Birth Month',
               filterType: 'select',
-              filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+              filterValues: [{title:'January', id:'jan'}, {title:'Feb', id:'February'}, 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
             },
            {
               id: 'car',
               title:  'Car',
               placeholder: 'Filter by Car Make',
               filterType: 'complex-select',
-              filterValues: ['Subaru', 'Toyota'],
+              filterValues: [{title:'Subaru', id:'subie'}, 'Toyota'],
               filterDelimiter: '-',
               filterCategoriesPlaceholder: 'Filter by Car Model',
-              filterCategories: {subaru: {
-                id: 'subaru',
+              filterCategories: {subie: {
+                id: 'subie',
                 title:  'Subaru',
-                filterValues: ['Outback', 'Crosstrek', 'Impreza']},
+                filterValues: [{title:'Outback', id:'out'}, 'Crosstrek', 'Impreza']},
                 toyota: {
                 id: 'toyota',
                 title:  'Toyota',
-                filterValues: ['Prius', 'Corolla', 'Echo']}
+                filterValues: [{title:'Prius', id:'pri'}, 'Corolla', 'Echo']}
                 }
             }
           ],
