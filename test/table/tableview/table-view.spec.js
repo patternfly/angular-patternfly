@@ -85,21 +85,21 @@ describe('Component: pfTableView', function () {
     basicSetup();
     $scope.items = null;
     $scope.$digest();
-    expect(element.find('#title').text()).toContain('');
+    expect(element.find('.blank-state-pf-title').text()).toContain('');
   });
 
   it('should show the empty state when items is empty', function () {
     basicSetup();
     $scope.items = [];
     $scope.$digest();
-    expect(element.find('#title').text()).toContain('No Items Available');
+    expect(element.find('.blank-state-pf-title').text()).toContain('No Items Available');
   });
 
   it('should show the empty state when the config property is specified', function () {
     basicSetup();
     $scope.config.itemsAvailable = false;
     $scope.$digest();
-    expect(element.find('#title').text()).toContain('No Items Available');
+    expect(element.find('.blank-state-pf-title').text()).toContain('No Items Available');
   });
 
   it('should show the correct number of items', function () {

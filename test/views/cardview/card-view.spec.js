@@ -224,6 +224,6 @@ describe('Component:  pfCardView', function () {
   it('should show the empty state when specified', function () {
     $scope.cardConfig.itemsAvailable = false;
     $scope.$digest();
-    expect(element.find('#title').text()).toContain('No Items Available');
+    expect(element.find('.blank-state-pf-title').text()).toContain('No Items Available');
   });
 })

@@ -2,13 +2,13 @@
   <div ng-if="$ctrl.config.icon" class="blank-slate-pf-icon">
     <span class="{{$ctrl.config.icon}}"></span>
   </div>
-  <h1 id="title">
+  <h4 id="blank-state-pf-title-{{$id}}" class="h1 blank-state-pf-title">
     {{$ctrl.config.title}}
-  </h1>
-  <p id="info" ng-if="$ctrl.config.info">
+  </h4>
+  <p id="blank-state-pf-info-{{$id}}" class="blank-state-pf-info" ng-if="$ctrl.config.info">
     {{$ctrl.config.info}}
   </p>
-  <p id="helpLink" ng-if="$ctrl.config.helpLink">
+  <p id="blank-state-pf-helpLink-{{$id}}" class="blank-state-pf-helpLink" ng-if="$ctrl.config.helpLink">
     {{$ctrl.config.helpLink.label}} <a href="{{$ctrl.config.helpLink.url}}">{{$ctrl.config.helpLink.urlLabel}}</a>.
   </p>
   <div ng-if="$ctrl.hasMainActions()" class="blank-slate-pf-main-action">

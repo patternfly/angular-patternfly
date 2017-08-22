@@ -603,6 +603,6 @@ describe('Component:  pfDataList', function () {
   it('should show the empty state when specified', function () {
     $scope.listConfig.itemsAvailable = false;
     $scope.$digest();
-    expect(element.find('#title').text()).toContain('No Items Available');
+    expect(element.find('.blank-state-pf-title').text()).toContain('No Items Available');
   });
 });
