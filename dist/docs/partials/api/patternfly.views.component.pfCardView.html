@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/cardview/card-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/cf207ff/src/views/cardview/card-view.component.js#L240" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCardView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/cardview/card-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/07ec6d3/src/views/cardview/card-view.component.js#L313" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCardView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -10,6 +10,7 @@
 <h2 id="usage">Usage</h2>
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-card-view
        config="{object}"
+       page-config="{object}"
        empty-state-config="{object}"
        empty-state-action-buttons="{array}"
        items="{Array}"&gt;
@@ -29,6 +30,12 @@
 <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
 <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
 <li>.itemsAvailable         - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
+</ul></div></td></tr><tr><td>pageConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>Optional pagination configuration object.  Since all properties are optional it is ok to specify: &#39;pageConfig = {}&#39; to indicate that you want to
+use pagination with the default parameters.</p>
+<ul style='list-style-type: none'>
+  <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+  <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of &quot;Items per Page&quot;.  Default is 10 items per page
+  <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the &#39;per page&#39; dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
 </ul></div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
 </div></td></tr><tr><td>emptyStateActionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
 </div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">Array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>the data to be shown in the cards<br/></p>
@@ -51,7 +58,12 @@
   </style>
   <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
     <div class="col-md-12">
-      <pf-card-view id="exampleCardView" config="config" empty-state-config="emptyStateConfig" items="items" empty-state-action-buttons="emptyStateActionButtons">
+      <pf-card-view id="exampleCardView"
+          config="config"
+          page-config="pageConfig"
+          empty-state-config="emptyStateConfig"
+          items="items"
+          empty-state-action-buttons="emptyStateActionButtons">
         <div class="col-md-12">
           <span>{{item.name}}</span>
         </div>
@@ -102,6 +114,9 @@
           <label class="checkbox-inline">
             <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
           </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="showPagination" ng-change="togglePagination()">Show Pagination</input>
+          </label>
         </div>
       </form>
     </div>
@@ -119,6 +134,7 @@
 <script type="text/ng-template" id="script.js-79">
 angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
 function ($scope) {
+       $scope.showPagination = false;
        $scope.eventText = '';
        var handleSelect = function (item, e) {
          $scope.eventText = item.name + ' selected\n' + $scope.eventText;
@@ -135,6 +151,15 @@ function ($scope) {
        var handleCheckBoxChange = function (item, selected, e) {
          $scope.eventText = item.name + ' checked: ' + item.selected + '\n' + $scope.eventText;
        };
+       $scope.togglePagination = function () {
+         if ($scope.showPagination) {
+           $scope.pageConfig = {
+              pageSize: 5
+           }
+         } else {
+           delete $scope.pageConfig;
+         }
+       };
 
        var checkDisabledItem = function(item) {
          return $scope.showDisabled && (item.name === "John Smith");
@@ -149,7 +174,7 @@ function ($scope) {
            $scope.config.selectItems = true;
            $scope.config.showSelectBox = false;
          } else {
-           $scope.config.selectItems = false
+           $scope.config.selectItems = false;
            $scope.config.showSelectBox = false;
          }
        };
@@ -203,7 +228,55 @@ function ($scope) {
            city: "New York",
            state: "New York"
          },
-       ]
+         {
+           name: "Betty Rubble",
+           address: "30 Dinosaur Way",
+           city: "Bedrock",
+           state: "Washingstone"
+         },
+         {
+           name: "Martha Smith",
+           address: "415 East Main Street",
+           city: "Norfolk",
+           state: "Virginia"
+         },
+         {
+           name: "Liz Livingston",
+           address: "234 Elm Street",
+           city: "Pittsburgh",
+           state: "Pennsylvania"
+         },
+         {
+           name: "Howard McGovern",
+           address: "22 Oak Street",
+           city: "Denver",
+           state: "Colorado"
+         },
+         {
+           name: "Joyce Brown",
+           address: "72 Bourbon Way",
+           city: "Nashville",
+           state: "Tennessee"
+         },
+         {
+           name: "Mike Nichols",
+           address: "21 Jump Street",
+           city: "Hollywood",
+           state: "California"
+         },
+         {
+           name: "Mark Edwards",
+           address: "17 Cross Street",
+           city: "Boston",
+           state: "Massachusetts"
+         },
+         {
+           name: "Chris Thomas",
+           address: "50 Second Street",
+           city: "New York",
+           state: "New York"
+         }
+       ];
 
        var performEmptyStateAction = function (action) {
          $scope.eventText = action.name + "\r\n" + $scope.eventText;

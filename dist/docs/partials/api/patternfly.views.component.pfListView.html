@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/examples/list-view.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/cf207ff/src/views/listview/examples/list-view.js#L760" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/listview/examples/list-view.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/07ec6d3/src/views/listview/examples/list-view.js#L978" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfListView</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -15,6 +15,7 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-list-view
        items="{array}"
        config="{object}"
+       page-config="{object}"
        action-buttons="{array}"
        enable-button-for-item-fn="{function (action, item))}"
        menu-actions="{array}"
@@ -47,6 +48,12 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
 <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
 <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none. Note: row expansion is the default behavior after onClick performed, but user can stop such default behavior by adding the sentence &quot;return false;&quot; to the end of onClick function body
 <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
+</ul></div></td></tr><tr><td>pageConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>Optional pagination configuration object.  Since all properties are optional it is ok to specify: &#39;pageConfig = {}&#39; to indicate that you want to
+use pagination with the default parameters.</p>
+<ul style='list-style-type: none'>
+  <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+  <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of &quot;Items per Page&quot;.  Default is 10 items per page
+  <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the &#39;per page&#39; dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
 </ul></div></td></tr><tr><td>actionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><p>List of action buttons in each row</p>
 <ul style='list-style-type: none'>
   <li>.name - (String) The name of the action, displayed on the button
@@ -73,17 +80,19 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-views-component-page patternfly-views-component-pflistview-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils view.js basic.js compound.js itemExpansion.js" source-edit-html="index.html-82 basic.html compound.html itemExpansion.html" source-edit-css="" source-edit-js="view.js basic.js compound.js itemExpansion.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils view.js basic.js compound.js itemExpansion.js pagination.js" source-edit-html="index.html-82 basic.html compound.html itemExpansion.html pagination.html" source-edit-css="" source-edit-js="view.js basic.js compound.js itemExpansion.js pagination.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-82" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils view.js basic.js compound.js itemExpansion.js"></pre>
+<pre class="prettyprint linenums" ng-set-text="index.html-82" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils view.js basic.js compound.js itemExpansion.js pagination.js"></pre>
 <script type="text/ng-template" id="index.html-82">
    <div ng-controller="ViewCtrl" style="background-color: #fff; margin: -20px;">
      <ul class="nav nav-tabs">
        <li ng-class="{'active': viewType === 'basic'}"><a href="#" ng-click="setView('basic')">Basic (w/ Options)</a></li>
        <li ng-class="{'active': viewType === 'compound'}"><a href="#" ng-click="setView('compound')">Compound Expansion</a></li>
+       <li ng-class="{'active': viewType === 'pagination'}"><a href="#" ng-click="setView('pagination')">Pagination</a></li>
      </ul>
      <div ng-if="viewType === 'basic'" ng-include="'basic.html'"></div>
      <div ng-if="viewType === 'compound'" ng-include="'compound.html'"></div>
+     <div ng-if="viewType === 'pagination'" ng-include="'pagination.html'"></div>
    </div>
 </script>
 </div>
@@ -298,6 +307,37 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
  <div ng-if="$ctrl.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
 </script>
 </div>
+<div class="tab-pane" title="pagination.html">
+<pre class="prettyprint linenums" ng-set-text="pagination.html"></pre>
+<script type="text/ng-template" id="pagination.html">
+ <div ng-controller="PaginationCtrl" class="row example-container">
+   <div class="col-md-12 list-view-container example-list-view">
+     <pf-list-view id="paginationListView"
+       items="items"
+       page-config="pageConfig"
+       action-buttons="actionButtons"
+       menu-actions="menuActions">
+       <div class="list-view-pf-description">
+         <div class="list-group-item-heading">
+           {{item.name}}
+         </div>
+         <div class="list-group-item-text">
+           {{item.address}}
+         </div>
+       </div>
+       <div class="list-view-pf-additional-info">
+         <div class="list-view-pf-additional-info-item">
+           {{item.city}}
+         </div>
+         <div class="list-view-pf-additional-info-item">
+           {{item.state}}
+         </div>
+       </div>
+     </pf-list-view>
+   </div>
+ </div>
+</script>
+</div>
 <div class="tab-pane" title="view.js">
 <pre class="prettyprint linenums" ng-set-text="view.js"></pre>
 <script type="text/ng-template" id="view.js">
@@ -389,7 +429,7 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
           $scope.config.selectItems = true;
           $scope.config.showSelectBox = false;
         } else {
-          $scope.config.selectItems = false
+          $scope.config.selectItems = false;
           $scope.config.showSelectBox = false;
         }
       };
@@ -505,7 +545,7 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
           address: "50 Second Street",
           city: "New York",
           state: "New York"
-        },
+        }
       ];
 
       $scope.getMenuClass = function (item) {
@@ -699,7 +739,7 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
           clusterCount: 6,
           nodeCount: 10,
           imageCount: 8
-        },
+        }
       ];
 
       $scope.getMenuClass = function (item) {
@@ -781,7 +821,7 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
 <script type="text/ng-template" id="itemExpansion.js">
   angular.module('patternfly.views').component('itemExpansion', {
     bindings: {
-      item: '<',
+      item: '<'
     },
     templateUrl: 'itemExpansion.html',
     controller: function () {
@@ -791,7 +831,189 @@ Setting compoundExpanion requires the applicatiot to set/unset the items&#39; is
   });
 </script>
 </div>
+<div class="tab-pane" title="pagination.js">
+<pre class="prettyprint linenums" ng-set-text="pagination.js"></pre>
+<script type="text/ng-template" id="pagination.js">
+ angular.module('patternfly.views').controller('PaginationCtrl', ['$scope', '$templateCache',
+   function ($scope, $templateCache) {
+
+      $scope.pageConfig = {
+        pageSize: 5
+      };
+
+      var startServer = function (action, item) {
+        console.log(item.name + " : " + action.name);
+      };
+
+      var performAction = function (action, item) {
+        console.log(item.name + " : " + action.name);
+      };
+
+      $scope.items = [
+        {
+          name: "Fred Flintstone",
+          address: "20 Dinosaur Way",
+          city: "Bedrock",
+          state: "Washingstone"
+        },
+        {
+          name: "John Smith",
+          address: "415 East Main Street",
+          city: "Norfolk",
+          state: "Virginia"
+        },
+        {
+          name: "Frank Livingston",
+          address: "234 Elm Street",
+          city: "Pittsburgh",
+          state: "Pennsylvania"
+        },
+        {
+          name: "Linda McGovern",
+          address: "22 Oak Street",
+          city: "Denver",
+          state: "Colorado"
+        },
+        {
+          name: "Jim Brown",
+          address: "72 Bourbon Way",
+          city: "Nashville",
+          state: "Tennessee"
+        },
+        {
+          name: "Holly Nichols",
+          address: "21 Jump Street",
+          city: "Hollywood",
+          state: "California"
+        },
+        {
+          name: "Marie Edwards",
+          address: "17 Cross Street",
+          city: "Boston",
+          state: "Massachusetts"
+        },
+        {
+          name: "Pat Thomas",
+          address: "50 Second Street",
+          city: "New York",
+          state: "New York"
+        },
+        {
+          name: "Betty Rubble",
+          address: "30 Dinosaur Way",
+          city: "Bedrock",
+          state: "Washingstone"
+        },
+        {
+          name: "Martha Smith",
+          address: "415 East Main Street",
+          city: "Norfolk",
+          state: "Virginia",
+        },
+        {
+          name: "Liz Livingston",
+          address: "234 Elm Street",
+          city: "Pittsburgh",
+          state: "Pennsylvania"
+        },
+        {
+          name: "Howard McGovern",
+          address: "22 Oak Street",
+          city: "Denver",
+          state: "Colorado"
+        },
+        {
+          name: "Joyce Brown",
+          address: "72 Bourbon Way",
+          city: "Nashville",
+          state: "Tennessee"
+        },
+        {
+          name: "Mike Nichols",
+          address: "21 Jump Street",
+          city: "Hollywood",
+          state: "California"
+        },
+        {
+          name: "Mark Edwards",
+          address: "17 Cross Street",
+          city: "Boston",
+          state: "Massachusetts"
+        },
+        {
+          name: "Chris Thomas",
+          address: "50 Second Street",
+          city: "New York",
+          state: "New York"
+        }
+      ];
+
+      $scope.actionButtons = [
+        {
+          name: 'Start',
+          class: 'btn-primary',
+          include: 'start-button-template',
+          title: 'Start the server',
+          actionFn: startServer
+        },
+        {
+          name: 'Action 1',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Action 2',
+          title: 'Do something else',
+          actionFn: performAction
+        },
+        {
+          name: 'Action 3',
+          include: 'my-button-template',
+          title: 'Do something special',
+          actionFn: performAction
+        }
+      ];
+      $scope.menuActions = [
+        {
+          name: 'Action',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Another Action',
+          title: 'Do something else',
+          actionFn: performAction
+        },
+        {
+          name: 'Disabled Action',
+          title: 'Unavailable action',
+          actionFn: performAction,
+          isDisabled: true
+        },
+        {
+          name: 'Something Else',
+          title: '',
+          actionFn: performAction
+        },
+        {
+          isSeparator: true
+        },
+        {
+          name: 'Grouped Action 1',
+          title: 'Do something',
+          actionFn: performAction
+        },
+        {
+          name: 'Grouped Action 2',
+          title: 'Do something similar',
+          actionFn: performAction
+        }
+      ];
+    }
+ ]);
+</script>
+</div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-82" ng-eval-javascript="view.js basic.js compound.js itemExpansion.js"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-82" ng-eval-javascript="view.js basic.js compound.js itemExpansion.js pagination.js"></div>
 </div></div>
 </div>

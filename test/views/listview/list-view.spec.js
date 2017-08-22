@@ -1,4 +1,4 @@
-describe('Component:  pfDataList', function () {
+describe('Component:  pfListView', function () {
   var $scope;
   var $compile;
   var element;
@@ -7,7 +7,7 @@ describe('Component:  pfDataList', function () {
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.views', 'patternfly.utils', 'views/listview/list-view.html', 'views/empty-state.html');
+    module('patternfly.views', 'patternfly.utils', 'views/listview/list-view.html', 'views/empty-state.html', 'pagination/pagination.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
@@ -23,7 +23,7 @@ describe('Component:  pfDataList', function () {
     scope.$digest();
   };
 
-  beforeEach(function () {
+  function basicSetup() {
     $scope.systemModel = [
       {uuid: '1', name: 'One', size: 291445030, capacity: 8200000000},
       {uuid: '2', name: 'Two', size: 1986231544, capacity: 8700000000},
@@ -31,6 +31,7 @@ describe('Component:  pfDataList', function () {
       {uuid: '4', name: 'Four', size: 8162410, capacity: 3200000000},
       {uuid: '5', name: 'Five', size: 6781425410, capacity: 7600000000}
     ];
+
     $scope.listConfig = {
       selectedItems: []
     };
@@ -132,9 +133,34 @@ describe('Component:  pfDataList', function () {
       '</pf-list-view>';
 
     compileHTML(htmlTmp, $scope);
-  });
+  };
+
+  function paginationSetup() {
+    $scope.systemModel = [
+      {uuid: '1', name: 'One', size: 291445030, capacity: 8200000000},
+      {uuid: '2', name: 'Two', size: 1986231544, capacity: 8700000000},
+      {uuid: '3', name: 'Three', size: 7864632, capacity: 7800000000},
+      {uuid: '4', name: 'Four', size: 8162410, capacity: 3200000000},
+      {uuid: '5', name: 'Five', size: 6781425410, capacity: 7600000000},
+      {uuid: '6', name: 'Six', size: 6781425410, capacity: 7600000000},
+      {uuid: '7', name: 'Seven', size: 6781425410, capacity: 7600000000}
+    ];
+
+    $scope.pageConfig = {
+      pageNumber: 2,
+      pageSize: 2,
+      pageSizeIncrements: [2, 10, 15]
+    };
+
+    var htmlTmp = '<pf-list-view items="systemModel" page-config="pageConfig">' +
+      '<div class="nameLabel1">{{item.name}}</div>' +
+      '</pf-list-view>';
+
+    compileHTML(htmlTmp, $scope);
+  }
 
   it('should have correct number list items', function () {
+    basicSetup();
     var rows = element.find('.list-group-item');
     expect(rows.length).toBe(5);
 
@@ -143,6 +169,8 @@ describe('Component:  pfDataList', function () {
   it('should show the select checkbox by default', function () {
     var items;
     var checkItems;
+
+    basicSetup();
 
     items = element.find('.list-group-item');
     checkItems = element.find('.list-view-pf-checkbox');
@@ -159,6 +187,8 @@ describe('Component:  pfDataList', function () {
   it('should not show the select checkboxes when showSelectBox is false', function () {
     var checkItems;
 
+    basicSetup();
+
     checkItems = element.find('.list-view-pf-checkbox');
     expect(checkItems.length).toBe(5);
 
@@ -173,6 +203,8 @@ describe('Component:  pfDataList', function () {
   it('should not allow selection when selectItems is false', function () {
     var items;
     var selectedItems;
+
+    basicSetup();
 
     items = element.find('.list-group-item');
     selectedItems = element.find('.active');
@@ -190,6 +222,8 @@ describe('Component:  pfDataList', function () {
     var items;
     var selectedItems;
 
+    basicSetup();
+
     items = element.find('.list-view-pf-main-info');
     selectedItems = element.find('.active');
     expect(selectedItems.length).toBe(0);
@@ -206,6 +240,8 @@ describe('Component:  pfDataList', function () {
   it('should manage selected array', function () {
     var items;
     var selectedItems;
+
+    basicSetup();
 
     items = element.find('.list-view-pf-main-info');
     expect($scope.listConfig.selectedItems.length).toBe(0);
@@ -228,6 +264,8 @@ describe('Component:  pfDataList', function () {
       doubleClickWorking = true;
     };
 
+    basicSetup();
+
     $scope.listConfig.onDblClick = onDoubleClick;
 
     items = element.find('.list-view-pf-main-info');
@@ -241,6 +279,8 @@ describe('Component:  pfDataList', function () {
   it('should respect the multiSelect setting', function () {
     var items;
     var selectedItems;
+
+    basicSetup();
 
     items = element.find('.list-view-pf-main-info');
     selectedItems = element.find('.active');
@@ -274,6 +314,8 @@ describe('Component:  pfDataList', function () {
       return item.uuid === '2';
     };
 
+    basicSetup();
+
     // allow item selection
     $scope.listConfig.selectItems = true;
     $scope.listConfig.showSelectBox = false;
@@ -293,6 +335,8 @@ describe('Component:  pfDataList', function () {
 
   it('should not allow both row and checkbox selection', function () {
     var exceptionRaised = false;
+
+    basicSetup();
 
     $scope.badConfig = {
       selectItems: true,
@@ -314,6 +358,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should show the action buttons for each row', function () {
+    basicSetup();
+
     var items = element.find('.list-group-item');
     var buttons = element.find('.list-view-pf-actions .btn-default');
     expect(items.length).toBe(5);
@@ -321,6 +367,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should have the proper button class applied', function() {
+    basicSetup();
+
     var items = element.find('.list-group-item');
     var buttons = element.find('.list-view-pf-actions .btn-danger');
     expect(items.length).toBe(5);
@@ -330,6 +378,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should disable action buttons appropriately', function () {
+    basicSetup();
+
     var items = element.find('.list-group-item');
     var buttons = element.find('.list-view-pf-actions .btn-default');
     var disabledButtons = element.find('.list-view-pf-actions .btn-default.disabled');
@@ -339,6 +389,9 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should call the action function with the appropriate action when an action button is clicked', function () {
+
+    basicSetup();
+
     var items = element.find('.list-group-item');
     var actionButtons = element.find('.list-view-pf-actions .btn-default');
     var dangerButton = element.find('.list-view-pf-actions .btn-danger');
@@ -363,6 +416,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should not call the action function when a disabled action button is clicked', function () {
+    basicSetup();
+
     var items = element.find('.list-group-item');
     var actionButtons = element.find('.list-view-pf-actions .btn-default');
     expect(items.length).toBe(5);
@@ -383,11 +438,14 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should show the actions menu button for each row', function () {
+    basicSetup();
     var menuButtons = element.find('.dropdown-kebab-pf .dropdown-toggle');
     expect(menuButtons.length).toBe(5);
   });
 
   it('should show the actions menu with the correct items', function () {
+    basicSetup();
+
     var menuButtons = element.find('.dropdown-kebab-pf .dropdown-toggle');
     var menuItems = element.find('[role=menuitem]');
     var separators = element.find('[role=separator]');
@@ -398,6 +456,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should correctly disable menu actions', function () {
+    basicSetup();
+
     var menuButtons = element.find('.dropdown-kebab-pf .dropdown-toggle');
     var disabled = element.find('li .disabled');
 
@@ -413,6 +473,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should call the action function with the appropriate action when a menu action is clicked', function () {
+    basicSetup();
+
     var menuButtons = element.find('.dropdown-kebab-pf .dropdown-toggle');
     var menus = element.find('.dropdown-kebab-pf .dropdown-menu');
     var separators = element.find('[role=separator]');
@@ -438,6 +500,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should not call the action function when a disabled menu action is clicked', function () {
+    basicSetup();
+
     var menuButtons = element.find('.dropdown-kebab-pf .dropdown-toggle');
     var menus = element.find('.dropdown-kebab-pf .dropdown-menu');
     var separators = element.find('[role=separator]');
@@ -458,6 +522,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it ('should not show action components when actions are not supplied', function () {
+    basicSetup();
+
     var menuButtons = element.find('.dropdown-kebab-pf .dropdown-toggle');
 
     expect(menuButtons.length).toBe(5);
@@ -474,6 +540,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it ('should only show the actions component when either button or menu actions are supplied', function () {
+    basicSetup();
+
     var actionArea = element.find('.list-view-pf-actions');
 
     expect(actionArea.length).toBe(5);
@@ -520,6 +588,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it ('should hide kebab menu when specified', function () {
+    basicSetup();
+
     var kebabs  = element.find('.dropdown-kebab-pf');
     expect(kebabs.length).toBe(5);
 
@@ -528,6 +598,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it ('should add a class to the kebab menu when specified', function () {
+    basicSetup();
+
     var kebabs  = element.find('.dropdown-kebab-pf');
     expect(kebabs.length).toBe(5);
 
@@ -537,6 +609,9 @@ describe('Component:  pfDataList', function () {
 
   it('should allow expanding rows by clicking the caret icon', function () {
     var items;
+
+    basicSetup();
+
     $scope.listConfig.useExpandingRows = true;
     $scope.$digest();
 
@@ -551,6 +626,9 @@ describe('Component:  pfDataList', function () {
 
   it('should allow expanding rows by clicking the main-info section', function () {
     var items;
+
+    basicSetup();
+
     $scope.listConfig.useExpandingRows = true;
 
     $scope.$digest();
@@ -563,6 +641,8 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should allow expanding rows to disable individual expansion', function () {
+    basicSetup();
+
     $scope.systemModel[0].disableRowExpansion = true;
     $scope.listConfig.useExpandingRows = true;
     var htmlTmp = '<pf-list-view items="systemModel" ' +
@@ -578,6 +658,9 @@ describe('Component:  pfDataList', function () {
 
   it('should not show the expansion icon when using compound expansion', function () {
     var items;
+
+    basicSetup();
+
     $scope.listConfig.useExpandingRows = true;
     $scope.listConfig.compoundExpansionOnly = true;
     $scope.$digest();
@@ -588,6 +671,9 @@ describe('Component:  pfDataList', function () {
 
   it('should not expand rows by clicking the main-info section when using compound expansion', function () {
     var items;
+
+    basicSetup();
+
     $scope.listConfig.useExpandingRows = true;
     $scope.listConfig.compoundExpansionOnly = true;
 
@@ -601,8 +687,70 @@ describe('Component:  pfDataList', function () {
   });
 
   it('should show the empty state when specified', function () {
+    basicSetup();
+
     $scope.listConfig.itemsAvailable = false;
     $scope.$digest();
     expect(element.find('#title').text()).toContain('No Items Available');
+  });
+
+  it('should not show pagination controls by default', function () {
+    basicSetup();
+    expect(element.find('pf-pagination').length).toBe(0);
+  });
+
+  it('should show pagination controls when configured', function () {
+    paginationSetup();
+    expect(element.find('pf-pagination').length).toBe(1);
+
+    expect(angular.element(element.find('.pagination-pf-items-current')).text().trim()).toBe('3-4');  // page # 2
+    expect(angular.element(element.find('.pagination-pf-items-total')).text().trim()).toBe('7');
+    expect(angular.element(element.find('.pagination-pf-page')).val().trim()).toBe('2');
+    expect(angular.element(element.find('.pagination-pf-pages')).text().trim()).toBe('4');
+
+    // two items shown in the list
+    expect(element.find('.list-group-item').length).toBe(2);
+  });
+
+  it('should goto a specific page when inputted', function () {
+    paginationSetup();
+
+    angular.element(element.find('.pagination-pf-page ')).val('3').trigger('input').blur();
+    $scope.$digest();
+
+    expect(angular.element(element.find('.pagination-pf-items-current')).text().trim()).toBe('5-6');
+    expect(angular.element(element.find('.pagination-pf-items-total')).text().trim()).toBe('7');
+    expect(angular.element(element.find('.pagination-pf-page')).val().trim()).toBe('3');
+    expect(angular.element(element.find('.pagination-pf-pages')).text().trim()).toBe('4');
+
+    // two items shown in the list
+    expect(element.find('.list-group-item').length).toBe(2);
+  });
+
+  it('should change the page size when selected from dropdown', function() {
+    paginationSetup();
+
+    //Get pageSizeDropdown
+    var pageSizeDropdown = element.find('div[uib-dropdown]');
+    expect(pageSizeDropdown.length).toBe(1);
+
+    // two items shown in the list
+    expect(element.find('.list-group-item').length).toBe(2);
+
+    var selectedPageSize = pageSizeDropdown.find('.display-length-increment.selected');
+    expect(selectedPageSize.length).toBe(1);
+    expect(angular.element(selectedPageSize).text().trim()).toBe('2', 'selected pageSize should be 2');
+
+    //Change pageSizeDropdown to 10
+    var pageSizeLinks = pageSizeDropdown.find('a');
+    expect(pageSizeLinks.length).toBe(3);
+    pageSizeLinks[1].click();  // switch to 10 items per page
+    element.isolateScope().$digest();
+
+    selectedPageSize = pageSizeDropdown.find('.display-length-increment.selected');
+    expect(selectedPageSize.length).toBe(1);
+    expect(angular.element(selectedPageSize).text().trim()).toBe('10', 'selected pageSize should be 10');
+
+    expect(element.find('.list-group-item').length).toBe(7, 'should be 7 items shown in list');
   });
 });
