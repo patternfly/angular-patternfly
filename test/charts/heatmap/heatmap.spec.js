@@ -9,14 +9,16 @@ describe('Component: pfHeatmap', function() {
     'charts/heatmap/heatmap-legend.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
+    $timeout = _$timeout_;
   }));
 
   var compileChart = function (markup, scope) {
     var el = $compile(markup)(scope);
     scope.$digest();
+    $timeout.flush();
     return angular.element(el);
   };
 

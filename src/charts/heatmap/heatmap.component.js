@@ -307,10 +307,30 @@ angular.module('patternfly.charts').component('pfHeatmap', {
       });
     };
 
-    ctrl.updateAll = function () {
-      // Need to deep watch changes in chart data
-      prevData = angular.copy(ctrl.data);
+    var updateDisplay = function () {
+      setStyles();
 
+      if (ctrl.chartDataAvailable !== false && ctrl.data) {
+        ctrl.loadingDone = true;
+
+        // Allow the style change to take effect to update the container size
+        $timeout(function () {
+          setSizes();
+          redraw();
+        });
+      }
+    };
+
+    var handleDataUpdate = function () {
+      prevData = angular.copy(ctrl.data);
+      updateDisplay();
+    };
+
+    var debounceResize = _.debounce(function () {
+      updateDisplay();
+    }, 250, 500);
+
+    var updateConfig = function () {
       //Allow overriding of defaults
       if (ctrl.maxBlockSize === undefined || isNaN(ctrl.maxBlockSize)) {
         ctrl.maxSize = 64;
@@ -360,46 +380,36 @@ angular.module('patternfly.charts').component('pfHeatmap', {
       }
       ctrl.height = ctrl.height || heightDefault;
       ctrl.showLegend = ctrl.showLegend || (ctrl.showLegend === undefined);
-      ctrl.loadingDone = false;
-
-      angular.element($window).on('resize', function () {
-        setSizes();
-        redraw();
-      });
-
-      ctrl.thisComponent = $element[0].querySelector('.heatmap-pf-svg');
-
-      $timeout(function () {
-        setStyles();
-        setSizes();
-        redraw();
-      });
     };
+
+    ctrl.loadingDone = false;
 
     ctrl.$onChanges = function (changesObj) {
       if (changesObj.chartDataAvailable && !changesObj.chartDataAvailable.isFirstChange()) {
         setStyles();
-      } else {
-        ctrl.updateAll();
-        ctrl.loadingDone = true;
+      } else if (!changesObj.data) {
+        updateConfig();
+        updateDisplay();
       }
     };
 
     ctrl.$doCheck = function () {
       // do a deep compare on chartData and config
       if (!angular.equals(ctrl.data, prevData)) {
-        setStyles();
-        if (ctrl.chartDataAvailable !== false) {
-          setSizes();
-          redraw();
-        }
+        handleDataUpdate();
       }
     };
 
     ctrl.$postLink = function () {
-      setStyles();
-      setSizes();
-      redraw();
+      ctrl.thisComponent = $element[0].querySelector('.heatmap-pf-svg');
+      updateConfig();
+      handleDataUpdate();
+
+      angular.element($window).on('resize', debounceResize);
+    };
+
+    ctrl.$onDestroy = function () {
+      angular.element($window).off('resize', debounceResize);
     };
   }
 });
