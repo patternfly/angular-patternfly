@@ -14,7 +14,7 @@ angular.module('patternfly.table').component('pfTableView', {
   templateUrl: 'table/tableview/table-view.html',
   controller: function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout, $sce) {
     'use strict';
-    var ctrl = this, prevDtOptions, prevItems;
+    var ctrl = this, prevDtOptions, prevItems, prevPageConfig;
 
     // Once datatables is out of active development I'll remove log statements
     ctrl.debug = false;
@@ -40,16 +40,7 @@ angular.module('patternfly.table').component('pfTableView', {
       showCheckboxes: true
     };
 
-    ctrl.$onInit = function () {
-
-      if (ctrl.debug) {
-        $log.debug("$onInit");
-      }
-
-      if (angular.isDefined(ctrl.colummns) && angular.isUndefined(ctrl.columns)) {
-        ctrl.columns = ctrl.colummns;
-      }
-
+    function setPagination () {
       if (angular.isUndefined(ctrl.dtOptions)) {
         ctrl.dtOptions = {};
       } else {
@@ -59,16 +50,16 @@ angular.module('patternfly.table').component('pfTableView', {
           if (angular.isUndefined(ctrl.pageConfig)) {
             ctrl.pageConfig = {};
           }
-          if (angular.isUndefined(ctrl.pageConfig.pageNumber)) {
+          if (!angular.isNumber(ctrl.pageConfig.pageNumber)) {
             ctrl.pageConfig.pageNumber = 1;
           }
         }
-        if (angular.isDefined(ctrl.dtOptions.displayLength)) {
+        if (angular.isNumber(ctrl.dtOptions.displayLength)) {
           ctrl.dtOptions.paging = true;
           if (angular.isUndefined(ctrl.pageConfig)) {
             ctrl.pageConfig = {};
           }
-          if (angular.isUndefined(ctrl.pageConfig.pageSize)) {
+          if (!angular.isNumber(ctrl.pageConfig.pageSize)) {
             ctrl.pageConfig.pageSize = ctrl.dtOptions.displayLength;
           }
         }
@@ -92,6 +83,17 @@ angular.module('patternfly.table').component('pfTableView', {
           ctrl.pageConfig.pageNumber = 1;
         }
       }
+    }
+
+    ctrl.$onInit = function () {
+
+      if (ctrl.debug) {
+        $log.debug("$onInit");
+      }
+
+      if (angular.isDefined(ctrl.colummns) && angular.isUndefined(ctrl.columns)) {
+        ctrl.columns = ctrl.colummns;
+      }
 
       if (angular.isUndefined(ctrl.config)) {
         ctrl.config = {};
@@ -103,11 +105,13 @@ angular.module('patternfly.table').component('pfTableView', {
     };
 
     ctrl.updateConfigOptions = function () {
-      var col, props = "";
+      var props = "";
 
       if (ctrl.debug) {
         $log.debug("  updateConfigOptions");
       }
+
+      setPagination();
 
       if (angular.isDefined(ctrl.dtOptions) && angular.isDefined(ctrl.dtOptions.displayLength)) {
         ctrl.dtOptions.displayLength = Number(ctrl.dtOptions.displayLength);
@@ -116,6 +120,7 @@ angular.module('patternfly.table').component('pfTableView', {
       // Need to deep watch changes in dtOptions and items
       prevDtOptions = angular.copy(ctrl.dtOptions);
       prevItems = angular.copy(ctrl.items);
+      prevPageConfig = angular.copy(ctrl.pageConfig);
 
       // Setting bound variables to new variables loses it's one way binding
       //   ctrl.dtOptions = pfUtils.merge(ctrl.defaultDtOptions, ctrl.dtOptions);
@@ -143,7 +148,6 @@ angular.module('patternfly.table').component('pfTableView', {
     };
 
     ctrl.dtInstanceCallback = function (_dtInstance) {
-      var oTable, rows;
       if (ctrl.debug) {
         $log.debug("--> dtInstanceCallback");
       }
@@ -188,7 +192,8 @@ angular.module('patternfly.table').component('pfTableView', {
         $log.debug("$doCheck");
       }
       // do a deep compare on dtOptions and items
-      if (!angular.equals(ctrl.dtOptions, prevDtOptions)) {
+      if (!angular.equals(ctrl.dtOptions, prevDtOptions) ||
+          !angular.equals(ctrl.pageConfig, prevPageConfig)) {
         if (ctrl.debug) {
           $log.debug("  dtOptions !== prevDtOptions");
         }
@@ -223,7 +228,7 @@ angular.module('patternfly.table').component('pfTableView', {
 
     function setColumnDefs () {
       var i = 0, actnBtns = 1;
-      var item, prop, offset;
+      var offset;
       ctrl.dtColumnDefs = [];
 
       // add checkbox col, not sortable
@@ -368,7 +373,6 @@ angular.module('patternfly.table').component('pfTableView', {
       //     returns ['Mary Jane', 'Fred Flinstone', 'Frank Livingston']
       //
       var i, rowData, visibleRows = new Array();
-      var oTable = ctrl.dtInstance.dataTable;
 
       var anNodes = document.querySelectorAll("#" + ctrl.tableId + "  tbody tr");
 
@@ -455,7 +459,8 @@ angular.module('patternfly.table').component('pfTableView', {
       });
     };
 
-    ctrl.checkDisabled = function (item) {
+    ctrl.checkDisabled = function () {
+      //TODO: implement checkDisabled
       return false;
     };
 

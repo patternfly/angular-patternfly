@@ -1,6 +1,6 @@
 <span>
   <div ng-if="$ctrl.config.itemsAvailable !== false" class="card-view-pf" >
-    <div class="card" ng-repeat="item in $ctrl.items"
+    <div class="card" ng-repeat="item in $ctrl.items | startFrom:($ctrl.pageConfig.pageNumber - 1)*$ctrl.pageConfig.pageSize | limitTo:$ctrl.pageConfig.pageSize"
          ng-class="{'pf-selectable': $ctrl.selectItems, 'active': $ctrl.isSelected(item), 'disabled': $ctrl.checkDisabled(item)}">
       <div class="card-content"
            ng-click="$ctrl.itemClick($event, item)"
@@ -12,5 +12,11 @@
       </div>
     </div>
   </div>
+  <pf-pagination ng-if="$ctrl.pageConfig.showPaginationControls && $ctrl.config.itemsAvailable === true"
+                 page-size="$ctrl.pageConfig.pageSize"
+                 page-size-increments="$ctrl.pageConfig.pageSizeIncrements"
+                 page-number="$ctrl.pageConfig.pageNumber"
+                 num-total-items="$ctrl.pageConfig.numTotalItems">
+  </pf-pagination>
   <pf-empty-state ng-if="$ctrl.config.itemsAvailable === false" config="$ctrl.emptyStateConfig" action-buttons="$ctrl.emptyStateActionButtons"></pf-empty-state>
 </span>

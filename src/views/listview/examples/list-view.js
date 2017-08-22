@@ -34,6 +34,13 @@
  * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none. Note: row expansion is the default behavior after onClick performed, but user can stop such default behavior by adding the sentence "return false;" to the end of onClick function body
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
  * </ul>
+ * @param {object} pageConfig Optional pagination configuration object.  Since all properties are optional it is ok to specify: 'pageConfig = {}' to indicate that you want to
+ * use pagination with the default parameters.
+ * <ul style='list-style-type: none'>
+ *   <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+ *   <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of "Items per Page".  Default is 10 items per page
+ *   <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the 'per page' dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
+ * </ul>
  * @param {array} actionButtons List of action buttons in each row
  *   <ul style='list-style-type: none'>
  *     <li>.name - (String) The name of the action, displayed on the button
@@ -66,9 +73,11 @@
        <ul class="nav nav-tabs">
          <li ng-class="{'active': viewType === 'basic'}"><a href="#" ng-click="setView('basic')">Basic (w/ Options)</a></li>
          <li ng-class="{'active': viewType === 'compound'}"><a href="#" ng-click="setView('compound')">Compound Expansion</a></li>
+         <li ng-class="{'active': viewType === 'pagination'}"><a href="#" ng-click="setView('pagination')">Pagination</a></li>
        </ul>
        <div ng-if="viewType === 'basic'" ng-include="'basic.html'"></div>
        <div ng-if="viewType === 'compound'" ng-include="'compound.html'"></div>
+       <div ng-if="viewType === 'pagination'" ng-include="'pagination.html'"></div>
      </div>
   </file>
   <file name="view.js">
@@ -281,7 +290,7 @@
             $scope.config.selectItems = true;
             $scope.config.showSelectBox = false;
           } else {
-            $scope.config.selectItems = false
+            $scope.config.selectItems = false;
             $scope.config.showSelectBox = false;
           }
         };
@@ -397,7 +406,7 @@
             address: "50 Second Street",
             city: "New York",
             state: "New York"
-          },
+          }
         ];
 
         $scope.getMenuClass = function (item) {
@@ -661,7 +670,7 @@
             clusterCount: 6,
             nodeCount: 10,
             imageCount: 8
-          },
+          }
         ];
 
         $scope.getMenuClass = function (item) {
@@ -740,7 +749,7 @@
   <file name="itemExpansion.js">
     angular.module('patternfly.views').component('itemExpansion', {
       bindings: {
-        item: '<',
+        item: '<'
       },
       templateUrl: 'itemExpansion.html',
       controller: function () {
@@ -754,6 +763,215 @@
    <div ng-if="$ctrl.item.expandField === 'clusters'" ng-include="'views/listview/examples/clusters-content.html'"></div>
    <div ng-if="$ctrl.item.expandField === 'nodes'" ng-include="'views/listview/examples/nodes-content.html'"></div>
    <div ng-if="$ctrl.item.expandField === 'images'" ng-include="'views/listview/examples/images-content.html'"></div>
+ </file>
+
+ <file name="pagination.html">
+   <div ng-controller="PaginationCtrl" class="row example-container">
+     <div class="col-md-12 list-view-container example-list-view">
+       <pf-list-view id="paginationListView"
+         items="items"
+         page-config="pageConfig"
+         action-buttons="actionButtons"
+         menu-actions="menuActions">
+         <div class="list-view-pf-description">
+           <div class="list-group-item-heading">
+             {{item.name}}
+           </div>
+           <div class="list-group-item-text">
+             {{item.address}}
+           </div>
+         </div>
+         <div class="list-view-pf-additional-info">
+           <div class="list-view-pf-additional-info-item">
+             {{item.city}}
+           </div>
+           <div class="list-view-pf-additional-info-item">
+             {{item.state}}
+           </div>
+         </div>
+       </pf-list-view>
+     </div>
+   </div>
+ </file>
+
+ <file name="pagination.js">
+   angular.module('patternfly.views').controller('PaginationCtrl', ['$scope', '$templateCache',
+     function ($scope, $templateCache) {
+
+        $scope.pageConfig = {
+          pageSize: 5
+        };
+
+        var startServer = function (action, item) {
+          console.log(item.name + " : " + action.name);
+        };
+
+        var performAction = function (action, item) {
+          console.log(item.name + " : " + action.name);
+        };
+
+        $scope.items = [
+          {
+            name: "Fred Flintstone",
+            address: "20 Dinosaur Way",
+            city: "Bedrock",
+            state: "Washingstone"
+          },
+          {
+            name: "John Smith",
+            address: "415 East Main Street",
+            city: "Norfolk",
+            state: "Virginia"
+          },
+          {
+            name: "Frank Livingston",
+            address: "234 Elm Street",
+            city: "Pittsburgh",
+            state: "Pennsylvania"
+          },
+          {
+            name: "Linda McGovern",
+            address: "22 Oak Street",
+            city: "Denver",
+            state: "Colorado"
+          },
+          {
+            name: "Jim Brown",
+            address: "72 Bourbon Way",
+            city: "Nashville",
+            state: "Tennessee"
+          },
+          {
+            name: "Holly Nichols",
+            address: "21 Jump Street",
+            city: "Hollywood",
+            state: "California"
+          },
+          {
+            name: "Marie Edwards",
+            address: "17 Cross Street",
+            city: "Boston",
+            state: "Massachusetts"
+          },
+          {
+            name: "Pat Thomas",
+            address: "50 Second Street",
+            city: "New York",
+            state: "New York"
+          },
+          {
+            name: "Betty Rubble",
+            address: "30 Dinosaur Way",
+            city: "Bedrock",
+            state: "Washingstone"
+          },
+          {
+            name: "Martha Smith",
+            address: "415 East Main Street",
+            city: "Norfolk",
+            state: "Virginia",
+          },
+          {
+            name: "Liz Livingston",
+            address: "234 Elm Street",
+            city: "Pittsburgh",
+            state: "Pennsylvania"
+          },
+          {
+            name: "Howard McGovern",
+            address: "22 Oak Street",
+            city: "Denver",
+            state: "Colorado"
+          },
+          {
+            name: "Joyce Brown",
+            address: "72 Bourbon Way",
+            city: "Nashville",
+            state: "Tennessee"
+          },
+          {
+            name: "Mike Nichols",
+            address: "21 Jump Street",
+            city: "Hollywood",
+            state: "California"
+          },
+          {
+            name: "Mark Edwards",
+            address: "17 Cross Street",
+            city: "Boston",
+            state: "Massachusetts"
+          },
+          {
+            name: "Chris Thomas",
+            address: "50 Second Street",
+            city: "New York",
+            state: "New York"
+          }
+        ];
+
+        $scope.actionButtons = [
+          {
+            name: 'Start',
+            class: 'btn-primary',
+            include: 'start-button-template',
+            title: 'Start the server',
+            actionFn: startServer
+          },
+          {
+            name: 'Action 1',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 2',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Action 3',
+            include: 'my-button-template',
+            title: 'Do something special',
+            actionFn: performAction
+          }
+        ];
+        $scope.menuActions = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ];
+      }
+   ]);
  </file>
  </example>
  */
