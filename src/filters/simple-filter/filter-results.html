@@ -6,7 +6,7 @@
       <ul class="list-inline">
         <li ng-repeat="filter in $ctrl.config.appliedFilters">
           <span class="active-filter label label-info">
-            {{filter.title}}: {{filter.value}}
+            {{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}}
             <a><span class="pficon pficon-close" ng-click="$ctrl.clearFilter(filter)"></span></a>
           </span>
         </li>
