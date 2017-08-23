@@ -14,7 +14,7 @@
  * <li>.id          - (String) Optional unique Id for the filter field, useful for comparisons
  * <li>.title       - (String) The title to display for the filter field
  * <li>.placeholder - (String) Text to display when no filter value has been entered
- * <li>.filterMultiselect - (Boolean) In `complex-select`, allow selection of multiple values per category. Optional, default is `false`
+ * <li>.filterMultiselect - (Boolean) In `complex-select`, allow selection of multiple categories and values. Optional, default is `false`
  * <li>.filterType  - (String) The filter input field type (any html input type, or 'select' for a single select box or 'complex-select' for a category select box)
  * <li>.filterValues - (Array) List of valid select values used when filterType is 'select' or 'complex-select' (in where these values serve as case insensitve keys for .filterCategories objects)
  * <li>.filterCategories - (Array of (Objects)) For 'complex-select' only, array of objects whoes keys (case insensitive) match the .filterValues, these objects include each of the filter fields above (sans .placeholder)
@@ -75,7 +75,11 @@ angular.module('patternfly.filters').component('pfFilterFields', {
             break;
           }
           if (ctrl.filterCategory && ctrl.filterValue) {
-            ctrl.addFilterFn(ctrl.currentField, ctrl.filterCategory + ctrl.currentField.filterDelimiter + ctrl.filterValue);
+            ctrl.addFilterFn(ctrl.currentField, {
+              filterCategory: ctrl.filterCategory,
+              filterDelimiter: ctrl.currentField.filterDelimiter,
+              filterValue: ctrl.filterValue
+            });
           }
         } else {
           ctrl.addFilterFn(ctrl.currentField, filterValue);
