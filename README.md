@@ -88,6 +88,9 @@ Note:
     
     <!-- Angular-PatternFly  -->
     <script src="node_modules/angular-patternfly/dist/angular-patternfly.min.js"></script>
+
+    <!-- Lodash -->
+    <script src="node_modules/angular-patternfly/node_modules/lodash/lodash.min.js"></script>
     ```
 
 5. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
