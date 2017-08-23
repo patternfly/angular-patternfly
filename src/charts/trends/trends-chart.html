@@ -19,7 +19,7 @@
   </div>
   <div ng-switch-when="compact" class="trend-card-compact-pf">
     <div class="row trend-row">
-      <div class="col-sm-4 col-md-4">
+      <div class="col-sm-2">
         <div class="trend-compact-details">
           <span ng-if="$ctrl.showActualValue">
             <span class="trend-title-compact-big-pf">{{$ctrl.getLatestValue()}}</span>
@@ -32,7 +32,7 @@
           <span class="trend-header-compact-pf" ng-if="$ctrl.config.title">{{$ctrl.config.title}}</span>
         </div>
       </div>
-      <div class="col-sm-8 col-md-8">
+      <div class="col-sm-10">
         <pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config="$ctrl.config" chart-data="$ctrl.chartData" chart-height="$ctrl.getChartHeight()"
              show-x-axis="$ctrl.showXAxis" show-y-axis="$ctrl.showYAxis"></pf-sparkline-chart>
         <pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height="$ctrl.getChartHeight()"></pf-empty-chart>
@@ -41,12 +41,12 @@
   </div>
   <div ng-switch-when="inline" class="trend-card-inline-pf">
     <div class="row trend-row">
-      <div class="col-sm-8 col-md-8 trend-flat-col">
+      <div class="col-sm-8 trend-flat-col">
         <pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config="$ctrl.config" chart-data="$ctrl.chartData" chart-height="$ctrl.getChartHeight()"
              show-x-axis="$ctrl.showXAxis" show-y-axis="$ctrl.showYAxis"></pf-sparkline-chart>
         <pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height="$ctrl.getChartHeight()"></pf-empty-chart>
       </div>
-      <div class="col-sm-4 col-md-4 trend-flat-col">
+      <div class="col-sm-4 trend-flat-col">
         <div class="trend-flat-details">
           <div class="trend-flat-details-cell">
             <span class="trend-title-flat-big-pf">{{$ctrl.getPercentageValue() + '%'}}</span>
