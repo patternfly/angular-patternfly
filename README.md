@@ -4,9 +4,9 @@
 
 [![Join the chat at https://gitter.im/patternfly/angular-patternfly](https://badges.gitter.im/patternfly/angular-patternfly.svg)](https://gitter.im/patternfly/angular-patternfly?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# AngularJS directives for [PatternFly](https://www.patternfly.org) 
+# AngularJS components for [PatternFly](https://www.patternfly.org)
 
-This project will provide a set of common AngularJS directives for use with the PatternFly reference implementation.
+This project will provide a set of common AngularJS components for use with the PatternFly reference implementation.
 
 * Web site: https://www.patternfly.org
 * API Docs: http://www.patternfly.org/angular-patternfly/#/api
@@ -18,7 +18,7 @@ You have to install required software before you're able to use grunt:
 
 * Install Node.js - Find more information on [Node.js](http://nodejs.org/)
 
-  Angular Patternfly stays up to date with the Node LTS [Release Schedule](https://github.com/nodejs/LTS#lts_schedule). If you're using Angular Patternfly downstream, we suggest the use of an actively supported version of Node/NPM, although prior versions of Node may work. 
+  Angular Patternfly stays up to date with the Node LTS [Release Schedule](https://github.com/nodejs/LTS#lts_schedule). If you're using Angular Patternfly downstream, we suggest the use of an actively supported version of Node/NPM, although prior versions of Node may work.
 
 * Install npm - If npm is not already installed with Node.js, you have to install it manually. Find more information on [NPM](https://www.npmjs.org/)
 
@@ -55,7 +55,7 @@ Note:
 2. Add the core Patternfly CSS and script includes to your HTML file(s):
 
     Please see:  https://github.com/patternfly/patternfly/blob/master/QUICKSTART.md
-    
+
     Alternatively, the minimum you will need:
 
        <!-- PatternFly Styles -->
@@ -78,24 +78,24 @@ Note:
     ```html
     <!-- Angular -->
     <script src="node_modules/angular-patternfly/node_modules/angular/angular.min.js"></script>
-    
+
     <!-- Angular-Bootstrap -->
     <script src="node_modules/angular-patternfly/node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
     <script src="node_modules/angular-patternfly/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-    
+
     <!-- Angular-Sanitize -->
     <script src="node_modules/angular-patternfly/node_modules/angular-sanitize/angular-sanitize.min.js"></script>
-    
+
     <!-- Angular-PatternFly  -->
     <script src="node_modules/angular-patternfly/dist/angular-patternfly.min.js"></script>
     ```
 
 5. (optional) The 'patternfly.charts' module is not a dependency in the default angular 'patternfly' module.
    In order to use patternfly charts you must add it as a dependency in your application:
-   
+
     ```javascript
     my-app.module.js:
-    
+
     angular.module('myApp', [
      'patternfly',
      'patternfly.charts'
@@ -111,10 +111,10 @@ Note:
 
 6. (optional) The 'patternfly.table' module is not a dependency in the default angular 'patternfly' module.
    In order to use pfTableView, you must add 'patternfly.table' as a dependency in your application:
-   
+
     ```javascript
     my-app.module.js:
-    
+
     angular.module('myApp', [
      'patternfly',
      'patternfly.table'
@@ -128,13 +128,13 @@ Note:
 
    Add the following CSS includes to your HTML file(s):
 
-   
+
     ```html
     <!-- Place before any patternfly css -->
     <link rel="stylesheet" href="node_modules/angular-patternfly/node_modules/datatables.net-dt/css/jquery.dataTables.css" />
     ```
    Add the following Javascript includes to your HTML file(s):
-   
+
    ```html
    <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/jquery/dist/jquery.js"></script>
    <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/datatables.net/js/jquery.dataTables.js"></script>
@@ -144,10 +144,10 @@ Note:
    ```
 7. (optional) The 'patternfly.canvas' module is not a dependency in the default angular 'patternfly' module.
    In order to use pfCanvasEditor or pfCanvas, you must add 'patternfly.canvas' as a dependency in your application:
-   
+
     ```javascript
     my-app.module.js:
-    
+
     angular.module('myApp', [
      'patternfly',
      'patternfly.canvas'
@@ -162,7 +162,7 @@ Note:
    ```
 
    Add the following Javascript includes to your HTML file(s):
-   
+
    ```html
     <!-- jquery before angular.js -->
     <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/jquery/dist/jquery.js"></script>
@@ -176,7 +176,7 @@ Note:
    Also, the canvas background grid image is located in 'node_modules/angular-patternfly/dist/imgs/canvas-dot-grid.png'
    please copy this image to your application's main images directory and reference it by overridding the '.canvas' css
    class:
-   
+
     ```html
     <style>
      .canvas {
@@ -253,19 +253,30 @@ format that includes a **type**, a **scope** and a **subject** ([full explanatio
 
 ```
 fix(pencil): stop graphite breaking when too much pressure applied
+// Specific example using the component name as the scope
+fix(pfEmptyState): add missing closing <span> tag
 ```
 
 ##### Feature Release
 
 ```
 feat(pencil): add 'graphiteWidth' option
+// Specific example using the component name as the scope
+feat(pfNotificationDrawer): add empty state message to group without notifications
 ```
 
 ##### Breaking Release
 
 ```
 perf(pencil): remove graphiteWidth option
+// Specific example using the component name as the scope
+perf(pfFakeComponent): remove pfFakeComponent
 ```
+
+##### Non-Release
+
+chore(pencil): rename internal graphiteDensity variable
+chore(pfNotificationDrawer):  rename internal drawer expanded variable
 
 ## Contributing
 
@@ -279,11 +290,11 @@ Please ensure that your PR provides the following:
 
 ### Unit Testing Required
 
-Applying a unit test, or an update to a unit test, is a contribution requirement. 
+Applying a unit test, or an update to a unit test, is a contribution requirement.
 
 If you're unfamiliar with Angular unit testing, or just need a refresher, here
 are the overall [Angular 1x guidelines](https://docs.angularjs.org/guide/unit-testing).
- 
+
 You can access the Angular PatternFly unit test ```spec``` files under the ```test``` directory.
 
 To get started, some basic guidelines:
