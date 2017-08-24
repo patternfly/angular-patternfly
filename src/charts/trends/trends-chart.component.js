@@ -15,6 +15,7 @@
  * <li>.chartId    - the unique id of this trends chart
  * <li>.title      - (optional) title of the Trends chart
  * <li>.layout     - (optional) the layout and sizes of titles and chart. Values are 'large' (default), 'small', 'compact', and 'inline'
+ * <li>.compactLabelPosition - (optional) the trend label positioning when the layout value is 'compact'. Values are 'left' (default) or 'right'
  * <li>.trendLabel - (optional) the trend label used in the 'inline' layout
  * <li>.timeFrame  - (optional) the time frame for the data in the pfSparklineChart, ex: 'Last 30 Days'
  * <li>.units      - unit label for values, ex: 'MHz','GB', etc..
@@ -44,7 +45,7 @@
      <div class="col-md-12">
        <div class="row">
          <div class="col-md-4">
-           <form role="form"">
+           <form role="form">
              <div class="form-group">
                <label>Show</label></br>
                <label class="checkbox-inline">
@@ -101,11 +102,24 @@
          </div>
        </div>
        <div class="row">
-         <div class="col-md-6">
-           <form role="form"">
+         <div class="col-md-4">
+           <form role="form">
              <div class="form-group">
                <label class="checkbox-inline">
                  <input type="checkbox" ng-model="data.dataAvailable">Data Available</input>
+               </label>
+             </div>
+           </form>
+         </div>
+         <div class="col-md-4" ng-if="config.layout === 'compact'">
+           <form role="form">
+             <div class="form-group">
+               <label>Compact Label Position</label></br>
+               <label class="radio-inline">
+                 <input type="radio" ng-model="config.compactLabelPosition" value="left">Left</input>
+               </label>
+               <label class="radio-inline">
+                 <input type="radio" ng-model="config.compactLabelPosition" value="right">Right</input>
                </label>
              </div>
            </form>
@@ -125,7 +139,8 @@
          valueType    : 'actual',
          timeFrame    : 'Last 15 Minutes',
          units        : 'MHz',
-         tooltipType  : 'percentage'
+         tooltipType  : 'percentage',
+         compactLabelPosition  : 'left'
        };
 
        $scope.footerConfig = {
@@ -134,7 +149,7 @@
          callBackFn: function () {
             alert("Footer Callback Fn Called");
           }
-       }
+       };
 
        $scope.filterConfig = {
          filters : [{label:'Last 30 Days', value:'30'},
@@ -143,7 +158,7 @@
          callBackFn: function (f) {
             alert("Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
           }
-       }
+       };
 
        $scope.layouts = [
          {

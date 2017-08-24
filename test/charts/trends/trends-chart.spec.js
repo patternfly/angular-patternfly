@@ -95,6 +95,18 @@ describe('Directive: pfTrendsChart', function() {
     expect(trendCard.length).toBe(1);
   });
 
+  it("should push/pull label to the right when compactLabelPosition is 'right'", function() {
+    $scope.config.layout = 'compact';
+    $scope.config.compactLabelPosition = 'right';
+    $scope.$digest();
+
+    trendCard = element.find('.col-sm-2');
+    expect(trendCard.hasClass('col-sm-push-10')).toEqual(true);
+
+    trendCard = element.find('.col-sm-10');
+    expect(trendCard.hasClass('col-sm-pull-2')).toEqual(true);
+  });
+
   it("should show inline card layout", function() {
     $scope.config.layout = 'inline';
     $scope.$digest();
