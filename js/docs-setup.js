@@ -451,7 +451,7 @@ NG_DOCS={
       "type": "directive",
       "moduleName": "patternfly.wizard",
       "shortDescription": "Component for rendering a Wizard step.  Each step can stand alone or have substeps.  This directive can only be used as a child of pf-wizard.",
-      "keywords": "allowclicknav api button called child click component data default description details directive directly disables display displayed enabled entire expanded function header identifier indicates indicators leave navigate nextenabled nexttooltip numbered numeric oktonavaway onshow order passed patternfly pf-wizard prevenabled prevtooltip priority reached relative rendering review reviewtemplate screen sequentially sets shared showreview showreviewdetails stand step stepid steppriority steps steptitle substeps template text title tooltip user viewed wizard wizarddata wzdisabled"
+      "keywords": "allowclicknav api button called child click component data default description details directive directly display displayed enabled entire expanded function header hides identifier indicates indicators leave navigate nextenabled nexttooltip numbered numeric oktonavaway onshow order passed patternfly pf-wizard prevenabled prevtooltip priority reached relative rendering review reviewtemplate screen sequentially set sets shared showreview showreviewdetails stand step stepid steppriority steps steptitle substeps template text title tooltip true user viewed wizard wizarddata wzdisabled"
     },
     {
       "section": "api",
@@ -460,7 +460,7 @@ NG_DOCS={
       "type": "directive",
       "moduleName": "patternfly.wizard",
       "shortDescription": "Component for rendering a Wizard substep.  Each substep must be a child of a pf-wizardstep in a pf-wizard directive.",
-      "keywords": "allowclicknav api button called child click component data default description details directive directly disables displayed enabled entire expanded function header identifier indicators leave navigate nextenabled numbered numeric oktonavaway onshow order passed patternfly pf-wizard pf-wizardstep prevenabled priority reached relative rendering review reviewtemplate screen sequentially sets shared showreviewdetails step stepid steppriority steps steptitle substep template text title user viewed wizard wizarddata wzdisabled"
+      "keywords": "allowclicknav api button called child click component data default description details directive directly displayed enabled entire expanded function header hides identifier indicators leave navigate nextenabled numbered numeric oktonavaway onshow order passed patternfly pf-wizard pf-wizardstep prevenabled priority reached relative rendering review reviewtemplate screen sequentially set sets shared showreviewdetails step stepid steppriority steps steptitle substep template text title true user viewed wizard wizarddata wzdisabled"
     }
   ],
   "apis": {

@@ -16680,7 +16680,7 @@ angular.module('patternfly.wizard').component('pfWizardReviewPage', {
  * @param {boolean=} prevEnabled Sets whether the back button should be enabled when this step is first displayed
  * @param {string=} nextTooltip The text to display as a tooltip on the next button
  * @param {string=} prevTooltip The text to display as a tooltip on the back button
- * @param {boolean=} wzDisabled Disables the wizard when this page is shown
+ * @param {boolean=} wzDisabled Hides the step when set to True
  * @param {boolean} okToNavAway Sets whether or not it's ok for the user to leave this page
  * @param {boolean} allowClickNav Sets whether the user can click on the numeric step indicators to navigate directly to this step
  * @param {string=} description The step description (optional)
@@ -16999,7 +16999,7 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
 * @param {number} stepPriority  This sets the priority of this wizard step relative to other wizard steps.  They should be numbered sequentially in the order they should be viewed.
 * @param {boolean=} nextEnabled Sets whether the next button should be enabled when this step is first displayed
 * @param {boolean=} prevEnabled Sets whether the back button should be enabled when this step is first displayed
-* @param {boolean=} wzDisabled Disables the wizard when this page is shown
+* @param {boolean=} wzDisabled Hides the step when set to True
 * @param {boolean} okToNavAway Sets whether or not it's ok for the user to leave this page
 * @param {boolean=} allowClickNav Sets whether the user can click on the numeric step indicators to navigate directly to this step
 * @param {string=} description The step description
