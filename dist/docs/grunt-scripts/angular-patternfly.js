@@ -7806,7 +7806,7 @@ angular.module('patternfly.filters').component('pfFilterFields', {
     }
 
     function onValueKeyPress (keyEvent) {
-      if (keyEvent.which === 13) {
+      if (keyEvent.which === 13 && ctrl.currentValue && ctrl.currentValue.length > 0) {
         ctrl.addFilterFn(ctrl.currentField, ctrl.currentValue);
         ctrl.currentValue = undefined;
         keyEvent.stopPropagation();
