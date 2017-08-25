@@ -131,6 +131,12 @@ pf-c3-chart {
 .utilization-trend-chart-pf.data-unavailable-pf .current-values {
   color: transparent;
 }
+.trend-card-compact-pf .col-sm-2 {
+  padding-right: 0;
+}
+.trend-card-compact-pf .col-sm-10 {
+  padding-left: 0;
+}
 .trend-flat-details {
   display: table;
   margin-top: 5px;
