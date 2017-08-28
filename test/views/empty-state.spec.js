@@ -1,4 +1,4 @@
-describe('Component:  pfEnptyState', function () {
+describe('Component:  pfEmptyState', function () {
   var $scope;
   var $compile;
   var element;
@@ -68,9 +68,9 @@ describe('Component:  pfEnptyState', function () {
     compileHTML('<pf-empty-state config="config" action-buttons="actionButtons"></pf-empty-state>', $scope);
 
     expect(element.find('.pficon-add-circle-o').length).toBe(1);
-    expect(element.find('#title').text()).toContain('Empty State Title');
-    expect(element.find('#info').text()).toContain('This is the Empty State component');
-    expect(element.find('#helpLink').text()).toContain('For more information please see');
+    expect(element.find('.blank-state-pf-title').text()).toContain('Empty State Title');
+    expect(element.find('.blank-state-pf-info').text()).toContain('This is the Empty State component');
+    expect(element.find('.blank-state-pf-helpLink').text()).toContain('For more information please see');
     expect(element.find('a').text()).toContain('pfExample');
     expect(element.find('a').prop('href')).toContain('#/api/patternfly.views.component:pfEmptyState');
 
@@ -89,11 +89,11 @@ describe('Component:  pfEnptyState', function () {
   it('should only display main default title when no config and actionButtons defined', function () {
     compileHTML('<pf-empty-state></pf-empty-state>', $scope);
 
-    expect(element.find('#title').text()).toContain('No Items Available');
+    expect(element.find('.blank-state-pf-title').text()).toContain('No Items Available');
 
     expect(element.find('.blank-slate-pf-icon').length).toBe(0);
-    expect(element.find('#info').length).toBe(0);
-    expect(element.find('#helpLink').length).toBe(0);
+    expect(element.find('.info').length).toBe(0);
+    expect(element.find('.helpLink').length).toBe(0);
     expect(element.find('button').length).toBe(0);
   });
 });

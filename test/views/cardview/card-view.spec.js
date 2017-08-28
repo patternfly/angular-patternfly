@@ -275,7 +275,7 @@ describe('Component:  pfCardView', function () {
     basicSetup();
     $scope.cardConfig.itemsAvailable = false;
     $scope.$digest();
-    expect(element.find('#title').text()).toContain('No Items Available');
+    expect(element.find('.blank-state-pf-title').text()).toContain('No Items Available');
   });
 
   it('should not show pagination controls by default', function () {
