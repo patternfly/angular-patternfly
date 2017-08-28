@@ -38,6 +38,9 @@
      <pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
        <pf-trends-chart config="configSingle" chart-data="dataSingle"></pf-trends-chart>
      </pf-card>
+      <pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
+        <pf-trends-chart config="configRightLabel" chart-data="dataSingle"></pf-trends-chart>
+      </pf-card>
      <label class="label-title">Card with Multiple Trends</label>
      <pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
           show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
@@ -57,7 +60,7 @@
          'callBackFn': function () {
             alert("Footer Callback Fn Called");
           }
-       }
+       };
 
        $scope.filterConfig = {
          'filters' : [{label:'Last 30 Days', value:'30'},
@@ -67,7 +70,7 @@
             alert("Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
           },
         'defaultFilter' : '1'
-       }
+       };
 
        var today = new Date();
        var dates = ['dates'];
@@ -82,6 +85,16 @@
          'valueType'    : 'actual',
          'units'        : 'TB',
          'tooltipType'  : 'percentage'
+       };
+
+       $scope.configRightLabel = {
+       'chartId'      : 'exampleRightLabelTrendsChart',
+         'title'        : 'Storage Capacity',
+         'layout'       : 'compact',
+         'valueType'    : 'actual',
+         'units'        : 'TB',
+         'tooltipType'  : 'percentage',
+         'compactLabelPosition'  : 'right'
        };
 
        $scope.dataSingle = {
