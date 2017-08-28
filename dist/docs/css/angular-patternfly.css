@@ -131,10 +131,10 @@ pf-c3-chart {
 .utilization-trend-chart-pf.data-unavailable-pf .current-values {
   color: transparent;
 }
-.trend-card-compact-pf .col-sm-2 {
+.trend-card-compact-pf .col-sm-2:not(.col-sm-push-10) {
   padding-right: 0;
 }
-.trend-card-compact-pf .col-sm-10 {
+.trend-card-compact-pf .col-sm-10:not(.col-sm-pull-2) {
   padding-left: 0;
 }
 .trend-flat-details {
