@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/trends/trends-chart.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/c7c7f29/src/charts/trends/trends-chart.component.js#L216" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTrendsChart</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/trends/trends-chart.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/4207e65/src/charts/trends/trends-chart.component.js#L231" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTrendsChart</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
@@ -23,6 +23,7 @@ See also: <a href="#/api/patternfly.charts.component:pfSparklineChart">patternfl
 <li>.chartId    - the unique id of this trends chart
 <li>.title      - (optional) title of the Trends chart
 <li>.layout     - (optional) the layout and sizes of titles and chart. Values are &#39;large&#39; (default), &#39;small&#39;, &#39;compact&#39;, and &#39;inline&#39;
+<li>.compactLabelPosition - (optional) the trend label positioning when the layout value is &#39;compact&#39;. Values are &#39;left&#39; (default) or &#39;right&#39;
 <li>.trendLabel - (optional) the trend label used in the &#39;inline&#39; layout
 <li>.timeFrame  - (optional) the time frame for the data in the pfSparklineChart, ex: &#39;Last 30 Days&#39;
 <li>.units      - unit label for values, ex: &#39;MHz&#39;,&#39;GB&#39;, etc..
@@ -52,7 +53,7 @@ See also: <a href="#/api/patternfly.charts.component:pfSparklineChart">patternfl
     <div class="col-md-12">
       <div class="row">
         <div class="col-md-4">
-          <form role="form"">
+          <form role="form">
             <div class="form-group">
               <label>Show</label></br>
               <label class="checkbox-inline">
@@ -109,11 +110,24 @@ See also: <a href="#/api/patternfly.charts.component:pfSparklineChart">patternfl
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
-          <form role="form"">
+        <div class="col-md-4">
+          <form role="form">
             <div class="form-group">
               <label class="checkbox-inline">
                 <input type="checkbox" ng-model="data.dataAvailable">Data Available</input>
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-4" ng-if="config.layout === 'compact'">
+          <form role="form">
+            <div class="form-group">
+              <label>Compact Label Position</label></br>
+              <label class="radio-inline">
+                <input type="radio" ng-model="config.compactLabelPosition" value="left">Left</input>
+              </label>
+              <label class="radio-inline">
+                <input type="radio" ng-model="config.compactLabelPosition" value="right">Right</input>
               </label>
             </div>
           </form>
@@ -136,7 +150,8 @@ angular.module( 'demo', ['patternfly.charts', 'patternfly.card', 'ui.bootstrap']
         valueType    : 'actual',
         timeFrame    : 'Last 15 Minutes',
         units        : 'MHz',
-        tooltipType  : 'percentage'
+        tooltipType  : 'percentage',
+        compactLabelPosition  : 'left'
       };
 
       $scope.footerConfig = {
@@ -145,7 +160,7 @@ angular.module( 'demo', ['patternfly.charts', 'patternfly.card', 'ui.bootstrap']
         callBackFn: function () {
            alert("Footer Callback Fn Called");
          }
-      }
+      };
 
       $scope.filterConfig = {
         filters : [{label:'Last 30 Days', value:'30'},
@@ -154,7 +169,7 @@ angular.module( 'demo', ['patternfly.charts', 'patternfly.card', 'ui.bootstrap']
         callBackFn: function (f) {
            alert("Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
          }
-      }
+      };
 
       $scope.layouts = [
         {
