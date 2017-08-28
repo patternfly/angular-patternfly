@@ -34,6 +34,9 @@ describe('Component: pfHeatmap', function() {
       {'id': 21, 'value': 0.81, 'tooltip': 'Node 21 : My OpenShift Provider<br>81% : 81 Used of 100 Total<br>19 Available'}];
   });
 
+  it("should have access to a global d3 object", function() {
+    expect(window.d3).toBeDefined();
+  });
 
   it("should set the heatmap title", function() {
     element = compileChart('<pf-heatmap chart-title="title" data="data"></pf-heatmap>',$scope);

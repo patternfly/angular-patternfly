@@ -1,4 +1,4 @@
-describe('Directive: pfDonutPctChart', function() {
+describe('Component: pfDonutPctChart', function() {
   var $scope, ctrl, $compile, $timeout, element;
 
   beforeEach(module(
@@ -40,6 +40,11 @@ describe('Directive: pfDonutPctChart', function() {
   var compileDonutCenterLabel = function () {
     element = compileDonut('<pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></pf-donut-pct-chart>');
   };
+
+  it("should have access to a global PatternFly object & method", function() {
+    expect(window.patternfly).toBeDefined();
+    expect(window.patternfly.c3ChartDefaults()).toBeDefined();
+  });
 
   it("should trigger error threshold", function() {
     compileSimpleDonut();

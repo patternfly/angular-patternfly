@@ -1,4 +1,4 @@
-describe('Directive: pfTrendsChart', function() {
+describe('Component: pfTrendsChart', function() {
   var $scope, $compile, element, isolateScope, trendCard;
 
   beforeEach(module(
