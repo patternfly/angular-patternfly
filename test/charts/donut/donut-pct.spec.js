@@ -16,7 +16,13 @@ describe('Directive: pfDonutPctChart', function() {
   beforeEach(function() {
     $scope.config = {
       'units': 'MHz',
-      'thresholds':{'warning':'75.0','error':'90.00'}
+      'thresholds':{'warning':'75.0','error':'90.00'},
+      'labelConfig': {
+        'orientation': 'right',
+        'title': 'Lorem Ipsum',
+        'label': 'available',
+        'units': 'MHz'
+      }
     };
 
     $scope.data = {
@@ -40,6 +46,13 @@ describe('Directive: pfDonutPctChart', function() {
   var compileDonutCenterLabel = function () {
     element = compileDonut('<pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></pf-donut-pct-chart>');
   };
+
+  it("should have an external label", function() {
+    compileSimpleDonut();
+    expect(element.find('.pct-donut-chart-pf-right').length).toEqual(1);
+    expect(element.find('.pct-donut-chart-pf-label')[0].innerText).toContain('Lorem Ipsum');
+    expect(element.find('.pct-donut-chart-pf-label > span')[0].innerText).toContain('50 MHz available');
+  });
 
   it("should trigger error threshold", function() {
     compileSimpleDonut();
@@ -133,3 +146,4 @@ describe('Directive: pfDonutPctChart', function() {
   });
 
 });
+
