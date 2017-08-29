@@ -207,4 +207,58 @@ describe('Directive:  pfFilter', function () {
 
     expect(element.find('.pf-table-view-selected-label').text()).toContain('0 of 10 selected');
   });
+
+  it('should show results inline only when specified', function() {
+    expect(element.find('.filter-pf.inline-filter-pf').length).toBe(0);
+
+    $scope.filterConfig.inlineResults = true;
+
+    $scope.$digest();
+
+    expect(element.find('.filter-pf.inline-filter-pf').length).toBe(1);
+  });
+
+  it('should show the total count in the results only when specified', function() {
+    $scope.filterConfig.appliedFilters = [
+      {
+        id: 'address',
+        title: 'Address',
+        value: 'New York'
+      }
+    ];
+    $scope.$digest();
+
+    expect(element.find('.toolbar-pf-results h5').text()).toContain('5 Results');
+
+    $scope.filterConfig.showTotalCountResults = true;
+    $scope.filterConfig.totalCount = 10;
+
+    $scope.$digest();
+
+    expect(element.find('.toolbar-pf-results h5').text()).toContain('5 of 10 Results');
+  });
+
+  it('should use the given results label when specified', function() {
+    $scope.filterConfig.showTotalCountResults = true;
+    $scope.filterConfig.resultsCount = 1;
+    $scope.filterConfig.totalCount = 1;
+    $scope.filterConfig.itemsLabel = 'Item';
+    $scope.filterConfig.itemsLabelPlural = 'Items';
+
+    $scope.filterConfig.appliedFilters = [
+      {
+        id: 'address',
+        title: 'Address',
+        value: 'New York'
+      }
+    ];
+    $scope.$digest();
+
+    expect(element.find('.toolbar-pf-results h5').text()).toContain('1 of 1 Item');
+
+    $scope.filterConfig.totalCount = 2;
+    $scope.$digest();
+
+    expect(element.find('.toolbar-pf-results h5').text()).toContain('1 of 2 Items');
+  });
 });
