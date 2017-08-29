@@ -98,3 +98,53 @@ pf-filter-panel {
     padding-left: 4px;
   }
 }
+
+.filter-pf {
+  &.inline-filter-pf {
+    flex: 1 1 100%;
+    margin: 15px 15px 7px 0;
+
+    pf-filter-fields,
+    pf-filter-results {
+      display: inline-block;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+      margin-right: 15px;
+    }
+
+    .toolbar-pf-results {
+      border-top: none;
+      margin: 0;
+
+      .col-sm-12 {
+        float: left;
+        padding: 0;
+      }
+
+      h5,
+      p,
+      ul {
+        line-height: 1.43;
+        padding-bottom: 6px;
+        padding-top: 6px;
+      }
+
+      .list-inline {
+        margin-bottom: -5px;
+        padding-right: 5px;
+
+        > li {
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+
+  .toolbar-pf-results {
+    .list-inline {
+      margin-left: 0;
+    }
+  }
+}
