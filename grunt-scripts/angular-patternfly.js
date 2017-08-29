@@ -10100,6 +10100,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
  * @param {boolean} drawerExpanded Flag if the drawer is expanded (only valid if allowExpand is true). Optional, default: false
  * @param {string}  drawerTitle  Title to display for the drawer (leaving this blank will remove the provided expand capability)
  * @param {object} notificationGroups Collection notification groups to add to the drawer. Alternatively, a single group object can be given if categorization is not used.
+ * @param {string} notificationTrackField Optional field from the notifications to use to track by in the notifications listing ($index used otherwise).
  * @param {function} onClose function() Callback for the close button. Close button is shown if this callback is supplied. Callback should set drawerHidden to true to close the drawer.
  * @param {boolean} showMarkAllRead Flag if the mark all read button should be shown, optional, default is false
  * @param {function} onMarkAllRead function(notificationGroup) Callback method for the mark all read button (Optional)
@@ -10141,7 +10142,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
               show-mark-all-read="true" on-mark-all-read="markAllRead"
               show-clear-all="true" on-clear-all="clearAll"
               heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
-              notification-footer-include="notification-footer.html" custom-scope="customScope">
+              notification-footer-include="notification-footer.html" custom-scope="customScope" notification-track-field="uid">
          </pf-notification-drawer>
        </div>
      </div>
@@ -10249,6 +10250,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
            subHeading: "5 New Events",
            notifications: [
              {
+               uid: 1,
                unread: true,
                message: "A New Event! Huzzah! Bold.",
                status: 'info',
@@ -10256,6 +10258,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 2,
                unread: true,
                message: "Another Event Notification",
                status: 'ok',
@@ -10263,6 +10266,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 3,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -10270,6 +10274,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 4,
                unread: false,
                message: "Another Event Notification",
                status: 'error',
@@ -10277,6 +10282,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 5,
                unread: true,
                message: "A New Event! Huzzah! Bold",
                status: 'info',
@@ -10284,6 +10290,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 6,
                unread: true,
                message: "Another Event Notification",
                status: 'error',
@@ -10291,6 +10298,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 7,
                unread: false,
                message: "Another Event Notification",
                status: 'ok',
@@ -10298,6 +10306,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 8,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -10305,6 +10314,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 9,
                unread: true,
                message: "Another Event Notification",
                status: 'info',
@@ -10319,6 +10329,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
            subHeading: "3 New Events",
            notifications: [
              {
+               uid: 10,
                unread: true,
                message: "A New Event! Huzzah! Bold",
                status: 'info',
@@ -10326,6 +10337,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 11,
                unread: true,
                message: "Another Event Notification",
                status: 'error',
@@ -10333,6 +10345,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 12,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -10340,6 +10353,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 13,
                unread: false,
                message: "Another Event Notification",
                status: 'ok',
@@ -10347,6 +10361,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 14,
                unread: true,
                message: "Another Event Notification",
                status: 'warning',
@@ -10366,6 +10381,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
            subHeading: "3 New Events",
            notifications: [
              {
+               uid: 15,
                unread: true,
                message: "A New Event! Huzzah! Bold",
                status: 'warning',
@@ -10373,6 +10389,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 16,
                unread: true,
                message: "Another Event Notification",
                status: 'ok',
@@ -10380,6 +10397,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 17,
                unread: false,
                message: "Another Event Notification",
                status: 'ok',
@@ -10387,6 +10405,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 18,
                unread: false,
                message: "Another Event Notification",
                status: 'error',
@@ -10394,6 +10413,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 19,
                unread: true,
                message: "Another Event Notification",
                status: 'info',
@@ -10407,6 +10427,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
            subHeading: "3 New Events",
            notifications: [
              {
+               uid: 20,
                unread: true,
                message: "A New Event! Huzzah! Bold",
                status: 'error',
@@ -10414,6 +10435,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 21,
                unread: true,
                message: "Another Event Notification",
                status: 'error',
@@ -10421,6 +10443,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 22,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -10428,6 +10451,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 23,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -10435,6 +10459,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 24,
                unread: true,
                message: "Another Event Notification",
                status: 'error',
@@ -10637,6 +10662,7 @@ angular.module( 'patternfly.notification' ).component('pfInlineNotification', {
     drawerExpanded: '=?',
     drawerTitle: '@',
     notificationGroups: '<',
+    notificationTrackField: '@',
     onClose: '=?',
     showMarkAllRead: '<?',
     onMarkAllRead: '=?',
@@ -18182,7 +18208,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
 
   $templateCache.put('notification/notification-drawer.html',
-    "<div class=drawer-pf ng-class=\"{'hide': $ctrl.drawerHidden, 'drawer-pf-expanded': $ctrl.drawerExpanded}\"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a ng-if=$ctrl.allowExpand class=\"drawer-pf-toggle-expand fa fa-angle-double-left\" ng-click=$ctrl.toggleExpandDrawer()></a> <a ng-if=$ctrl.onClose class=\"drawer-pf-close pficon pficon-close\" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in $ctrl.notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}\"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread, 'expanded-notification': $ctrl.drawerExpanded}\" ng-repeat=\"notification in notificationGroup.notifications\" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div ng-if=\"($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)\" class=drawer-pf-action><span class=drawer-pf-action-link ng-if=\"$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)\"><button class=\"btn btn-link\" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class=\"btn btn-link\" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class=\"pficon pficon-close\"></span> Clear All</button></span></div><div ng-if=\"$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)\" class=drawer-pf-action><a class=\"btn btn-link btn-block\" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>"
+    "<div class=drawer-pf ng-class=\"{'hide': $ctrl.drawerHidden, 'drawer-pf-expanded': $ctrl.drawerExpanded}\"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a ng-if=$ctrl.allowExpand class=\"drawer-pf-toggle-expand fa fa-angle-double-left\" ng-click=$ctrl.toggleExpandDrawer()></a> <a ng-if=$ctrl.onClose class=\"drawer-pf-close pficon pficon-close\" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class=\"panel panel-default\" ng-repeat=\"notificationGroup in $ctrl.notificationGroups track by $index\"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class=\"{collapsed: !notificationGroup.open}\" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class=\"panel-collapse collapse\" ng-class=\"{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}\"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class=\"{unread: notification.unread, 'expanded-notification': $ctrl.drawerExpanded}\" ng-repeat=\"notification in notificationGroup.notifications track by $ctrl.notificationTrackField ? notification[$ctrl.notificationTrackField] || $index : $index\" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class=\"drawer-pf-loading text-center\"><span class=\"spinner spinner-xs spinner-inline\"></span> Loading More</div></div><div ng-if=\"($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)\" class=drawer-pf-action><span class=drawer-pf-action-link ng-if=\"$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)\"><button class=\"btn btn-link\" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class=\"btn btn-link\" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class=\"pficon pficon-close\"></span> Clear All</button></span></div><div ng-if=\"$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)\" class=drawer-pf-action><a class=\"btn btn-link btn-block\" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>"
   );
 
 
