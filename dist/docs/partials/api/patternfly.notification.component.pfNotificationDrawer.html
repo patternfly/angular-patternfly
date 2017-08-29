@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/notification/examples/notification-drawer.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/4e7f52c/src/notification/examples/notification-drawer.js#L458" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfNotificationDrawer</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/notification/examples/notification-drawer.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3faf39f/src/notification/examples/notification-drawer.js#L483" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfNotificationDrawer</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.notification</code>
 </span>
 </div>
@@ -35,6 +35,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
        drawer-expanded="{boolean}"
        drawer-title="{string}"
        notification-groups="{object}"
+       notification-track-field="{string}"
        on-close="{function}"
        show-mark-all-read="{boolean}"
        on-mark-all-read="{function}"
@@ -55,6 +56,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
 </div></td></tr><tr><td>drawerExpanded</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Flag if the drawer is expanded (only valid if allowExpand is true). Optional, default: false</p>
 </div></td></tr><tr><td>drawerTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Title to display for the drawer (leaving this blank will remove the provided expand capability)</p>
 </div></td></tr><tr><td>notificationGroups</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Collection notification groups to add to the drawer. Alternatively, a single group object can be given if categorization is not used.</p>
+</div></td></tr><tr><td>notificationTrackField</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Optional field from the notifications to use to track by in the notifications listing ($index used otherwise).</p>
 </div></td></tr><tr><td>onClose</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>function() Callback for the close button. Close button is shown if this callback is supplied. Callback should set drawerHidden to true to close the drawer.</p>
 </div></td></tr><tr><td>showMarkAllRead</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>Flag if the mark all read button should be shown, optional, default is false</p>
 </div></td></tr><tr><td>onMarkAllRead</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pfnotificationdrawer-page"><p>function(notificationGroup) Callback method for the mark all read button (Optional)</p>
@@ -99,7 +101,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
              show-mark-all-read="true" on-mark-all-read="markAllRead"
              show-clear-all="true" on-clear-all="clearAll"
              heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
-             notification-footer-include="notification-footer.html" custom-scope="customScope">
+             notification-footer-include="notification-footer.html" custom-scope="customScope" notification-track-field="uid">
         </pf-notification-drawer>
       </div>
     </div>
@@ -224,6 +226,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
           subHeading: "5 New Events",
           notifications: [
             {
+              uid: 1,
               unread: true,
               message: "A New Event! Huzzah! Bold.",
               status: 'info',
@@ -231,6 +234,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (1 * 60 * 60 * 1000)
             },
             {
+              uid: 2,
               unread: true,
               message: "Another Event Notification",
               status: 'ok',
@@ -238,6 +242,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (2 * 60 * 60 * 1000)
             },
             {
+              uid: 3,
               unread: false,
               message: "Another Event Notification",
               status: 'warning',
@@ -245,6 +250,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (10 * 60 * 60 * 1000)
             },
             {
+              uid: 4,
               unread: false,
               message: "Another Event Notification",
               status: 'error',
@@ -252,6 +258,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (12 * 60 * 60 * 1000)
             },
             {
+              uid: 5,
               unread: true,
               message: "A New Event! Huzzah! Bold",
               status: 'info',
@@ -259,6 +266,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (1 * 60 * 60 * 1000)
             },
             {
+              uid: 6,
               unread: true,
               message: "Another Event Notification",
               status: 'error',
@@ -266,6 +274,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (2 * 60 * 60 * 1000)
             },
             {
+              uid: 7,
               unread: false,
               message: "Another Event Notification",
               status: 'ok',
@@ -273,6 +282,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (10 * 60 * 60 * 1000)
             },
             {
+              uid: 8,
               unread: false,
               message: "Another Event Notification",
               status: 'warning',
@@ -280,6 +290,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (12 * 60 * 60 * 1000)
             },
             {
+              uid: 9,
               unread: true,
               message: "Another Event Notification",
               status: 'info',
@@ -294,6 +305,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
           subHeading: "3 New Events",
           notifications: [
             {
+              uid: 10,
               unread: true,
               message: "A New Event! Huzzah! Bold",
               status: 'info',
@@ -301,6 +313,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (1 * 60 * 60 * 1000)
             },
             {
+              uid: 11,
               unread: true,
               message: "Another Event Notification",
               status: 'error',
@@ -308,6 +321,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (2 * 60 * 60 * 1000)
             },
             {
+              uid: 12,
               unread: false,
               message: "Another Event Notification",
               status: 'warning',
@@ -315,6 +329,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (10 * 60 * 60 * 1000)
             },
             {
+              uid: 13,
               unread: false,
               message: "Another Event Notification",
               status: 'ok',
@@ -322,6 +337,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (12 * 60 * 60 * 1000)
             },
             {
+              uid: 14,
               unread: true,
               message: "Another Event Notification",
               status: 'warning',
@@ -341,6 +357,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
           subHeading: "3 New Events",
           notifications: [
             {
+              uid: 15,
               unread: true,
               message: "A New Event! Huzzah! Bold",
               status: 'warning',
@@ -348,6 +365,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (1 * 60 * 60 * 1000)
             },
             {
+              uid: 16,
               unread: true,
               message: "Another Event Notification",
               status: 'ok',
@@ -355,6 +373,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (2 * 60 * 60 * 1000)
             },
             {
+              uid: 17,
               unread: false,
               message: "Another Event Notification",
               status: 'ok',
@@ -362,6 +381,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (10 * 60 * 60 * 1000)
             },
             {
+              uid: 18,
               unread: false,
               message: "Another Event Notification",
               status: 'error',
@@ -369,6 +389,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (12 * 60 * 60 * 1000)
             },
             {
+              uid: 19,
               unread: true,
               message: "Another Event Notification",
               status: 'info',
@@ -382,6 +403,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
           subHeading: "3 New Events",
           notifications: [
             {
+              uid: 20,
               unread: true,
               message: "A New Event! Huzzah! Bold",
               status: 'error',
@@ -389,6 +411,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (1 * 60 * 60 * 1000)
             },
             {
+              uid: 21,
               unread: true,
               message: "Another Event Notification",
               status: 'error',
@@ -396,6 +419,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (2 * 60 * 60 * 1000)
             },
             {
+              uid: 22,
               unread: false,
               message: "Another Event Notification",
               status: 'warning',
@@ -403,6 +427,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (10 * 60 * 60 * 1000)
             },
             {
+              uid: 23,
               unread: false,
               message: "Another Event Notification",
               status: 'warning',
@@ -410,6 +435,7 @@ text given will be used for the group if that is supplied. Otherwise, the defaul
               timeStamp: currentTime - (12 * 60 * 60 * 1000)
             },
             {
+              uid: 24,
               unread: true,
               message: "Another Event Notification",
               status: 'error',
