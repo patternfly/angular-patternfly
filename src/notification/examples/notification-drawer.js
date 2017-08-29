@@ -35,6 +35,7 @@
  * @param {boolean} drawerExpanded Flag if the drawer is expanded (only valid if allowExpand is true). Optional, default: false
  * @param {string}  drawerTitle  Title to display for the drawer (leaving this blank will remove the provided expand capability)
  * @param {object} notificationGroups Collection notification groups to add to the drawer. Alternatively, a single group object can be given if categorization is not used.
+ * @param {string} notificationTrackField Optional field from the notifications to use to track by in the notifications listing ($index used otherwise).
  * @param {function} onClose function() Callback for the close button. Close button is shown if this callback is supplied. Callback should set drawerHidden to true to close the drawer.
  * @param {boolean} showMarkAllRead Flag if the mark all read button should be shown, optional, default is false
  * @param {function} onMarkAllRead function(notificationGroup) Callback method for the mark all read button (Optional)
@@ -76,7 +77,7 @@
               show-mark-all-read="true" on-mark-all-read="markAllRead"
               show-clear-all="true" on-clear-all="clearAll"
               heading-include="heading.html" subheading-include="subheading.html" notification-body-include="notification-body.html"
-              notification-footer-include="notification-footer.html" custom-scope="customScope">
+              notification-footer-include="notification-footer.html" custom-scope="customScope" notification-track-field="uid">
          </pf-notification-drawer>
        </div>
      </div>
@@ -184,6 +185,7 @@
            subHeading: "5 New Events",
            notifications: [
              {
+               uid: 1,
                unread: true,
                message: "A New Event! Huzzah! Bold.",
                status: 'info',
@@ -191,6 +193,7 @@
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 2,
                unread: true,
                message: "Another Event Notification",
                status: 'ok',
@@ -198,6 +201,7 @@
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 3,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -205,6 +209,7 @@
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 4,
                unread: false,
                message: "Another Event Notification",
                status: 'error',
@@ -212,6 +217,7 @@
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 5,
                unread: true,
                message: "A New Event! Huzzah! Bold",
                status: 'info',
@@ -219,6 +225,7 @@
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 6,
                unread: true,
                message: "Another Event Notification",
                status: 'error',
@@ -226,6 +233,7 @@
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 7,
                unread: false,
                message: "Another Event Notification",
                status: 'ok',
@@ -233,6 +241,7 @@
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 8,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -240,6 +249,7 @@
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 9,
                unread: true,
                message: "Another Event Notification",
                status: 'info',
@@ -254,6 +264,7 @@
            subHeading: "3 New Events",
            notifications: [
              {
+               uid: 10,
                unread: true,
                message: "A New Event! Huzzah! Bold",
                status: 'info',
@@ -261,6 +272,7 @@
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 11,
                unread: true,
                message: "Another Event Notification",
                status: 'error',
@@ -268,6 +280,7 @@
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 12,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -275,6 +288,7 @@
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 13,
                unread: false,
                message: "Another Event Notification",
                status: 'ok',
@@ -282,6 +296,7 @@
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 14,
                unread: true,
                message: "Another Event Notification",
                status: 'warning',
@@ -301,6 +316,7 @@
            subHeading: "3 New Events",
            notifications: [
              {
+               uid: 15,
                unread: true,
                message: "A New Event! Huzzah! Bold",
                status: 'warning',
@@ -308,6 +324,7 @@
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 16,
                unread: true,
                message: "Another Event Notification",
                status: 'ok',
@@ -315,6 +332,7 @@
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 17,
                unread: false,
                message: "Another Event Notification",
                status: 'ok',
@@ -322,6 +340,7 @@
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 18,
                unread: false,
                message: "Another Event Notification",
                status: 'error',
@@ -329,6 +348,7 @@
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 19,
                unread: true,
                message: "Another Event Notification",
                status: 'info',
@@ -342,6 +362,7 @@
            subHeading: "3 New Events",
            notifications: [
              {
+               uid: 20,
                unread: true,
                message: "A New Event! Huzzah! Bold",
                status: 'error',
@@ -349,6 +370,7 @@
                timeStamp: currentTime - (1 * 60 * 60 * 1000)
              },
              {
+               uid: 21,
                unread: true,
                message: "Another Event Notification",
                status: 'error',
@@ -356,6 +378,7 @@
                timeStamp: currentTime - (2 * 60 * 60 * 1000)
              },
              {
+               uid: 22,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -363,6 +386,7 @@
                timeStamp: currentTime - (10 * 60 * 60 * 1000)
              },
              {
+               uid: 23,
                unread: false,
                message: "Another Event Notification",
                status: 'warning',
@@ -370,6 +394,7 @@
                timeStamp: currentTime - (12 * 60 * 60 * 1000)
              },
              {
+               uid: 24,
                unread: true,
                message: "Another Event Notification",
                status: 'error',
