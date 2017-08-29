@@ -1,4 +1,4 @@
-<div class="filter-pf">
+<div class="filter-pf" ng-class="{'inline-filter-pf': $ctrl.config.inlineResults === true}">
   <pf-filter-fields config="$ctrl.config" add-filter-fn="$ctrl.addFilter"></pf-filter-fields>
   <pf-filter-results config="$ctrl.config"></pf-filter-results>
 </div>
