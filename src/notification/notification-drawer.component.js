@@ -5,6 +5,7 @@ angular.module('patternfly.notification').component('pfNotificationDrawer', {
     drawerExpanded: '=?',
     drawerTitle: '@',
     notificationGroups: '<',
+    notificationTrackField: '@',
     onClose: '=?',
     showMarkAllRead: '<?',
     onMarkAllRead: '=?',
