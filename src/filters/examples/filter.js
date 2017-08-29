@@ -21,8 +21,13 @@
  * <li>.filterCategoriesPlaceholder - (String) Text to display in `complex-select` category value select when no filter value has been entered, Optional
  * <li>.filterDelimiter - (String) Delimiter separating 'complex-select' category and value. Optional, default is a space, ' '
  * </ul>
+ * <li>.inlineResults - (Boolean) Flag to show results inline with the filter selection (default: false)
  * <li>.appliedFilters - (Array) List of the currently applied filters
  * <li>.resultsCount   - (int) The number of results returned after the current applied filters have been applied
+ * <li>.totalCount     - (int) The total number of items before any filters have been applied. The 'm' in the label: 'n' of 'm' selected
+ * <li>.showTotalCountResults - (Boolean) Optional, flag to show the total count in the filter results as well (ie. 'n' of 'm' Results)
+ * <li>.itemsLabel     - (String) Optional label to use for the items in the results count (default: Result)
+ * <li>.itemsLabelPlural - (String) Optional label to use for the items in the resuults count when plural (default: Results)
  * <li>.onFilterChange - ( function(array of filters) ) Function to call when the applied filters list changes
  * </ul>
  *
@@ -32,6 +37,26 @@
     <div ng-controller="ViewCtrl" class="row example-container">
       <div class="col-md-12">
         <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
+      </div>
+      <hr class="col-md-12">
+      </br></br>
+      <div class="col-sm-4">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="filterConfig.inlineResults">Inline results</input>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-4">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="filterConfig.showTotalCountResults">Show total count in results</input>
+            </label>
+          </div>
+        </form>
       </div>
       <hr class="col-md-12">
       <div class="col-md-12">
@@ -55,7 +80,6 @@
           </div>
         </div>
       </div>
-      </br></br>
       <div class="col-md-12">
         <label class="events-label">Current Filters: </label>
       </div>
@@ -206,6 +230,7 @@
             }
           ],
           resultsCount: $scope.items.length,
+          totalCount: $scope.allItems.length,
           appliedFilters: [],
           onFilterChange: filterChange
         };
