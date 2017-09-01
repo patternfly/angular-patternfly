@@ -48,6 +48,14 @@ describe('Component:  pfApplicationLauncher', function () {
     expect(content.length).toBe(2);
   });
 
+  it('should have dropdown menu to the right', function() {
+    var htmlTmp = '<pf-application-launcher items="sites" label="" is-disabled="false" is-list="true" hidden-icons="true"></div>';
+    compileHTML(htmlTmp, $scope);
+
+    var content = element.find('ul');
+    expect(content.hasClass('dropdown-menu-right')).toBe(true);
+  });
+
   it('should have a custom label', function () {
     var htmlTmp = '<pf-application-launcher items="sites" label="Product Launcher" is-disabled="false" is-list="false" hidden-icons="false"></div>';
     compileHTML(htmlTmp, $scope);
