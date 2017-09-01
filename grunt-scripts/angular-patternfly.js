@@ -8704,13 +8704,56 @@ angular.module('patternfly.modals')
      <div class="col-xs-12 pre-demo-text">
        <label>Click the launcher indicator to show the Application Launcher Dropdown:</label>
      </div>
-     <nav class="navbar navbar-pf navbar-collapse">
-       <ul class="nav navbar-left">
-         <li>
-           <pf-application-launcher items="navigationItems" label="{{label}}" is-disabled="isDisabled" is-list="isList" hidden-icons="hiddenIcons"></pf-application-launcher>
-         </li>
-       </ul>
+     <nav class="navbar navbar-default navbar-pf" role="navigation">
+       <div class="navbar-header">
+         <a class="navbar-brand" href="/">
+         <img src="img/brand.svg" alt="PatternFly Enterprise Application">
+         </a>
+       </div>
+       <div class="collapse navbar-collapse navbar-collapse-1">
+         <ul class="nav navbar-nav navbar-utility">
+           <li>
+             <pf-application-launcher items="navigationItems" label="{{label}}" is-disabled="isDisabled" is-list="isList" hidden-icons="ctrl.hiddenIcons === 'true'"></pf-application-launcher>
+           </li>
+           <li class="dropdown">
+             <a class="nav-item-iconic" id="horizontalDropdownMenu11" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+               <span title="Help" class="fa pficon-help"></span>
+               <span class="caret"></span>
+             </a>
+           </li>
+           <li class="dropdown">
+             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+               <span class="pficon pficon-user"></span>Brian Johnson <b class="caret"></b>
+             </a>
+           </li>
+         </ul>
+         <ul class="nav navbar-nav navbar-primary">
+           <li><a href="#">First Link</a></li>
+           <li class="active"><a href="#">Another Link</a></li>
+           <li><a href="#">And Another</a></li>
+           <li><a href="#">As a General Rule</a></li>
+           <li><a href="#">Five to Seven Links</a></li>
+           <li><a href="#">Is Good</a></li>
+         </ul>
+       </div>
      </nav>
+     <div class="col-md-12">
+       <form role="form">
+         <div class="row">
+           <div class="col-md-3">
+             <div class="form-group">
+               <label>Grid Menu</label></br>
+               <label class="radio-inline">
+                 <input type="radio" ng-model="ctrl.hiddenIcons" value="false">Icons</input>
+               </label>
+               <label class="radio-inline">
+                 <input type="radio" ng-model="ctrl.hiddenIcons" value="true">No Icons</input>
+               </label>
+             </div>
+           </div>
+         </div>
+       </form>
+     </div>
    </div>
  </file>
  <file name="script.js">
@@ -8746,7 +8789,7 @@ angular.module('patternfly.modals')
        $scope.label = 'Application Launcher';
        $scope.isDisabled = false;
        $scope.isList = false;
-       $scope.hiddenIcons = false;
+       $scope.hiddenIcons = 'false';
      }]);
  </file>
  </example>
