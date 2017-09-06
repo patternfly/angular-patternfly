@@ -68,19 +68,19 @@ describe('Directive: pfTrendsChart', function() {
     trendCard = element.find('.trend-card-large-pf');
     expect(trendCard.length).toBe(1);
     // check small card isn't being shown by default
-    expect(trendCard.hasClass('.trend-card-small-pf')).toBeFalsy();
+    expect(trendCard.hasClass('trend-card-small-pf')).toBe(false);
 
     $scope.config.layout = 'small';
     $scope.$digest();
     trendCard = element.find('.trend-card-small-pf');
     expect(trendCard.length).toBe(1);
-    expect(trendCard.hasClass('.trend-card-large-pf')).toBeFalsy();
+    expect(trendCard.hasClass('trend-card-large-pf')).toBe(false);
 
     $scope.config.layout = 'large';
     $scope.$digest();
     trendCard = element.find('.trend-card-large-pf');
     expect(trendCard.length).toBe(1);
-    expect(trendCard.hasClass('.trend-card-small-pf')).toBeFalsy();
+    expect(trendCard.hasClass('trend-card-small-pf')).toBe(false);
   });
 
   it("should show compact card layout", function() {
