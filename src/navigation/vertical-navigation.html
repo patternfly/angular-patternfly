@@ -70,7 +70,7 @@
                   ng-mouseenter="$ctrl.handleSecondaryHover(secondaryItem)" ng-mouseleave="$ctrl.handleSecondaryUnHover(secondaryItem)">
                 <a ng-click="$ctrl.handleSecondaryClick(item, secondaryItem, $event)">
                   <span class="list-group-item-value">{{secondaryItem.title}}</span>
-                  <div ng-if="showBadges && secondaryItem.badges" class="badge-container-pf">
+                  <div ng-if="$ctrl.showBadges && secondaryItem.badges" class="badge-container-pf">
                     <div class="badge {{badge.badgeClass}}" ng-repeat="badge in secondaryItem.badges"
                       uib-tooltip="{{badge.tooltip}}"
                       tooltip-append-to-body="true"
