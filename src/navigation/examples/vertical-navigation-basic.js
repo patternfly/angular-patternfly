@@ -216,7 +216,14 @@
                  children: [
                     {
                        title: "Novum",
-                       href: "#/ipsum/patrioque/novum"
+                       href: "#/ipsum/patrioque/novum",
+                       badges: [
+                         {
+                           count: 6,
+                           tooltip: "Total number of error items",
+                           badgeClass: 'example-error-background'
+                         }
+                       ]
                     },
                     {
                        title: "Pericula",
@@ -255,15 +262,35 @@
                  children: [
                     {
                        title: "Delicatissimi",
-                       href: "#/amet/detracto/delicatissimi"
+                       href: "#/amet/detracto/delicatissimi",
+                       badges: [
+                         {
+                           count: 6,
+                           tooltip: "Total number of error items",
+                           badgeClass: 'example-error-background'
+                         }
+                       ]
                     },
                     {
                        title: "Aliquam",
-                       href: "#/amet/detracto/aliquam"
+                       href: "#/amet/detracto/aliquam",
+                       badges: [
+                         {
+                           count: 2,
+                           tooltip: "Total number of items"
+                         }
+                       ]
                     },
                     {
                        title: "Principes",
-                       href: "#/amet/detracto/principes"
+                       href: "#/amet/detracto/principes",
+                       badges: [
+                         {
+                           count: 18,
+                           tooltip: "Total number of warning items",
+                           badgeClass: 'example-warning-background'
+                         }
+                       ]
                     }
                  ]
               },
@@ -272,15 +299,35 @@
                  children: [
                     {
                        title: "Convenire",
-                       href: "#/amet/mediocrem/convenire"
+                       href: "#/amet/mediocrem/convenire",
+                       badges: [
+                         {
+                           count: 6,
+                           tooltip: "Total number of error items",
+                           badgeClass: 'example-error-background'
+                         }
+                       ]
                     },
                     {
                        title: "Nonumy",
-                       href: "#/amet/mediocrem/nonumy"
+                       href: "#/amet/mediocrem/nonumy",
+                       badges: [
+                         {
+                           count: 2,
+                           tooltip: "Total number of items"
+                         }
+                       ]
                     },
                     {
                        title: "Deserunt",
-                       href: "#/amet/mediocrem/deserunt"
+                       href: "#/amet/mediocrem/deserunt",
+                       badges: [
+                         {
+                           count: 18,
+                           tooltip: "Total number of warning items",
+                           badgeClass: 'example-warning-background'
+                         }
+                       ]
                     }
                  ]
               },
@@ -289,21 +336,53 @@
                  children: [
                     {
                        title: "Aeque",
-                       href: "#/amet/corrumpit/aeque"
+                       href: "#/amet/corrumpit/aeque",
+                       badges: [
+                         {
+                           count: 6,
+                           tooltip: "Total number of error items",
+                           badgeClass: 'example-error-background'
+                         }
+                       ]
                     },
                     {
                        title: "Delenit",
-                       href: "#/amet/corrumpit/delenit"
+                       href: "#/amet/corrumpit/delenit",
+                       badges: [
+                         {
+                           count: 2,
+                           tooltip: "Total number of items"
+                         }
+                       ]
                     },
                     {
                        title: "Qualisque",
-                       href: "#/amet/corrumpit/qualisque"
+                       href: "#/amet/corrumpit/qualisque",
+                       badges: [
+                         {
+                           count: 18,
+                           tooltip: "Total number of warning items",
+                           badgeClass: 'example-warning-background'
+                         }
+                       ]
                     }
                  ]
               },
               {
-                 title: "urbanitas",
-                 href: "#/amet/urbanitas"
+                 title: "Urbanitas",
+                 href: "#/amet/urbanitas",
+                 badges: [
+                   {
+                     count: 2,
+                     tooltip: "Total number of error items",
+                     iconClass: 'pficon pficon-error-circle-o'
+                   },
+                   {
+                     count: 6,
+                     tooltip: "Total number warning error items",
+                     iconClass: 'pficon pficon-warning-triangle-o'
+                   }
+                 ]
               }
            ]
         },
