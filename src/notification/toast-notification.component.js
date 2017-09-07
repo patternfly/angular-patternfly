@@ -5,8 +5,8 @@
  * @scope
  *
  * @param {string} notificationType The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'
- * @param {string} header The header text of the notification.
- * @param {string} message The main text message of the notification.
+ * @param {string} header The header text of the notification. Accepts HTML content.
+ * @param {string} message The main text message of the notification. Accepts HTML content.
  * @param {boolean} showClose Flag to show the close button, default: true
  * @param {function} closeCallback (function(data)) Function to invoke when close action is selected, optional
  * @param {string} actionTitle Text to show for the primary action, optional.
@@ -107,7 +107,7 @@
        $scope.showClose = false;
 
        $scope.header = 'Default Header.';
-       $scope.message = 'Default Message.';
+       $scope.message = 'Default <strong>notification</strong> message.';
        $scope.primaryAction = '';
 
        $scope.updateType = function(item) {
@@ -190,7 +190,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     'data': '=?'
   },
   templateUrl: 'notification/toast-notification.html',
-  controller: function () {
+  controller: function ($sce) {
     'use strict';
     var ctrl = this,
       _showClose;
@@ -249,5 +249,10 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
         ctrl.updateShowClose();
       }
     };
+
+    ctrl.trustAsHtml = function (html) {
+      return $sce.trustAsHtml(html);
+    };
   }
 });
+
