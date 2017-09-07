@@ -7,8 +7,8 @@
  * @param {Array} notifications The list of current notifications to display. Each notification should have the following (see pfToastNotification):
  *           <ul style='list-style-type: none'>
  *             <li>.type - (String) The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'
- *             <li>.header - (String) The header to display for the notification (optional)
- *             <li>.message - (String) The main text message of the notification.
+ *             <li>.header - (String) The header to display for the notification, accepts HTML content. (optional)
+ *             <li>.message - (String) The main text message of the notification. Accepts HTML content.
  *             <li>.actionTitle Text to show for the primary action, optional.
  *             <li>.actionCallback (function(this notification)) Function to invoke when primary action is selected, optional
  *             <li>.menuActions  Optional list of actions to place in the kebab menu:<br/>
@@ -118,7 +118,7 @@
 
        $scope.type = $scope.types[0];
        $scope.header = 'Default header.';
-       $scope.message = 'Default notification message.';
+       $scope.message = 'Default <strong>notification</strong> message.';
        $scope.showClose = false;
        $scope.persistent = false;
 
@@ -193,7 +193,7 @@
            $scope.handleAction,
            ($scope.showMenu ? $scope.menuActions : undefined)
          );
-       }
+       };
 
        $scope.notifications = Notifications.data;
      });
@@ -225,3 +225,4 @@ angular.module('patternfly.notification').component('pfToastNotificationList', {
     };
   }
 });
+
