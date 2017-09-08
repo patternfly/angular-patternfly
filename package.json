@@ -54,7 +54,7 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "matchdep": "0.3.0",
     "nsp": "^2.6.1",
-    "patternfly-eng-release": "^3.26.29",
+    "patternfly-eng-release": "^3.26.35",
     "semantic-release": "^6.3.6"
   },
   "optionalDependencies": {
@@ -83,7 +83,6 @@
     "ngdocs": "grunt ngdocs",
     "ngdocs:view": "grunt ngdocs:view",
     "ngdocs:publish": "grunt ngdocs:publish",
-    "nsp-check": "nsp check",
     "lint": "grunt lint",
     "test": "grunt test",
     "check": "grunt check",
