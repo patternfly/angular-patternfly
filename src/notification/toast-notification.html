@@ -27,7 +27,11 @@
   <span class="pficon pficon-info" ng-if="$ctrl.notificationType === 'info'"></span>
   <span class="pficon pficon-error-circle-o" ng-if="$ctrl.notificationType === 'danger'"></span>
   <span class="pficon pficon-warning-triangle-o" ng-if="$ctrl.notificationType === 'warning'"></span>
-  <span>
+  <span ng-if="!$ctrl.htmlContent">
+    <strong ng-if="$ctrl.header" ng-bind="$ctrl.header"></strong>
+    <span ng-bind="$ctrl.message"></span>
+  </span>
+  <span ng-if="$ctrl.htmlContent">
     <strong ng-if="$ctrl.header" ng-bind-html="$ctrl.trustAsHtml($ctrl.header)"></strong>
     <span ng-bind-html="$ctrl.trustAsHtml($ctrl.message)"></span>
   </span>
