@@ -4,6 +4,7 @@
          header="{{notification.header}}"
          message="{{notification.message}}"
          show-close="{{($ctrl.showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}"
+         html-content="$ctrl.htmlContent"
          close-callback="$ctrl.handleClose"
          action-title="{{notification.actionTitle}}"
          action-callback="notification.actionCallback"
