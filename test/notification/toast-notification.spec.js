@@ -21,13 +21,14 @@ describe('Component: pfToastNotification', function () {
     scope.$digest();
   };
 
-  var setupHTML = function (notificationType, header, message, showClose, primaryAction, showMenu, data) {
+  var setupHTML = function (notificationType, header, message, showClose, primaryAction, showMenu, data, htmlContent) {
     $scope.type = notificationType;
     $scope.header = header;
     $scope.message = message || "Test Toast Notification Message";
     $scope.showClose = showClose;
     $scope.primaryAction = primaryAction;
     $scope.data = data;
+    $scope.htmlContent = htmlContent;
 
     $scope.closeData = undefined;
     $scope.closeCallback = function (data) {
@@ -91,9 +92,9 @@ describe('Component: pfToastNotification', function () {
       title: "Test Notification"
     };
     var htmlTmp = '<pf-toast-notification notification-type="{{type}}" header="{{header}}" message="{{message}}"' +
-                  '    show-close="{{showClose}}" close-callback="closeCallback"' +
-                  '    action-title="{{primaryAction}}" action-callback="handleAction"' +
-                  '    menu-actions="menuActions" data="data">' +
+                  '    show-close="{{showClose}}" html-content="htmlContent" ' +
+                  '    close-callback="closeCallback" action-title="{{primaryAction}}"' +
+                  '    action-callback="handleAction" menu-actions="menuActions" data="data">' +
                   '    </pf-toast-notification>';
 
     compileHTML(htmlTmp, $scope);
@@ -119,12 +120,12 @@ describe('Component: pfToastNotification', function () {
   });
 
   it('should allow HTML content within the header and message', function () {
-    setupHTML ("info", "<em>Test Header</em>", null, false, '', false);
+    setupHTML ("info", "<em>Test Header</em>", null, false, '', false, null, true);
     var header = element.find('.toast-pf span strong em');
     expect(header.length).toBe(1);
     expect(header.text()).toContain("Test Header");
 
-    setupHTML ("info", "", "<em>Test Notification Message</em>", false, '', false);
+    setupHTML ("info", "", "<em>Test Notification Message</em>", false, '', false, null, true);
     var message = element.find('.toast-pf > span em');
     expect(message.length).toBe(1);
     expect(message.text()).toContain("Test Notification Message");

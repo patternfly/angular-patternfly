@@ -5,9 +5,10 @@
  * @scope
  *
  * @param {string} notificationType The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'
- * @param {string} header The header text of the notification. Accepts HTML content.
- * @param {string} message The main text message of the notification. Accepts HTML content.
+ * @param {string} header The header text of the notification. Accepts HTML content when allowed.
+ * @param {string} message The main text message of the notification. Accepts HTML content when allowed.
  * @param {boolean} showClose Flag to show the close button, default: true
+ * @param {boolean} htmlContent Flag to allow HTML content within the header and message options.
  * @param {function} closeCallback (function(data)) Function to invoke when close action is selected, optional
  * @param {string} actionTitle Text to show for the primary action, optional.
  * @param {function} actionCallback (function(data)) Function to invoke when primary action is selected, optional
@@ -37,9 +38,9 @@
      <div ng-controller="ToastNotificationDemoCtrl" class="row example-container">
        <div class="col-md-12">
          <pf-toast-notification notification-type="{{type}}" header="{{header}}" message="{{message}}"
-              show-close="{{showClose}}" close-callback="closeCallback"
-              action-title="{{primaryAction}}" action-callback="handleAction"
-              menu-actions="menuActions">
+              show-close="{{showClose}}"  html-content="htmlContent"
+              close-callback="closeCallback" action-title="{{primaryAction}}"
+              action-callback="handleAction" menu-actions="menuActions">
          </pf-toast-notification>
 
          <form class="form-horizontal">
@@ -81,12 +82,16 @@
            </div>
            <div class="form-group">
              <label class="col-sm-2 control-label" for="type">Show Close:</label>
-             <div class="col-sm-3">
+             <div class="col-sm-1">
              <input type="checkbox" ng-model="showClose"/>
              </div>
              <label class="col-sm-2 control-label" for="type">Show Menu:</label>
-             <div class="col-sm-3">
+             <div class="col-sm-1">
               <input type="checkbox" ng-model="showMenu"/>
+             </div>
+             <label class="col-sm-2 control-label" for="type">Allow HTML:</label>
+                <div class="col-sm-1">
+                <input type="checkbox" ng-model="htmlContent"/>
              </div>
            </div>
          </form>
@@ -105,6 +110,7 @@
        $scope.types = ['success','info','danger', 'warning'];
        $scope.type = $scope.types[0];
        $scope.showClose = false;
+       $scope.htmlContent = false;
 
        $scope.header = 'Default Header.';
        $scope.message = 'Default <strong>notification</strong> message.';
@@ -182,6 +188,7 @@ angular.module( 'patternfly.notification' ).component('pfToastNotification', {
     'message': '@',
     'header': '@',
     'showClose': '@',
+    'htmlContent': '<?',
     'closeCallback': '=?',
     'actionTitle': '@',
     'actionCallback': '=?',
