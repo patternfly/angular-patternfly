@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/notification/toast-notification.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/cfb620c/src/notification/toast-notification.component.js#L179" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfToastNotification</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/notification/toast-notification.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/1b8b540/src/notification/toast-notification.component.js#L185" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfToastNotification</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.notification</code>
 </span>
 </div>
@@ -17,6 +17,7 @@ Add a close menu item if you want to have both capabilities.</p>
        header="{string}"
        message="{string}"
        show-close="{boolean}"
+       html-content="{boolean}"
        close-callback="{function}"
        action-title="{string}"
        action-callback="{function}"
@@ -29,9 +30,10 @@ Add a close menu item if you want to have both capabilities.</p>
 </ul>
 </div>
 <h4 id="usage_directive-info_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>notificationType</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>The type of the notification message. Allowed value is one of these: &#39;success&#39;,&#39;info&#39;,&#39;danger&#39;, &#39;warning&#39;</p>
-</div></td></tr><tr><td>header</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>The header text of the notification.</p>
-</div></td></tr><tr><td>message</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>The main text message of the notification.</p>
+</div></td></tr><tr><td>header</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>The header text of the notification. Accepts HTML content when allowed.</p>
+</div></td></tr><tr><td>message</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>The main text message of the notification. Accepts HTML content when allowed.</p>
 </div></td></tr><tr><td>showClose</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>Flag to show the close button, default: true</p>
+</div></td></tr><tr><td>htmlContent</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>Flag to allow HTML content within the header and message options.</p>
 </div></td></tr><tr><td>closeCallback</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>(function(data)) Function to invoke when close action is selected, optional</p>
 </div></td></tr><tr><td>actionTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>Text to show for the primary action, optional.</p>
 </div></td></tr><tr><td>actionCallback</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-notification-component-page patternfly-notification-component-pftoastnotification-page"><p>(function(data)) Function to invoke when primary action is selected, optional</p>
@@ -53,9 +55,9 @@ Add a close menu item if you want to have both capabilities.</p>
     <div ng-controller="ToastNotificationDemoCtrl" class="row example-container">
       <div class="col-md-12">
         <pf-toast-notification notification-type="{{type}}" header="{{header}}" message="{{message}}"
-             show-close="{{showClose}}" close-callback="closeCallback"
-             action-title="{{primaryAction}}" action-callback="handleAction"
-             menu-actions="menuActions">
+             show-close="{{showClose}}"  html-content="htmlContent"
+             close-callback="closeCallback" action-title="{{primaryAction}}"
+             action-callback="handleAction" menu-actions="menuActions">
         </pf-toast-notification>
 
         <form class="form-horizontal">
@@ -97,12 +99,16 @@ Add a close menu item if you want to have both capabilities.</p>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label" for="type">Show Close:</label>
-            <div class="col-sm-3">
+            <div class="col-sm-1">
             <input type="checkbox" ng-model="showClose"/>
             </div>
             <label class="col-sm-2 control-label" for="type">Show Menu:</label>
-            <div class="col-sm-3">
+            <div class="col-sm-1">
              <input type="checkbox" ng-model="showMenu"/>
+            </div>
+            <label class="col-sm-2 control-label" for="type">Allow HTML:</label>
+               <div class="col-sm-1">
+               <input type="checkbox" ng-model="htmlContent"/>
             </div>
           </div>
         </form>
@@ -123,9 +129,10 @@ Add a close menu item if you want to have both capabilities.</p>
       $scope.types = ['success','info','danger', 'warning'];
       $scope.type = $scope.types[0];
       $scope.showClose = false;
+      $scope.htmlContent = false;
 
       $scope.header = 'Default Header.';
-      $scope.message = 'Default Message.';
+      $scope.message = 'Default <strong>notification</strong> message.';
       $scope.primaryAction = '';
 
       $scope.updateType = function(item) {
