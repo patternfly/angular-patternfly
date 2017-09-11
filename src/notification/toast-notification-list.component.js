@@ -7,8 +7,8 @@
  * @param {Array} notifications The list of current notifications to display. Each notification should have the following (see pfToastNotification):
  *           <ul style='list-style-type: none'>
  *             <li>.type - (String) The type of the notification message. Allowed value is one of these: 'success','info','danger', 'warning'
- *             <li>.header - (String) The header to display for the notification (optional)
- *             <li>.message - (String) The main text message of the notification.
+ *             <li>.header - (String) The header to display for the notification, accepts HTML content when allowed. (optional)
+ *             <li>.message - (String) The main text message of the notification. Accepts HTML content when allowed.
  *             <li>.actionTitle Text to show for the primary action, optional.
  *             <li>.actionCallback (function(this notification)) Function to invoke when primary action is selected, optional
  *             <li>.menuActions  Optional list of actions to place in the kebab menu:<br/>
@@ -21,6 +21,7 @@
  *             <li>.isPersistent Flag to show close button for the notification even if showClose is false.
  *           </ul>
  * @param {Boolean} showClose Flag to show the close button on all notifications (not shown if the notification has menu actions)
+ * @param {Boolean} htmlContent Flag to allow HTML content within the header and message options.
  * @param {function} closeCallback (function(data)) Function to invoke when closes a toast notification
  * @param {function} updateViewing (function(boolean, data)) Function to invoke when user is viewing/not-viewing (hovering on) a toast notification
  *
@@ -32,7 +33,7 @@
 
    <file name="index.html">
      <div ng-controller="ToastNotificationListDemoCtrl" >
-       <pf-toast-notification-list notifications="notifications" show-close="showClose" close-callback="handleClose" update-viewing="updateViewing"></pf-toast-notification-list>
+       <pf-toast-notification-list notifications="notifications" show-close="showClose" html-content="htmlContent" close-callback="handleClose" update-viewing="updateViewing"></pf-toast-notification-list>
        <div class="row example-container">
          <div class="col-md-12">
            <form class="form-horizontal">
@@ -84,8 +85,12 @@
                  <input type="checkbox" ng-model="persistent"/>
                </div>
                <label class="col-sm-2 control-label" for="type">Show Menu:</label>
-               <div class="col-sm-2">
+               <div class="col-sm-1">
                  <input type="checkbox" ng-model="showMenu"/>
+               </div>
+               <label class="col-sm-2 control-label" for="type">Allow HTML:</label>
+               <div class="col-sm-1">
+               <input type="checkbox" ng-model="htmlContent"/>
                </div>
              </div>
              <div class="form-group">
@@ -118,8 +123,9 @@
 
        $scope.type = $scope.types[0];
        $scope.header = 'Default header.';
-       $scope.message = 'Default notification message.';
+       $scope.message = 'Default <strong>notification</strong> message.';
        $scope.showClose = false;
+       $scope.htmlContent = false;
        $scope.persistent = false;
 
        $scope.primaryAction = '';
@@ -193,7 +199,7 @@
            $scope.handleAction,
            ($scope.showMenu ? $scope.menuActions : undefined)
          );
-       }
+       };
 
        $scope.notifications = Notifications.data;
      });
@@ -205,6 +211,7 @@ angular.module('patternfly.notification').component('pfToastNotificationList', {
   bindings: {
     notifications: '=',
     showClose: '=?',
+    htmlContent: '<?',
     closeCallback: '=?',
     updateViewing: '=?'
   },
@@ -225,3 +232,4 @@ angular.module('patternfly.notification').component('pfToastNotificationList', {
     };
   }
 });
+

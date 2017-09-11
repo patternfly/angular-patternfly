@@ -21,13 +21,14 @@ describe('Component: pfToastNotification', function () {
     scope.$digest();
   };
 
-  var setupHTML = function (notificationType, header, showClose, primaryAction, showMenu, data) {
+  var setupHTML = function (notificationType, header, message, showClose, primaryAction, showMenu, data, htmlContent) {
     $scope.type = notificationType;
     $scope.header = header;
-    $scope.message = "Test Toast Notification Message";
+    $scope.message = message || "Test Toast Notification Message";
     $scope.showClose = showClose;
     $scope.primaryAction = primaryAction;
-    $scope.data = data
+    $scope.data = data;
+    $scope.htmlContent = htmlContent;
 
     $scope.closeData = undefined;
     $scope.closeCallback = function (data) {
@@ -91,35 +92,47 @@ describe('Component: pfToastNotification', function () {
       title: "Test Notification"
     };
     var htmlTmp = '<pf-toast-notification notification-type="{{type}}" header="{{header}}" message="{{message}}"' +
-                  '    show-close="{{showClose}}" close-callback="closeCallback"' +
-                  '    action-title="{{primaryAction}}" action-callback="handleAction"' +
-                  '    menu-actions="menuActions" data="data">' +
+                  '    show-close="{{showClose}}" html-content="htmlContent" ' +
+                  '    close-callback="closeCallback" action-title="{{primaryAction}}"' +
+                  '    action-callback="handleAction" menu-actions="menuActions" data="data">' +
                   '    </pf-toast-notification>';
 
     compileHTML(htmlTmp, $scope);
   };
 
   it('should have the correct header and message', function () {
-    setupHTML ("info", "Test Header", false, '', false);
+    setupHTML ("info", "Test Header", null, false, '', false);
     header = element.find('.toast-pf span strong');
     expect(header.length).toBe(1);
     expect(header.text()).toBe("Test Header");
-    message = element.find('.toast-pf span');
+    message = element.find('.toast-pf > span');
     expect(message.length).toBe(2);
     expect(angular.element(message[1]).text()).toContain("Test Toast Notification Message");
   });
 
   it('should have the correct message when no header is given', function () {
-    setupHTML ("info", "", false, '', false);
+    setupHTML ("info", "", null, false, '', false);
     var header = element.find('.toast-pf span strong');
     expect(header.length).toBe(0);
-    var message = element.find('.toast-pf span');
+    var message = element.find('.toast-pf > span');
     expect(message.length).toBe(2);
     expect(angular.element(message[1]).text()).toContain("Test Toast Notification Message");
   });
 
+  it('should allow HTML content within the header and message', function () {
+    setupHTML ("info", "<em>Test Header</em>", null, false, '', false, null, true);
+    var header = element.find('.toast-pf span strong em');
+    expect(header.length).toBe(1);
+    expect(header.text()).toContain("Test Header");
+
+    setupHTML ("info", "", "<em>Test Notification Message</em>", false, '', false, null, true);
+    var message = element.find('.toast-pf > span em');
+    expect(message.length).toBe(1);
+    expect(message.text()).toContain("Test Notification Message");
+  });
+
   it('should have the correct status icon', function () {
-    setupHTML ("success", "Test Header", false, '', false);
+    setupHTML ("success", "Test Header", null, false, '', false);
     var okIcon = element.find('.pficon.pficon-ok');
     var infoIcon = element.find('.pficon.pficon-info');
     var errorIcon = element.find('.pficon.pficon-error-circle-o');
@@ -129,7 +142,7 @@ describe('Component: pfToastNotification', function () {
     expect(errorIcon.length).toBe(0);
     expect(warnIcon.length).toBe(0);
 
-    setupHTML ("info", "Test Header", false, '', false);
+    setupHTML ("info", "Test Header", null, false, '', false);
     okIcon = element.find('.pficon.pficon-ok');
     infoIcon = element.find('.pficon.pficon-info');
     errorIcon = element.find('.pficon.pficon-error-circle-o');
@@ -139,7 +152,7 @@ describe('Component: pfToastNotification', function () {
     expect(errorIcon.length).toBe(0);
     expect(warnIcon.length).toBe(0);
 
-    setupHTML ("danger", "Test Header", false, '', false);
+    setupHTML ("danger", "Test Header", null, false, '', false);
     okIcon = element.find('.pficon.pficon-ok');
     infoIcon = element.find('.pficon.pficon-info');
     errorIcon = element.find('.pficon.pficon-error-circle-o');
@@ -149,7 +162,7 @@ describe('Component: pfToastNotification', function () {
     expect(errorIcon.length).toBe(1);
     expect(warnIcon.length).toBe(0);
 
-    setupHTML ("warning", "Test Header", false, '', false);
+    setupHTML ("warning", "Test Header", null, false, '', false);
     okIcon = element.find('.pficon.pficon-ok');
     infoIcon = element.find('.pficon.pficon-info');
     errorIcon = element.find('.pficon.pficon-error-circle-o');
@@ -162,11 +175,11 @@ describe('Component: pfToastNotification', function () {
   });
 
   it('should have the close button when specified', function () {
-    setupHTML ("success", "Test Header", false, 'Test Action', true);
+    setupHTML ("success", "Test Header", null, false, 'Test Action', true);
     var closeButton = element.find('button.close');
     expect(closeButton.length).toBe(0);
 
-    setupHTML ("success", "Test Header", true, 'Test Action', false);
+    setupHTML ("success", "Test Header", null, true, 'Test Action', false);
     closeButton = element.find('button.close');
     expect(closeButton.length).toBe(1);
 
@@ -179,13 +192,13 @@ describe('Component: pfToastNotification', function () {
     expect($scope.closeData.title).toBe("Test Notification");
 
     // No close button even if specified when menu actions exist
-    setupHTML ("success", "Test Header", true, 'Test Action', true);
+    setupHTML ("success", "Test Header", null, true, 'Test Action', true);
     closeButton = element.find('button.close');
     expect(closeButton.length).toBe(0);
   });
 
   it('should have the correct primary action and call the correct callback when clicked', function () {
-    setupHTML ("success", "Test Header", false, 'Test Action', false);
+    setupHTML ("success", "Test Header", null, false, 'Test Action', false);
     var actionButton = element.find('.toast-pf-action > a');
     expect(actionButton.length).toBe(1);
     expect($scope.actionData).toBeUndefined();
@@ -198,7 +211,7 @@ describe('Component: pfToastNotification', function () {
   });
 
   it('should have the correct kebab menu and call the correct callback when items are clicked', function () {
-    setupHTML ("success", "Test Header", false, 'Test Action', true);
+    setupHTML ("success", "Test Header", null, false, 'Test Action', true);
     var menuIndicator = element.find('.dropdown-kebab-pf');
     expect(menuIndicator.length).toBe(1);
     var menuItems = element.find('.dropdown-kebab-pf .dropdown-menu li');
@@ -219,13 +232,13 @@ describe('Component: pfToastNotification', function () {
   });
 
   it('should have correct number of separators', function () {
-    setupHTML ("success", "Test Header", false, 'Test Action', true);
+    setupHTML ("success", "Test Header", null, false, 'Test Action', true);
     var fields = element.find('.dropdown-kebab-pf .dropdown-menu .divider');
     expect(fields.length).toBe(1);
   });
 
   it('should correctly disable actions and not call the callback if clicked', function () {
-    setupHTML ("success", "Test Header", false, 'Test Action', true);
+    setupHTML ("success", "Test Header", null, false, 'Test Action', true);
     var fields = element.find('.dropdown-kebab-pf .dropdown-menu .disabled > a');
     expect(fields.length).toBe(1);
 
@@ -239,3 +252,4 @@ describe('Component: pfToastNotification', function () {
     expect($scope.menuData).toBeUndefined();
   });
 });
+

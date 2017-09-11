@@ -157,12 +157,13 @@ describe('Component: pfToastNotificationList', function () {
     // No Menu Actions
     $scope.notifications.forEach(function(nextItem) {
       nextItem.menuActions = undefined;
-    })
+    });
+
     var htmlTmp = '<pf-toast-notification-list notifications="notifications" show-close="false" close-callback="handleClose"></pf-toast-notification-list>';
 
     compileHTML(htmlTmp, $scope);
 
-    var closeButton = element.find('.toast-notifications-list-pf .toast-pf button.close');
+    closeButton = element.find('.toast-notifications-list-pf .toast-pf button.close');
     expect(closeButton.length).toBe(3);
 
     expect($scope.closeData).toBeUndefined();
@@ -208,3 +209,4 @@ describe('Component: pfToastNotificationList', function () {
     expect($scope.menuData.header).toBe("Header 1");
   });
 });
+
