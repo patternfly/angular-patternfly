@@ -21,6 +21,7 @@
   *
   * @param {string} title The wizard title displayed in the header
   * @param {boolean=} hideIndicators  Hides the step indicators in the header of the wizard
+  * @param {boolean=} activeStepTitleOnly  Shows the title only for the active step in the step indicators, optional, default is false.
   * @param {boolean=} hideSidebar  Hides page navigation sidebar on the wizard pages
   * @param {boolean=} hideHeader Optional value to hide the title bar. Default is false.
   * @param {boolean=} hideBackButton Optional value to hide the back button, useful in 2 step wizards. Default is false.
@@ -68,10 +69,10 @@
         </div>
         <pf-wizard-substep step-title="Details - Extra" next-enabled="true" step-id="details-extra" step-priority="1" show-review="true" show-review-details="true" review-template="review-second-template.html">
           <form class="form-horizontal">
-            <pf-form-group pf-label="Lorem" required>
+            <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
               <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text" required/>
             </pf-form-group>
-            <pf-form-group pf-label="Ipsum">
+            <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
               <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
             </pf-form-group>
           </form>
@@ -80,10 +81,10 @@
       <pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
         <form class="form-horizontal">
           <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
-          <pf-form-group pf-label="Lorem">
+          <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
             <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
           </pf-form-group>
-          <pf-form-group pf-label="Ipsum">
+          <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
             <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
           </pf-form-group>
         </form>
@@ -98,10 +99,10 @@
     <div ng-controller="DetailsGeneralController">
        <pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
          <form class="form-horizontal">
-           <pf-form-group pf-label="Name" required>
+           <pf-form-group pf-label="Name" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
               <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
            </pf-form-group>
-           <pf-form-group pf-label="Description">
+           <pf-form-group pf-label="Description" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
              <input id="new-description" name="description" ng-model="data.description" type="text" />
            </pf-form-group>
          </form>
@@ -312,6 +313,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
   bindings: {
     title: '@',
     hideIndicators: '=?',
+    activeStepTitleOnly: '<?',
     hideSidebar: '@',
     hideHeader: '@',
     hideBackButton: '@',
@@ -377,6 +379,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
       ctrl.hideHeader = ctrl.hideHeader === 'true';
       ctrl.hideSidebar = ctrl.hideSidebar === 'true';
       ctrl.hideBackButton = ctrl.hideBackButton === 'true';
+      ctrl.activeStepTitleOnly = ctrl.activeStepTitleOnly === true;
 
       // If a step class is given use it for all steps
       if (angular.isDefined(ctrl.stepClass)) {
@@ -386,7 +389,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
           ctrl.sidebarClass = ctrl.stepClass;
         }
       } else {
-        // No step claass give, setup the content style to allow scrolling and a fixed height
+        // No step class give, setup the content style to allow scrolling and a fixed height
         if (angular.isUndefined(ctrl.contentHeight)) {
           ctrl.contentHeight = '300px';
         }
@@ -595,7 +598,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
       // Check if callback is a function
       if (angular.isFunction(callback)) {
         if (callback(ctrl.selectedStep)) {
-          if (index <= enabledSteps.length - 1) {
+          if (index < enabledSteps.length - 1) {
             // Go to the next step
             if (enabledSteps[index + 1].substeps) {
               enabledSteps[index + 1].resetNav();
