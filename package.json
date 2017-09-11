@@ -17,7 +17,7 @@
     "angular-ui-bootstrap": "2.3.x",
     "angular-svg-base-fix": "2.0.0",
     "lodash": "4.x",
-    "patternfly": ">=3.26.0"
+    "patternfly": ">=3.27.2"
   },
   "devDependencies": {
     "angular-dragdrop": "1.0.13",
@@ -58,7 +58,7 @@
     "semantic-release": "^6.3.6"
   },
   "optionalDependencies": {
-    "angularjs-datatables": "^0.5.8",
+    "angularjs-datatables": "^0.5.9",
     "angular-drag-and-drop-lists": "2.0.0",
     "bootstrap-select": "~1.10.0",
     "c3": "~0.4.11",

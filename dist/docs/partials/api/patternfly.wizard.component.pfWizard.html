@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/wizard/wizard.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/2d6c6ac/src/wizard/wizard.component.js#L309" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfWizard</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/wizard/wizard.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/d8c6849/src/wizard/wizard.component.js#L310" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfWizard</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.wizard</code>
 </span>
 </div>
@@ -23,6 +23,7 @@ The basic structure should be:
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-wizard
        title="{string}"
        [hide-indicators="{boolean}"]
+       [active-step-title-only="{boolean}"]
        [hide-sidebar="{boolean}"]
        [hide-header="{boolean}"]
        [hide-back-button="{boolean}"]
@@ -47,6 +48,7 @@ The basic structure should be:
 &lt;/pf-wizard&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>title</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>The wizard title displayed in the header</p>
 </div></td></tr><tr><td>hideIndicators <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Hides the step indicators in the header of the wizard</p>
+</div></td></tr><tr><td>activeStepTitleOnly <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Shows the title only for the active step in the step indicators, optional, default is false.</p>
 </div></td></tr><tr><td>hideSidebar <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Hides page navigation sidebar on the wizard pages</p>
 </div></td></tr><tr><td>hideHeader <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Optional value to hide the title bar. Default is false.</p>
 </div></td></tr><tr><td>hideBackButton <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Optional value to hide the back button, useful in 2 step wizards. Default is false.</p>
@@ -100,10 +102,10 @@ The basic structure should be:
       </div>
       <pf-wizard-substep step-title="Details - Extra" next-enabled="true" step-id="details-extra" step-priority="1" show-review="true" show-review-details="true" review-template="review-second-template.html">
         <form class="form-horizontal">
-          <pf-form-group pf-label="Lorem" required>
+          <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
             <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text" required/>
           </pf-form-group>
-          <pf-form-group pf-label="Ipsum">
+          <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
             <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
           </pf-form-group>
         </form>
@@ -112,10 +114,10 @@ The basic structure should be:
     <pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
       <form class="form-horizontal">
         <h5 id="example_source_wizards-should-make-use-of-substeps-consistently-throughout-this-is-an-example-only">Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h5>
-        <pf-form-group pf-label="Lorem">
+        <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
           <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
         </pf-form-group>
-        <pf-form-group pf-label="Ipsum">
+        <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
           <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
         </pf-form-group>
       </form>
@@ -133,10 +135,10 @@ The basic structure should be:
   <div ng-controller="DetailsGeneralController">
      <pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
        <form class="form-horizontal">
-         <pf-form-group pf-label="Name" required>
+         <pf-form-group pf-label="Name" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
             <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
          </pf-form-group>
-         <pf-form-group pf-label="Description">
+         <pf-form-group pf-label="Description" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
            <input id="new-description" name="description" ng-model="data.description" type="text" />
          </pf-form-group>
        </form>

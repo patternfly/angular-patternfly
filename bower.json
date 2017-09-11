@@ -41,13 +41,13 @@
     "angular-animate": "1.5.*",
     "angular-bootstrap": "2.2.x",
     "angular-dragdrop": "1.0.13",
-    "angularjs-datatables": "^0.5.8",
+    "angularjs-datatables": "^0.5.9",
     "angular-drag-and-drop-lists": "2.0.0",
     "angular-sanitize": "1.5.*",
     "datatables.net": "^1.10.12",
     "datatables.net-select": "~1.2.0",
     "lodash": "4.x",
-    "patternfly": ">=3.26.0"
+    "patternfly": ">=3.27.2"
   },
   "devDependencies": {
     "angular-mocks": "1.5.*",

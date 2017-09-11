@@ -302,4 +302,16 @@ describe('Component:  pfWizard', function () {
     var backButton = element.find('.wizard-pf-footer #backButton');
     expect(backButton.length).toBe(1);
   });
+
+  it('should not show inactive step titles when activeStepTitleOnly is specified', function () {
+    setupWizard('test/wizard/wizard-container.html');
+    var stepTitles = element.find('.wizard-pf-step-title');
+    expect(stepTitles.length).toBe(3);
+
+    $scope.activeStepTitleOnly = true;
+    $scope.$digest();
+
+    stepTitles = element.find('.wizard-pf-step-title');
+    expect(stepTitles.length).toBe(1);
+  });
 });
