@@ -12,7 +12,8 @@
         <li class="wizard-pf-step" ng-class="{active: step.selected}" ng-repeat="step in $ctrl.getEnabledSteps()" data-tabgroup="{{$index }}">
           <a ng-click="$ctrl.stepClick(step)" ng-class="{'disabled': !$ctrl.allowStepIndicatorClick(step)}">
             <span class="wizard-pf-step-number">{{$index + 1}}</span>
-            <span class="wizard-pf-step-title">{{step.title}}</span>
+            <span ng-if="!$ctrl.activeStepTitleOnly || step.selected" class="wizard-pf-step-title">{{step.title}}</span>
+            <span class="wizard-pf-step-title-substep" ng-repeat="substep in step.steps track by $index" ng-class="{'active': substep.selected}">{{substep.title}}</span>
           </a>
         </li>
       </ul>
