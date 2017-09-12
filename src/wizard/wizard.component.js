@@ -589,6 +589,8 @@ angular.module('patternfly.wizard').component('pfWizard', {
       // Save the step  you were on when next() was invoked
       var index = stepIdx(ctrl.selectedStep);
 
+      callback = callback || ctrl.nextCallback;
+
       if (ctrl.selectedStep.substeps) {
         if (ctrl.selectedStep.next(callback)) {
           return;
@@ -625,6 +627,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
     ctrl.previous = function (callback) {
       var index = stepIdx(ctrl.selectedStep);
+      callback = callback || ctrl.backCallback;
 
       if (ctrl.selectedStep.substeps) {
         if (ctrl.selectedStep.previous(callback)) {
