@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/utilization-bar/utilization-bar-chart.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/4482cfb/src/charts/utilization-bar/utilization-bar-chart.component.js#L138" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfUtilizationBarChart</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/utilization-bar/utilization-bar-chart.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/239fbe9/src/charts/utilization-bar/utilization-bar-chart.component.js#L150" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfUtilizationBarChart</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
@@ -20,7 +20,9 @@ There are three possible fill colors for Used Percentage, dependent on whether o
        [footer-label-format="{string}"]
        [units="{object}"]
        [threshold-error="{string}"]
-       [threshold-warning="{string}"]&gt;
+       [threshold-warning="{string}"]
+       avaliable-tooltip-function="{function(items)}"
+       used-tooltip-function="{function(items)}"&gt;
 &lt;/pf-utilization-bar-chart&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>chartData</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pfutilizationbarchart-page"><p>the data to be shown in the utilization bar chart<br/></p>
 <ul style='list-style-type: none'>
@@ -46,6 +48,8 @@ has not been specified. Values may be:<br/></p>
 has been reached, the used donut arc will be red.</p>
 </div></td></tr><tr><td>threshold-warning <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pfutilizationbarchart-page"><p>The percentage usage, when reached, denotes a warning.  Valid values are 1-100. When the warning threshold
 has been reached, the used donut arc will be orange.</p>
+</div></td></tr><tr><td>avaliableTooltipFunction</td><td><a href="" class="label type-hint type-hint-function">function(items</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pfutilizationbarchart-page"><p>A passed in tooltip function which can be used to overwrite the default available tooltip behavior</p>
+</div></td></tr><tr><td>usedTooltipFunction</td><td><a href="" class="label type-hint type-hint-function">function(items</a></td><td><div class="patternfly-charts-directive-page patternfly-charts-directive-pfutilizationbarchart-page"><p>A passed in tooltip function which can be used to overwrite the default usedtooltip behavior</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-charts-directive-page patternfly-charts-directive-pfutilizationbarchart-page"><h4 id="example_source">Source</h4>
@@ -58,12 +62,17 @@ has been reached, the used donut arc will be orange.</p>
     <label class="label-title">Default Layout, no Thresholds</label>
     <pf-utilization-bar-chart chart-data=data1 chart-title=title1 units=units1></pf-utilization-bar-chart>
     <br>
+    <label class="label-title">Inline layout, Custom tooltips'</label>
+    <pf-utilization-bar-chart chart-data=data1 chart-title=title1 units=units1
+      available-tooltip-function="availableTooltip(title1, data1)"
+      used-tooltip-function="usedTooltip(title1, data1)"></pf-utilization-bar-chart>
+    <br>
     <label class="label-title">Inline Layouts with Error, Warning, and Ok Thresholds</label>
     <pf-utilization-bar-chart chart-data=data5 chart-title=title5 layout=layoutInline units=units5 threshold-error="85" threshold-warning="60">../utilization-trend/utilization-trend-chart-directive.js</pf-utilization-bar-chart>
     <pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
     <pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
     <br>
-    <label class="label-title">layout='inline', footer-label-format='percent', and custom chart-footer labels</label>
+    <label class="label-title">Inline layout, Footer label percent, and Custom chart footer labels</label>
     <pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline footer-label-format='percent' units=units2 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
     <pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline footer-label-format='percent' units=units3 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
     <pf-utilization-bar-chart chart-data=data4 chart-title=title4 chart-footer=footer1 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
@@ -98,8 +107,8 @@ angular.module( 'patternfly.example' ).controller( 'ChartCtrl', function( $scope
    'total': '24'
  };
 
- $scope.title2      = 'Memory';
- $scope.units2      = 'GB';
+ $scope.title2 = 'Memory';
+ $scope.units2 = 'GB';
 
  $scope.data2 = {
    'used': '25',
@@ -141,7 +150,12 @@ angular.module( 'patternfly.example' ).controller( 'ChartCtrl', function( $scope
 
  $scope.footer1 = '<strong>500 TB</strong> Total';
  $scope.footer2 = '<strong>450 of 500</strong> Total';
-
+ $scope.availableTooltip = function (title, data){
+   return '<div>Title: ' + title + '</div><div>Available: ' + data.total + '</div>';
+ };
+ $scope.usedTooltip = function (title, data){
+   return '<div>Title: ' + title + '</div><div>Usage: ' + data.used + 'MB</div>';
+ };
 });
 </script>
 </div>
