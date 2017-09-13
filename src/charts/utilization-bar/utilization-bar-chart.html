@@ -4,13 +4,13 @@
     <div class="progress progress-label-top-right" ng-if="$ctrl.chartData.dataAvailable !== false">
       <div class="progress-bar" aria-valuenow="{{$ctrl.chartData.percentageUsed}}" aria-valuemin="0" aria-valuemax="100" ng-class="{'animate': animate,
            'progress-bar-success': $ctrl.isOk, 'progress-bar-danger': $ctrl.isError, 'progress-bar-warning': $ctrl.isWarn}"
-           ng-style="{width:$ctrl.chartData.percentageUsed + '%'}" uib-tooltip="{{$ctrl.chartData.percentageUsed}}% Used" >
+           ng-style="{width:$ctrl.chartData.percentageUsed + '%'}" uib-tooltip-html="'{{$ctrl.usedTooltipMessage()}}'" >
         <span ng-if="$ctrl.chartFooter" ng-bind-html="$ctrl.chartFooter"></span>
         <span ng-if="!$ctrl.chartFooter && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === 'actual')"><strong>{{$ctrl.chartData.used}} of {{$ctrl.chartData.total}} {{$ctrl.units}}</strong> Used</span>
         <span ng-if="!$ctrl.chartFooter && $ctrl.footerLabelFormat === 'percent'"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span>
       </div>
       <div class="progress-bar progress-bar-remaining"
-           ng-style="{width:(100 - $ctrl.chartData.percentageUsed) + '%'}" uib-tooltip="{{100 - $ctrl.chartData.percentageUsed}}% Available">
+           ng-style="{width:(100 - $ctrl.chartData.percentageUsed) + '%'}" uib-tooltip-html="'{{$ctrl.availableTooltipMessage()}}'">
       </div>
     </div>
   </span>
@@ -21,13 +21,13 @@
       <div class="progress" ng-if="$ctrl.chartData.dataAvailable !== false">
         <div class="progress-bar" aria-valuenow="{{$ctrl.chartData.percentageUsed}}" aria-valuemin="0" aria-valuemax="100"
              ng-class="{'animate': $ctrl.animate, 'progress-bar-success': $ctrl.isOk, 'progress-bar-danger': $ctrl.isError, 'progress-bar-warning': $ctrl.isWarn}"
-             ng-style="{width:$ctrl.chartData.percentageUsed + '%'}" uib-tooltip="{{$ctrl.chartData.percentageUsed}}% Used">
+             ng-style="{width:$ctrl.chartData.percentageUsed + '%'}" uib-tooltip-html="'{{$ctrl.usedTooltipMessage()}}'">
           <span ng-if="$ctrl.chartFooter" ng-bind-html="$ctrl.chartFooter"></span>
           <span ng-if="(!$ctrl.chartFooter) && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === 'actual')" ng-style="{'max-width':$ctrl.layout.footerLabelWidth}"><strong>{{$ctrl.chartData.used}} {{$ctrl.units}}</strong> Used</span>
           <span ng-if="(!$ctrl.chartFooter) && $ctrl.footerLabelFormat === 'percent'" ng-style="{'max-width':$ctrl.layout.footerLabelWidth}"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span>
         </div>
         <div class="progress-bar progress-bar-remaining"
-             ng-style="{width:(100 - $ctrl.chartData.percentageUsed) + '%'}" uib-tooltip="{{100 - $ctrl.chartData.percentageUsed}}% Available">
+             ng-style="{width:(100 - $ctrl.chartData.percentageUsed) + '%'}" uib-tooltip-html="'{{$ctrl.availableTooltipMessage()}}'">
         </div>
       </div>
     </div>
