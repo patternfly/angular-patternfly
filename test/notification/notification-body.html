@@ -13,7 +13,9 @@
   </ul>
 </div>
 <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}"></span>
-<span class="drawer-pf-notification-message">{{notification.message}}</span>
+<span class="drawer-pf-notification-message" tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip-placement="bottom" tooltip="{{notification.message}}">
+   <span ng-bind-html="notification.message"></span>
+</span>
 <div class="drawer-pf-notification-info">
   <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
   <span class="time">{{notification.timeStamp | date:'h:mm:ss a'}}</span>

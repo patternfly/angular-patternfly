@@ -115,7 +115,7 @@
    <span ng-if="notification.status" class="{{'pull-left ' + $ctrl.customScope.getNotficationStatusIconClass(notification)}}" ng-click="$ctrl.customScope.markRead(notification)"></span>
    <div class="drawer-pf-notification-content" ng-click="$ctrl.customScope.markRead(notification)">
      <span class="drawer-pf-notification-message" tooltip-append-to-body="true" tooltip-popup-delay="500" tooltip-placement="bottom" tooltip="{{notification.message}}">
-      {{notification.message}}
+       <span ng-bind-html="notification.message"></span>
      </span>
      <div class="drawer-pf-notification-info" ng-click="$ctrl.customScope.markRead(notification)">
        <span class="date">{{notification.timeStamp | date:'MM/dd/yyyy'}}</span>
@@ -187,7 +187,7 @@
              {
                uid: 1,
                unread: true,
-               message: "A New Event! Huzzah! Bold.",
+               message: "A New Event! Huzzah! Bold. <a href='http://www.google.com'>Goto Google!</a>",
                status: 'info',
                actions: menuActions,
                timeStamp: currentTime - (1 * 60 * 60 * 1000)

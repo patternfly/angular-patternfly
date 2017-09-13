@@ -43,7 +43,6 @@ describe('Component:  pfNotificationDrawer', function () {
       }
     ];
 
-
     $scope.groups = [
       {
         heading: "Group 1",
@@ -51,7 +50,7 @@ describe('Component:  pfNotificationDrawer', function () {
         notifications: [
           {
             unread: true,
-            message: "A New Event! Huzzah! Bold",
+            message: "A New Event! Huzzah! Bold <a href='http://www.google.com'>Goto Google!</a>",
             status: 'info',
             actions: menuActions,
             timeStamp: currentTime - (1 * 60 * 60 * 1000)
@@ -622,5 +621,10 @@ describe('Component:  pfNotificationDrawer', function () {
 
     title = angular.element(emptyStates[1]).find('.blank-state-pf-title').html();
     expect(_.trim(title)).toBe('Nothing');
+  });
+
+  it ('should render HTML in message', function() {
+    var messages = element.find('.drawer-pf-notification-message a');
+    expect(messages.length).toBe(1);
   });
 });
