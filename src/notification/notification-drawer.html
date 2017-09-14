@@ -1,7 +1,7 @@
 <div class="drawer-pf" ng-class="{'hide': $ctrl.drawerHidden, 'drawer-pf-expanded': $ctrl.drawerExpanded}">
-  <div  ng-if="$ctrl.drawerTitle" class="drawer-pf-title">
-    <a ng-if="$ctrl.allowExpand" class="drawer-pf-toggle-expand fa fa-angle-double-left" ng-click="$ctrl.toggleExpandDrawer()"></a>
-    <a  ng-if="$ctrl.onClose" class="drawer-pf-close pficon pficon-close" ng-click="$ctrl.onClose()"></a>
+  <div ng-if="$ctrl.drawerTitle" class="drawer-pf-title">
+    <a href="#0" ng-if="$ctrl.allowExpand" class="drawer-pf-toggle-expand fa fa-angle-double-left" ng-click="$ctrl.toggleExpandDrawer()"></a>
+    <a href="#0" ng-if="$ctrl.onClose" class="drawer-pf-close pficon pficon-close" ng-click="$ctrl.onClose()"></a>
     <h3 class="text-center">{{$ctrl.drawerTitle}}</h3>
   </div>
   <div ng-if="$ctrl.titleInclude" class="drawer-pf-title" ng-include src="$ctrl.titleInclude"></div>
