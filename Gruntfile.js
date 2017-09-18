@@ -67,7 +67,7 @@ module.exports = function (grunt) {
         },
         img: {
           cwd: 'misc/',
-          src: ['patternfly-orb.svg', '*.png'],
+          src: ['patternfly-orb.svg','patternfly-logo.svg', 'grid-sidebar.png', '*.png'],
           dest: 'docs/img',
           expand: true
         },
@@ -163,7 +163,7 @@ module.exports = function (grunt) {
       },
       ngdocs: {
         options: {
-          title: 'Angular Patternfly Documentation',
+          title: 'ANGULAR PATTERNFLY',
           dest: 'docs',
           image: 'misc/logo-alt.svg',
           scripts: [
@@ -195,6 +195,7 @@ module.exports = function (grunt) {
             'node_modules/patternfly/dist/css/patternfly.css',
             'node_modules/patternfly/dist/css/patternfly-additions.css',
             'dist/styles/angular-patternfly.css',
+            'misc/patternfly-showcase.css',
             'misc/ng-docs.css',
             'misc/examples.css']
         },
