@@ -25,6 +25,8 @@
  *                    {label:'Today', value:'today'}]</pre>
  * <li>.defaultFilter - integer, 0 based index into the filters array
  * <li>.callBackFn - user defined function to call when a filter is selected
+ * <li>.position - (optional) If not specified, or set to 'footer'; the position of the filter dropdown will appear in the
+ * card footer.  If set to 'header', the filter dropdown will appear in the card header.
  * </ul>
  * @description
  * Component for easily displaying a card with html content
