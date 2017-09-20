@@ -333,8 +333,17 @@ NG_DOCS={
       "shortName": "pfSelect",
       "type": "directive",
       "moduleName": "patternfly.select",
-      "shortDescription": "The pfSelect component provides a wrapper for the angular ui bootstrap dropdown container allowing for use of ng-model and ng-options",
-      "keywords": "$scope allowing angular ape api apple apples array banana bananas beer bootstrap call cat chicken class coffee col-sm-10 col-sm-2 component container control-label controller curently directive display display-field displayfield dog drink drinks dropdown empty-value emptyvalue field florida form-group form-horizontal fresh fruit fruits function great html item js macintosh module ng-controller ng-model ng-options nodrink nopet object onselect options orange oranges patternfly pet pets pfselect pies preferred script select selectdemoctrl selected selection selections tea title ui user valid water wine wrapper"
+      "shortDescription": "The pfSelect component provides a wrapper for the angular ui bootstrap dropdown.",
+      "keywords": "$scope angular ape api apple apples array banana bananas beer bootstrap call cat chicken class coffee col-sm-10 col-sm-2 component control-label controller curently directive display display-field displayfield dog drink drinks dropdown empty-value emptyvalue field florida form-group form-horizontal fresh fruit fruits function great html item js macintosh module ng-controller nodrink nopet object onselect options orange oranges patternfly pet pets pfselect pies preferred script select selectdemoctrl selected selection selections tea title ui user valid water wine wrapper"
+    },
+    {
+      "section": "api",
+      "id": "patternfly.select.directive:pfBootstrapSelect",
+      "shortName": "pfBootstrapSelect",
+      "type": "directive",
+      "moduleName": "patternfly.select",
+      "shortDescription": "An AngularJS wrapper for the Bootstrap-select jQuery plugin which is used",
+      "keywords": "$scope angular angularjs api apple attribute banana binding bootstrap-select cat chicken class coffee col-sm-10 col-sm-2 control-label controller decorator default directive dog drink drinks dynamically element elements form-group form-horizontal fruit function generate github html http https io jquery js list mandatory model module ng-controller ng-model ng-options ng-selected ngmodel ngmodelcontroller ngoptions noneselectedtext orange org patternfly pet pets pf-bootstrap-select plugin preferred script select selectdemoctrl selected tea true water wrapper"
     },
     {
       "section": "api",
@@ -480,6 +489,8 @@ NG_DOCS={
   "startPage": "/api",
   "scripts": [
     "jquery.js",
+    "bootstrap.min.js",
+    "bootstrap-select.js",
     "jquery-ui.min.js",
     "jquery.dataTables.js",
     "dataTables.select.js",

@@ -39,10 +39,16 @@
       "resolved": "https://registry.npmjs.org/angularjs-datatables/-/angularjs-datatables-0.5.9.tgz",
       "optional": true
     },
+    "bootstrap": {
+      "version": "3.3.7",
+      "from": "bootstrap@>=3.3.7 <3.4.0",
+      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz",
+      "optional": true
+    },
     "bootstrap-select": {
-      "version": "1.10.0",
-      "from": "bootstrap-select@>=1.10.0 <1.11.0",
-      "resolved": "https://registry.npmjs.org/bootstrap-select/-/bootstrap-select-1.10.0.tgz",
+      "version": "1.12.4",
+      "from": "bootstrap-select@>=1.12.4 <1.13.0",
+      "resolved": "https://registry.npmjs.org/bootstrap-select/-/bootstrap-select-1.12.4.tgz",
       "optional": true
     },
     "c3": {

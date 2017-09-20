@@ -60,7 +60,8 @@
   "optionalDependencies": {
     "angularjs-datatables": "^0.5.9",
     "angular-drag-and-drop-lists": "2.0.0",
-    "bootstrap-select": "~1.10.0",
+    "bootstrap": "~3.3.7",
+    "bootstrap-select": "~1.12.4",
     "c3": "~0.4.11",
     "components-jqueryui": "components/jqueryui#1.12.1",
     "d3": "~3.5.17",
