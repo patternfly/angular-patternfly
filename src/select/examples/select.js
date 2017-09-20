@@ -10,7 +10,7 @@
  * @param {function(item)} onSelect Function to call upon user selection of an item.
  *
  * @description
- * The pfSelect component provides a wrapper for the angular ui bootstrap dropdown container allowing for use of ng-model and ng-options
+ * The pfSelect component provides a wrapper for the angular ui bootstrap dropdown.
  *
  * @example
  <example module="patternfly.select">
@@ -37,7 +37,7 @@
        </div>
      </form>
      <p>Your preferred pet is {{pet || noPet}}.</p>
-     <p>Your preferred drink is {{fruit.name}}.</p>
+     <p>Your preferred fruit is {{fruit.name}}.</p>
      <p>Your preferred drink is {{drink ? drink.name : noDrink}}.</p>
    </div>
    </file>
