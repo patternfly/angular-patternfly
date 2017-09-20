@@ -3245,6 +3245,8 @@ angular.module('patternfly.card').component('pfCard', {
  *                    {label:'Today', value:'today'}]</pre>
  * <li>.defaultFilter - integer, 0 based index into the filters array
  * <li>.callBackFn - user defined function to call when a filter is selected
+ * <li>.position - (optional) If not specified, or set to 'footer'; the position of the filter dropdown will appear in the
+ * card footer.  If set to 'header', the filter dropdown will appear in the card header.
  * </ul>
  * @description
  * Component for easily displaying a card with html content
@@ -16813,6 +16815,25 @@ angular.module('patternfly.views').component('pfEmptyState', {
 ;(function () {
   'use strict';
 
+  /**
+   * @ngdoc object
+   * @name patternfly.views.pfViewUtils
+   * @description
+   * A utility constant to return view objects used for Dashboard, Card, Table, List, and Topology view switcher types.
+   * @example
+   * <pre>
+   * $scope.viewsConfig = {
+   *   views: [pfViewUtils.getListView(), pfViewUtils.getCardView(), pfViewUtils.getTableView()]
+   * };
+   * </pre>
+   * Each getXxxxView() returns an object:
+   * <ul style='list-style-type: none'>
+   *    <li>.id - (String) Unique id for the view, used for comparisons
+   *    <li>.title - (String) Optional title, uses as a tooltip for the view selector
+   *    <li>.iconClass - (String) Icon class to use for the view selector
+   * </ul>
+   * Please see {@link patternfly.toolbars.component:pfToolbar pfToolbar} for use in Toolbar View Switcher
+   */
   angular.module('patternfly.views').constant('pfViewUtils', {
     getDashboardView: function (title) {
       return {
