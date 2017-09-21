@@ -68,6 +68,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.card.component:pfInfoStatusCard",
+      "shortName": "pfInfoStatusCard",
+      "type": "directive",
+      "moduleName": "patternfly.card",
+      "shortDescription": "Component for easily displaying textual information",
+      "keywords": "$scope aapdemo002 accepts address allow angular api array border card carddemoctrl class clicks col-md-10 component configuration content controller core count cpu directive display displaying drift easily element fa fa-coffee fa-heart fa-motorcycle fa-shield false favorite flag function hides history host href html html-content htmlcontent icon iconclass iconimage image img infastructure info infostatus infostatusalt infostatustitless infrastructure ip js left list-style-type localdomian localhost main mb module navigate ng-controller options patternfly power script show-top-border snapshots socket status strings style svg textual things tinycore-local title top true vm vmware"
+    },
+    {
+      "section": "api",
       "id": "patternfly.charts.component:pfC3Chart",
       "shortName": "pfC3Chart",
       "type": "directive",

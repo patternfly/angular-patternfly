@@ -3459,6 +3459,101 @@ angular.module('patternfly.card').component('pfCard', {
  </file>
  </example>
  */
+;/**
+ * @ngdoc directive
+ * @name patternfly.card.component:pfInfoStatusCard
+ * @restrict E
+ *
+ * @param {object} status Status configuration information<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.title         - the main title of the info status card
+ * <li>.href          - the href to navigate to if one clicks on the title or count
+ * <li>.iconClass     - an icon to display to the left of the count
+ * <li>.iconImage     - an image to display to the left of Infrastructure
+ * <li>.info          - an array of strings to display, each element in the array is on a new line, accepts HTML content
+ * </ul>
+ * @param {boolean=} show-top-border Show/hide the top border, true shows top border, false (default) hides top border
+ * @param {boolean} htmlContent Flag to allow HTML content within the info options
+ *
+ * @description
+ * Component for easily displaying textual information
+ *
+ * @example
+ <example module="patternfly.card">
+
+ <file name="index.html">
+   <div ng-controller="CardDemoCtrl" style="display:inline-block;">
+     <div class="col-md-10">
+       <label>With Top Border, Icon Class, Href</label>
+       <pf-info-status-card status="infoStatus" show-top-border="true"></pf-info-status-card>
+       <br/>
+       <label>No Top Border, Icon Image, No Title</label>
+       <pf-info-status-card status="infoStatusTitless"></pf-info-status-card>
+       <br/>
+       <label>With HTML</label>
+       <pf-info-status-card status="infoStatusAlt" html-content="true"></pf-info-status-card>
+     </div>
+   </div>
+ </file>
+
+ <file name="script.js">
+   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope ) {
+    $scope.infoStatus = {
+      "title":"TinyCore-local",
+      "href":"#",
+      "iconClass": "fa fa-shield",
+      "info":[
+        "VM Name: aapdemo002",
+        "Host Name: localhost.localdomian",
+        "IP Address: 10.9.62.100",
+        "Power status: on"
+      ]
+    };
+
+    $scope.infoStatusTitless = {
+      "iconImage":"img/OpenShift-logo.svg",
+      "info":[
+        "Infastructure: VMware",
+        "Vmware: 1 CPU (1 socket x 1 core), 1024 MB",
+        "12 Snapshots",
+        "Drift History: 1"
+        ]
+    };
+
+    $scope.infoStatusAlt = {
+      "title":"Favorite Things",
+      "iconClass":"fa fa-heart",
+      "info":[
+        "<i class='fa fa-coffee'>",
+        "<i class='fa fa-motorcycle'>",
+        "<b>Tacos</b>"
+      ]
+    };
+   });
+ </file>
+
+ </example>
+ */
+
+angular.module( 'patternfly.card' ).component('pfInfoStatusCard', {
+  bindings: {
+    status: '=',
+    showTopBorder: '@?',
+    htmlContent: '@?'
+  },
+  templateUrl: 'card/info-status/info-status-card.html',
+  controller: ["$sce", function ($sce) {
+    'use strict';
+    var ctrl = this;
+    ctrl.$onInit = function () {
+      ctrl.shouldShowTopBorder = (ctrl.showTopBorder === 'true');
+      ctrl.shouldShowHtmlContent = (ctrl.htmlContent === 'true');
+      ctrl.trustAsHtml = function (html) {
+        return $sce.trustAsHtml(html);
+      };
+    };
+  }]
+});
 ;(function () {
   'use strict';
 
@@ -18344,6 +18439,11 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
   $templateCache.put('card/basic/card.html',
     "<div ng-class=\"$ctrl.showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div ng-if=$ctrl.showHeader() ng-class=\"$ctrl.shouldShowTitlesSeparator ? 'card-pf-heading' : 'card-pf-heading-no-bottom'\"><div ng-if=$ctrl.showFilterInHeader() ng-include=\"'card/basic/card-filter.html'\"></div><h2 class=card-pf-title>{{$ctrl.headTitle}}</h2></div><span ng-if=$ctrl.subTitle class=card-pf-subtitle>{{$ctrl.subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div><div ng-if=$ctrl.footer class=card-pf-footer><div ng-if=$ctrl.showFilterInFooter() ng-include=\"'card/basic/card-filter.html'\"></div><p><a ng-if=$ctrl.footer.href href={{$ctrl.footer.href}} ng-class=\"{'card-pf-link-with-icon':$ctrl.footer.iconClass,'card-pf-link':!$ctrl.footer.iconClass}\"><span ng-if=$ctrl.footer.iconClass class=\"{{$ctrl.footer.iconClass}} card-pf-footer-text\"></span> <span ng-if=$ctrl.footer.text class=card-pf-footer-text>{{$ctrl.footer.text}}</span></a> <a ng-if=\"$ctrl.footer.callBackFn && !$ctrl.footer.href\" ng-click=$ctrl.footerCallBackFn() ng-class=\"{'card-pf-link-with-icon':$ctrl.footer.iconClass,'card-pf-link':!$ctrl.footer.iconClass}\"><span class=\"{{$ctrl.footer.iconClass}} card-pf-footer-text\" ng-if=$ctrl.footer.iconClass></span> <span class=card-pf-footer-text ng-if=$ctrl.footer.text>{{$ctrl.footer.text}}</span></a> <span ng-if=\"!$ctrl.footer.href && !$ctrl.footer.callBackFn\"><span ng-if=$ctrl.footer.iconClass class=\"{{$ctrl.footer.iconClass}} card-pf-footer-text\" ng-class=\"{'card-pf-link-with-icon':$ctrl.footer.iconClass,'card-pf-link':!$ctrl.footer.iconClass}\"></span> <span ng-if=$ctrl.footer.text class=card-pf-footer-text>{{$ctrl.footer.text}}</span></span></p></div></div>"
+  );
+
+
+  $templateCache.put('card/info-status/info-status-card.html',
+    "<div class=\"card-pf card-pf-info-status\" ng-class=\"{'card-pf-accented': $ctrl.shouldShowTopBorder}\"><div class=info-image-container><img ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=\"info-img\"> <span class=\"info-icon {{$ctrl.status.iconClass}}\"></span></div><div><h2 class=card-pf-title ng-if=$ctrl.status.title><a href={{$ctrl.status.href}} ng-if=$ctrl.status.href><span>{{$ctrl.status.title}}</span></a> <span ng-if=!$ctrl.status.href><span>{{$ctrl.status.title}}</span></span></h2><p ng-if=$ctrl.shouldShowHtmlContent ng-bind-html=$ctrl.trustAsHtml(item) ng-repeat=\"item in $ctrl.status.info track by $index\"></p><p ng-if=!$ctrl.shouldShowHtmlContent ng-bind=item ng-repeat=\"item in $ctrl.status.info track by $index\"></p></div></div>"
   );
 
 }]);
