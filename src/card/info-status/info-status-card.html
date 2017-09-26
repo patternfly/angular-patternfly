@@ -1,22 +1,22 @@
 <div class="card-pf card-pf-info-status"
      ng-class="{'card-pf-accented': $ctrl.shouldShowTopBorder}">
-  <div class="info-image-container">
+  <div class="card-pf-info-image">
     <img ng-if="$ctrl.status.iconImage" ng-src="{{$ctrl.status.iconImage}}" alt=""
          class="info-img"/>
     <span class="info-icon {{$ctrl.status.iconClass}}"></span>
   </div>
-  <div>
+  <div class="card-pf-info-content">
     <h2 class="card-pf-title" ng-if="$ctrl.status.title">
       <a href="{{$ctrl.status.href}}" ng-if="$ctrl.status.href">
         <span class="">{{$ctrl.status.title}}</span>
       </a>
       <span ng-if="!$ctrl.status.href">
-            <span class="">{{$ctrl.status.title}}</span>
-          </span>
+        <span class="">{{$ctrl.status.title}}</span>
+      </span>
     </h2>
-    <p ng-if="$ctrl.shouldShowHtmlContent" ng-bind-html="$ctrl.trustAsHtml(item)"
-       ng-repeat="item in $ctrl.status.info track by $index"></p>
-    <p ng-if="!$ctrl.shouldShowHtmlContent" ng-bind="item"
-       ng-repeat="item in $ctrl.status.info track by $index"></p>
+    <div ng-if="$ctrl.shouldShowHtmlContent" class="card-pf-info-item" ng-bind-html="$ctrl.trustAsHtml(item)"
+         ng-repeat="item in $ctrl.status.info track by $index"></div>
+    <div ng-if="!$ctrl.shouldShowHtmlContent" class="card-pf-info-item" ng-bind="item"
+         ng-repeat="item in $ctrl.status.info track by $index"></div>
   </div>
 </div>
