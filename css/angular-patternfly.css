@@ -73,19 +73,27 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 }
 .card-pf-info-status {
   display: flex;
+  margin: 0 10px;
 }
-.card-pf-info-status .info-image-container {
+.card-pf-info-status .card-pf-info-image {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-right: 10px;
+  margin-right: 15px;
 }
-.card-pf-info-status .info-image-container .info-icon {
+.card-pf-info-status .card-pf-info-image .info-icon {
   font-size: 50px;
 }
-.card-pf-info-status .info-image-container .info-img {
+.card-pf-info-status .card-pf-info-image .info-img {
   max-height: 50px;
+}
+.card-pf-info-status .card-pf-info-content {
+  margin: 10px 0;
+}
+.card-pf-info-status .card-pf-info-content .card-pf-title {
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 pf-c3-chart {
   display: block;
