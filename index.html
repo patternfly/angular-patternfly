@@ -11,7 +11,7 @@
                  Declarative templates with data-binding, MVC, dependency injection and great
                  testability story all implemented with pure client-side JavaScript!">
   <meta name="fragment" content="!">
-  <title ng-bind-template="Angular Patternfly Documentation: {{partialTitle}}">Docs</title>
+  <title ng-bind-template="ANGULAR PATTERNFLY: {{partialTitle}}">Docs</title>
   <script type="text/javascript">
     // dynamically add base tag as well as css and javascript files.
     // we can't add css/js the usual way, because some browsers (FF) eagerly prefetch resources
@@ -46,6 +46,8 @@
          addTag('link', {rel: 'stylesheet', href: 'css/patternfly-additions.css', type: 'text/css'}, sync);
       
          addTag('link', {rel: 'stylesheet', href: 'css/angular-patternfly.css', type: 'text/css'}, sync);
+      
+         addTag('link', {rel: 'stylesheet', href: 'css/patternfly-showcase.css', type: 'text/css'}, sync);
       
          addTag('link', {rel: 'stylesheet', href: 'css/ng-docs.css', type: 'text/css'}, sync);
       
@@ -136,24 +138,86 @@
   </script>
 </head>
 
-<body>
-  <header class="header">
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid navbar-inverse">
-          
-            
-              <img class="pull-left" src="grunt-styles/misc/logo-alt.svg">
-            
-          
-          
-            
-            <a  class="navbar-brand">Angular Patternfly Documentation</a>
-          
-          
+<body class="showcase">
+  <header>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" ng-click="isOpen = !isOpen">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="navbar-brand">
+            <a id="logo" ng-bind-template="ANGULAR PATTERNFLY" href="#"></a>
+          </div>
+        </div>
+        <div class="navbar-collapse navbar-collapse-pf-site collapse">
+          <ul id="menu-primary" class="nav navbar-nav navbar-right navbar-utility">
+            <li class="active">
+              <a href="#">Components</a>
+            </li>
+            <li>
+              <a href="https://github.com/patternfly/angular-patternfly">Github</a>
+            </li>
+            <li class="applauncher-pf  dropdown dropdown-kebab-pf">
+              <a class="dropdown-toggle nav-item-iconic" data-toggle="dropdown" href="#" aria-expanded="true">
+                <i class="fa fa-th applauncher-pf-icon" aria-hidden="true">
+                  <span class="sr-only">PatternFly Showcases</span>
+                </i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li class="applauncher-pf-item" role="menuitem">
+                  <a class="applauncher-pf-link" href="https://rawgit.com/patternfly/patternfly-ng/master-dist/dist-demo/#/">
+                    <span class="applauncher-pf-link-title">PatternFly NG</span>
+                  </a>
+                </li>
+                <li class="applauncher-pf-item" role="menuitem">
+                  <a class="applauncher-pf-link" href="https://patternfly-webcomponents.github.io/components.html">
+                    <span class="applauncher-pf-link-title">PatternFly Web Components</span>
+                  </a>
+                </li>
+                <li class="applauncher-pf-item" role="menuitem">
+                  <a class="applauncher-pf-link" href="https://rawgit.com/patternfly/patternfly-react/gh-pages/index.html">
+                    <span class="applauncher-pf-link-title">PatternFly React</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </nav>
+    <nav class="navbar navbar-sidebar navbar-primary" ng-class="{'open': isOpen}">
+      <ul>
+        <li class="primary-menu">
+          <a href="">Menu</a>
+          <ul>
+            <li class="active">
+              <a href="#">Components</a>
+            </li>
+            <li>
+              <a href="https://github.com/patternfly/angular-patternfly">Github</a>
+            </li>
+            <li>
+              <a class="showcase-collapsed" ng-class="{'collapsed': !isCollapsed}" ng-click="isCollapsed = !isCollapsed">PatternFly Showcases</a>
+              <ul class="collapse" ng-class="{'in': isCollapsed}">
+                <li>
+                  <a href="https://rawgit.com/patternfly/patternfly-ng/master-dist/dist-demo/#/">PatternFly NG</a>
+                </li>
+                <li>
+                  <a href="https://patternfly-webcomponents.github.io/components.html">PatternFly Web Components</a>
+                </li>
+                <li>
+                  <a href="https://rawgit.com/patternfly/patternfly-react/gh-pages/index.html">PatternFly React</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
   </header>
 
   <div role="main" class="container-fluid">
