@@ -27,7 +27,7 @@
      <nav class="navbar navbar-default navbar-pf" role="navigation">
        <div class="navbar-header">
          <a class="navbar-brand" href="/">
-         <img src="img/brand.svg" alt="PatternFly Enterprise Application">
+         <img src="{{imagePath}}/brand.svg" alt="PatternFly Enterprise Application">
          </a>
        </div>
        <div class="collapse navbar-collapse navbar-collapse-1">
@@ -77,8 +77,9 @@
    </div>
  </file>
  <file name="script.js">
-   angular.module('patternfly.navigation').controller('applicationLauncherController', ['$scope',
-     function ($scope) {
+   angular.module('patternfly.navigation').controller('applicationLauncherController', ['$scope', '$window',
+     function ($scope, $window) {
+       $scope.imagePath = $window.IMAGE_PATH || "img";
        $scope.navigationItems = [
          {
            title: "Recteque",
@@ -130,4 +131,3 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
     ctrl.$id = $scope.$id;
   }
 });
-
