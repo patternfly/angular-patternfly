@@ -36,7 +36,8 @@
  </file>
 
  <file name="script.js">
-   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope ) {
+   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window ) {
+    var imagePath = $window.IMAGE_PATH || "img";
     $scope.infoStatus = {
       "title":"TinyCore-local",
       "href":"#",
@@ -50,7 +51,7 @@
     };
 
     $scope.infoStatusTitless = {
-      "iconImage":"img/OpenShift-logo.svg",
+      "iconImage": imagePath + "/OpenShift-logo.svg",
       "info":[
         "Infastructure: VMware",
         "Vmware: 1 CPU (1 socket x 1 core), 1024 MB",
