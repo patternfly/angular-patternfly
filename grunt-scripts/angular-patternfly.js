@@ -2370,7 +2370,8 @@ var pfCanvas = {};
  </file>
 
  <file name="script.js">
- angular.module( 'patternfly.canvas.demo' ).controller( 'CanvasDemoCtrl', function( $scope ) {
+ angular.module( 'patternfly.canvas.demo' ).controller( 'CanvasDemoCtrl', function( $scope, $window ) {
+     var imagePath = $window.IMAGE_PATH || "img";
      $scope.chartDataModel = {
           "nodes": [
             {
@@ -2378,7 +2379,7 @@ var pfCanvas = {};
               "x": 345,
               "y": 67,
               "id": 1,
-              "image": "/img/OpenShift-logo.svg",
+              "image": imagePath + "/OpenShift-logo.svg",
               "width": 150,
               "bundle": true,
               "backgroundColor": "#fff",
@@ -2403,7 +2404,7 @@ var pfCanvas = {};
               "x": 100,
               "y": 290,
               "id": 2,
-              "image": "/img/kubernetes.svg",
+              "image": imagePath + "/kubernetes.svg",
               "width": 150,
               "backgroundColor": "#fff",
               "validConnectionTypes": ["storage"],
@@ -2666,7 +2667,8 @@ var pfCanvas = {};
  </file>
 
  <file name="script.js">
- angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCtrl', function( $scope, $filter ) {
+ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCtrl', function( $scope, $filter, $window ) {
+     var imagePath = $window.IMAGE_PATH || "img";
      $scope.chartDataModel = {
           "nodes": [
             {
@@ -2674,7 +2676,7 @@ var pfCanvas = {};
               "x": 345,
               "y": 67,
               "id": 1,
-              "image": "/img/OpenShift-logo.svg",
+              "image": imagePath + "/OpenShift-logo.svg",
               "width": 150,
               "bundle": true,
               "backgroundColor": "#fff",
@@ -2699,7 +2701,7 @@ var pfCanvas = {};
               "x": 100,
               "y": 290,
               "id": 2,
-              "image": "/img/kubernetes.svg",
+              "image": imagePath + "/kubernetes.svg",
               "width": 150,
               "backgroundColor": "#fff",
               "validConnectionTypes": ["storage"],
@@ -2828,12 +2830,12 @@ var pfCanvas = {};
            {
              "name": "Nuage",
              "id": 10000000000004,
-             "image": "/img/OpenShift-logo.svg"
+             "image": imagePath + "/OpenShift-logo.svg"
            },
            {
              "name": "Vmware",
              "id": 10000000000010,
-             "image": "/img/kubernetes.svg"
+             "image": imagePath + "/kubernetes.svg"
            }
          ]
        },
@@ -3003,7 +3005,8 @@ var pfCanvas = {};
  </file>
 
  <file name="script.js">
-   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope ) {
+   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window ) {
+    var imagePath = $window.IMAGE_PATH || "img";
     $scope.status = {
       "title":"Nodes",
       "count":793,
@@ -3027,12 +3030,12 @@ var pfCanvas = {};
       "count":3,
       "notifications":[
         {
-          "iconImage":"img/kubernetes.svg",
+          "iconImage": imagePath + "/kubernetes.svg",
           "count":1,
           "href":"#"
         },
         {
-          "iconImage":"img/OpenShift-logo.svg",
+          "iconImage": imagePath + "/OpenShift-logo.svg",
           "count":2,
           "href":"#"
         }
@@ -3497,7 +3500,8 @@ angular.module('patternfly.card').component('pfCard', {
  </file>
 
  <file name="script.js">
-   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope ) {
+   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window ) {
+    var imagePath = $window.IMAGE_PATH || "img";
     $scope.infoStatus = {
       "title":"TinyCore-local",
       "href":"#",
@@ -3511,7 +3515,7 @@ angular.module('patternfly.card').component('pfCard', {
     };
 
     $scope.infoStatusTitless = {
-      "iconImage":"img/OpenShift-logo.svg",
+      "iconImage": imagePath + "/OpenShift-logo.svg",
       "info":[
         "Infastructure: VMware",
         "Vmware: 1 CPU (1 socket x 1 core), 1024 MB",
@@ -8826,7 +8830,7 @@ angular.module('patternfly.modals')
      <nav class="navbar navbar-default navbar-pf" role="navigation">
        <div class="navbar-header">
          <a class="navbar-brand" href="/">
-         <img src="img/brand.svg" alt="PatternFly Enterprise Application">
+         <img src="{{imagePath}}/brand.svg" alt="PatternFly Enterprise Application">
          </a>
        </div>
        <div class="collapse navbar-collapse navbar-collapse-1">
@@ -8876,8 +8880,9 @@ angular.module('patternfly.modals')
    </div>
  </file>
  <file name="script.js">
-   angular.module('patternfly.navigation').controller('applicationLauncherController', ['$scope',
-     function ($scope) {
+   angular.module('patternfly.navigation').controller('applicationLauncherController', ['$scope', '$window',
+     function ($scope, $window) {
+       $scope.imagePath = $window.IMAGE_PATH || "img";
        $scope.navigationItems = [
          {
            title: "Recteque",
@@ -8929,7 +8934,6 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
     ctrl.$id = $scope.$id;
   }]
 });
-
 ;/**
  * @ngdoc directive
  * @name patternfly.navigation.component:pfVerticalNavigation - Basic
