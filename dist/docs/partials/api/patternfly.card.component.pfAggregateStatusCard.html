@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/card/aggregate-status/aggregate-status-card.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/7648876/src/card/aggregate-status/aggregate-status-card.component.js#L132" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfAggregateStatusCard</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/card/aggregate-status/aggregate-status-card.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/d80f6e3/src/card/aggregate-status/aggregate-status-card.component.js#L133" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfAggregateStatusCard</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.card</code>
 </span>
 </div>
@@ -77,7 +77,8 @@ When layout=&#39;mini&#39;, only one notification can be specified:<br>
 <div class="tab-pane" title="script.js">
 <pre class="prettyprint linenums" ng-set-text="script.js-4"></pre>
 <script type="text/ng-template" id="script.js-4">
-  angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope ) {
+  angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window ) {
+   var imagePath = $window.IMAGE_PATH || "img";
    $scope.status = {
      "title":"Nodes",
      "count":793,
@@ -101,12 +102,12 @@ When layout=&#39;mini&#39;, only one notification can be specified:<br>
      "count":3,
      "notifications":[
        {
-         "iconImage":"img/kubernetes.svg",
+         "iconImage": imagePath + "/kubernetes.svg",
          "count":1,
          "href":"#"
        },
        {
-         "iconImage":"img/OpenShift-logo.svg",
+         "iconImage": imagePath + "/OpenShift-logo.svg",
          "count":2,
          "href":"#"
        }

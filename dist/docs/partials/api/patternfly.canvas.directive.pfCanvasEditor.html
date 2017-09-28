@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/canvas-view/examples/canvasEditor.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/7648876/src/canvas-view/examples/canvasEditor.js#L344" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCanvasEditor</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/canvas-view/examples/canvasEditor.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/d80f6e3/src/canvas-view/examples/canvasEditor.js#L345" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCanvasEditor</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.canvas</code>
 </span>
 </div>
@@ -88,7 +88,8 @@ latest svg specification&#39;s &#39;foreignObject&#39; api.  Tested in FireFox, 
 <div class="tab-pane" title="script.js">
 <pre class="prettyprint linenums" ng-set-text="script.js-2"></pre>
 <script type="text/ng-template" id="script.js-2">
-angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCtrl', function( $scope, $filter ) {
+angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCtrl', function( $scope, $filter, $window ) {
+    var imagePath = $window.IMAGE_PATH || "img";
     $scope.chartDataModel = {
          "nodes": [
            {
@@ -96,7 +97,7 @@ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCt
              "x": 345,
              "y": 67,
              "id": 1,
-             "image": "/img/OpenShift-logo.svg",
+             "image": imagePath + "/OpenShift-logo.svg",
              "width": 150,
              "bundle": true,
              "backgroundColor": "#fff",
@@ -121,7 +122,7 @@ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCt
              "x": 100,
              "y": 290,
              "id": 2,
-             "image": "/img/kubernetes.svg",
+             "image": imagePath + "/kubernetes.svg",
              "width": 150,
              "backgroundColor": "#fff",
              "validConnectionTypes": ["storage"],
@@ -250,12 +251,12 @@ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCt
           {
             "name": "Nuage",
             "id": 10000000000004,
-            "image": "/img/OpenShift-logo.svg"
+            "image": imagePath + "/OpenShift-logo.svg"
           },
           {
             "name": "Vmware",
             "id": 10000000000010,
-            "image": "/img/kubernetes.svg"
+            "image": imagePath + "/kubernetes.svg"
           }
         ]
       },

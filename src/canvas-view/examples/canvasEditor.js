@@ -74,7 +74,8 @@
  </file>
 
  <file name="script.js">
- angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCtrl', function( $scope, $filter ) {
+ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCtrl', function( $scope, $filter, $window ) {
+     var imagePath = $window.IMAGE_PATH || "img";
      $scope.chartDataModel = {
           "nodes": [
             {
@@ -82,7 +83,7 @@
               "x": 345,
               "y": 67,
               "id": 1,
-              "image": "/img/OpenShift-logo.svg",
+              "image": imagePath + "/OpenShift-logo.svg",
               "width": 150,
               "bundle": true,
               "backgroundColor": "#fff",
@@ -107,7 +108,7 @@
               "x": 100,
               "y": 290,
               "id": 2,
-              "image": "/img/kubernetes.svg",
+              "image": imagePath + "/kubernetes.svg",
               "width": 150,
               "backgroundColor": "#fff",
               "validConnectionTypes": ["storage"],
@@ -236,12 +237,12 @@
            {
              "name": "Nuage",
              "id": 10000000000004,
-             "image": "/img/OpenShift-logo.svg"
+             "image": imagePath + "/OpenShift-logo.svg"
            },
            {
              "name": "Vmware",
              "id": 10000000000010,
-             "image": "/img/kubernetes.svg"
+             "image": imagePath + "/kubernetes.svg"
            }
          ]
        },
