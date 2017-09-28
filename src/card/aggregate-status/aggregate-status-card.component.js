@@ -68,7 +68,8 @@
  </file>
 
  <file name="script.js">
-   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope ) {
+   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window ) {
+    var imagePath = $window.IMAGE_PATH || "img";
     $scope.status = {
       "title":"Nodes",
       "count":793,
@@ -92,12 +93,12 @@
       "count":3,
       "notifications":[
         {
-          "iconImage":"img/kubernetes.svg",
+          "iconImage": imagePath + "/kubernetes.svg",
           "count":1,
           "href":"#"
         },
         {
-          "iconImage":"img/OpenShift-logo.svg",
+          "iconImage": imagePath + "/OpenShift-logo.svg",
           "count":2,
           "href":"#"
         }
