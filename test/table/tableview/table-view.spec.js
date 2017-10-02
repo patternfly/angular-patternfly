@@ -85,7 +85,7 @@ describe('Component: pfTableView', function () {
     basicSetup();
     $scope.items = null;
     $scope.$digest();
-    expect(element.find('.blank-state-pf-title').text()).toContain('');
+    expect(element.find('.blank-state-pf-title').text().length).toBe(0);
   });
 
   it('should show the empty state when items is empty', function () {
