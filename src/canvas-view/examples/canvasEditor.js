@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.canvas.directive:pfCanvasEditor
+ * @name patternfly.canvas.component:pfCanvasEditor
  * @restrict E
  *
  * @description
@@ -8,7 +8,7 @@
  * operations such as: Zoom In, Zoom Out, Hide Connections, Remove Node, and Duplicate Node.  Does not work in IE 11 or lower because they do not support
  * latest svg specification's 'foreignObject' api.  Tested in FireFox, Chrome, and MS-Edge.
  *
- * @param {object} chartDataModel Chart data object which defines the nodes and connections on the canvas. See {@link patternfly.canvas.directive:pfCanvas} for detailed information.
+ * @param {object} chartDataModel Chart data object which defines the nodes and connections on the canvas. See {@link patternfly.canvas.component:pfCanvas} for detailed information.
  * @param {object} chartViewModel (Optional) The chartViewModel is initialized from the chartDataModel and contains additional helper methods such as <code>chartViewModel.isOnlyOneNodeSelected()</code> and
  * <code>chartViewModel.getSelectedNodes()</code>.
  * @param {boolean} toolboxTabs An array of Tab objects used in the Toolbox.  Each Tab object many contain 'subtabs' and/or 'items'.  Items may be dragged onto the canvas.
@@ -131,7 +131,7 @@
                     "fontFamily": "PatternFlyIcons-webfont",
                     "fontContent": "\ue621"
                   }
-                ],
+                ]
             },
             {
               "name": "NetApp",
@@ -189,20 +189,20 @@
               "id": 1,
               "name": "connect",
               "iconClass": "fa fa-share-alt",
-              "action": "nodeActionConnect",
+              "action": "nodeActionConnect"
             },
             {
               "id": 2,
               "name": "edit",
               "iconClass": "pf pficon-edit",
-              "action": "nodeActionEdit",
+              "action": "nodeActionEdit"
             },
             {
               "id": 3,
               "name": "tag",
               "iconClass": "fa fa-tag",
-              "action": "nodeActionTag",
-            },
+              "action": "nodeActionTag"
+            }
           ],
           "connections": [
             {
@@ -285,7 +285,6 @@
        }
      ];
 
-     $scope.chartViewModel;
      $scope.readOnly = false;
      $scope.eventText = "";
 
@@ -324,7 +323,7 @@
        $scope.chartViewModel.addNode(duplicatedNode);
 
        angular.element("#duplicateItem").blur();
-     }
+     };
 
      function getCopyName(baseName) {
        // Test to see if we are duplicating an existing 'Copy'

@@ -1,6 +1,6 @@
-<div class="node-toolbar" ng-style="{width: vm.node.width()}">
-  <span ng-repeat="nodeAction in vm.nodeActions"
+<div class="node-toolbar" ng-style="{width: $ctrl.node.width()}">
+  <span ng-repeat="nodeAction in $ctrl.nodeActions"
         class="{{nodeAction.iconClass()}} node-toolbar-icons"
-        ng-click="actionIconClicked(nodeAction.action())">
+        ng-click="$ctrl.actionIconClicked(nodeAction.action())">
   </span>
 </div>

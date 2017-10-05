@@ -4,13 +4,13 @@
   angular.module('patternfly.canvas').component('pfCanvasEditor', {
 
     bindings: {
-      chartDataModel: "=",
-      chartViewModel: "=?",
-      toolboxTabs: "=",
+      chartDataModel: '=',
+      chartViewModel: '=?',
+      toolboxTabs: '=',
       readOnly: '<?'
     },
     transclude: true,
-    templateUrl: "canvas-view/canvas-editor/canvas-editor.html",
+    templateUrl: 'canvas-view/canvas-editor/canvas-editor.html',
     controller: function ($timeout) {
       var ctrl = this;
       var newNodeCount = 0;
@@ -59,8 +59,8 @@
         // focus to filter input box
 
         $timeout(function () {
-          angular.element(".subtabs>ul").addClass('nav-tabs-pf');
-          angular.element("#filterFld").focus();
+          angular.element('.subtabs>u').addClass('nav-tabs-pf');
+          angular.element('#filterFld').focus();
         });
       };
 
@@ -79,7 +79,7 @@
       };
 
       ctrl.tabClicked = function () {
-        angular.element("#filterFld").focus();
+        angular.element('#filterFld').focus();
       };
 
       /*** Toolbox ***/
@@ -109,7 +109,7 @@
       };
 
       ctrl.tabClicked = function () {
-        angular.element("#filterFld").focus();
+        angular.element('#filterFld').focus();
       };
 
       ctrl.activeTab = function () {
