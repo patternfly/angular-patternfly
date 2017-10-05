@@ -84,13 +84,12 @@
         mouseCapture.acquire(evt, {
           mouseMove: mouseMove,
           mouseUp: mouseUp,
-          released: released,
+          released: released
         });
 
         evt.stopPropagation();
         evt.preventDefault();
-      },
-
+      }
     };
   }
 })();

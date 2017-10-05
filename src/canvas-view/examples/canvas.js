@@ -1,10 +1,10 @@
 /**
  * @ngdoc directive
- * @name patternfly.canvas.directive:pfCanvas
+ * @name patternfly.canvas.component:pfCanvas
  * @restrict E
  *
  * @description
- * Directive for core operations and rendering of a canvas. Does not work in IE 11 or lower because they do not support
+ * Component for core operations and rendering of a canvas. Does not work in IE 11 or lower because they do not support
  * latest svg specification's 'foreignObject' api.  Tested in FireFox, Chrome, and MS-Edge.
  * @param {object} chartDataModel Chart data object which defines the nodes and connections on the canvas
  * <ul style='list-style-type: none'>
@@ -37,6 +37,12 @@
  *       <li>.name      - (string) The name of the node action
  *       <li>.iconClass - (string) The icon class of the action.  Ex: "pf pficon-edit"
  *       <li>.action    - (string) The action identifier, which is passed along with the action event.
+ *     </ul>
+ *   <li>.actionIconClicked - function that listens for node actions/events when clicking the items within the node toolbar.
+ *     <ul style='list-style-type: none'>
+ *       <li>nodeClickHandler - (function) A function that starts the connection mode when clicking the items within the node toolbar. Passes the following arguments: string (action) and object (node) as parameters.
+ *       <li>$scope.$emit - (function) A function that listens to the action click event via $scope.$on to log the eventText when clicking the items within the node toolbar. Passes the following arguments: string ('nodeActionClicked') and object ({action, node}) as parameters.
+ *       Also is used to listen for when the mouse is currently over a node (or not) when an action is selected - in which it then passes the following argument: string ('nodeActionClosed') as parameters.
  *     </ul>
  *   <li>.connections  - An array of connections between nodes
  *     <ul style='list-style-type: none'>
@@ -163,7 +169,7 @@
                     "fontFamily": "PatternFlyIcons-webfont",
                     "fontContent": "\ue621"
                   }
-                ],
+                ]
             },
             {
               "name": "NetApp",
@@ -221,20 +227,20 @@
               "id": 1,
               "name": "connect",
               "iconClass": "fa fa-share-alt",
-              "action": "nodeActionConnect",
+              "action": "nodeActionConnect"
             },
             {
               "id": 2,
               "name": "edit",
               "iconClass": "pf pficon-edit",
-              "action": "nodeActionEdit",
+              "action": "nodeActionEdit"
             },
             {
               "id": 3,
               "name": "tag",
               "iconClass": "fa fa-tag",
-              "action": "nodeActionTag",
-            },
+              "action": "nodeActionTag"
+            }
           ],
           "connections": [
             {
@@ -284,7 +290,6 @@
       "validConnectionTypes": ["network"]
      };
 
-     $scope.chartViewModel;
      $scope.readOnly = false;
      $scope.hideConnectors = false;
      $scope.eventText = "";
@@ -299,7 +304,7 @@
        newNode.y = 200 + (numNewNodes * 4 + 160);
 
        $scope.chartViewModel.addNode(newNode);
-     }
+     };
 
      $scope.$on('nodeActionClicked', function(evt, args) {
        var action = args.action;
@@ -309,20 +314,20 @@
 
      $scope.zoomIn = function() {
        $scope.$broadcast('zoomIn');
-     }
+     };
      $scope.zoomOut = function() {
        $scope.$broadcast('zoomOut');
-     }
+     };
 
      $scope.selectAll = function() {
        $scope.$broadcast('selectAll');
-     }
+     };
      $scope.deselectAll = function() {
        $scope.$broadcast('deselectAll');
-     }
+     };
      $scope.deleteSelected = function() {
        $scope.$broadcast('deleteSelected');
-     }
+     };
  });
  </file>
  </example>
