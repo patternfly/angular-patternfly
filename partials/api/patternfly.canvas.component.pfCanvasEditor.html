@@ -1,10 +1,10 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/canvas-view/examples/canvasEditor.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/75b6a78/src/canvas-view/examples/canvasEditor.js#L345" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCanvasEditor</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/canvas-view/examples/canvasEditor.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/cbf373d/src/canvas-view/examples/canvasEditor.js#L344" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCanvasEditor</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.canvas</code>
 </span>
 </div>
 </h1>
 <div><h2 id="description">Description</h2>
-<div class="description"><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvaseditor-page"><p>Component for canvas editor which adds a toolbox where items can be dragged and dropped onto canvas, as well as other canvas
+<div class="description"><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvaseditor-page"><p>Component for canvas editor which adds a toolbox where items can be dragged and dropped onto canvas, as well as other canvas
 operations such as: Zoom In, Zoom Out, Hide Connections, Remove Node, and Duplicate Node.  Does not work in IE 11 or lower because they do not support
 latest svg specification&#39;s &#39;foreignObject&#39; api.  Tested in FireFox, Chrome, and MS-Edge.</p>
 </div></div>
@@ -15,10 +15,10 @@ latest svg specification&#39;s &#39;foreignObject&#39; api.  Tested in FireFox, 
        toolbox-tabs="{boolean}"
        read-only&gt;
 &lt;/pf-canvas-editor&gt;</pre>
-<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>chartDataModel</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvaseditor-page"><p>Chart data object which defines the nodes and connections on the canvas. See <a href="#/api/patternfly.canvas.directive:pfCanvas">patternfly.canvas.directive:pfCanvas</a> for detailed information.</p>
-</div></td></tr><tr><td>chartViewModel</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvaseditor-page"><p>(Optional) The chartViewModel is initialized from the chartDataModel and contains additional helper methods such as <code>chartViewModel.isOnlyOneNodeSelected()</code> and
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>chartDataModel</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvaseditor-page"><p>Chart data object which defines the nodes and connections on the canvas. See <a href="#/api/patternfly.canvas.component:pfCanvas">patternfly.canvas.component:pfCanvas</a> for detailed information.</p>
+</div></td></tr><tr><td>chartViewModel</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvaseditor-page"><p>(Optional) The chartViewModel is initialized from the chartDataModel and contains additional helper methods such as <code>chartViewModel.isOnlyOneNodeSelected()</code> and
 <code>chartViewModel.getSelectedNodes()</code>.</p>
-</div></td></tr><tr><td>toolboxTabs</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvaseditor-page"><p>An array of Tab objects used in the Toolbox.  Each Tab object many contain &#39;subtabs&#39; and/or &#39;items&#39;.  Items may be dragged onto the canvas.</p>
+</div></td></tr><tr><td>toolboxTabs</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvaseditor-page"><p>An array of Tab objects used in the Toolbox.  Each Tab object many contain &#39;subtabs&#39; and/or &#39;items&#39;.  Items may be dragged onto the canvas.</p>
 <ul style='list-style-type: none'>
   <li>.preTitle - (string) (Optional) A small title above the main tab title
   <li>.title    - (string) The main title of the tab
@@ -30,10 +30,10 @@ latest svg specification&#39;s &#39;foreignObject&#39; api.  Tested in FireFox, 
     <li>.image    - (string) (Optional) The url of the item&#39;s image.  Ex: &quot;/img/kubernetes.svg&quot;
     <li>.icon     - (string) (Optional) The icon class of the item&#39;s icon.  Ex: &quot;pf pficon-service&quot;
   </ul>
-</ul></div></td></tr><tr><td>readOnly</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvaseditor-page"><p>(Optional) A flag indicating whether the canvas is in &#39;read-only&#39; mode.  When in &#39;read-only&#39; mode nodes cannot be moved, selected, or deleted, and the node action toolbar is hidden.</p>
+</ul></div></td></tr><tr><td>readOnly</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvaseditor-page"><p>(Optional) A flag indicating whether the canvas is in &#39;read-only&#39; mode.  When in &#39;read-only&#39; mode nodes cannot be moved, selected, or deleted, and the node action toolbar is hidden.</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
-<div class="example"><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvaseditor-page"><h4 id="example_source">Source</h4>
+<div class="example"><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvaseditor-page"><h4 id="example_source">Source</h4>
 <div source-edit="patternfly.canvaseditor.demo" source-edit-deps="angular.js modules.js script.js" source-edit-html="index.html-1" source-edit-css="" source-edit-js="modules.js script.js-2" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
 <pre class="prettyprint linenums" ng-set-text="index.html-1" ng-html-wrap-loaded="patternfly.canvaseditor.demo angular.js modules.js script.js"></pre>
@@ -145,7 +145,7 @@ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCt
                    "fontFamily": "PatternFlyIcons-webfont",
                    "fontContent": "\ue621"
                  }
-               ],
+               ]
            },
            {
              "name": "NetApp",
@@ -203,20 +203,20 @@ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCt
              "id": 1,
              "name": "connect",
              "iconClass": "fa fa-share-alt",
-             "action": "nodeActionConnect",
+             "action": "nodeActionConnect"
            },
            {
              "id": 2,
              "name": "edit",
              "iconClass": "pf pficon-edit",
-             "action": "nodeActionEdit",
+             "action": "nodeActionEdit"
            },
            {
              "id": 3,
              "name": "tag",
              "iconClass": "fa fa-tag",
-             "action": "nodeActionTag",
-           },
+             "action": "nodeActionTag"
+           }
          ],
          "connections": [
            {
@@ -299,7 +299,6 @@ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCt
       }
     ];
 
-    $scope.chartViewModel;
     $scope.readOnly = false;
     $scope.eventText = "";
 
@@ -338,7 +337,7 @@ angular.module( 'patternfly.canvaseditor.demo' ).controller( 'CanvasEditorDemoCt
       $scope.chartViewModel.addNode(duplicatedNode);
 
       angular.element("#duplicateItem").blur();
-    }
+    };
 
     function getCopyName(baseName) {
       // Test to see if we are duplicating an existing 'Copy'

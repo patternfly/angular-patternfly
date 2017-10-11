@@ -224,13 +224,13 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
   angular.module('patternfly.canvas').component('pfCanvasEditor', {
 
     bindings: {
-      chartDataModel: "=",
-      chartViewModel: "=?",
-      toolboxTabs: "=",
+      chartDataModel: '=',
+      chartViewModel: '=?',
+      toolboxTabs: '=',
       readOnly: '<?'
     },
     transclude: true,
-    templateUrl: "canvas-view/canvas-editor/canvas-editor.html",
+    templateUrl: 'canvas-view/canvas-editor/canvas-editor.html',
     controller: ["$timeout", function ($timeout) {
       var ctrl = this;
       var newNodeCount = 0;
@@ -279,8 +279,8 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
         // focus to filter input box
 
         $timeout(function () {
-          angular.element(".subtabs>ul").addClass('nav-tabs-pf');
-          angular.element("#filterFld").focus();
+          angular.element('.subtabs>u').addClass('nav-tabs-pf');
+          angular.element('#filterFld').focus();
         });
       };
 
@@ -299,7 +299,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
       };
 
       ctrl.tabClicked = function () {
-        angular.element("#filterFld").focus();
+        angular.element('#filterFld').focus();
       };
 
       /*** Toolbox ***/
@@ -329,7 +329,7 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
       };
 
       ctrl.tabClicked = function () {
-        angular.element("#filterFld").focus();
+        angular.element('#filterFld').focus();
       };
 
       ctrl.activeTab = function () {
@@ -384,484 +384,427 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
     }] // controller
   }); // module
 })();
-;/* eslint-disable */
-(function() {
+;(function () {
   'use strict';
 
   angular.module('patternfly.canvas')
-    .directive('toolboxItems', toolboxItemsDirective);
-
-  function toolboxItemsDirective() {
-    var directive = {
-      restrict: 'E',
-      scope: {
+    .component('toolboxItems', {
+      templateUrl: 'canvas-view/canvas-editor/toolbox-items.html',
+      bindings: {
         items: '=',
-        startDragCallback: '=',
-        clickCallback: '=',
+        startDragCallback: '<',
+        clickCallback: '<',
         searchText: '='
       },
-      controller: toolboxItemsController,
-      templateUrl: 'canvas-view/canvas-editor/toolbox-items.html',
-      controllerAs: 'vm',
-      bindToController: true
-    };
+      controller: function toolboxItemsController () {
+        var ctrl = this;
 
-    return directive;
+        ctrl.itemClicked = function (item) {
+          if (angular.isFunction(ctrl.clickCallback) && !item.disableInToolbox) {
+            ctrl.clickCallback(item);
+          }
+        };
 
-    function toolboxItemsController() {
-      var vm = this;
-
-      vm.clickCallbackfmDir = function(item) {
-        if (!item.disableInToolbox) {
-          vm.clickCallback(item);
-        }
-      };
-
-      vm.startDragCallbackfmDir = function(event, ui, item) {
-        vm.startDragCallback(event, ui, item);
-      };
-    }
-  }
+        ctrl.startItemDrag = function (event, ui, item) {
+          if (angular.isFunction(ctrl.startDragCallback)) {
+            ctrl.startDragCallback(event, ui, item);
+          }
+        };
+      }
+    });
 })();
 ;(function () {
   'use strict';
 
   angular.module('patternfly.canvas')
-  .filter('trustAsResourceUrl', ['$sce', function ($sce) {
-    return function (val) {
-      return $sce.trustAsResourceUrl(val);
-    };
-  }])
+    .filter('trustAsResourceUrl', ['$sce', function ($sce) {
+      return function (val) {
+        return $sce.trustAsResourceUrl(val);
+      };
+    }])
 
-  //
-  // Directive that generates the rendered chart from the data model.
-  //
-  .directive('pfCanvas', ["$document", function ($document) {
-    return {
-      restrict: 'E',
-      templateUrl: "canvas-view/canvas/canvas.html",
-      replace: true,
-      scope: {
-        chartDataModel: "=",
-        chartViewModel: "=?",
-        readOnly: "=?",
-        hideConnectors: "=?"
+    //
+    // Component that generates the rendered chart from the data model.
+    //
+    .component('pfCanvas', {
+      templateUrl: 'canvas-view/canvas/canvas.html',
+      bindings: {
+        chartDataModel:'=',
+        chartViewModel: '=?',
+        readOnly: '<?',
+        hideConnectors: '=?'
       },
-      controller: 'CanvasController',
-      link: link
-    };
-    function link (scope) {
-      var deleteKeyCode = 46;
-      var ctrlKeyCode = 17;
-      var ctrlDown = false;
-      var aKeyCode = 65;
-      var dKeyCode = 68;
-      var escKeyCode = 27;
+      controller: ["$scope", "dragging", "$element", "$document", function CanvasController ($scope, dragging, $element, $document) {
+        var ctrl = this;
 
-      $document.find('body').keydown(function (evt) {
-        if (evt.keyCode === ctrlKeyCode) {
-          ctrlDown = true;
-          evt.stopPropagation();
-          evt.preventDefault();
-        }
-
-        if (evt.keyCode === aKeyCode && ctrlDown) {
-          //
-          // Ctrl + A
-          //
-          scope.selectAll();
-          scope.$digest();
-          evt.stopPropagation();
-          evt.preventDefault();
-        }
-      });
-
-      $document.find('body').keyup(function (evt) {
-        if (evt.keyCode === deleteKeyCode) {
-          scope.deleteSelected();
-          scope.$digest();
-        }
-
-        if (evt.keyCode === escKeyCode) {
-          scope.deselectAll();
-          scope.$digest();
-        }
-
-        if (evt.keyCode === ctrlKeyCode) {
-          ctrlDown = false;
-          evt.stopPropagation();
-          evt.preventDefault();
-        }
-      });
-    }
-  }])
-  //
-  // Controller for the canvas directive.
-  // Having a separate controller is better for unit testing, otherwise
-  // it is painful to unit test a directive without instantiating the DOM
-  // (which is possible, just not ideal).
-  //
-  .controller('CanvasController', ['$scope', 'dragging', '$element', '$document', function CanvasController ($scope, dragging, $element, $document) {
-    var controller = this;
-
-    $scope.chart = new pfCanvas.ChartViewModel($scope.chartDataModel);
-    $scope.chartViewModel = $scope.chart;
-    //
-    // Reference to the document and jQuery, can be overridden for testting.
-    //
-    this.document = document;
-
-    //
-    // Wrap jQuery so it can easily be  mocked for testing.
-    //
-    this.jQuery = function (element) {
-      return angular.element(element);
-    };
-
-    //
-    // Init data-model variables.
-    //
-    $scope.draggingConnection = false;
-    $scope.connectorSize = 6;
-    $scope.dragSelecting = false;
-
-    //
-    // Reference to the connection, connector or node that the mouse is currently over.
-    //
-    $scope.mouseOverConnector = null;
-    $scope.mouseOverConnection = null;
-    $scope.mouseOverNode = null;
-
-    //
-    // The class for connections and connectors.
-    //
-    this.connectionClass = 'connection';
-    this.connectorClass = 'connector';
-    this.nodeClass = 'node';
-
-    //
-    // Translate the coordinates so they are relative to the svg element.
-    //
-    this.translateCoordinates = function (x, y, evt) {
-      var svgElem =  $element.get(0);
-      var matrix = svgElem.getScreenCTM();
-      var point = svgElem.createSVGPoint();
-      point.x = (x - evt.view.pageXOffset) / $scope.zoomLevel();
-      point.y = (y - evt.view.pageYOffset) / $scope.zoomLevel();
-
-      return point.matrixTransform(matrix.inverse());
-    };
-
-    $scope.hideConnectors = $scope.hideConnectors ? $scope.hideConnectors : false;
-
-    $scope.isConnectorConnected = function (connector) {
-      return (connector && connector.connected());
-    };
-
-    $scope.isConnectorUnconnectedAndValid = function (connector) {
-      return (connector && !connector.connected() && !connector.invalid() &&
-              connector.parentNode() !== $scope.connectingModeSourceNode);
-    };
-
-    // determins if a dest. connector is connected to the source node
-    $scope.isConnectedTo = function (connector, node) {
-      var i,connection;
-      var connections = $scope.chart.connections;
-      for (i = 0; i < connections.length; i++) {
-        connection = connections[i];
-        if (connection.dest === connector && connection.source.parentNode() === node) {
-          return true;
-        }
-      }
-
-      return false;
-    };
-
-    $scope.availableConnections = function () {
-      return $scope.chart.validConnections;
-    };
-
-    $scope.foreignObjectSupported = function () {
-      return $document[0].implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Extensibility', '1.1');
-    };
-
-    $scope.addNodeToCanvas = function (newNode) {
-      $scope.chart.addNode(newNode);
-    };
-
-    $scope.$on('selectAll', function (evt, args) {
-      $scope.selectAll();
-    });
-
-    $scope.selectAll = function () {
-      $scope.chart.selectAll();
-    };
-
-    $scope.$on('deselectAll', function (evt, args) {
-      $scope.deselectAll();
-    });
-
-    $scope.deselectAll = function () {
-      $scope.chart.deselectAll();
-    };
-
-    $scope.$on('deleteSelected', function (evt, args) {
-      $scope.deleteSelected();
-    });
-
-    $scope.deleteSelected = function () {
-      $scope.chart.deleteSelected();
-    };
-
-    //
-    // Called on mouse down in the chart.
-    //
-    $scope.mouseDown = function (evt) {
-      if ($scope.readOnly) {
-        return;
-      }
-
-      if ($scope.chart.inConnectingMode ) {
-        // camceling out of connection mode, remove unused output connector
-        $scope.cancelConnectingMode();
-      }
-
-      $scope.chart.deselectAll();
-
-      $scope.chart.clickedOnChart = true;
-
-      dragging.startDrag(evt, {
+        ctrl.chart = new pfCanvas.ChartViewModel(ctrl.chartDataModel);
+        ctrl.chartViewModel = ctrl.chart;
 
         //
-        // Commence dragging... setup variables to display the drag selection rect.
+        // Init data-model variables.
         //
-        dragStarted: function (x, y) {
-          var startPoint;
-          $scope.dragSelecting = true;
-          startPoint = controller.translateCoordinates(x, y, evt);
-          $scope.dragSelectionStartPoint = startPoint;
-          $scope.dragSelectionRect = {
-            x: startPoint.x,
-            y: startPoint.y,
-            width: 0,
-            height: 0,
-          };
-        },
+        ctrl.draggingConnection = false;
+        ctrl.connectorSize = 6;
+        ctrl.dragSelecting = false;
 
         //
-        // Update the drag selection rect while dragging continues.
+        // Reference to the connection, connector or node that the mouse is currently over.
         //
-        dragging: function (x, y) {
-          var startPoint = $scope.dragSelectionStartPoint;
-          var curPoint = controller.translateCoordinates(x, y, evt);
+        ctrl.mouseOverConnector = null;
+        ctrl.mouseOverConnection = null;
+        ctrl.mouseOverNode = null;
 
-          $scope.dragSelectionRect = {
-            x: curPoint.x > startPoint.x ? startPoint.x : curPoint.x,
-            y: curPoint.y > startPoint.y ? startPoint.y : curPoint.y,
-            width: curPoint.x > startPoint.x ? curPoint.x - startPoint.x : startPoint.x - curPoint.x,
-            height: curPoint.y > startPoint.y ? curPoint.y - startPoint.y : startPoint.y - curPoint.y,
-          };
-        },
 
         //
-        // Dragging has ended... select all that are within the drag selection rect.
+        // Translate the coordinates so they are relative to the svg element.
         //
-        dragEnded: function () {
-          $scope.dragSelecting = false;
-          $scope.chart.applySelectionRect($scope.dragSelectionRect);
-          delete $scope.dragSelectionStartPoint;
-          delete $scope.dragSelectionRect;
-        },
-      });
-    };
+        this.translateCoordinates = function (x, y, evt) {
+          var svgElem =  $element.get(0).children[0];
+          var matrix = svgElem.getScreenCTM();
+          var point = svgElem.createSVGPoint();
+          point.x = (x - evt.view.pageXOffset) / ctrl.zoomLevel();
+          point.y = (y - evt.view.pageYOffset) / ctrl.zoomLevel();
 
-    //
-    // Handle nodeMouseOver on an node.
-    //
-    $scope.nodeMouseOver = function (evt, node) {
-      if (!$scope.readOnly) {
-        $scope.mouseOverNode = node;
-      }
-    };
+          return point.matrixTransform(matrix.inverse());
+        };
 
-    //
-    // Handle nodeMouseLeave on an node.
-    //
-    $scope.nodeMouseLeave = function (evt, node) {
-      $scope.mouseOverNode = null;
-    };
+        ctrl.hideConnectors = ctrl.hideConnectors || false;
 
-    //
-    // Handle mousedown on a node.
-    //
-    $scope.nodeMouseDown = function (evt, node) {
-      var chart = $scope.chart;
-      var lastMouseCoords;
+        ctrl.isConnectorConnected = function (connector) {
+          return (connector && connector.connected());
+        };
 
-      if ($scope.readOnly) {
-        return;
-      }
+        ctrl.isConnectorUnconnectedAndValid = function (connector) {
+          return (connector && !connector.connected() && !connector.invalid() &&
+          connector.parentNode() !== ctrl.connectingModeSourceNode);
+        };
 
-      dragging.startDrag(evt, {
-
-        //
-        // Node dragging has commenced.
-        //
-        dragStarted: function (x, y) {
-          lastMouseCoords = controller.translateCoordinates(x, y, evt);
-
-          //
-          // If nothing is selected when dragging starts,
-          // at least select the node we are dragging.
-          //
-          if (!node.selected()) {
-            chart.deselectAll();
-            node.select();
+        // determines if a dest. connector is connected to the source node
+        ctrl.isConnectedTo = function (connector, node) {
+          var i,connection;
+          var connections = ctrl.chart.connections;
+          for (i = 0; i < connections.length; i++) {
+            connection = connections[i];
+            if (connection.dest === connector && connection.source.parentNode() === node) {
+              return true;
+            }
           }
-        },
+
+          return false;
+        };
+
+        ctrl.availableConnections = function () {
+          return ctrl.chart.validConnections;
+        };
+
+        ctrl.foreignObjectSupported = function () {
+          return $document[0].implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Extensibility', '1.1');
+        };
+
+        ctrl.addNodeToCanvas = function (newNode) {
+          ctrl.chart.addNode(newNode);
+        };
+
+        $scope.$on('selectAll', function () {
+          ctrl.selectAll();
+        });
+
+        ctrl.selectAll = function () {
+          ctrl.chart.selectAll();
+        };
+
+        $scope.$on('deselectAll', function () {
+          ctrl.deselectAll();
+        });
+
+        ctrl.deselectAll = function () {
+          ctrl.chart.deselectAll();
+        };
+
+        $scope.$on('deleteSelected', function () {
+          ctrl.deleteSelected();
+        });
+
+        ctrl.deleteSelected = function () {
+          ctrl.chart.deleteSelected();
+        };
 
         //
-        // Dragging selected nodes... update their x,y coordinates.
+        // Called on mouse down in the chart.
         //
-        dragging: function (x, y) {
-          var curCoords = controller.translateCoordinates(x, y, evt);
-          var deltaX = curCoords.x - lastMouseCoords.x;
-          var deltaY = curCoords.y - lastMouseCoords.y;
+        ctrl.mouseDown = function (evt) {
+          if (ctrl.readOnly) {
+            return;
+          }
 
-          chart.updateSelectedNodesLocation(deltaX, deltaY);
+          if (ctrl.chart.inConnectingMode ) {
+            // canceling out of connection mode, remove unused output connector
+            ctrl.cancelConnectingMode();
+          }
 
-          lastMouseCoords = curCoords;
-        },
+          ctrl.chart.deselectAll();
+
+          ctrl.chart.clickedOnChart = true;
+
+          dragging.startDrag(evt, {
+
+            //
+            // Commence dragging... setup variables to display the drag selection rect.
+            //
+            dragStarted: function (x, y) {
+              var startPoint;
+              ctrl.dragSelecting = true;
+              startPoint = ctrl.translateCoordinates(x, y, evt);
+              ctrl.dragSelectionStartPoint = startPoint;
+              ctrl.dragSelectionRect = {
+                x: startPoint.x,
+                y: startPoint.y,
+                width: 0,
+                height: 0
+              };
+            },
+
+            //
+            // Update the drag selection rect while dragging continues.
+            //
+            dragging: function (x, y) {
+              var startPoint = ctrl.dragSelectionStartPoint;
+              var curPoint = ctrl.translateCoordinates(x, y, evt);
+
+              ctrl.dragSelectionRect = {
+                x: curPoint.x > startPoint.x ? startPoint.x : curPoint.x,
+                y: curPoint.y > startPoint.y ? startPoint.y : curPoint.y,
+                width: curPoint.x > startPoint.x ? curPoint.x - startPoint.x : startPoint.x - curPoint.x,
+                height: curPoint.y > startPoint.y ? curPoint.y - startPoint.y : startPoint.y - curPoint.y,
+              };
+            },
+
+            //
+            // Dragging has ended... select all that are within the drag selection rect.
+            //
+            dragEnded: function () {
+              ctrl.dragSelecting = false;
+              ctrl.chart.applySelectionRect(ctrl.dragSelectionRect);
+              delete ctrl.dragSelectionStartPoint;
+              delete ctrl.dragSelectionRect;
+            }
+          });
+        };
 
         //
-        // The node wasn't dragged... it was clicked.
+        // Handle nodeMouseOver on an node.
         //
-        clicked: function () {
-          chart.handleNodeClicked(node, evt.ctrlKey);
-        },
+        ctrl.nodeMouseOver = function (evt, node) {
+          if (!ctrl.readOnly) {
+            ctrl.mouseOverNode = node;
+          }
+        };
 
-      });
-    };
+        //
+        // Handle nodeMouseLeave on an node.
+        //
+        ctrl.nodeMouseLeave = function () {
+          ctrl.mouseOverNode = null;
+        };
 
-    //
-    // Listen for node action
-    //
-    $scope.$on('nodeActionClicked', function (evt, args) {
-      var action = args.action;
-      var node = args.node;
+        //
+        // Handle mousedown on a node.
+        //
+        ctrl.nodeMouseDown = function (evt, node) {
+          var chart = ctrl.chart;
+          var lastMouseCoords;
 
-      if (action === 'nodeActionConnect') {
-        $scope.startConnectingMode(node);
-      }
+          if (ctrl.readOnly) {
+            return;
+          }
+
+          dragging.startDrag(evt, {
+
+            //
+            // Node dragging has commenced.
+            //
+            dragStarted: function (x, y) {
+              lastMouseCoords = ctrl.translateCoordinates(x, y, evt);
+
+              //
+              // If nothing is selected when dragging starts,
+              // at least select the node we are dragging.
+              //
+              if (!node.selected()) {
+                chart.deselectAll();
+                node.select();
+              }
+            },
+
+            //
+            // Dragging selected nodes... update their x,y coordinates.
+            //
+            dragging: function (x, y) {
+              var curCoords = ctrl.translateCoordinates(x, y, evt);
+              var deltaX = curCoords.x - lastMouseCoords.x;
+              var deltaY = curCoords.y - lastMouseCoords.y;
+
+              chart.updateSelectedNodesLocation(deltaX, deltaY);
+
+              lastMouseCoords = curCoords;
+            },
+
+            //
+            // The node wasn't dragged... it was clicked.
+            //
+            clicked: function () {
+              chart.handleNodeClicked(node, evt.ctrlKey);
+            }
+
+          });
+        };
+
+        //
+        // Listen for node action
+        //
+        ctrl.nodeClickHandler = function (action, node) {
+          if (action === 'nodeActionConnect') {
+            ctrl.startConnectingMode(node);
+          }
+        };
+
+        ctrl.nodeCloseHandler = function () {
+          ctrl.mouseOverNode = null;
+        };
+
+        ctrl.connectingModeOutputConnector = null;
+        ctrl.connectingModeSourceNode = null;
+
+        ctrl.startConnectingMode = function (node) {
+          ctrl.chart.inConnectingMode = true;
+          ctrl.hideConnectors = false;
+          ctrl.connectingModeSourceNode = node;
+          ctrl.connectingModeSourceNode.select();
+          ctrl.connectingModeOutputConnector = node.getOutputConnector();
+          ctrl.chart.updateValidNodesAndConnectors(ctrl.connectingModeSourceNode);
+        };
+
+        ctrl.cancelConnectingMode = function () {
+          // if output connector not connected to something, remove it
+          if (!ctrl.connectingModeOutputConnector.connected()) {
+            ctrl.chart.removeOutputConnector(ctrl.connectingModeOutputConnector);
+          }
+          ctrl.stopConnectingMode();
+        };
+
+        ctrl.stopConnectingMode = function () {
+          ctrl.chart.inConnectingMode = false;
+          ctrl.chart.resetValidNodesAndConnectors();
+        };
+
+        //
+        // Handle connectionMouseOver on an connection.
+        //
+        ctrl.connectionMouseOver = function (evt, connection) {
+          if (!ctrl.draggingConnection && !ctrl.readOnly) {  // Only allow 'connection mouse over' when not dragging out a connection.
+            ctrl.mouseOverConnection = connection;
+          }
+        };
+
+        //
+        // Handle connectionMouseLeave on an connection.
+        //
+        ctrl.connectionMouseLeave = function () {
+          ctrl.mouseOverConnection = null;
+        };
+
+        //
+        // Handle mousedown on a connection.
+        //
+        ctrl.connectionMouseDown = function (evt, connection) {
+          var chart = ctrl.chart;
+          if (!ctrl.readOnly) {
+            chart.handleConnectionMouseDown(connection, evt.ctrlKey);
+          }
+          // Don't let the chart handle the mouse down.
+          evt.stopPropagation();
+          evt.preventDefault();
+        };
+
+        //
+        // Handle connectorMouseOver on an connector.
+        //
+        ctrl.connectorMouseOver = function (evt, node, connector) {
+          if (!ctrl.readOnly) {
+            ctrl.mouseOverConnector = connector;
+          }
+        };
+
+        //
+        // Handle connectorMouseLeave on an connector.
+        //
+        ctrl.connectorMouseLeave = function () {
+          ctrl.mouseOverConnector = null;
+        };
+
+        //
+        // Handle mousedown on an input connector.
+        //
+        ctrl.connectorMouseDown = function (evt, node) {
+          if (ctrl.chart.inConnectingMode && node !== ctrl.connectingModeSourceNode) {
+            ctrl.chart.createNewConnection(ctrl.connectingModeOutputConnector, ctrl.mouseOverConnector);
+            ctrl.stopConnectingMode();
+          }
+        };
+
+        //
+        // zoom.
+        //
+        $scope.$on('zoomIn', function () {
+          ctrl.chart.zoom.in();
+        });
+
+        $scope.$on('zoomOut', function () {
+          ctrl.chart.zoom.out();
+        });
+
+        $scope.maxZoom = function () {
+          return (ctrl.chart.chartViewModel && ctrl.chart.chartViewModel.zoom) ? ctrl.chart.chartViewModel.zoom.isMax() : false;
+        };
+        $scope.minZoom = function () {
+          return (ctrl.chart.chartViewModel && ctrl.chart.chartViewModel.zoom) ? ctrl.chart.chartViewModel.zoom.isMin() : false;
+        };
+
+        ctrl.zoomLevel = function () {
+          return ctrl.chart.zoom.getLevel();
+        };
+
+        ctrl.$onInit = function () {
+          var backspaceKeyCode = 8;
+          var deleteKeyCode = 46;
+          var aKeyCode = 65;
+          var escKeyCode = 27;
+
+          $document.find('body').keydown(function (evt) {
+
+            if (evt.keyCode === aKeyCode && evt.ctrlKey === true) {
+              //
+              // Ctrl + A
+              //
+              ctrl.selectAll();
+              $scope.$digest();
+              evt.stopPropagation();
+              evt.preventDefault();
+            }
+
+            if (evt.keyCode === deleteKeyCode || evt.keyCode === backspaceKeyCode) {
+              ctrl.deleteSelected();
+              $scope.$digest();
+            }
+
+            if (evt.keyCode === escKeyCode) {
+              ctrl.deselectAll();
+              $scope.$digest();
+            }
+          });
+        };
+      }]
     });
-
-    $scope.$on('nodeActionClosed', function () {
-      $scope.mouseOverNode = null;
-    });
-
-    $scope.connectingModeOutputConnector = null;
-    $scope.connectingModeSourceNode = null;
-
-    $scope.startConnectingMode = function (node) {
-      $scope.chart.inConnectingMode = true;
-      $scope.hideConnectors = false;
-      $scope.connectingModeSourceNode = node;
-      $scope.connectingModeSourceNode.select();
-      $scope.connectingModeOutputConnector = node.getOutputConnector();
-      $scope.chart.updateValidNodesAndConnectors($scope.connectingModeSourceNode);
-    };
-
-    $scope.cancelConnectingMode = function () {
-      // if output connector not connected to something, remove it
-      if (!$scope.connectingModeOutputConnector.connected()) {
-        $scope.chart.removeOutputConnector($scope.connectingModeOutputConnector);
-      }
-      $scope.stopConnectingMode();
-    };
-
-    $scope.stopConnectingMode = function () {
-      $scope.chart.inConnectingMode = false;
-      $scope.chart.resetValidNodesAndConnectors();
-    };
-
-    //
-    // Handle connectionMouseOver on an connection.
-    //
-    $scope.connectionMouseOver = function (evt, connection) {
-      if (!$scope.draggingConnection && !$scope.readOnly) {  // Only allow 'connection mouse over' when not dragging out a connection.
-        $scope.mouseOverConnection = connection;
-      }
-    };
-
-    //
-    // Handle connectionMouseLeave on an connection.
-    //
-    $scope.connectionMouseLeave = function (evt, connection) {
-      $scope.mouseOverConnection = null;
-    };
-
-    //
-    // Handle mousedown on a connection.
-    //
-    $scope.connectionMouseDown = function (evt, connection) {
-      var chart = $scope.chart;
-      if (!$scope.readOnly) {
-        chart.handleConnectionMouseDown(connection, evt.ctrlKey);
-      }
-      // Don't let the chart handle the mouse down.
-      evt.stopPropagation();
-      evt.preventDefault();
-    };
-
-    //
-    // Handle connectorMouseOver on an connector.
-    //
-    $scope.connectorMouseOver = function (evt, node, connector, connectorIndex, isInputConnector) {
-      if (!$scope.readOnly) {
-        $scope.mouseOverConnector = connector;
-      }
-    };
-
-    //
-    // Handle connectorMouseLeave on an connector.
-    //
-    $scope.connectorMouseLeave = function (evt, node, connector, connectorIndex, isInputConnector) {
-      $scope.mouseOverConnector = null;
-    };
-
-    //
-    // Handle mousedown on an input connector.
-    //
-    $scope.connectorMouseDown = function (evt, node, connector, connectorIndex, isInputConnector) {
-      if ($scope.chart.inConnectingMode && node !== $scope.connectingModeSourceNode) {
-        $scope.chart.createNewConnection($scope.connectingModeOutputConnector, $scope.mouseOverConnector);
-        $scope.stopConnectingMode();
-      }
-    };
-
-    //
-    // zoom.
-    //
-    $scope.$on('zoomIn', function (evt, args) {
-      $scope.chart.zoom.in();
-    });
-
-    $scope.$on('zoomOut', function (evt, args) {
-      $scope.chart.zoom.out();
-    });
-
-    $scope.maxZoom = function () {
-      return ($scope.chart.chartViewModel && $scope.chart.chartViewModel.zoom) ? $scope.chart.chartViewModel.zoom.isMax() : false;
-    };
-    $scope.minZoom = function () {
-      return ($scope.chart.chartViewModel && $scope.chart.chartViewModel.zoom) ? $scope.chart.chartViewModel.zoom.isMin() : false;
-    };
-
-    $scope.zoomLevel = function () {
-      return $scope.chart.zoom.getLevel();
-    };
-  }
-  ]);
 })();
 ;/* eslint-disable */
 //
@@ -2103,13 +2046,12 @@ var pfCanvas = {};
         mouseCapture.acquire(evt, {
           mouseMove: mouseMove,
           mouseUp: mouseUp,
-          released: released,
+          released: released
         });
 
         evt.stopPropagation();
         evt.preventDefault();
-      },
-
+      }
     };
   }
 })();
@@ -2205,7 +2147,7 @@ var pfCanvas = {};
 
         $element.unbind("mousemove", mouseMove);
         $element.unbind("mouseup", mouseUp);
-      },
+      }
     };
   }
 
@@ -2218,7 +2160,7 @@ var pfCanvas = {};
           // Register the directives element as the mouse capture element.
           //
           mouseCapture.registerElement($element);
-        }],
+        }]
 
     };
   }
@@ -2227,48 +2169,44 @@ var pfCanvas = {};
 ;(function () {
   'use strict';
 
-  nodeToolbarDirective.$inject = ["$document"];
   angular.module('patternfly.canvas')
-    .directive('nodeToolbar', nodeToolbarDirective);
-
-  function nodeToolbarDirective ($document) {
-    var directive = {
-      restrict: 'E',
-      scope: {
+    .component('nodeToolbar', {
+      templateUrl: 'canvas-view/canvas/node-toolbar.html',
+      bindings: {
         node: '=',
         nodeActions: '=',
+        nodeClickHandler: '<',
+        nodeCloseHandler: '<'
       },
-      controller: NodeToolbarController,
-      templateUrl: 'canvas-view/canvas/node-toolbar.html',
-      controllerAs: 'vm',
-      bindToController: true,
-    };
+      controller: ["$scope", function NodeToolbarController ($scope) {
+        var ctrl = this;
+        ctrl.selectedAction = 'none';
 
-    return directive;
+        ctrl.actionIconClicked = function (action) {
+          ctrl.selectedAction = action;
+          $scope.$emit('nodeActionClicked', {'action': action, 'node': ctrl.node});
+          if (angular.isFunction(ctrl.nodeClickHandler)) {
+            ctrl.nodeClickHandler(action, ctrl.node);
+          }
+        };
 
-    function NodeToolbarController ($scope) {
-      var vm = this;
-      vm.selectedAction = "none";
-
-      $scope.actionIconClicked = function (action) {
-        vm.selectedAction = action;
-        $scope.$emit('nodeActionClicked', {'action': action, 'node': vm.node});
-      };
-
-      $scope.close = function () {
-        vm.selectedAction = 'none';
-        $scope.$emit('nodeActionClosed');
-      };
-    }
-  }
+        ctrl.close = function () {
+          ctrl.selectedAction = 'none';
+          $scope.$emit('nodeActionClosed');
+          if (angular.isFunction(ctrl.nodeCloseHandler)) {
+            ctrl.nodeCloseHandler();
+          }
+        };
+      }]
+    });
 })();
 ;/**
  * @ngdoc directive
- * @name patternfly.canvas.directive:pfCanvas
+ * @name patternfly.canvas.component:pfCanvas
  * @restrict E
  *
  * @description
- * Directive for core operations and rendering of a canvas. Does not work in IE 11 or lower because they do not support
+ * Component for core operations and rendering of a canvas. Does not work in IE 11 or lower because they do not support
  * latest svg specification's 'foreignObject' api.  Tested in FireFox, Chrome, and MS-Edge.
  * @param {object} chartDataModel Chart data object which defines the nodes and connections on the canvas
  * <ul style='list-style-type: none'>
@@ -2301,6 +2239,12 @@ var pfCanvas = {};
  *       <li>.name      - (string) The name of the node action
  *       <li>.iconClass - (string) The icon class of the action.  Ex: "pf pficon-edit"
  *       <li>.action    - (string) The action identifier, which is passed along with the action event.
+ *     </ul>
+ *   <li>.actionIconClicked - function that listens for node actions/events when clicking the items within the node toolbar.
+ *     <ul style='list-style-type: none'>
+ *       <li>nodeClickHandler - (function) A function that starts the connection mode when clicking the items within the node toolbar. Passes the following arguments: string (action) and object (node) as parameters.
+ *       <li>$scope.$emit - (function) A function that listens to the action click event via $scope.$on to log the eventText when clicking the items within the node toolbar. Passes the following arguments: string ('nodeActionClicked') and object ({action, node}) as parameters.
+ *       Also is used to listen for when the mouse is currently over a node (or not) when an action is selected - in which it then passes the following argument: string ('nodeActionClosed') as parameters.
  *     </ul>
  *   <li>.connections  - An array of connections between nodes
  *     <ul style='list-style-type: none'>
@@ -2427,7 +2371,7 @@ var pfCanvas = {};
                     "fontFamily": "PatternFlyIcons-webfont",
                     "fontContent": "\ue621"
                   }
-                ],
+                ]
             },
             {
               "name": "NetApp",
@@ -2485,20 +2429,20 @@ var pfCanvas = {};
               "id": 1,
               "name": "connect",
               "iconClass": "fa fa-share-alt",
-              "action": "nodeActionConnect",
+              "action": "nodeActionConnect"
             },
             {
               "id": 2,
               "name": "edit",
               "iconClass": "pf pficon-edit",
-              "action": "nodeActionEdit",
+              "action": "nodeActionEdit"
             },
             {
               "id": 3,
               "name": "tag",
               "iconClass": "fa fa-tag",
-              "action": "nodeActionTag",
-            },
+              "action": "nodeActionTag"
+            }
           ],
           "connections": [
             {
@@ -2548,7 +2492,6 @@ var pfCanvas = {};
       "validConnectionTypes": ["network"]
      };
 
-     $scope.chartViewModel;
      $scope.readOnly = false;
      $scope.hideConnectors = false;
      $scope.eventText = "";
@@ -2563,7 +2506,7 @@ var pfCanvas = {};
        newNode.y = 200 + (numNewNodes * 4 + 160);
 
        $scope.chartViewModel.addNode(newNode);
-     }
+     };
 
      $scope.$on('nodeActionClicked', function(evt, args) {
        var action = args.action;
@@ -2573,27 +2516,27 @@ var pfCanvas = {};
 
      $scope.zoomIn = function() {
        $scope.$broadcast('zoomIn');
-     }
+     };
      $scope.zoomOut = function() {
        $scope.$broadcast('zoomOut');
-     }
+     };
 
      $scope.selectAll = function() {
        $scope.$broadcast('selectAll');
-     }
+     };
      $scope.deselectAll = function() {
        $scope.$broadcast('deselectAll');
-     }
+     };
      $scope.deleteSelected = function() {
        $scope.$broadcast('deleteSelected');
-     }
+     };
  });
  </file>
  </example>
  */
 ;/**
  * @ngdoc directive
- * @name patternfly.canvas.directive:pfCanvasEditor
+ * @name patternfly.canvas.component:pfCanvasEditor
  * @restrict E
  *
  * @description
@@ -2601,7 +2544,7 @@ var pfCanvas = {};
  * operations such as: Zoom In, Zoom Out, Hide Connections, Remove Node, and Duplicate Node.  Does not work in IE 11 or lower because they do not support
  * latest svg specification's 'foreignObject' api.  Tested in FireFox, Chrome, and MS-Edge.
  *
- * @param {object} chartDataModel Chart data object which defines the nodes and connections on the canvas. See {@link patternfly.canvas.directive:pfCanvas} for detailed information.
+ * @param {object} chartDataModel Chart data object which defines the nodes and connections on the canvas. See {@link patternfly.canvas.component:pfCanvas} for detailed information.
  * @param {object} chartViewModel (Optional) The chartViewModel is initialized from the chartDataModel and contains additional helper methods such as <code>chartViewModel.isOnlyOneNodeSelected()</code> and
  * <code>chartViewModel.getSelectedNodes()</code>.
  * @param {boolean} toolboxTabs An array of Tab objects used in the Toolbox.  Each Tab object many contain 'subtabs' and/or 'items'.  Items may be dragged onto the canvas.
@@ -2724,7 +2667,7 @@ var pfCanvas = {};
                     "fontFamily": "PatternFlyIcons-webfont",
                     "fontContent": "\ue621"
                   }
-                ],
+                ]
             },
             {
               "name": "NetApp",
@@ -2782,20 +2725,20 @@ var pfCanvas = {};
               "id": 1,
               "name": "connect",
               "iconClass": "fa fa-share-alt",
-              "action": "nodeActionConnect",
+              "action": "nodeActionConnect"
             },
             {
               "id": 2,
               "name": "edit",
               "iconClass": "pf pficon-edit",
-              "action": "nodeActionEdit",
+              "action": "nodeActionEdit"
             },
             {
               "id": 3,
               "name": "tag",
               "iconClass": "fa fa-tag",
-              "action": "nodeActionTag",
-            },
+              "action": "nodeActionTag"
+            }
           ],
           "connections": [
             {
@@ -2878,7 +2821,6 @@ var pfCanvas = {};
        }
      ];
 
-     $scope.chartViewModel;
      $scope.readOnly = false;
      $scope.eventText = "";
 
@@ -2917,7 +2859,7 @@ var pfCanvas = {};
        $scope.chartViewModel.addNode(duplicatedNode);
 
        angular.element("#duplicateItem").blur();
-     }
+     };
 
      function getCopyName(baseName) {
        // Test to see if we are duplicating an existing 'Copy'
@@ -18391,31 +18333,31 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
 
   $templateCache.put('canvas-view/canvas-editor/toolbox-items.html',
-    "<ul class=toolbox-items-list><li class=toolbox-item ng-repeat=\"item in vm.items | filter:vm.searchText\" data-drag={{!item.disableInToolbox}} jqyoui-draggable=\"{onStart:'vm.startDragCallbackfmDir(item)'}\" ng-class=\"{'not-draggable': item.disableInToolbox}\" data-jqyoui-options=\"{revert: 'invalid', helper: 'clone'}\" ng-click=vm.clickCallbackfmDir(item) uib-tooltip=\"{{(item.disableInToolbox ? 'Items cannot be added to the canvas more than once.' : '')}}\"><img ng-if=item.image src={{item.image}} alt=\"{{item.name}}\"> <i ng-if=\"item.icon && !item.image\" class=\"draggable-item-icon {{item.icon}}\"></i> <span>{{ item.name }}</span></li></ul>"
+    "<ul class=toolbox-items-list><li class=toolbox-item ng-repeat=\"item in $ctrl.items | filter:$ctrl.searchText\" data-drag={{!item.disableInToolbox}} jqyoui-draggable=\"{onStart:'$ctrl.startDragCallbackfmDir(item)'}\" ng-class=\"{'not-draggable': item.disableInToolbox}\" data-jqyoui-options=\"{revert: 'invalid', helper: 'clone'}\" ng-click=$ctrl.clickCallbackfmDir(item) uib-tooltip=\"{{(item.disableInToolbox ? 'Items cannot be added to the canvas more than once.' : '')}}\"><img ng-if=item.image src={{item.image}} alt=\"{{item.name}}\"> <i ng-if=\"item.icon && !item.image\" class=\"draggable-item-icon {{item.icon}}\"></i> <span>{{ item.name }}</span></li></ul>"
   );
 
 
   $templateCache.put('canvas-view/canvas/canvas.html',
-    "<svg class=\"canvas draggable-container\" xmlns=http://www.w3.org/2000/svg ng-mousedown=mouseDown($event) ng-mousemove=mouseMove($event) ng-class=\"{'read-only': readOnly, 'canvas-in-connection-mode': chart.inConnectingMode}\" ng-style=\"{'height': chart.zoom.getChartHeight() + 'px', 'width': chart.zoom.getChartWidth() + 'px', 'background-size': chart.zoom.getBackgroundSize() + 'px '+  chart.zoom.getBackgroundSize() + 'px'}\" mouse-capture><!-- Zoom --><g ng-attr-transform=scale({{zoomLevel()}})><!-- Connection Mode Notification --><g ng-if=chart.inConnectingMode><rect class=connecting-mode-rec ry=1 rx=1 x=0 y=0 width=640 height=32></rect><text class=connecting-mode-label x=12 y=22 ng-if=availableConnections()>Select a second item to complete the connection or click on the canvas to cancel</text><text class=connecting-mode-label-warning x=12 y=22 ng-if=!availableConnections()>No available connections! Click on the canvas to cancel</text></g><!-- Main Node Loop --><g ng-repeat=\"node in chart.nodes\" ng-mousedown=\"nodeMouseDown($event, node)\" ng-mouseover=\"nodeMouseOver($event, node)\" ng-mouseleave=\"nodeMouseLeave($event, node)\" ng-attr-transform=\"translate({{node.x()}}, {{node.y()}})\"><!-- Node --><rect ng-class=\"{'invalid-node-rect': node.invalid(), 'selected-node-rect': node.selected(), 'mouseover-node-rect': node == mouseOverNode, 'node-rect': node != mouseOverNode}\" ry=0 rx=0 x=0 y=0 ng-attr-width={{node.width()}} ng-attr-height={{node.height()}} fill={{node.backgroundColor()}} fill-opacity=1.0></rect><!-- Node Title: no-wrap --><text ng-if=!foreignObjectSupported() class=node-header ng-class=\"{'invalid-node-header': node.invalid()}\" ng-attr-x={{node.width()/2}} ng-attr-y=\"{{node.height() - 24}}\" text-anchor=middle alignment-baseline=middle>{{node.name()}}</text><!-- Node Title: text wrap --><foreignobject ng-if=foreignObjectSupported() x=0 ng-attr-y=\"{{node.height() - 42}}\" ng-attr-width={{node.width()}} ng-attr-height=\"{{node.height() - 42}}\"><body><div class=node-header ng-attr-width={{node.width()}} ng-attr-height=\"{{node.height() - 42}}\"><p ng-class=\"{'invalid-node-header': node.invalid()}\" ng-style=\"{width: node.width()}\">{{node.name()}}</p></div></body></foreignobject><!-- Node Image --><image ng-if=node.image() class=node-center-img ng-class=\"{'invalid-node-img': node.invalid()}\" ng-href=\"{{node.image() | trustAsResourceUrl}}\" xlink:href=\"\" ng-attr-x=\"{{(node.width()/2) - 40}}\" ng-attr-y={{20}} height=80px width=80px></image><!-- Node Icon: icon class --><foreignobject ng-if=\"node.icon() && !node.image() && foreignObjectSupported()\" ng-attr-x=\"{{(node.width()/2) - 44}}\" ng-attr-y=\"{{(node.height()/2) - 54}}\" ng-attr-height={{node.height()}}px ng-attr-width={{node.width()}}px class=node-center-img-icon ng-class=\"{'invalid-node-header': node.invalid()}\"><body><i class={{node.icon()}} ng-style=\"{'font-size': node.fontSize() ? node.fontSize() : '76px'}\"></i></body></foreignobject><!-- Node Icon: fontContent --><text ng-if=\"node.fontFamily() && !node.image()\" class=node-center-icon ng-class=\"{'invalid-node-header': node.invalid()}\" font-family={{node.fontFamily()}} ng-attr-x=\"{{(node.width()/2) - 34 + ((node.bundle()) ? 4 : 0) }}\" ng-attr-y={{90}}>{{node.fontContent()}}</text><!-- Sm. Top Left Bundle Icon --><text ng-if=node.bundle() class=bundle-icon x=6 y=22 font-family=PatternFlyIcons-webfont font-size=20>{{'\\ue918'}}</text><!-- Bottom Node Toolbar --><g id=nodeToolBar ng-if=\"node == mouseOverNode && !chart.inConnectingMode\"><g class=svg-triangle><polyline points=\"4,152 14,140 24,152\"></polyline></g><foreignobject ng-attr-x={{node.x}} ng-attr-y={{node.height()+1}} ng-mousedown=$event.stopPropagation() height=100% width=100%><body><node-toolbar node=node node-actions=chart.nodeActions></node-toolbar></body></foreignobject></g><!-- Connected Input Connectors --><g ng-if=!hideConnectors ng-repeat=\"connector in node.inputConnectors | filter: isConnectorConnected\" ng-mousedown=\"connectorMouseDown($event, node, connector, $index, true)\" ng-mouseover=\"connectorMouseOver($event, node, connector, $index, true)\" ng-mouseleave=\"connectorMouseLeave($event, node, connector, $index, true)\" class=\"connector input-connector\"><circle ng-if=\"!chart.inConnectingMode || isConnectedTo(connector, connectingModeSourceNode)\" ng-class=\"{'mouseover-connector-circle': connector == mouseOverConnector,\n" +
-    "                   'connector-circle': connector != mouseOverConnector}\" ng-attr-r={{connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g><!-- Unconnected Input Connectors --><g ng-if=chart.inConnectingMode ng-repeat=\"connector in node.inputConnectors | filter: isConnectorUnconnectedAndValid\" ng-mousedown=\"connectorMouseDown($event, node, connector, $index, true)\" ng-mouseover=\"connectorMouseOver($event, node, connector, $index, true)\" ng-mouseleave=\"connectorMouseLeave($event, node, connector, $index, true)\" class=\"connector input-connector\"><text ng-if=connector.fontFamily() class=connector-icons font-family={{connector.fontFamily()}} ng-attr-x=\"{{connector.x() - 28}}\" ng-attr-y=\"{{connector.y() + 7}}\">{{connector.fontContent()}}</text><circle ng-class=\"{'unconnected-circle': connector != mouseOverConnector,\n" +
-    "                         'mouseover-unconnected-circle': connector == mouseOverConnector}\" ng-attr-r={{connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle><g ng-if=\"connector == mouseOverConnector\"><rect class=connector-tooltip ry=1 rx=1 ng-attr-x=\"{{connector.x() - 4}}\" ng-attr-y=\"{{connector.y() + 12}}\" ng-attr-width={{80}} height=20></rect><text class=connector-tooltip-text ng-attr-x=\"{{connector.x() + 2}}\" ng-attr-y=\"{{connector.y() + 26}}\" text-anchor=start alignment-baseline=top>{{connector.name()}}</text></g></g><!-- Output Connector --><g ng-if=!hideConnectors ng-repeat=\"connector in node.outputConnectors\" ng-mousedown=\"connectorMouseDown($event, node, connector, $index, false)\" ng-mouseover=\"connectorMouseOver($event, node, connector, $index, false)\" ng-mouseleave=\"connectorMouseLeave($event, node, connector, $index, false)\" class=\"connector output-connector\"><circle ng-if=\"!chart.inConnectingMode || (connectingModeSourceNode === connector.parentNode())\" ng-class=\"{'connector-circle': connector != mouseOverConnector,\n" +
-    "                   'mouseover-connector-circle': connector == mouseOverConnector}\" ng-attr-r={{connectorSize}} ng-attr-r={{connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g></g><!--  End Nodes Loop --><!-- Connections --><g ng-if=!hideConnectors ng-repeat=\"connection in chart.connections\" class=connection ng-mousedown=\"connectionMouseDown($event, connection)\" ng-mouseover=\"connectionMouseOver($event, connection)\" ng-mouseleave=\"connectionMouseLeave($event, connection)\"><g ng-if=\"!chart.inConnectingMode || connectingModeSourceNode === connection.source.parentNode()\"><path ng-class=\"{'selected-connection-line': connection.selected(),\n" +
-    "                     'mouseover-connection-line': connection == mouseOverConnection,\n" +
-    "                     'connection-line': connection != mouseOverConnection}\" ng-attr-d=\"M {{connection.sourceCoordX()}}, {{connection.sourceCoordY()}}\n" +
+    "<svg class=\"canvas draggable-container\" xmlns=http://www.w3.org/2000/svg ng-mousedown=$ctrl.mouseDown($event) ng-mousemove=mouseMove($event) ng-class=\"{'read-only': $ctrl.readOnly, 'canvas-in-connection-mode': $ctrl.chart.inConnectingMode}\" ng-style=\"{'height': $ctrl.chart.zoom.getChartHeight() + 'px', 'width': $ctrl.chart.zoom.getChartWidth() + 'px', 'background-size': $ctrl.chart.zoom.getBackgroundSize() + 'px '+  chart.zoom.getBackgroundSize() + 'px'}\" mouse-capture><!-- Zoom --><g ng-attr-transform=scale({{$ctrl.zoomLevel()}})><!-- Connection Mode Notification --><g ng-if=$ctrl.chart.inConnectingMode><rect class=connecting-mode-rec ry=1 rx=1 x=0 y=0 width=640 height=32></rect><text class=connecting-mode-label x=12 y=22 ng-if=$ctrl.availableConnections()>Select a second item to complete the connection or click on the canvas to cancel</text><text class=connecting-mode-label-warning x=12 y=22 ng-if=!$ctrl.availableConnections()>No available connections! Click on the canvas to cancel</text></g><!-- Main Node Loop --><g ng-repeat=\"node in $ctrl.chart.nodes\" ng-mousedown=\"$ctrl.nodeMouseDown($event, node)\" ng-mouseover=\"$ctrl.nodeMouseOver($event, node)\" ng-mouseleave=\"$ctrl.nodeMouseLeave($event, node)\" ng-attr-transform=\"translate({{node.x()}}, {{node.y()}})\"><!-- Node --><rect ng-class=\"{'invalid-node-rect': node.invalid(), 'selected-node-rect': node.selected(), 'mouseover-node-rect': node == $ctrl.mouseOverNode, 'node-rect': node != $ctrl.mouseOverNode}\" ry=0 rx=0 x=0 y=0 ng-attr-width={{node.width()}} ng-attr-height={{node.height()}} fill={{node.backgroundColor()}} fill-opacity=1.0></rect><!-- Node Title: no-wrap --><text ng-if=!$ctrl.foreignObjectSupported() class=node-header ng-class=\"{'invalid-node-header': node.invalid()}\" ng-attr-x={{node.width()/2}} ng-attr-y=\"{{node.height() - 24}}\" text-anchor=middle alignment-baseline=middle>{{node.name()}}</text><!-- Node Title: text wrap --><foreignobject ng-if=$ctrl.foreignObjectSupported() x=0 ng-attr-y=\"{{node.height() - 42}}\" ng-attr-width={{node.width()}} ng-attr-height=\"{{node.height() - 42}}\"><body><div class=node-header ng-attr-width={{node.width()}} ng-attr-height=\"{{node.height() - 42}}\"><p ng-class=\"{'invalid-node-header': node.invalid()}\" ng-style=\"{width: node.width()}\">{{node.name()}}</p></div></body></foreignobject><!-- Node Image --><image ng-if=node.image() class=node-center-img ng-class=\"{'invalid-node-img': node.invalid()}\" ng-href=\"{{node.image() | trustAsResourceUrl}}\" xlink:href=\"\" ng-attr-x=\"{{(node.width()/2) - 40}}\" ng-attr-y={{20}} height=80px width=80px></image><!-- Node Icon: icon class --><foreignobject ng-if=\"node.icon() && !node.image() && $ctrl.foreignObjectSupported()\" ng-attr-x=\"{{(node.width()/2) - 44}}\" ng-attr-y=\"{{(node.height()/2) - 54}}\" ng-attr-height={{node.height()}}px ng-attr-width={{node.width()}}px class=node-center-img-icon ng-class=\"{'invalid-node-header': node.invalid()}\"><body><i class={{node.icon()}} ng-style=\"{'font-size': node.fontSize() ? node.fontSize() : '76px'}\"></i></body></foreignobject><!-- Node Icon: fontContent --><text ng-if=\"node.fontFamily() && !node.image()\" class=node-center-icon ng-class=\"{'invalid-node-header': node.invalid()}\" font-family={{node.fontFamily()}} ng-attr-x=\"{{(node.width()/2) - 34 + ((node.bundle()) ? 4 : 0) }}\" ng-attr-y={{90}}>{{node.fontContent()}}</text><!-- Sm. Top Left Bundle Icon --><text ng-if=node.bundle() class=bundle-icon x=6 y=22 font-family=PatternFlyIcons-webfont font-size=20>{{'\\ue918'}}</text><!-- Bottom Node Toolbar --><g id=nodeToolBar ng-if=\"node == $ctrl.mouseOverNode && !$ctrl.chart.inConnectingMode\"><g class=svg-triangle><polyline points=\"4,152 14,140 24,152\"></polyline></g><foreignobject ng-attr-x={{node.x}} ng-attr-y={{node.height()+1}} ng-mousedown=$event.stopPropagation() height=100% width=100%><body><node-toolbar node=node node-actions=$ctrl.chart.nodeActions node-click-handler=$ctrl.nodeClickHandler node-close-handler=$ctrl.nodeCloseHandler></node-toolbar></body></foreignobject></g><!-- Connected Input Connectors --><g ng-if=!$ctrl.hideConnectors ng-repeat=\"connector in node.inputConnectors | filter: $ctrl.isConnectorConnected\" ng-mousedown=\"$ctrl.connectorMouseDown($event, node, connector, $index, true)\" ng-mouseover=\"$ctrl.connectorMouseOver($event, node, connector, $index, true)\" ng-mouseleave=\"$ctrl.connectorMouseLeave($event, node, connector, $index, true)\" class=\"connector input-connector\"><circle ng-if=\"!$ctrl.chart.inConnectingMode || $ctrl.isConnectedTo(connector, connectingModeSourceNode)\" ng-class=\"{'mouseover-connector-circle': connector == $ctrl.mouseOverConnector,\n" +
+    "                   'connector-circle': connector != $ctrl.mouseOverConnector}\" ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g><!-- Unconnected Input Connectors --><g ng-if=$ctrl.chart.inConnectingMode ng-repeat=\"connector in node.inputConnectors | filter: $ctrl.isConnectorUnconnectedAndValid\" ng-mousedown=\"$ctrl.connectorMouseDown($event, node, connector, $index, true)\" ng-mouseover=\"$ctrl.connectorMouseOver($event, node, connector, $index, true)\" ng-mouseleave=\"$ctrl.connectorMouseLeave($event, node, connector, $index, true)\" class=\"connector input-connector\"><text ng-if=connector.fontFamily() class=connector-icons font-family={{connector.fontFamily()}} ng-attr-x=\"{{connector.x() - 28}}\" ng-attr-y=\"{{connector.y() + 7}}\">{{connector.fontContent()}}</text><circle ng-class=\"{'unconnected-circle': connector != $ctrl.mouseOverConnector,\n" +
+    "                         'mouseover-unconnected-circle': connector == $ctrl.mouseOverConnector}\" ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle><g ng-if=\"connector == $ctrl.mouseOverConnector\"><rect class=connector-tooltip ry=1 rx=1 ng-attr-x=\"{{connector.x() - 4}}\" ng-attr-y=\"{{connector.y() + 12}}\" ng-attr-width={{80}} height=20></rect><text class=connector-tooltip-text ng-attr-x=\"{{connector.x() + 2}}\" ng-attr-y=\"{{connector.y() + 26}}\" text-anchor=start alignment-baseline=top>{{connector.name()}}</text></g></g><!-- Output Connector --><g ng-if=!$ctrl.hideConnectors ng-repeat=\"connector in node.outputConnectors\" ng-mousedown=\"$ctrl.connectorMouseDown($event, node, connector, $index, false)\" ng-mouseover=\"$ctrl.connectorMouseOver($event, node, connector, $index, false)\" ng-mouseleave=\"$ctrl.connectorMouseLeave($event, node, connector, $index, false)\" class=\"connector output-connector\"><circle ng-if=\"!$ctrl.chart.inConnectingMode || ($ctrl.connectingModeSourceNode === connector.parentNode())\" ng-class=\"{'connector-circle': connector != $ctrl.mouseOverConnector,\n" +
+    "                   'mouseover-connector-circle': connector == $ctrl.mouseOverConnector}\" ng-attr-r={{$ctrl.connectorSize}} ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g></g><!--  End Nodes Loop --><!-- Connections --><g ng-if=!$ctrl.hideConnectors ng-repeat=\"connection in $ctrl.chart.connections\" class=connection ng-mousedown=\"$ctrl.connectionMouseDown($event, connection)\" ng-mouseover=\"$ctrl.connectionMouseOver($event, connection)\" ng-mouseleave=\"$ctrl.connectionMouseLeave($event, connection)\"><g ng-if=\"!$ctrl.chart.inConnectingMode || connectingModeSourceNode === connection.source.parentNode()\"><path ng-class=\"{'selected-connection-line': connection.selected(),\n" +
+    "                     'mouseover-connection-line': connection == $ctrl.mouseOverConnection,\n" +
+    "                     'connection-line': connection != $ctrl.mouseOverConnection}\" ng-attr-d=\"M {{connection.sourceCoordX()}}, {{connection.sourceCoordY()}}\n" +
     "                     C {{connection.sourceTangentX()}}, {{connection.sourceTangentY()}}\n" +
     "                       {{connection.destTangentX()}}, {{connection.destTangentY()}}\n" +
-    "                       {{connection.destCoordX()}}, {{connection.destCoordY()}}\"></path><text ng-if=\"connection == mouseOverConnection\" ng-class=\"{'selected-connection-name': connection.selected(),\n" +
-    "                     'mouseover-connection-name': connection == mouseOverConnection && !connection.selected(),\n" +
-    "                     'connection-name': connection != mouseOverConnection && !connection.selected()}\" ng-attr-x={{connection.middleX()}} ng-attr-y={{connection.middleY()}} text-anchor=middle alignment-baseline=middle>{{connection.name()}}</text><circle ng-class=\"{'selected-connection-endpoint': connection.selected(),\n" +
-    "                       'mouseover-connection-endpoint': connection == mouseOverConnection && !connection.selected(),\n" +
-    "                       'connection-endpoint': connection != mouseOverConnection && !connection.selected()}\" r=5 ng-attr-cx={{connection.sourceCoordX()}} ng-attr-cy={{connection.sourceCoordY()}}></circle><circle ng-class=\"{'selected-connection-endpoint': connection.selected(),\n" +
-    "                       'mouseover-connection-endpoint': connection == mouseOverConnection && !connection.selected(),\n" +
-    "                       'connection-endpoint': connection != mouseOverConnection && !connection.selected()}\" r=5 ng-attr-cx={{connection.destCoordX()}} ng-attr-cy={{connection.destCoordY()}}></circle></g></g><rect ng-if=dragSelecting class=drag-selection-rect ng-attr-x={{dragSelectionRect.x}} ng-attr-y={{dragSelectionRect.y}} ng-attr-width={{dragSelectionRect.width}} ng-attr-height={{dragSelectionRect.height}}></rect></g></svg>"
+    "                       {{connection.destCoordX()}}, {{connection.destCoordY()}}\"></path><text ng-if=\"connection == $ctrl.mouseOverConnection\" ng-class=\"{'selected-connection-name': connection.selected(),\n" +
+    "                     'mouseover-connection-name': connection == $ctrl.mouseOverConnection && !connection.selected(),\n" +
+    "                     'connection-name': connection != $ctrl.mouseOverConnection && !connection.selected()}\" ng-attr-x={{connection.middleX()}} ng-attr-y={{connection.middleY()}} text-anchor=middle alignment-baseline=middle>{{connection.name()}}</text><circle ng-class=\"{'selected-connection-endpoint': connection.selected(),\n" +
+    "                       'mouseover-connection-endpoint': connection == $ctrl.mouseOverConnection && !connection.selected(),\n" +
+    "                       'connection-endpoint': connection != $ctrl.mouseOverConnection && !connection.selected()}\" r=5 ng-attr-cx={{connection.sourceCoordX()}} ng-attr-cy={{connection.sourceCoordY()}}></circle><circle ng-class=\"{'selected-connection-endpoint': connection.selected(),\n" +
+    "                       'mouseover-connection-endpoint': connection == $ctrl.mouseOverConnection && !connection.selected(),\n" +
+    "                       'connection-endpoint': connection != $ctrl.mouseOverConnection && !connection.selected()}\" r=5 ng-attr-cx={{connection.destCoordX()}} ng-attr-cy={{connection.destCoordY()}}></circle></g></g><rect ng-if=$ctrl.dragSelecting class=drag-selection-rect ng-attr-x={{$ctrl.dragSelectionRect.x}} ng-attr-y={{$ctrl.dragSelectionRect.y}} ng-attr-width={{$ctrl.dragSelectionRect.width}} ng-attr-height={{$ctrl.dragSelectionRect.height}}></rect></g></svg>"
   );
 
 
   $templateCache.put('canvas-view/canvas/node-toolbar.html',
-    "<div class=node-toolbar ng-style=\"{width: vm.node.width()}\"><span ng-repeat=\"nodeAction in vm.nodeActions\" class=\"{{nodeAction.iconClass()}} node-toolbar-icons\" ng-click=actionIconClicked(nodeAction.action())></span></div>"
+    "<div class=node-toolbar ng-style=\"{width: $ctrl.node.width()}\"><span ng-repeat=\"nodeAction in $ctrl.nodeActions\" class=\"{{nodeAction.iconClass()}} node-toolbar-icons\" ng-click=$ctrl.actionIconClicked(nodeAction.action())></span></div>"
   );
 
 }]);

@@ -1,10 +1,10 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/canvas-view/examples/canvas.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/75b6a78/src/canvas-view/examples/canvas.js#L330" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCanvas</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/canvas-view/examples/canvas.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/cbf373d/src/canvas-view/examples/canvas.js#L335" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCanvas</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.canvas</code>
 </span>
 </div>
 </h1>
 <div><h2 id="description">Description</h2>
-<div class="description"><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvas-page"><p>Directive for core operations and rendering of a canvas. Does not work in IE 11 or lower because they do not support
+<div class="description"><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvas-page"><p>Component for core operations and rendering of a canvas. Does not work in IE 11 or lower because they do not support
 latest svg specification&#39;s &#39;foreignObject&#39; api.  Tested in FireFox, Chrome, and MS-Edge.</p>
 </div></div>
 <h2 id="usage">Usage</h2>
@@ -14,7 +14,7 @@ latest svg specification&#39;s &#39;foreignObject&#39; api.  Tested in FireFox, 
        read-only
        hide-connectors="{boolean}"&gt;
 &lt;/pf-canvas&gt;</pre>
-<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>chartDataModel</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvas-page"><p>Chart data object which defines the nodes and connections on the canvas</p>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>chartDataModel</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvas-page"><p>Chart data object which defines the nodes and connections on the canvas</p>
 <ul style='list-style-type: none'>
   <li>.nodes  - An array of node objects.  For each node&#39;s main icon/image you can define either an <em>image url</em>, an <em>icon class</em>, or
   <em>fontContent</em> unicode characters.  For more information please see the details below:
@@ -46,6 +46,12 @@ latest svg specification&#39;s &#39;foreignObject&#39; api.  Tested in FireFox, 
       <li>.iconClass - (string) The icon class of the action.  Ex: &quot;pf pficon-edit&quot;
       <li>.action    - (string) The action identifier, which is passed along with the action event.
     </ul>
+  <li>.actionIconClicked - function that listens for node actions/events when clicking the items within the node toolbar.
+    <ul style='list-style-type: none'>
+      <li>nodeClickHandler - (function) A function that starts the connection mode when clicking the items within the node toolbar. Passes the following arguments: string (action) and object (node) as parameters.
+      <li>$scope.$emit - (function) A function that listens to the action click event via $scope.$on to log the eventText when clicking the items within the node toolbar. Passes the following arguments: string (&#39;nodeActionClicked&#39;) and object ({action, node}) as parameters.
+      Also is used to listen for when the mouse is currently over a node (or not) when an action is selected - in which it then passes the following argument: string (&#39;nodeActionClosed&#39;) as parameters.
+    </ul>
   <li>.connections  - An array of connections between nodes
     <ul style='list-style-type: none'>
       <li>.source - (object) The source of a connection
@@ -59,13 +65,13 @@ latest svg specification&#39;s &#39;foreignObject&#39; api.  Tested in FireFox, 
           <li>.connectorIndex - (number) The index of the input connector on the dest/target node to connect.  Zero equals the top input connector, increment for subsequent input connectors.
         </ul>
     </ul>
-</ul></div></td></tr><tr><td>chartViewModel</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvas-page"><p>(Optional) The chartViewModel is initialized from the chartDataModel and contains additional helper methods such as <code>chartViewModel.isOnlyOneNodeSelected()</code> and
+</ul></div></td></tr><tr><td>chartViewModel</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvas-page"><p>(Optional) The chartViewModel is initialized from the chartDataModel and contains additional helper methods such as <code>chartViewModel.isOnlyOneNodeSelected()</code> and
 <code>chartViewModel.getSelectedNodes()</code>.  You only need to specify a chartViewModel object if you plan on using advanced canvas operations.</p>
-</div></td></tr><tr><td>readOnly</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvas-page"><p>A flag indicating whether the canvas is in &#39;read-only&#39; mode.  When in &#39;read-only&#39; mode nodes cannot be moved, selected, or deleted, and the node action toolbar is hidden.</p>
-</div></td></tr><tr><td>hideConnectors</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvas-page"><p>A flag indicating whether connections should be hidden or shown on the canvas</p>
+</div></td></tr><tr><td>readOnly</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvas-page"><p>A flag indicating whether the canvas is in &#39;read-only&#39; mode.  When in &#39;read-only&#39; mode nodes cannot be moved, selected, or deleted, and the node action toolbar is hidden.</p>
+</div></td></tr><tr><td>hideConnectors</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvas-page"><p>A flag indicating whether connections should be hidden or shown on the canvas</p>
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
-<div class="example"><div class="patternfly-canvas-directive-page patternfly-canvas-directive-pfcanvas-page"><h4 id="example_source">Source</h4>
+<div class="example"><div class="patternfly-canvas-component-page patternfly-canvas-component-pfcanvas-page"><h4 id="example_source">Source</h4>
 <div source-edit="patternfly.canvas.demo" source-edit-deps="angular.js modules.js script.js" source-edit-html="index.html-0" source-edit-css="" source-edit-js="modules.js script.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
 <pre class="prettyprint linenums" ng-set-text="index.html-0" ng-html-wrap-loaded="patternfly.canvas.demo angular.js modules.js script.js"></pre>
@@ -178,7 +184,7 @@ angular.module( 'patternfly.canvas.demo' ).controller( 'CanvasDemoCtrl', functio
                    "fontFamily": "PatternFlyIcons-webfont",
                    "fontContent": "\ue621"
                  }
-               ],
+               ]
            },
            {
              "name": "NetApp",
@@ -236,20 +242,20 @@ angular.module( 'patternfly.canvas.demo' ).controller( 'CanvasDemoCtrl', functio
              "id": 1,
              "name": "connect",
              "iconClass": "fa fa-share-alt",
-             "action": "nodeActionConnect",
+             "action": "nodeActionConnect"
            },
            {
              "id": 2,
              "name": "edit",
              "iconClass": "pf pficon-edit",
-             "action": "nodeActionEdit",
+             "action": "nodeActionEdit"
            },
            {
              "id": 3,
              "name": "tag",
              "iconClass": "fa fa-tag",
-             "action": "nodeActionTag",
-           },
+             "action": "nodeActionTag"
+           }
          ],
          "connections": [
            {
@@ -299,7 +305,6 @@ angular.module( 'patternfly.canvas.demo' ).controller( 'CanvasDemoCtrl', functio
      "validConnectionTypes": ["network"]
     };
 
-    $scope.chartViewModel;
     $scope.readOnly = false;
     $scope.hideConnectors = false;
     $scope.eventText = "";
@@ -314,7 +319,7 @@ angular.module( 'patternfly.canvas.demo' ).controller( 'CanvasDemoCtrl', functio
       newNode.y = 200 + (numNewNodes * 4 + 160);
 
       $scope.chartViewModel.addNode(newNode);
-    }
+    };
 
     $scope.$on('nodeActionClicked', function(evt, args) {
       var action = args.action;
@@ -324,20 +329,20 @@ angular.module( 'patternfly.canvas.demo' ).controller( 'CanvasDemoCtrl', functio
 
     $scope.zoomIn = function() {
       $scope.$broadcast('zoomIn');
-    }
+    };
     $scope.zoomOut = function() {
       $scope.$broadcast('zoomOut');
-    }
+    };
 
     $scope.selectAll = function() {
       $scope.$broadcast('selectAll');
-    }
+    };
     $scope.deselectAll = function() {
       $scope.$broadcast('deselectAll');
-    }
+    };
     $scope.deleteSelected = function() {
       $scope.$broadcast('deleteSelected');
-    }
+    };
 });
 </script>
 </div>
