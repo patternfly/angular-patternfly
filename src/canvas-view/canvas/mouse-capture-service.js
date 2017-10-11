@@ -89,7 +89,7 @@
 
         $element.unbind("mousemove", mouseMove);
         $element.unbind("mouseup", mouseUp);
-      },
+      }
     };
   }
 
@@ -102,7 +102,7 @@
           // Register the directives element as the mouse capture element.
           //
           mouseCapture.registerElement($element);
-        }],
+        }]
 
     };
   }
