@@ -53,15 +53,15 @@
 
        $scope.getChart = function (chart) {
          $scope.chart = chart;
-       }
+       };
 
        $scope.focusUsed = function () {
          $scope.chart.focus("Used");
-       }
+       };
 
        $scope.updateAvailable = function (val) {
          $scope.available =  $scope.total - $scope.used;
-       }
+       };
 
        $scope.submitform = function (val) {
          console.log("submitform");

@@ -372,7 +372,7 @@ angular.module('patternfly.table').component('pfTableView', {
       //        page length === 3
       //     returns ['Mary Jane', 'Fred Flinstone', 'Frank Livingston']
       //
-      var i, rowData, visibleRows = new Array();
+      var i, rowData, visibleRows = [];
 
       var anNodes = document.querySelectorAll("#" + ctrl.tableId + "  tbody tr");
 

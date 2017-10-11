@@ -60,7 +60,7 @@
          <div class="form-group">
            <label class="col-sm-2 control-label" for="type">Persistent:</label>
            <div class="col-sm-10">
-            <input type="checkbox" ng-model="notification.isPersistent"></input>
+            <input type="checkbox" ng-model="notification.isPersistent"/>
            </div>
          </div>
        </form>

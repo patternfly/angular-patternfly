@@ -24,7 +24,7 @@ angular.module('patternfly.form').directive('pfRemainingCharsCount', function ($
 
         // creating scope vars for unit testing
         $scope.remainingChars = remainingChars;
-        $scope.remainingCharsWarning = (remainingChars <= charsWarnRemaining ? true : false);
+        $scope.remainingCharsWarning = (remainingChars <= charsWarnRemaining);
 
         countRemainingFld.text(remainingChars);
         countRemainingFld.toggleClass('chars-warn-remaining-pf', remainingChars <= charsWarnRemaining);

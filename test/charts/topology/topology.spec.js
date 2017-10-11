@@ -69,7 +69,7 @@ describe('Component: pfTopology', function() {
           "miq_id": 10000000000061,
           "status": "Unknown",
           "display_kind": "Service"
-        },
+        }
       },
       "relations": [
         {
@@ -245,11 +245,11 @@ describe('Component: pfTopology', function() {
     var body = angular.element(document.body);
     body.append(elementDiv);
     compileTopology(body, $scope);
-    var disabledNodes = body.find('g[style="opacity: 0.2;"]')
+    var disabledNodes = body.find('g[style="opacity: 0.2;"]');
     expect(disabledNodes.length).toBe(0);
     $scope.searchText = 'vrguw';
     $scope.$digest();
-    disabledNodes = body.find('g[style="opacity: 0.2;"]')
+    disabledNodes = body.find('g[style="opacity: 0.2;"]');
     expect(disabledNodes.length).toBe(5);
   });
 });

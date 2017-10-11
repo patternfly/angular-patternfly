@@ -128,7 +128,7 @@ describe('Component: pfCard', function() {
 
       expect(isoScope.footerCallBackResult).toEqual('Footer Callback Fn Called');
 
-      var spans = cardClass.find('span');
+      spans = cardClass.find('span');
       expect(spans.length).toBe(2);
       expect(spans.eq(0)).toHaveClass('fa fa-flag');
       expect(spans.eq(1).html()).toBe('View All Events');
