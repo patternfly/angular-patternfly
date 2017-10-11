@@ -33,7 +33,7 @@ describe('Directive: pfFormGroup', function() {
   });
 
   it("should display validation error messages if they exist", function() {
-    $scope.testForm.name.$error.messages = ['Error message']
+    $scope.testForm.name.$error.messages = ['Error message'];
     $scope.$digest();
 
     expect(element.find('.help-block').hasClass('ng-hide')).toBe(false);

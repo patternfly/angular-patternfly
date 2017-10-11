@@ -56,7 +56,7 @@
          'callBackFn': function () {
             alert("Footer Callback Fn Called");
           }
-       }
+       };
 
        $scope.filterConfigHeader = {
          'filters' : [{label:'Last 30 Days', value:'30'},
@@ -66,7 +66,7 @@
             alert("Header Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
           },
         'position' : 'header'
-       }
+       };
 
        $scope.filterConfig = {
          'filters' : [{label:'Last 30 Days', value:'30'},
@@ -76,7 +76,7 @@
             alert("Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
           },
         'defaultFilter' : '1'
-       }
+       };
      });
  </file>
  </example>

@@ -107,21 +107,21 @@
 
     $scope.data3 = {
       'used': '420',
-      'total': '500',
+      'total': '500'
     };
 
     $scope.title4 = 'Disk Usage';
     $scope.units4 = 'TB';
     $scope.data4 = {
       'used': '350',
-      'total': '500',
+      'total': '500'
     };
 
     $scope.title5 = 'Disk I/O';
     $scope.units5 = 'I/Ops';
     $scope.data5 = {
       'used': '450',
-      'total': '500',
+      'total': '500'
     };
 
     $interval(function () {

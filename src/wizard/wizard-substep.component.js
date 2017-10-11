@@ -79,7 +79,6 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
         ctrl.allowClickNav = true;
       }
 
-
       ctrl.step.nextEnabled = ctrl.nextEnabled;
       ctrl.step.prevEnabled = ctrl.prevEnabled;
       ctrl.step.okToNavAway = ctrl.okToNavAway;

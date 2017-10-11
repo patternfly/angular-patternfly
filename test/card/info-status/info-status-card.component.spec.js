@@ -39,7 +39,7 @@ describe('Component: pfInfoStatusCard', function () {
       // border, ie. having a .card-pf class
       cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-accented');
       expect(cardClass).toBeFalsy();
-    })
+    });
 
     it('No link should be present in the title', function () {
 

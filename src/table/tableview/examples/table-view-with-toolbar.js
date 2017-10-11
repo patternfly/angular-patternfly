@@ -201,7 +201,7 @@
         pageNumber: 1,
         pageSize: 10,
         pageSizeIncrements: [5, 10, 15]
-      }
+      };
 
       $scope.allItems = [
         {
@@ -315,7 +315,7 @@
           age: 36,
           address: "21 Jump Street, Hollywood, California",
           birthMonth: 'March'
-        },
+        }
       ];
 
       $scope.items = $scope.allItems;
@@ -585,6 +585,7 @@
       $scope.addNewComponentToDOM = function () {
         $scope.showComponent = false;
         $timeout(() => $scope.showComponent = true);
+
       };
     }
   ]);

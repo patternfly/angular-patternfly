@@ -182,7 +182,7 @@ describe('Component:  pfWizard', function () {
 
     var backButton = element.find('#backButton');
     eventFire(backButton[0], 'click');
-    var stepIndicator = element.find('.wizard-pf-sidebar .list-group-item.active .wizard-pf-substep-number');
+    stepIndicator = element.find('.wizard-pf-sidebar .list-group-item.active .wizard-pf-substep-number');
     expect(stepIndicator.text()).toBe('1A.');
   });
 
@@ -215,7 +215,7 @@ describe('Component:  pfWizard', function () {
     // make sure indicators can be turned back on
     $scope.hideIndicators = false;
     $scope.$digest();
-    var indicators = element.find('.wizard-pf-steps');
+    indicators = element.find('.wizard-pf-steps');
     expect(indicators.children().length).toBe(1);
   });
 
@@ -276,7 +276,7 @@ describe('Component:  pfWizard', function () {
     var sidebarPanel = element.find('.wizard-pf-sidebar.test-step-class');
     expect(sidebarPanel.length).toBe(0);
 
-    var sidebarPanel = element.find('.wizard-pf-sidebar.test-sidebar-class');
+    sidebarPanel = element.find('.wizard-pf-sidebar.test-sidebar-class');
     expect(sidebarPanel.length).toBe(3);
   });
 
