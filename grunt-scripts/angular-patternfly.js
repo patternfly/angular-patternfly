@@ -859,7 +859,7 @@ var pfCanvas = {};
   pfCanvas.computeConnectorPos = function(node, connectorIndex, inputConnector) {
     return {
       x: node.x() + (inputConnector ? 0 : node.width ? node.width() : pfCanvas.defaultNodeWidth),
-      y: node.y() + pfCanvas.computeConnectorY(connectorIndex),
+      y: node.y() + pfCanvas.computeConnectorY(connectorIndex)
     };
   };
 
@@ -1279,7 +1279,7 @@ var pfCanvas = {};
     this.sourceCoord = function() {
       return {
         x: this.sourceCoordX(),
-        y: this.sourceCoordY(),
+        y: this.sourceCoordY()
       };
     };
 
@@ -1302,7 +1302,7 @@ var pfCanvas = {};
     this.destCoord = function() {
       return {
         x: this.destCoordX(),
-        y: this.destCoordY(),
+        y: this.destCoordY()
       };
     };
 
@@ -1386,7 +1386,7 @@ var pfCanvas = {};
   pfCanvas.computeConnectionSourceTangent = function(pt1, pt2) {
     return {
       x: pfCanvas.computeConnectionSourceTangentX(pt1, pt2),
-      y: pfCanvas.computeConnectionSourceTangentY(pt1, pt2),
+      y: pfCanvas.computeConnectionSourceTangentY(pt1, pt2)
     };
   };
 
@@ -1410,7 +1410,7 @@ var pfCanvas = {};
   pfCanvas.computeConnectionDestTangent = function(pt1, pt2) {
     return {
       x: pfCanvas.computeConnectionDestTangentX(pt1, pt2),
-      y: pfCanvas.computeConnectionDestTangentY(pt1, pt2),
+      y: pfCanvas.computeConnectionDestTangentY(pt1, pt2)
     };
   };
 
@@ -1558,17 +1558,17 @@ var pfCanvas = {};
 
       startNode = {
         nodeID: startNode.data.id,
-        connectorIndex: startConnectorIndex,
+        connectorIndex: startConnectorIndex
       };
 
       endNode = {
         nodeID: endNode.data.id,
-        connectorIndex: endConnectorIndex,
+        connectorIndex: endConnectorIndex
       };
 
       var connectionDataModel = {
         source: startConnectorType === 'output' ? startNode : endNode,
-        dest: startConnectorType === 'output' ? endNode : startNode,
+        dest: startConnectorType === 'output' ? endNode : startNode
       };
       connectionsDataModel.push(connectionDataModel);
 
@@ -3089,21 +3089,21 @@ angular.module( 'patternfly.card' ).component('pfAggregateStatusCard', {
 
        $scope.data3 = {
          'used': '420',
-         'total': '500',
+         'total': '500'
        };
 
        $scope.title4 = 'Disk Usage';
        $scope.units4 = 'TB';
        $scope.data4 = {
          'used': '350',
-         'total': '500',
+         'total': '500'
        };
 
        $scope.title5 = 'Disk I/O';
        $scope.units5 = 'I/Ops';
        $scope.data5 = {
          'used': '450',
-         'total': '500',
+         'total': '500'
        };
 
        $scope.layoutInline = {
@@ -3221,7 +3221,7 @@ angular.module('patternfly.card').component('pfCard', {
          'callBackFn': function () {
             alert("Footer Callback Fn Called");
           }
-       }
+       };
 
        $scope.filterConfigHeader = {
          'filters' : [{label:'Last 30 Days', value:'30'},
@@ -3231,7 +3231,7 @@ angular.module('patternfly.card').component('pfCard', {
             alert("Header Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
           },
         'position' : 'header'
-       }
+       };
 
        $scope.filterConfig = {
          'filters' : [{label:'Last 30 Days', value:'30'},
@@ -3241,7 +3241,7 @@ angular.module('patternfly.card').component('pfCard', {
             alert("Filter Callback Fn Called for '" + f.label + "' value = " + f.value);
           },
         'defaultFilter' : '1'
-       }
+       };
      });
  </file>
  </example>
@@ -3578,15 +3578,15 @@ angular.module( 'patternfly.card' ).component('pfInfoStatusCard', {
 
        $scope.getChart = function (chart) {
          $scope.chart = chart;
-       }
+       };
 
        $scope.focusUsed = function () {
          $scope.chart.focus("Used");
-       }
+       };
 
        $scope.updateAvailable = function (val) {
          $scope.available =  $scope.total - $scope.used;
-       }
+       };
 
        $scope.submitform = function (val) {
          console.log("submitform");
@@ -5621,7 +5621,7 @@ angular.module('patternfly.charts').component('pfSparklineChart', {
           "miq_id": 10000000000061,
           "status": "Unknown",
           "display_kind": "Service"
-        },
+        }
       },
       "relations": [
         {
@@ -5701,7 +5701,7 @@ angular.module('patternfly.charts').component('pfSparklineChart', {
           "icon": "",
           "fontfamily": "PatternFlyIcons-webfont"
         }
-      },
+      }
     });
 
     $rootScope.data = datasets[index];
@@ -6853,21 +6853,21 @@ angular.module('patternfly.charts').component('pfTrendsChart', {
 
     $scope.data3 = {
       'used': '420',
-      'total': '500',
+      'total': '500'
     };
 
     $scope.title4 = 'Disk Usage';
     $scope.units4 = 'TB';
     $scope.data4 = {
       'used': '350',
-      'total': '500',
+      'total': '500'
     };
 
     $scope.title5 = 'Disk I/O';
     $scope.units5 = 'I/Ops';
     $scope.data5 = {
       'used': '450',
-      'total': '500',
+      'total': '500'
     };
 
     $interval(function () {
@@ -8208,7 +8208,7 @@ angular.module('patternfly.filters').component('pfFilterResults', {
 
    <file name="script.js">
      angular.module( 'patternfly.form' ).controller( 'FormButtonCtrl', function( $scope, $timeout, $element ) {
-       $scope.status = 'Not yet Saved'
+       $scope.status = 'Not yet Saved';
        $scope.working = false;
 
        $scope.save = function (item) {
@@ -8544,7 +8544,7 @@ angular.module('patternfly.filters').component('pfFilterResults', {
 
         // creating scope vars for unit testing
         $scope.remainingChars = remainingChars;
-        $scope.remainingCharsWarning = (remainingChars <= charsWarnRemaining ? true : false);
+        $scope.remainingCharsWarning = (remainingChars <= charsWarnRemaining);
 
         countRemainingFld.text(remainingChars);
         countRemainingFld.toggleClass('chars-warn-remaining-pf', remainingChars <= charsWarnRemaining);
@@ -8618,10 +8618,10 @@ angular.module('patternfly.filters').component('pfFilterResults', {
          { name: 'User Role', value: 'Administrator' }];
        $scope.open = function () {
          $scope.isOpen = true;
-       }
+       };
        $scope.onClose = function() {
          $scope.isOpen = false;
-       }
+       };
      });
    </file>
  </example>
@@ -10248,7 +10248,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
         routeChangeListener();
       }
     };
-  }],
+  }]
 });
 ;/**
  * @ngdoc directive
@@ -10794,7 +10794,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
          <div class="form-group">
            <label class="col-sm-2 control-label" for="type">Persistent:</label>
            <div class="col-sm-10">
-            <input type="checkbox" ng-model="notification.isPersistent"></input>
+            <input type="checkbox" ng-model="notification.isPersistent"/>
            </div>
          </div>
        </form>
@@ -12959,7 +12959,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
         pageNumber: 1,
         pageSize: 10,
         pageSizeIncrements: [5, 10, 15]
-      }
+      };
 
       $scope.allItems = [
         {
@@ -13073,7 +13073,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
           age: 36,
           address: "21 Jump Street, Hollywood, California",
           birthMonth: 'March'
-        },
+        }
       ];
 
       $scope.items = $scope.allItems;
@@ -13343,6 +13343,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
       $scope.addNewComponentToDOM = function () {
         $scope.showComponent = false;
         $timeout(() => $scope.showComponent = true);
+
       };
     }
   ]);
@@ -13723,7 +13724,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
       //        page length === 3
       //     returns ['Mary Jane', 'Fred Flinstone', 'Frank Livingston']
       //
-      var i, rowData, visibleRows = new Array();
+      var i, rowData, visibleRows = [];
 
       var anNodes = document.querySelectorAll("#" + ctrl.tableId + "  tbody tr");
 
@@ -14170,7 +14171,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
 
       var viewSelected = function(viewId) {
         $scope.viewType = viewId;
-        $scope.sortConfig.show = ($scope.viewType === "tableView" ? false : true);
+        $scope.sortConfig.show = ($scope.viewType !== "tableView");
       };
 
       $scope.viewsConfig = {
@@ -14329,7 +14330,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
         selectionMatchProp: "name",
-        itemsAvailable: true,
+        itemsAvailable: true
       };
 
       $scope.doAdd = function () {
@@ -15186,19 +15187,19 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
         $scope.showDisabled = false;
 
         $scope.config = {
-         selectItems: false,
-         itemsAvailable: true,
-         multiSelect: false,
-         dblClick: false,
-         selectionMatchProp: 'name',
-         selectedItems: [],
-         checkDisabled: checkDisabledItem,
-         showSelectBox: true,
-         onSelect: handleSelect,
-         onSelectionChange: handleSelectionChange,
-         onCheckBoxChange: handleCheckBoxChange,
-         onClick: handleClick,
-         onDblClick: handleDblClick
+          selectItems: false,
+          itemsAvailable: true,
+          multiSelect: false,
+          dblClick: false,
+          selectionMatchProp: 'name',
+          selectedItems: [],
+          checkDisabled: checkDisabledItem,
+          showSelectBox: true,
+          onSelect: handleSelect,
+          onSelectionChange: handleSelectionChange,
+          onCheckBoxChange: handleCheckBoxChange,
+          onClick: handleClick,
+          onDblClick: handleDblClick
         };
 
         $scope.items = [
@@ -15291,9 +15292,9 @@ angular.module('patternfly.validation', []).directive('pfValidation', ["$timeout
           title: 'No Items Available',
           info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
           helpLink: {
-             label: 'For more information please see',
-             urlLabel: 'pfExample',
-             url : '#/api/patternfly.views.component:pfEmptyState'
+            label: 'For more information please see',
+            urlLabel: 'pfExample',
+            url : '#/api/patternfly.views.component:pfEmptyState'
           }
         };
 
@@ -15550,9 +15551,9 @@ angular.module('patternfly.views').component('pfCardView', {
        title: 'Empty State Title',
        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
        helpLink: {
-           label: 'For more information please see',
-           urlLabel: 'pfExample',
-           url : '#/api/patternfly.views.component:pfEmptyState'
+         label: 'For more information please see',
+         urlLabel: 'pfExample',
+         url : '#/api/patternfly.views.component:pfEmptyState'
        }
      };
 
@@ -15561,27 +15562,27 @@ angular.module('patternfly.views').component('pfCardView', {
      };
 
      $scope.actionButtons = [
-        {
-          name: 'Main Action',
-          title: 'Perform an action',
-          actionFn: performAction,
-          type: 'main'
-        },
-        {
-          name: 'Secondary Action 1',
-          title: 'Perform an action',
-          actionFn: performAction
-        },
-        {
-          name: 'Secondary Action 2',
-          title: 'Perform an action',
-          actionFn: performAction
-        },
-        {
-          name: 'Secondary Action 3',
-          title: 'Perform an action',
-          actionFn: performAction
-        }
+       {
+         name: 'Main Action',
+         title: 'Perform an action',
+         actionFn: performAction,
+         type: 'main'
+       },
+       {
+         name: 'Secondary Action 1',
+         title: 'Perform an action',
+         actionFn: performAction
+       },
+       {
+         name: 'Secondary Action 2',
+         title: 'Perform an action',
+         actionFn: performAction
+       },
+       {
+         name: 'Secondary Action 3',
+         title: 'Perform an action',
+         actionFn: performAction
+       }
      ];
    }
  ]);
@@ -16271,13 +16272,13 @@ angular.module('patternfly.views').component('pfEmptyState', {
         $scope.showDisabled = false;
 
         $scope.config = {
-         selectionMatchProp: 'name',
-         selectedItems: [],
-         itemsAvailable: true,
-         showSelectBox: true,
-         useExpandingRows: true,
-         compoundExpansionOnly: true,
-         onCheckBoxChange: handleCheckBoxChange
+          selectionMatchProp: 'name',
+          selectedItems: [],
+          itemsAvailable: true,
+          showSelectBox: true,
+          useExpandingRows: true,
+          compoundExpansionOnly: true,
+          onCheckBoxChange: handleCheckBoxChange
         };
 
         $scope.items = [
@@ -16527,7 +16528,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
             name: "Martha Smith",
             address: "415 East Main Street",
             city: "Norfolk",
-            state: "Virginia",
+            state: "Virginia"
           },
           {
             name: "Liz Livingston",
@@ -17602,7 +17603,6 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
       if (angular.isUndefined(ctrl.allowClickNav)) {
         ctrl.allowClickNav = true;
       }
-
 
       ctrl.step.nextEnabled = ctrl.nextEnabled;
       ctrl.step.prevEnabled = ctrl.prevEnabled;
