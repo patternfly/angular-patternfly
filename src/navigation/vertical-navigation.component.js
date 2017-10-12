@@ -560,5 +560,5 @@ angular.module('patternfly.navigation').component('pfVerticalNavigation', {
         routeChangeListener();
       }
     };
-  },
+  }
 });

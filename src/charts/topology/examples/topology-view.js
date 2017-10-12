@@ -106,7 +106,7 @@
           "miq_id": 10000000000061,
           "status": "Unknown",
           "display_kind": "Service"
-        },
+        }
       },
       "relations": [
         {
@@ -186,7 +186,7 @@
           "icon": "",
           "fontfamily": "PatternFlyIcons-webfont"
         }
-      },
+      }
     });
 
     $rootScope.data = datasets[index];

@@ -26,7 +26,7 @@ describe('pf-validation', function () {
         return true;
       }
       return false;
-    }
+    };
 
     it('should show a validation message when the ng-model is initially invalid', function () {
 

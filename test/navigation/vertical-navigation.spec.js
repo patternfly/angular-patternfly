@@ -651,7 +651,7 @@ describe('Component:  pfVerticalNavigation', function () {
     var warningBadge = angular.element(tertiaryMenu).find('.badge.example-warning-background > span');
     expect(warningBadge.length).toBe(1);
 
-    var warningBadge = angular.element(tertiaryMenu).find('.example-ok-background > span');
+    warningBadge = angular.element(tertiaryMenu).find('.example-ok-background > span');
     expect(warningBadge.length).toBe(0);
   });
 
@@ -681,13 +681,13 @@ describe('Component:  pfVerticalNavigation', function () {
     '';
     compileHTML(htmlTmp, $scope);
 
-    var primaryMenu = element.find('.nav-pf-vertical');
+    primaryMenu = element.find('.nav-pf-vertical');
     expect(primaryMenu.length).toBe(1);
 
-    var badgesMenu = element.find('.nav-pf-vertical-with-badges');
+    badgesMenu = element.find('.nav-pf-vertical-with-badges');
     expect(badgesMenu.length).toBe(0);
 
-    var badgesShown = element.find('.badge-container-pf');
+    badgesShown = element.find('.badge-container-pf');
     expect(badgesShown.length).toBe(0);
   });
 

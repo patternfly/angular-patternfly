@@ -613,13 +613,13 @@
         $scope.showDisabled = false;
 
         $scope.config = {
-         selectionMatchProp: 'name',
-         selectedItems: [],
-         itemsAvailable: true,
-         showSelectBox: true,
-         useExpandingRows: true,
-         compoundExpansionOnly: true,
-         onCheckBoxChange: handleCheckBoxChange
+          selectionMatchProp: 'name',
+          selectedItems: [],
+          itemsAvailable: true,
+          showSelectBox: true,
+          useExpandingRows: true,
+          compoundExpansionOnly: true,
+          onCheckBoxChange: handleCheckBoxChange
         };
 
         $scope.items = [
@@ -869,7 +869,7 @@
             name: "Martha Smith",
             address: "415 East Main Street",
             city: "Norfolk",
-            state: "Virginia",
+            state: "Virginia"
           },
           {
             name: "Liz Livingston",

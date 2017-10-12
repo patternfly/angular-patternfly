@@ -133,7 +133,7 @@ describe('Component:  pfListView', function () {
       '</pf-list-view>';
 
     compileHTML(htmlTmp, $scope);
-  };
+  }
 
   function paginationSetup() {
     $scope.systemModel = [

@@ -332,7 +332,7 @@
 
       var viewSelected = function(viewId) {
         $scope.viewType = viewId;
-        $scope.sortConfig.show = ($scope.viewType === "tableView" ? false : true);
+        $scope.sortConfig.show = ($scope.viewType !== "tableView");
       };
 
       $scope.viewsConfig = {
@@ -491,7 +491,7 @@
       $scope.tableConfig = {
         onCheckBoxChange: handleCheckBoxChange,
         selectionMatchProp: "name",
-        itemsAvailable: true,
+        itemsAvailable: true
       };
 
       $scope.doAdd = function () {

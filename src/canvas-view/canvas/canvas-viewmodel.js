@@ -51,7 +51,7 @@ var pfCanvas = {};
   pfCanvas.computeConnectorPos = function(node, connectorIndex, inputConnector) {
     return {
       x: node.x() + (inputConnector ? 0 : node.width ? node.width() : pfCanvas.defaultNodeWidth),
-      y: node.y() + pfCanvas.computeConnectorY(connectorIndex),
+      y: node.y() + pfCanvas.computeConnectorY(connectorIndex)
     };
   };
 
@@ -471,7 +471,7 @@ var pfCanvas = {};
     this.sourceCoord = function() {
       return {
         x: this.sourceCoordX(),
-        y: this.sourceCoordY(),
+        y: this.sourceCoordY()
       };
     };
 
@@ -494,7 +494,7 @@ var pfCanvas = {};
     this.destCoord = function() {
       return {
         x: this.destCoordX(),
-        y: this.destCoordY(),
+        y: this.destCoordY()
       };
     };
 
@@ -578,7 +578,7 @@ var pfCanvas = {};
   pfCanvas.computeConnectionSourceTangent = function(pt1, pt2) {
     return {
       x: pfCanvas.computeConnectionSourceTangentX(pt1, pt2),
-      y: pfCanvas.computeConnectionSourceTangentY(pt1, pt2),
+      y: pfCanvas.computeConnectionSourceTangentY(pt1, pt2)
     };
   };
 
@@ -602,7 +602,7 @@ var pfCanvas = {};
   pfCanvas.computeConnectionDestTangent = function(pt1, pt2) {
     return {
       x: pfCanvas.computeConnectionDestTangentX(pt1, pt2),
-      y: pfCanvas.computeConnectionDestTangentY(pt1, pt2),
+      y: pfCanvas.computeConnectionDestTangentY(pt1, pt2)
     };
   };
 
@@ -750,17 +750,17 @@ var pfCanvas = {};
 
       startNode = {
         nodeID: startNode.data.id,
-        connectorIndex: startConnectorIndex,
+        connectorIndex: startConnectorIndex
       };
 
       endNode = {
         nodeID: endNode.data.id,
-        connectorIndex: endConnectorIndex,
+        connectorIndex: endConnectorIndex
       };
 
       var connectionDataModel = {
         source: startConnectorType === 'output' ? startNode : endNode,
-        dest: startConnectorType === 'output' ? endNode : startNode,
+        dest: startConnectorType === 'output' ? endNode : startNode
       };
       connectionsDataModel.push(connectionDataModel);
 
