@@ -11,6 +11,14 @@
  *   <li>.icon   - (string) class for main icon. Ex. 'pficon pficon-add-circle-o'
  *   <li>.title  - (string) Text for the main title
  *   <li>.info  - (string) Text for the main informational paragraph
+ *   <li>.helpLink - (object) Contains url specific properties and actions
+ *   <ul style='list-style-type: none'>
+ *     <li>.label - (string) Optional text label which appears before the urlLabel
+ *     <li>.urlLabel - (string) Optional text for the clickable portion of the link
+ *     <li>.url - (string) Optional text for url path
+ *     <li>.urlAction - (function) Optional function to invoke a url action when a callback method is specified.
+ *     When both urlAction and url are specified the component will first execute urlAction then nagivate to the url.
+ *   </ul>
  * </ul>
  * @param {array} actionButtons Buttons to display under the icon, title, and informational paragraph.
  *   <ul style='list-style-type: none'>
