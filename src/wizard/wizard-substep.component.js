@@ -79,8 +79,6 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
         ctrl.allowClickNav = true;
       }
 
-      ctrl.step.nextEnabled = ctrl.nextEnabled;
-      ctrl.step.prevEnabled = ctrl.prevEnabled;
       ctrl.step.okToNavAway = ctrl.okToNavAway;
       ctrl.step.allowClickNav = ctrl.allowClickNav;
 
@@ -93,14 +91,6 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
         return;
       }
 
-      if (changesObj.nextEnabled) {
-        ctrl.step.nextEnabled = changesObj.nextEnabled.currentValue;
-      }
-
-      if (changesObj.prevEnabled) {
-        ctrl.step.prevEnabled = changesObj.prevEnabled.currentValue;
-      }
-
       if (changesObj.okToNavAway) {
         ctrl.step.okToNavAway = changesObj.okToNavAway.currentValue;
       }
@@ -110,14 +100,12 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
       }
     };
 
+    ctrl.isNextEnabled = function () {
+      return angular.isUndefined(ctrl.nextEnabled) || ctrl.nextEnabled;
+    };
+
     ctrl.isPrevEnabled = function () {
-      var enabled = angular.isUndefined(ctrl.prevEnabled) || ctrl.prevEnabled;
-      if (ctrl.substeps) {
-        angular.forEach(ctrl.getEnabledSteps(), function (step) {
-          enabled = enabled && step.prevEnabled;
-        });
-      }
-      return enabled;
+      return angular.isUndefined(ctrl.prevEnabled) || ctrl.prevEnabled;
     };
   }
 });
