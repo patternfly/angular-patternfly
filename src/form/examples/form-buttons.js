@@ -33,7 +33,7 @@
 
    <file name="script.js">
      angular.module( 'patternfly.form' ).controller( 'FormButtonCtrl', function( $scope, $timeout, $element ) {
-       $scope.status = 'Not yet Saved'
+       $scope.status = 'Not yet Saved';
        $scope.working = false;
 
        $scope.save = function (item) {

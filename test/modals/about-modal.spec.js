@@ -63,10 +63,10 @@ describe('Component:  pfABoutModal', function () {
       { product: 'Label', version: 'Version' }];
     $scope.open = function () {
       $scope.isOpen = true;
-    }
+    };
     $scope.onClose = function() {
       $scope.isOpen = false;
-    }
+    };
   });
 
   it('should invoke the onClose callback when close button is clicked', function () {

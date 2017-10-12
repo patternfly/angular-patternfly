@@ -44,10 +44,10 @@
          { name: 'User Role', value: 'Administrator' }];
        $scope.open = function () {
          $scope.isOpen = true;
-       }
+       };
        $scope.onClose = function() {
          $scope.isOpen = false;
-       }
+       };
      });
    </file>
  </example>

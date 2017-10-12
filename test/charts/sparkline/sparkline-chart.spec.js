@@ -120,7 +120,7 @@ describe('Component: pfSparklineChart', function() {
   });
 
   it("should allow tooltip type specification", function() {
-    $scope.config.tooltipType = "percentage"
+    $scope.config.tooltipType = "percentage";
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data"></pf-sparkline-chart>', $scope);
 
     expect(isolateScope.config.tooltipType).toBe("percentage");

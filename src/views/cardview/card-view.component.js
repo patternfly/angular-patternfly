@@ -171,19 +171,19 @@
         $scope.showDisabled = false;
 
         $scope.config = {
-         selectItems: false,
-         itemsAvailable: true,
-         multiSelect: false,
-         dblClick: false,
-         selectionMatchProp: 'name',
-         selectedItems: [],
-         checkDisabled: checkDisabledItem,
-         showSelectBox: true,
-         onSelect: handleSelect,
-         onSelectionChange: handleSelectionChange,
-         onCheckBoxChange: handleCheckBoxChange,
-         onClick: handleClick,
-         onDblClick: handleDblClick
+          selectItems: false,
+          itemsAvailable: true,
+          multiSelect: false,
+          dblClick: false,
+          selectionMatchProp: 'name',
+          selectedItems: [],
+          checkDisabled: checkDisabledItem,
+          showSelectBox: true,
+          onSelect: handleSelect,
+          onSelectionChange: handleSelectionChange,
+          onCheckBoxChange: handleCheckBoxChange,
+          onClick: handleClick,
+          onDblClick: handleDblClick
         };
 
         $scope.items = [
@@ -276,9 +276,9 @@
           title: 'No Items Available',
           info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
           helpLink: {
-             label: 'For more information please see',
-             urlLabel: 'pfExample',
-             url : '#/api/patternfly.views.component:pfEmptyState'
+            label: 'For more information please see',
+            urlLabel: 'pfExample',
+            url : '#/api/patternfly.views.component:pfEmptyState'
           }
         };
 

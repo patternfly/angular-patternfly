@@ -160,6 +160,7 @@ describe('Directive:  pfSort', function () {
     expect(chosenField).toBe($scope.sortConfig.fields[0]);
     expect(chosenDir).toBeFalsy();
   });
+
   it ('should return appropriate icons for current sort type and direction', function () {
     $scope.sortConfig.currentField = $scope.sortConfig.fields[0];
     $scope.sortConfig.isAscending = true;
@@ -209,4 +210,4 @@ describe('Directive:  pfSort', function () {
     expect(numericSortAsc.length).toBe(0);
     expect(numericSortDesc.length).toBe(1);
   });
-})
+});

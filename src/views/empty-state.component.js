@@ -47,9 +47,9 @@
        title: 'Empty State Title',
        info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
        helpLink: {
-           label: 'For more information please see',
-           urlLabel: 'pfExample',
-           url : '#/api/patternfly.views.component:pfEmptyState'
+         label: 'For more information please see',
+         urlLabel: 'pfExample',
+         url : '#/api/patternfly.views.component:pfEmptyState'
        }
      };
 
@@ -58,27 +58,27 @@
      };
 
      $scope.actionButtons = [
-        {
-          name: 'Main Action',
-          title: 'Perform an action',
-          actionFn: performAction,
-          type: 'main'
-        },
-        {
-          name: 'Secondary Action 1',
-          title: 'Perform an action',
-          actionFn: performAction
-        },
-        {
-          name: 'Secondary Action 2',
-          title: 'Perform an action',
-          actionFn: performAction
-        },
-        {
-          name: 'Secondary Action 3',
-          title: 'Perform an action',
-          actionFn: performAction
-        }
+       {
+         name: 'Main Action',
+         title: 'Perform an action',
+         actionFn: performAction,
+         type: 'main'
+       },
+       {
+         name: 'Secondary Action 1',
+         title: 'Perform an action',
+         actionFn: performAction
+       },
+       {
+         name: 'Secondary Action 2',
+         title: 'Perform an action',
+         actionFn: performAction
+       },
+       {
+         name: 'Secondary Action 3',
+         title: 'Perform an action',
+         actionFn: performAction
+       }
      ];
    }
  ]);
