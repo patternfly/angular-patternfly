@@ -700,17 +700,6 @@ table.dataTable tbody td {
 .table-view-pf-select {
   width: 13px;
 }
-.wizard-pf-footer .tooltip-wrapper {
-  border: none;
-  box-shadow: none;
-  display: inline-block;
-  margin-left: 5px;
-  padding: 0;
-  text-align: center;
-}
-.wizard-pf-footer .tooltip-wrapper .btn[disabled] {
-  pointer-events: none;
-}
 .wizard-pf-footer .btn-cancel.wizard-pf-cancel-no-back {
   margin-right: 0;
 }

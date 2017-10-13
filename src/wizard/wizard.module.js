@@ -6,7 +6,7 @@
  *
  */
 angular.module('patternfly.wizard', ['ui.bootstrap.modal',
-  'ui.bootstrap.tpls',
+  'ui.bootstrap',
   'patternfly.form']);
 
 

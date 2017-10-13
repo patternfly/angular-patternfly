@@ -1,9 +1,11 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/wizard/wizard.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/5b1fb53/src/wizard/wizard.component.js#L310" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfWizard</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/wizard/examples/wizard.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3873612/src/wizard/examples/wizard.js#L317" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfWizard</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.wizard</code>
 </span>
 </div>
 </h1>
-<div><h2 id="description">Description</h2>
+<div><fieldset class="deprecated"><legend>Deprecated API</legend>
+{string} title The wizard title displayed in the head (use wizardTitle instead)</fieldset>
+<h2 id="description">Description</h2>
 <div class="description"><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Component for rendering a Wizard modal.  Each wizard dynamically creates the step navigation both in the header and the left-hand side based on nested steps.
 Use pf-wizard-step to define individual steps within a wizard and pf-wizard-substep to define portions of pf-wizard-steps if so desired.  For instance, Step one can have two substeps - 1A and 1B when it is logical to group those together.
 <br /><br />
@@ -21,7 +23,7 @@ The basic structure should be:
 </div></div>
 <h2 id="usage">Usage</h2>
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-wizard
-       title="{string}"
+       wizard-title="{string}"
        [hide-indicators="{boolean}"]
        [active-step-title-only="{boolean}"]
        [hide-sidebar="{boolean}"]
@@ -46,7 +48,7 @@ The basic structure should be:
        [embed-in-page="{boolean}"]
        [on-step-changed="{function(step, index)}"]&gt;
 &lt;/pf-wizard&gt;</pre>
-<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>title</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>The wizard title displayed in the header</p>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>wizardTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>The wizard title displayed in the header</p>
 </div></td></tr><tr><td>hideIndicators <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Hides the step indicators in the header of the wizard</p>
 </div></td></tr><tr><td>activeStepTitleOnly <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Shows the title only for the active step in the step indicators, optional, default is false.</p>
 </div></td></tr><tr><td>hideSidebar <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><p>Hides page navigation sidebar on the wizard pages</p>
@@ -85,7 +87,7 @@ The basic structure should be:
 <div class="tab-pane" title="wizard-container.html">
 <pre class="prettyprint linenums" ng-set-text="wizard-container.html"></pre>
 <script type="text/ng-template" id="wizard-container.html">
-<pf-wizard title="Wizard Title"
+<pf-wizard wizard-title="Wizard Title"
   wizard-ready="deployProviderReady"
   on-finish="finishedWizard()"
   on-cancel="cancelDeploymentWizard()"
@@ -97,7 +99,7 @@ The basic structure should be:
   step-class="example-wizard-step"
   loading-secondary-information="secondaryLoadInformation"
   on-step-changed="stepChanged(step, index)">
-    <pf-wizard-step step-title="First Step" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
+    <pf-wizard-step step-title="First Step" next-tooltip="firstStepNextTooltip" prev-tooltip="firstStepPrevTooltip" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
       <div ng-include="'detail-page.html'">
       </div>
       <pf-wizard-substep step-title="Details - Extra" next-enabled="true" step-id="details-extra" step-priority="1" show-review="true" show-review-details="true" review-template="review-second-template.html">
@@ -111,7 +113,7 @@ The basic structure should be:
         </form>
       </pf-wizard-substep>
     </pf-wizard-step>
-    <pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
+    <pf-wizard-step step-title="Second Step" next-tooltip="secondStepNextTooltip" prev-tooltip="secondStepPrevTooltip" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
       <form class="form-horizontal">
         <h5 id="example_source_wizards-should-make-use-of-substeps-consistently-throughout-this-is-an-example-only">Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h5>
         <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
@@ -122,7 +124,7 @@ The basic structure should be:
         </pf-form-group>
       </form>
     </pf-wizard-step>
-    <pf-wizard-step step-title="Review" substeps="true" step-id="review" step-priority="2">
+    <pf-wizard-step step-title="Review" next-tooltip="reviewStepNextTooltip" prev-tooltip="reviewStepPrevTooltip" substeps="true" step-id="review" step-priority="2">
       <div ng-include="'summary.html'"></div>
       <div ng-include="'deployment.html'"></div>
     </pf-wizard-step>
@@ -262,6 +264,13 @@ angular.module('patternfly.wizard').controller('WizardController', ['$scope', '$
     };
 
     $scope.data = {};
+
+    $scope.firstStepNextTooltip = "First step next";
+    $scope.firstStepPrevTooltip = "First step back";
+    $scope.secondStepNextTooltip = "Second step next";
+    $scope.secondStepPrevTooltip = "Second step back";
+    $scope.reviewStepNextTooltip = "Review step next";
+    $scope.reviewStepPrevTooltip = "Review step back";
 
     $scope.nextCallback = function (step) {
       // call startdeploy after deploy button is clicked on review-summary tab

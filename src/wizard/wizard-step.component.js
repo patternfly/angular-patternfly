@@ -147,11 +147,15 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
 
     ctrl.$onChanges = function (changesObj) {
       if (changesObj.nextTooltip) {
-        ctrl.wizard.nextTooltip = changesObj.nextTooltip.currentValue;
+        if (_.get(ctrl.wizard, 'selectedStep') === ctrl) {
+          ctrl.wizard.nextTooltip = changesObj.nextTooltip.currentValue;
+        }
       }
 
       if (changesObj.prevTooltip) {
-        ctrl.wizard.prevTooltip = changesObj.prevTooltip.currentValue;
+        if (_.get(ctrl.wizard, 'selectedStep') === ctrl) {
+          ctrl.wizard.prevTooltip = changesObj.prevTooltip.currentValue;
+        }
       }
     };
 
@@ -183,20 +187,16 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
 
     ctrl.isNextEnabled = function () {
       var enabled = angular.isUndefined(ctrl.nextEnabled) || ctrl.nextEnabled;
-      if (ctrl.substeps) {
-        angular.forEach(ctrl.getEnabledSteps(), function (step) {
-          enabled = enabled && step.nextEnabled;
-        });
+      if (ctrl.substeps && ctrl.selectedStep) {
+        enabled = enabled && ctrl.selectedStep.isNextEnabled();
       }
       return enabled;
     };
 
     ctrl.isPrevEnabled = function () {
       var enabled = angular.isUndefined(ctrl.prevEnabled) || ctrl.prevEnabled;
-      if (ctrl.substeps) {
-        angular.forEach(ctrl.getEnabledSteps(), function (step) {
-          enabled = enabled && step.prevEnabled;
-        });
+      if (ctrl.substeps && ctrl.selectedStep) {
+        enabled = enabled && ctrl.selectedStep.isPrevEnabled();
       }
       return enabled;
     };
