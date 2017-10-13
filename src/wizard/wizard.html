@@ -3,7 +3,7 @@
     <button type="button" class="close wizard-pf-dismiss" aria-label="Close" ng-click="$ctrl.onCancel()" ng-if="!$ctrl.embedInPage">
       <span aria-hidden="true">&times;</span>
     </button>
-    <dt class="modal-title">{{$ctrl.title}}</dt>
+    <dt class="modal-title">{{$ctrl.wizardTitle}}</dt>
   </div>
   <div class="modal-body wizard-pf-body clearfix">
     <!-- step area -->
@@ -36,22 +36,25 @@
             ng-click="$ctrl.onCancel()">
       {{$ctrl.cancelTitle}}
     </button>
-    <div ng-if="!$ctrl.hideBackButton" class="tooltip-wrapper" uib-tooltip="{{$ctrl.prevTooltip}}" tooltip-placement="left">
-      <button id="backButton"
-              class="btn btn-default"
-              ng-disabled="!$ctrl.wizardReady || $ctrl.wizardDone || !$ctrl.selectedStep.prevEnabled || $ctrl.firstStep"
-              ng-click="$ctrl.previous()">
-        {{$ctrl.backTitle}}
-      </button>
-    </div>
-    <div class="tooltip-wrapper" uib-tooltip="{{$ctrl.nextTooltip}}" tooltip-placement="left">
-      <button id="nextButton"
-              class="btn btn-primary wizard-pf-next"
-              ng-disabled="!$ctrl.wizardReady || !$ctrl.selectedStep.nextEnabled"
-              ng-click="$ctrl.next()">
-        {{$ctrl.nextTitle}}
-      </button>
-    </div>
+    <button id="backButton"
+            class="btn btn-default"
+            ng-if="!$ctrl.hideBackButton"
+            tooltip-append-to-body="true"
+            uib-tooltip="{{$ctrl.prevTooltip}}"
+            tooltip-placement="left"
+            ng-disabled="!$ctrl.wizardReady || $ctrl.wizardDone || !$ctrl.selectedStep.isPrevEnabled() || $ctrl.firstStep"
+            ng-click="$ctrl.previous()">
+      {{$ctrl.backTitle}}
+    </button>
+    <button id="nextButton"
+            class="btn btn-primary wizard-pf-next"
+            uib-tooltip="{{$ctrl.nextTooltip}}"
+            tooltip-append-to-body="true"
+            tooltip-placement="left"
+            ng-disabled="!$ctrl.wizardReady || !$ctrl.selectedStep.isNextEnabled()"
+            ng-click="$ctrl.next()">
+      {{$ctrl.nextTitle}}
+    </button>
     <button ng-if="$ctrl.embedInPage"
             class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline"
             ng-disabled="$ctrl.wizardDone"

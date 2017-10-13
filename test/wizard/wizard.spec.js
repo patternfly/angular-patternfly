@@ -113,6 +113,13 @@ describe('Component:  pfWizard', function () {
     $timeout.flush();
   };
 
+  it('should set the title of the wizard', function () {
+    setupWizard('test/wizard/wizard-container.html');
+
+    var title = element.find('.modal-header .modal-title').text();
+    expect(title).toBe('Wizard Title');
+  });
+
   it('should dispatch the cancel event on the close button click', function () {
     setupWizard('test/wizard/wizard-container.html');
 
