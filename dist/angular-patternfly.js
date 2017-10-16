@@ -15552,7 +15552,12 @@ angular.module('patternfly.views').component('pfCardView', {
  <file name="script.js">
  angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
    function ($scope) {
+
      $scope.eventText = '';
+
+     var performEmptyStateAction = function () {
+       $scope.eventText += 'Empty State Action Executed \r\n';
+     };
 
      $scope.config = {
        icon: 'pficon-add-circle-o',
@@ -15561,7 +15566,8 @@ angular.module('patternfly.views').component('pfCardView', {
        helpLink: {
          label: 'For more information please see',
          urlLabel: 'pfExample',
-         url : '#/api/patternfly.views.component:pfEmptyState'
+         url: '#/api/patternfly.views.component:pfEmptyState',
+         urlAction: performEmptyStateAction
        }
      };
 
