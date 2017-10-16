@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/empty-state.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/5ab4738/src/views/empty-state.component.js#L96" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfEmptyState</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/empty-state.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/6b5494d/src/views/empty-state.component.js#L102" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfEmptyState</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -57,7 +57,12 @@
 <script type="text/ng-template" id="script.js-85">
 angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
   function ($scope) {
+
     $scope.eventText = '';
+
+    var performEmptyStateAction = function () {
+      $scope.eventText += 'Empty State Action Executed \r\n';
+    };
 
     $scope.config = {
       icon: 'pficon-add-circle-o',
@@ -66,7 +71,8 @@ angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
       helpLink: {
         label: 'For more information please see',
         urlLabel: 'pfExample',
-        url : '#/api/patternfly.views.component:pfEmptyState'
+        url: '#/api/patternfly.views.component:pfEmptyState',
+        urlAction: performEmptyStateAction
       }
     };
 
