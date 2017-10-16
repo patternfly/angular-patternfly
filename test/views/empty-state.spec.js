@@ -2,8 +2,6 @@ describe('Component:  pfEmptyState', function () {
   var $scope;
   var $compile;
   var element;
-  var performedAction;
-  var updateCount;
 
   // load the controller's module
   beforeEach(function () {
@@ -24,6 +22,11 @@ describe('Component:  pfEmptyState', function () {
   };
 
   beforeEach(function () {
+
+    var performEmptyStateAction = function () {
+      $scope.eventText = 'Empty State Action Executed';
+    };
+
     $scope.config = {
       icon: 'pficon-add-circle-o',
       title: 'Empty State Title',
@@ -31,7 +34,8 @@ describe('Component:  pfEmptyState', function () {
       helpLink: {
         label: 'For more information please see',
         urlLabel: 'pfExample',
-        url : '#/api/patternfly.views.component:pfEmptyState'
+        url : '#/api/patternfly.views.component:pfEmptyState',
+        urlAction: performEmptyStateAction
       }
     };
 
@@ -73,6 +77,8 @@ describe('Component:  pfEmptyState', function () {
     expect(element.find('.blank-state-pf-helpLink').text()).toContain('For more information please see');
     expect(element.find('a').text()).toContain('pfExample');
     expect(element.find('a').prop('href')).toContain('#/api/patternfly.views.component:pfEmptyState');
+    element.find('.blank-state-pf-helpLink').click();
+    expect($scope.eventText).toBe('Empty State Action Executed');
 
     var buttons = element.find('button');
     expect(buttons.length).toBe(4);
