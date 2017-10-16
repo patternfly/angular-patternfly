@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/empty-state.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3873612/src/views/empty-state.component.js#L88" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfEmptyState</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/empty-state.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/5ab4738/src/views/empty-state.component.js#L96" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfEmptyState</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
 </span>
 </div>
@@ -16,6 +16,14 @@
   <li>.icon   - (string) class for main icon. Ex. &#39;pficon pficon-add-circle-o&#39;
   <li>.title  - (string) Text for the main title
   <li>.info  - (string) Text for the main informational paragraph
+  <li>.helpLink - (object) Contains url specific properties and actions
+  <ul style='list-style-type: none'>
+    <li>.label - (string) Optional text label which appears before the urlLabel
+    <li>.urlLabel - (string) Optional text for the clickable portion of the link
+    <li>.url - (string) Optional text for url path
+    <li>.urlAction - (function) Optional function to invoke a url action when a callback method is specified.
+    When both urlAction and url are specified the component will first execute urlAction then nagivate to the url.
+  </ul>
 </ul></div></td></tr><tr><td>actionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfemptystate-page"><p>Buttons to display under the icon, title, and informational paragraph.</p>
 <ul style='list-style-type: none'>
   <li>.name - (String) The name of the action, displayed on the button

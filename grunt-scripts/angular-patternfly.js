@@ -15515,6 +15515,14 @@ angular.module('patternfly.views').component('pfCardView', {
  *   <li>.icon   - (string) class for main icon. Ex. 'pficon pficon-add-circle-o'
  *   <li>.title  - (string) Text for the main title
  *   <li>.info  - (string) Text for the main informational paragraph
+ *   <li>.helpLink - (object) Contains url specific properties and actions
+ *   <ul style='list-style-type: none'>
+ *     <li>.label - (string) Optional text label which appears before the urlLabel
+ *     <li>.urlLabel - (string) Optional text for the clickable portion of the link
+ *     <li>.url - (string) Optional text for url path
+ *     <li>.urlAction - (function) Optional function to invoke a url action when a callback method is specified.
+ *     When both urlAction and url are specified the component will first execute urlAction then nagivate to the url.
+ *   </ul>
  * </ul>
  * @param {array} actionButtons Buttons to display under the icon, title, and informational paragraph.
  *   <ul style='list-style-type: none'>
@@ -18626,7 +18634,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 
 
   $templateCache.put('views/empty-state.html',
-    "<div class=blank-slate-pf><div ng-if=$ctrl.config.icon class=blank-slate-pf-icon><span class={{$ctrl.config.icon}}></span></div><h4 id=blank-state-pf-title-{{$id}} class=\"h1 blank-state-pf-title\">{{$ctrl.config.title}}</h4><p id=blank-state-pf-info-{{$id}} class=blank-state-pf-info ng-if=$ctrl.config.info>{{$ctrl.config.info}}</p><p id=blank-state-pf-helpLink-{{$id}} class=blank-state-pf-helpLink ng-if=$ctrl.config.helpLink>{{$ctrl.config.helpLink.label}} <a href={{$ctrl.config.helpLink.url}}>{{$ctrl.config.helpLink.urlLabel}}</a>.</p><div ng-if=$ctrl.hasMainActions() class=blank-slate-pf-main-action><button class=\"btn btn-primary btn-lg\" ng-repeat=\"actionButton in $ctrl.actionButtons | filter:$ctrl.filterMainActions\" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div><div ng-if=$ctrl.hasSecondaryActions() class=blank-slate-pf-secondary-action><button class=\"btn btn-default\" ng-repeat=\"actionButton in $ctrl.actionButtons | filter:$ctrl.filterSecondaryActions\" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div></div>"
+    "<div class=blank-slate-pf><div ng-if=$ctrl.config.icon class=blank-slate-pf-icon><span class={{$ctrl.config.icon}}></span></div><h4 id=blank-state-pf-title-{{$id}} class=\"h1 blank-state-pf-title\">{{$ctrl.config.title}}</h4><p id=blank-state-pf-info-{{$id}} class=blank-state-pf-info ng-if=$ctrl.config.info>{{$ctrl.config.info}}</p><p id=blank-state-pf-helpLink-{{$id}} class=blank-state-pf-helpLink ng-if=$ctrl.config.helpLink ng-click=$ctrl.config.helpLink.urlAction()>{{$ctrl.config.helpLink.label}} <a href={{$ctrl.config.helpLink.url}}>{{$ctrl.config.helpLink.urlLabel}}</a>.</p><div ng-if=$ctrl.hasMainActions() class=blank-slate-pf-main-action><button class=\"btn btn-primary btn-lg\" ng-repeat=\"actionButton in $ctrl.actionButtons | filter:$ctrl.filterMainActions\" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div><div ng-if=$ctrl.hasSecondaryActions() class=blank-slate-pf-secondary-action><button class=\"btn btn-default\" ng-repeat=\"actionButton in $ctrl.actionButtons | filter:$ctrl.filterSecondaryActions\" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div></div>"
   );
 
 
