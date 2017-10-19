@@ -64,7 +64,7 @@
            <li class="drawer-pf-trigger dropdown" ng-class="{'open': !hideDrawer}">
              <a class="nav-item-iconic drawer-pf-trigger-icon" ng-click="toggleShowDrawer()">
                <span class="fa fa-bell" title="Notifications"></span>
-               <span ng-if="unreadNotifications" class="badge"> </span>
+               <span ng-if="unreadNotifications" class="badge badge-pf-bordered"> </span>
              </a>
            </li>
          </ul>

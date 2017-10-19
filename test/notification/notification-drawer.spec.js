@@ -499,7 +499,7 @@ describe('Component:  pfNotificationDrawer', function () {
     var expandToggle = element.find('.drawer-pf-toggle-expand');
     expect(expandToggle.length).toBe(1);
 
-    eventFire(expandToggle[0], 'click');
+    expandToggle[0].click();
     $scope.$digest();
 
     expandedDrawer = element.find('.drawer-pf.drawer-pf-expanded');
@@ -529,7 +529,7 @@ describe('Component:  pfNotificationDrawer', function () {
 
     expect($scope.closed).toBe(false);
 
-    eventFire(closeButton[0], 'click');
+    closeButton[0].click();
     $scope.$digest();
 
     expect($scope.closed).toBe(true);
