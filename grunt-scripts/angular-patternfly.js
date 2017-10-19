@@ -18352,7 +18352,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 
 
   $templateCache.put('canvas-view/canvas-editor/toolbox-items.html',
-    "<ul class=toolbox-items-list><li class=toolbox-item ng-repeat=\"item in $ctrl.items | filter:$ctrl.searchText\" data-drag={{!item.disableInToolbox}} jqyoui-draggable=\"{onStart:'$ctrl.startDragCallbackfmDir(item)'}\" ng-class=\"{'not-draggable': item.disableInToolbox}\" data-jqyoui-options=\"{revert: 'invalid', helper: 'clone'}\" ng-click=$ctrl.clickCallbackfmDir(item) uib-tooltip=\"{{(item.disableInToolbox ? 'Items cannot be added to the canvas more than once.' : '')}}\"><img ng-if=item.image src={{item.image}} alt=\"{{item.name}}\"> <i ng-if=\"item.icon && !item.image\" class=\"draggable-item-icon {{item.icon}}\"></i> <span>{{ item.name }}</span></li></ul>"
+    "<ul class=toolbox-items-list><li class=toolbox-item ng-repeat=\"item in $ctrl.items | filter:$ctrl.searchText\" data-drag={{!item.disableInToolbox}} jqyoui-draggable=\"{onStart:'$ctrl.startItemDrag(item)'}\" ng-class=\"{'not-draggable': item.disableInToolbox}\" data-jqyoui-options=\"{revert: 'invalid', helper: 'clone'}\" ng-click=$ctrl.itemClicked(item) uib-tooltip=\"{{(item.disableInToolbox ? 'Items cannot be added to the canvas more than once.' : '')}}\"><img ng-if=item.image src={{item.image}} alt=\"{{item.name}}\"> <i ng-if=\"item.icon && !item.image\" class=\"draggable-item-icon {{item.icon}}\"></i> <span>{{ item.name }}</span></li></ul>"
   );
 
 
