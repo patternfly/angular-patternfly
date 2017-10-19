@@ -1,9 +1,9 @@
 <div>
   <div class="modal-header" ng-if="!$ctrl.hideHeader">
-    <button type="button" class="close wizard-pf-dismiss" aria-label="Close" ng-click="$ctrl.onCancel()" ng-if="!$ctrl.embedInPage">
-      <span aria-hidden="true">&times;</span>
+    <button type="button" class="close wizard-pf-dismiss" aria-hidden="true" aria-label="Close" ng-click="$ctrl.onCancel()" ng-if="!$ctrl.embedInPage">
+      <span class="pficon pficon-close"></span>
     </button>
-    <dt class="modal-title">{{$ctrl.wizardTitle}}</dt>
+    <h4 class="modal-title">{{$ctrl.wizardTitle}}</h4>
   </div>
   <div class="modal-body wizard-pf-body clearfix">
     <!-- step area -->
