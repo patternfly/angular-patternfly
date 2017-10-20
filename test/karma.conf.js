@@ -42,7 +42,8 @@ module.exports = function(config) {
 
     preprocessors: {
       'src/**/*.html': 'ng-html2js',
-      'test/**/*.html': 'ng-html2js'
+      'test/**/*.html': 'ng-html2js',
+      'src/**/*.js': "coverage"
     },
 
     ngHtml2JsPreprocessor: {
@@ -52,11 +53,16 @@ module.exports = function(config) {
     // use dots reporter, as travis terminal does not support escaping sequences
     // possible values: 'dots', 'progress'
     // CLI --reporters progress
-    reporters: ['progress', 'junit'],
+    reporters: ['progress', 'junit', 'coverage'],
 
     junitReporter: {
       // will be resolved to basePath (in the same way as files/exclude patterns)
       outputFile: 'test/test-results.xml'
+    },
+
+    coverageReporter: {
+      type: "lcov",
+      dir: "coverage/"
     },
 
     // web server port

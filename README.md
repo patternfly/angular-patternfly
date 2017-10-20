@@ -3,6 +3,7 @@
 [![Code Climate](https://codeclimate.com/github/patternfly/angular-patternfly/badges/gpa.svg)](https://codeclimate.com/github/patternfly/angular-patternfly)
 [![NSP Status](https://nodesecurity.io/orgs/angular-patternfly/projects/690b94c3-4f36-4208-887d-fdb5f22f65fc/badge)](https://nodesecurity.io/orgs/angular-patternfly/projects/690b94c3-4f36-4208-887d-fdb5f22f65fc)
 [![Join the chat at https://gitter.im/patternfly/angular-patternfly](https://badges.gitter.im/patternfly/angular-patternfly.svg)](https://gitter.im/patternfly/angular-patternfly?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Coverage Status](https://coveralls.io/repos/github/patternfly/angular-patternfly/badge.svg)](https://coveralls.io/github/patternfly/angular-patternfly)
 
 # AngularJS components for [PatternFly](https://www.patternfly.org)
 

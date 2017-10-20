@@ -161,6 +161,14 @@ module.exports = function (grunt) {
           browsers: ['PhantomJS']
         }
       },
+      coveralls: {
+        options: {
+          debug: true,
+          coverageDir: 'coverage',
+          dryRun: false,
+          force: true
+        }
+      },
       ngdocs: {
         options: {
           title: 'ANGULAR PATTERNFLY',
@@ -369,7 +377,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['build']);
     grunt.registerTask('ngdocs:view', ['build', 'connect:docs', 'watch']);
     grunt.registerTask('lint', ['eslint', 'htmlhint']);
-    grunt.registerTask('test', ['karma']);
+    grunt.registerTask('test', ['karma', 'coveralls']);
     grunt.registerTask('check', ['lint', 'test']);
     grunt.registerTask('help', ['availabletasks']);
     grunt.registerTask('serve', ['ngdocs:view']);
