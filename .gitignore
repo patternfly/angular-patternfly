@@ -19,7 +19,7 @@ dist/docs/font*
 dist/docs/grunt-styles
 dist/docs/img
 dist/docs/index.html
-
+coverage/
 
 /docs
 /dist
