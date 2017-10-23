@@ -1,5 +1,9 @@
-describe('Component: pfSparklineChart', function() {
-  var $scope, $compile, $timeout, element, isoloateScope;
+describe('Component: pfSparklineChart', function () {
+  var $scope;
+  var $compile;
+  var $timeout;
+  var element;
+  var isoloateScope;
 
   beforeEach(module(
     'patternfly.charts',
@@ -7,13 +11,13 @@ describe('Component: pfSparklineChart', function() {
     'charts/sparkline/sparkline-chart.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $timeout = _$timeout_;
   }));
 
-  beforeEach(function() {
+  beforeEach(function () {
     $scope.config = {
       'chartId': 'testSparklineChart',
       'totalUnits': 'MHz'
@@ -40,7 +44,7 @@ describe('Component: pfSparklineChart', function() {
     return element;
   };
 
-  it("should not show axis by default", function() {
+  it("should not show axis by default", function () {
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data"></pf-sparkline-chart>',$scope);
 
     expect(isolateScope.sparklineChartId).toBe("testSparklineChartsparklineChart");
@@ -48,7 +52,7 @@ describe('Component: pfSparklineChart', function() {
     expect(isolateScope.chartConfig.axis.y.show).toBe(false);
   });
 
-  it("should allow attribute specifications to show x and y axis", function() {
+  it("should allow attribute specifications to show x and y axis", function () {
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data" show-x-axis="true" show-y-axis="true"></pf-sparkline-chart>', $scope);
 
     expect(isolateScope.sparklineChartId).toBe("testSparklineChartsparklineChart");
@@ -56,7 +60,7 @@ describe('Component: pfSparklineChart', function() {
     expect(isolateScope.chartConfig.axis.y.show).toBe(true);
   });
 
-  it("should update when the show x and y axis attributes change", function() {
+  it("should update when the show x and y axis attributes change", function () {
     $scope.showX = false;
     $scope.showY = false;
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data" show-x-axis="showX" show-y-axis="showY"></pf-sparkline-chart>', $scope);
@@ -73,14 +77,14 @@ describe('Component: pfSparklineChart', function() {
     expect(isolateScope.chartConfig.axis.y.show).toBe(true);
   });
 
-  it("should allow attribute specification of chart height", function() {
+  it("should allow attribute specification of chart height", function () {
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data" chart-height="120"></pf-sparkline-chart>', $scope);
 
     expect(isolateScope.sparklineChartId).toBe("testSparklineChartsparklineChart");
     expect(isolateScope.chartConfig.size.height).toBe(120);
   });
 
-  it("should update when the chart height attribute changes", function() {
+  it("should update when the chart height attribute changes", function () {
     $scope.chartHeight = 120;
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data" chart-height="chartHeight"></pf-sparkline-chart>', $scope);
 
@@ -92,7 +96,7 @@ describe('Component: pfSparklineChart', function() {
     expect(isolateScope.chartConfig.size.height).toBe(100);
   });
 
-  it("should setup C3 chart data correctly", function() {
+  it("should setup C3 chart data correctly", function () {
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data"></pf-sparkline-chart>', $scope);
 
     expect(isolateScope.config.data.x).toBe("dates");
@@ -101,7 +105,7 @@ describe('Component: pfSparklineChart', function() {
     expect(isolateScope.config.data.columns[1][0]).toBe("used");
   });
 
-  it("should update C3 chart data when data changes", function() {
+  it("should update C3 chart data when data changes", function () {
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data"></pf-sparkline-chart>', $scope);
 
     expect(isolateScope.config.data.x).toBe("dates");
@@ -119,16 +123,16 @@ describe('Component: pfSparklineChart', function() {
     expect(isolateScope.chartConfig.data.columns[1][1]).toBe('1000');
   });
 
-  it("should allow tooltip type specification", function() {
+  it("should allow tooltip type specification", function () {
     $scope.config.tooltipType = "percentage";
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data"></pf-sparkline-chart>', $scope);
 
     expect(isolateScope.config.tooltipType).toBe("percentage");
   });
 
-  it("should allow using a tooltip function", function() {
+  it("should allow using a tooltip function", function () {
     var functionCalled = false;
-    var myTooltipFn = function(d) {
+    var myTooltipFn = function (d) {
       if (d && d.length === 2) {
         functionCalled = true;
       }
@@ -142,7 +146,7 @@ describe('Component: pfSparklineChart', function() {
     expect(functionCalled).toBe(true);
   });
 
-  it("should allow using C3 chart data formats", function() {
+  it("should allow using C3 chart data formats", function () {
     $scope.config = {
       chartId: 'testSparklineChart',
       totalUnits: 'MHz',
@@ -164,7 +168,7 @@ describe('Component: pfSparklineChart', function() {
     expect(isolateScope.config.data.columns[1][0]).toBe("used");
   });
 
-  it("should show empty chart when the dataAvailable is set to false", function() {
+  it("should show empty chart when the dataAvailable is set to false", function () {
     element = compileChart('<pf-sparkline-chart config="config" chart-data="data"></pf-sparkline-chart>', $scope);
     var emptyChart = element.find('.empty-chart-content');
     expect(emptyChart.length).toBe(0);

@@ -1,6 +1,7 @@
 describe('pf-autofocus', function () {
-
-  var $scope, $compile, $timeout;
+  var $scope;
+  var $compile;
+  var $timeout;
 
   beforeEach(module('patternfly.autofocus'));
   beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_) {
@@ -49,7 +50,7 @@ describe('pf-autofocus', function () {
       var eUnFocused1 = page.find("#i1")[0];
       var eUnFocused2 = page.find("#i2")[0];
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.iFocused1 = true;
         $scope.iFocused2 = false;
       });
@@ -59,7 +60,7 @@ describe('pf-autofocus', function () {
       expect(eUnFocused1 === document.activeElement).toBe(true);
       expect(eUnFocused2 === document.activeElement).toBe(false);
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.iFocused1 = false;
         $scope.iFocused2 = true;
       });
@@ -88,7 +89,7 @@ describe('pf-autofocus', function () {
       expect(eUnFocused1 === document.activeElement).toBe(false);
       expect(eUnfocused2 === document.activeElement).toBe(false);
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.iFocused = true;
       });
 
@@ -97,7 +98,7 @@ describe('pf-autofocus', function () {
       expect(eUnFocused1 === document.activeElement).toBe(false);
       expect(eUnfocused2 === document.activeElement).toBe(true);
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.iFocused = false;
       });
 

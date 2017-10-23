@@ -1,5 +1,4 @@
 describe('Component:  pfApplicationLauncher', function () {
-
   var $scope;
   var $compile;
   var element;
@@ -48,7 +47,7 @@ describe('Component:  pfApplicationLauncher', function () {
     expect(content.length).toBe(2);
   });
 
-  it('should have dropdown menu to the right', function() {
+  it('should have dropdown menu to the right', function () {
     var htmlTmp = '<pf-application-launcher items="sites" label="" is-disabled="false" is-list="true" hidden-icons="true"></pf-application-launcher>';
     compileHTML(htmlTmp, $scope);
 

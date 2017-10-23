@@ -1,6 +1,8 @@
 describe('pf-notification', function () {
-
-  var $scope, $compile, Notifications, $timeout;
+  var $scope;
+  var $compile;
+  var Notifications;
+  var $timeout;
 
   beforeEach(module(
     'patternfly.notification',
@@ -92,7 +94,7 @@ describe('pf-notification', function () {
       expect(iconError).toHaveClass('ng-hide');
       expect(iconWarning).toHaveClass('ng-hide');
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.type = types[1];
       });
 
@@ -101,7 +103,7 @@ describe('pf-notification', function () {
       expect(iconError).toHaveClass('ng-hide');
       expect(iconWarning).toHaveClass('ng-hide');
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.type = types[2];
       });
 
@@ -110,7 +112,7 @@ describe('pf-notification', function () {
       expect(iconError).not.toHaveClass('ng-hide');
       expect(iconWarning).toHaveClass('ng-hide');
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.type = types[3];
       });
 
@@ -137,7 +139,7 @@ describe('pf-notification', function () {
       expect(closeButton).toBeDefined();
       expect(alertElement.text()).toContain('head1 defaultMes');
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.header = "head2";
       });
 
@@ -145,7 +147,7 @@ describe('pf-notification', function () {
       expect(closeButton).toBeDefined();
       expect(alertElement.text()).toContain('head2 defaultMes');
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         $scope.message = "defaultMes2";
       });
 
@@ -178,13 +180,13 @@ describe('pf-notification', function () {
 
       expect(notifyList.find('div.alert').length).toBe(0);
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         Notifications.info('aloha');
       });
 
       expect(notifyList.find('div.alert').length).toBe(1);
 
-      $scope.$apply(function(){
+      $scope.$apply(function () {
         Notifications.info('ahoj');
       });
 

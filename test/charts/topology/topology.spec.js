@@ -1,12 +1,14 @@
 
-describe('Component: pfTopology', function() {
-  var $scope, $compile, $timeout;
+describe('Component: pfTopology', function () {
+  var $scope;
+  var $compile;
+  var $timeout;
 
   beforeEach(module(
     'patternfly.charts'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $timeout = _$timeout_;
@@ -18,11 +20,11 @@ describe('Component: pfTopology', function() {
     return angular.element(el);
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     var index = 0;
     var datasets = [];
 
-    function sink(dataset) {
+    function sink (dataset) {
       datasets.push(dataset);
     }
 
@@ -164,7 +166,8 @@ describe('Component: pfTopology', function() {
 
     var icons = $scope.data.icons;
     $scope.nodes = {};
-    for(var kind in nodeKinds) {
+
+    Object.keys(nodeKinds).forEach(function (kind) {
       var icon = icons[kind];
       $scope.nodes[kind] = {
         "name": kind,
@@ -177,7 +180,7 @@ describe('Component: pfTopology', function() {
         "icon": icon.icon,
         "fontFamily": icon.fontfamily
       };
-    }
+    });
 
     // Individual values can also be set for specific icons
     $scope.nodes.ContainerService.textY = 9;
@@ -201,11 +204,11 @@ describe('Component: pfTopology', function() {
     };
   });
 
-  afterEach(function() {
+  afterEach(function () {
     d3.selectAll('pf-topology').remove();
   });
 
-  it("should create an svg internally", function() {
+  it("should create an svg internally", function () {
     var element = compileTopology('<div><pf-topology items="data.items" relations="data.relations" kinds="kinds" icons="data.icons" nodes="nodes" item-selected="itemSelected(item)" search-text="searchText" show-labels="showLabels" tooltip-function="tooltip(node)"></pf-topology></div>', $scope);
     expect(element.find('svg')).not.toBe(undefined);
   });

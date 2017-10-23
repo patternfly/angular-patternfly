@@ -146,13 +146,23 @@ module.exports = function (grunt) {
         }
       },
       eslint: {
-        options: {
-          configFile: 'eslint.yaml'
+        standard: {
+          options: {
+            configFile: 'eslint.yaml'
+          },
+          src : [
+            'Gruntfile.js',
+            'src/**/*.js'
+          ]
         },
-        target: [
-          'Gruntfile.js',
-          'src/**/*.js'
-        ]
+        tests: {
+          options: {
+            configFile: 'test/eslint.yaml'
+          },
+          src : [
+            'test/**/*.js'
+          ]
+        }
       },
       karma: {
         unit: {

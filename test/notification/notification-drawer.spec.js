@@ -299,12 +299,12 @@ describe('Component:  pfNotificationDrawer', function () {
     };
 
     $scope.allReadGroup = '';
-    $scope.markAllReadCB = function(group) {
+    $scope.markAllReadCB = function (group) {
       $scope.allReadGroup = group.heading;
     };
 
     $scope.clearAllGroup = '';
-    $scope.clearAllCB = function(group) {
+    $scope.clearAllCB = function (group) {
       $scope.clearAllGroup = group.heading;
     };
 
@@ -343,7 +343,7 @@ describe('Component:  pfNotificationDrawer', function () {
                   '     notification-footer-include="test/notification/notification-footer.html" custom-scope="customScope">' +
                   '</pf-notification-drawer>';
 
-      compileHTML(htmlTmp, $scope);
+    compileHTML(htmlTmp, $scope);
   });
 
   it('should have the correct title', function () {
@@ -506,7 +506,7 @@ describe('Component:  pfNotificationDrawer', function () {
     expect(expandedDrawer.length).toBe(1);
   });
 
-  it ('should except a single object with notification children', function() {
+  it ('should except a single object with notification children', function () {
     var htmlTmp = '<pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
       '     action-button-title="Mark All Read" action-button-callback="actionButtonCB" notification-groups="groups[0]"' +
       '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
@@ -523,7 +523,7 @@ describe('Component:  pfNotificationDrawer', function () {
     expect(notifications.length).toBe(9);
   });
 
-  it ('should notify on close button click', function() {
+  it ('should notify on close button click', function () {
     var closeButton = element.find('.drawer-pf-close');
     expect(closeButton.length).toBe(1);
 
@@ -535,7 +535,7 @@ describe('Component:  pfNotificationDrawer', function () {
     expect($scope.closed).toBe(true);
   });
 
-  it ('should show mark all read button for groups with unread notifications when specified', function() {
+  it ('should show mark all read button for groups with unread notifications when specified', function () {
     var actionButtons = element.find('.drawer-pf-action-link .btn-link');
     expect(actionButtons.length) .toBe(0);
 
@@ -558,7 +558,7 @@ describe('Component:  pfNotificationDrawer', function () {
     expect($scope.allReadGroup).toBe('Group 2');
   });
 
-  it ('should show clear all button for groups with notifications when specified', function() {
+  it ('should show clear all button for groups with notifications when specified', function () {
     var actionButtons = element.find('.drawer-pf-action-link .btn-link');
     expect(actionButtons.length) .toBe(0);
 
@@ -581,7 +581,7 @@ describe('Component:  pfNotificationDrawer', function () {
     expect($scope.clearAllGroup).toBe('Group 2');
   });
 
-  it ('should show the empty state pattern when no notifications exist', function() {
+  it ('should show the empty state pattern when no notifications exist', function () {
     var htmlTmp = '<pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
       '     show-clear-all="true" on-clear-all="clearAllCB"' +
       '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
@@ -597,7 +597,7 @@ describe('Component:  pfNotificationDrawer', function () {
     expect(_.trim(title)).toBe('There are no notifications to display.');
   });
 
-  it ('should show the empty state pattern with the specified message when no notifications exist', function() {
+  it ('should show the empty state pattern with the specified message when no notifications exist', function () {
     var htmlTmp = '<pf-notification-drawer allow-expand="true" drawer-hidden="hideDrawer" drawer-title="Notifications Drawer"  title-include="test/notification/title.html" ' +
       '     show-clear-all="true" on-clear-all="clearAllCB" no-notifications-text="Nothing"' +
       '     heading-include="test/notification/heading.html" subheading-include="test/notification/subheading.html" notification-body-include="test/notification/notification-body.html"' +
@@ -613,7 +613,7 @@ describe('Component:  pfNotificationDrawer', function () {
     expect(_.trim(title)).toBe('Nothing');
   });
 
-  it ('should show the empty state pattern when no notifications exist for a group', function() {
+  it ('should show the empty state pattern when no notifications exist for a group', function () {
     var emptyStates = element.find('.blank-slate-pf');
     expect(emptyStates.length).toBe(2);
 
