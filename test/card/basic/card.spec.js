@@ -1,5 +1,12 @@
-describe('Component: pfCard', function() {
-  var $scope, $compile, element, headTitle, subTitle, cardClass, innerContent, isoScope;
+describe('Component: pfCard', function () {
+  var $scope;
+  var $compile;
+  var element;
+  var headTitle;
+  var subTitle;
+  var cardClass;
+  var innerContent;
+  var isoScope;
 
   beforeEach(module(
     'patternfly.card',
@@ -7,7 +14,7 @@ describe('Component: pfCard', function() {
     'card/basic/card-filter.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
   }));
@@ -21,7 +28,7 @@ describe('Component: pfCard', function() {
       return el;
     };
 
-    it("should set the headTitle and subTitle and inner content", function() {
+    it("should set the headTitle and subTitle and inner content", function () {
 
       element = compileCard('<pf-card head-title="My card title" sub-title="My card subtitle title"><span>Inner content goes here</span></pf-card>', $scope);
 
@@ -40,7 +47,7 @@ describe('Component: pfCard', function() {
       expect(cardClass).toBeFalsy();
     });
 
-    it("should show the top border", function() {
+    it("should show the top border", function () {
 
       element = compileCard('<pf-card head-title="My card title" sub-title="My card subtitle title" show-top-border="true">Inner content goes here</pf-card>', $scope);
 
@@ -50,7 +57,7 @@ describe('Component: pfCard', function() {
 
     });
 
-    it("should hide the top border", function() {
+    it("should hide the top border", function () {
 
       element = compileCard('<pf-card head-title="My card title" sub-title="My card subtitle title" show-top-border="false">Inner content goes here</pf-card>', $scope);
 
@@ -60,7 +67,7 @@ describe('Component: pfCard', function() {
 
     });
 
-    it("should show and hide the bottom border", function() {
+    it("should show and hide the bottom border", function () {
 
       // by default, bottom border should be shown
       element = compileCard('<pf-card head-title="My card title" sub-title="My card subtitle title">Inner content goes here</pf-card>', $scope);
@@ -85,7 +92,7 @@ describe('Component: pfCard', function() {
 
     });
 
-    it("should show and hide the spinner", function() {
+    it("should show and hide the spinner", function () {
 
       // When data is loaded, spinner should be hidden
       $scope.dataLoading = false;
@@ -100,7 +107,7 @@ describe('Component: pfCard', function() {
       expect(cardClass.length).toBe(1);
     });
 
-    it("should show and hide the spinner text", function() {
+    it("should show and hide the spinner text", function () {
 
       // When no spinner text is given, it should be undefined
       element = compileCard('<pf-card head-title="My card title" show-spinner="dataLoading" sub-title="My card subtitle title" show-top-border="false">Inner content goes here</pf-card>', $scope);
@@ -115,7 +122,7 @@ describe('Component: pfCard', function() {
 
     });
 
-    it("should hide the action bar footer by default", function() {
+    it("should hide the action bar footer by default", function () {
 
       // by default, if footer not defined, footer should not be shown
       element = compileCard('<pf-card head-title="My card title" sub-title="My card subtitle title">Inner content goes here</pf-card>', $scope);
@@ -123,7 +130,7 @@ describe('Component: pfCard', function() {
       expect(cardClass.length).toBe(0);
     });
 
-    it("should show the action bar footer", function() {
+    it("should show the action bar footer", function () {
 
       // show a footer with a href
       $scope.actionBarConfig = {
@@ -164,7 +171,7 @@ describe('Component: pfCard', function() {
       expect(spans.eq(1).html()).toBe('View All Events');
     });
 
-    it("should hide the filter in the footer by default", function() {
+    it("should hide the filter in the footer by default", function () {
 
       // show a footer with a href
       $scope.actionBarConfig = {
@@ -178,7 +185,7 @@ describe('Component: pfCard', function() {
       expect(cardClass.length).toBe(0);
     });
 
-    it("should show the filter in the footer if specified", function() {
+    it("should show the filter in the footer if specified", function () {
 
       $scope.filterConfig = {
         'filters' : [{label:'Last 30 Days', value:'30'},
@@ -186,7 +193,7 @@ describe('Component: pfCard', function() {
                      {label:'Today', value:'today'}],
         'callBackFn': function (f) {
           return "Footer Filter Callback Fn Called: label='" + f.label + "' value = " + f.value;
-         },
+        },
         'defaultFilter' : 2
       };
 
@@ -209,7 +216,7 @@ describe('Component: pfCard', function() {
       expect(filterItem.html()).toContain('Last 30 Days');
     });
 
-    it("should show the filter in the header if specified", function() {
+    it("should show the filter in the header if specified", function () {
 
       $scope.filterConfig = {
         'filters' : [{label:'Last 30 Days', value:'30'},
@@ -245,7 +252,7 @@ describe('Component: pfCard', function() {
       expect(filterItem.html()).toContain('Last 30 Days');
     });
 
-    it("should not show the header if no title or filter specified", function() {
+    it("should not show the header if no title or filter specified", function () {
 
       element = compileCard('<pf-card>Inner content</pf-card>', $scope);
 

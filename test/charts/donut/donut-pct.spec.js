@@ -1,5 +1,9 @@
-describe('Directive: pfDonutPctChart', function() {
-  var $scope, ctrl, $compile, $timeout, element;
+describe('Directive: pfDonutPctChart', function () {
+  var $scope;
+  var ctrl;
+  var $compile;
+  var $timeout;
+  var element;
 
   beforeEach(module(
     'patternfly.charts',
@@ -7,13 +11,13 @@ describe('Directive: pfDonutPctChart', function() {
     'charts/donut/donut-pct-chart.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $timeout = _$timeout_;
   }));
 
-  beforeEach(function() {
+  beforeEach(function () {
     $scope.config = {
       'units': 'MHz',
       'thresholds':{'warning':'75.0','error':'90.00'},
@@ -47,33 +51,33 @@ describe('Directive: pfDonutPctChart', function() {
     element = compileDonut('<pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></pf-donut-pct-chart>');
   };
 
-  it("should have an external label", function() {
+  it("should have an external label", function () {
     compileSimpleDonut();
     expect(element.find('.pct-donut-chart-pf-right').length).toEqual(1);
     expect(element.find('.pct-donut-chart-pf-label')[0].innerText).toContain('Lorem Ipsum');
     expect(element.find('.pct-donut-chart-pf-label > span')[0].innerText).toContain('50 MHz available');
   });
 
-  it("should trigger error threshold", function() {
+  it("should trigger error threshold", function () {
     compileSimpleDonut();
     expect(ctrl.statusDonutColor().pattern[0]).toBe('#cc0000');  //red
   });
 
-  it("should trigger warning threshold", function() {
+  it("should trigger warning threshold", function () {
     compileSimpleDonut();
     $scope.data.used = 850;
     $scope.$digest();
     expect(ctrl.statusDonutColor().pattern[0]).toBe('#ec7a08');  //orange
   });
 
-  it("should trigger ok threshold", function() {
+  it("should trigger ok threshold", function () {
     compileSimpleDonut();
     $scope.data.used = 550;
     $scope.$digest();
     expect(ctrl.statusDonutColor().pattern[0]).toBe('#3f9c35');  //green
   });
 
-  it("should show no threshold", function() {
+  it("should show no threshold", function () {
     $scope.config = {
       'units': 'MHz'
     };
@@ -81,26 +85,26 @@ describe('Directive: pfDonutPctChart', function() {
     expect(ctrl.statusDonutColor().pattern[0]).toBe('#0088ce');  //blue
   });
 
-  it("should show 'used' center label by default", function() {
+  it("should show 'used' center label by default", function () {
     compileSimpleDonut();
     expect(ctrl.getCenterLabelText().smText).toContain('Used');
   });
 
-  it("should show 'available' center label", function() {
+  it("should show 'available' center label", function () {
     compileDonutCenterLabel();
     $scope.cntrLabel = 'available';
     $scope.$digest();
     expect(ctrl.getCenterLabelText().smText).toContain('Available');
   });
 
-  it("should show 'percent' center label", function() {
+  it("should show 'percent' center label", function () {
     compileDonutCenterLabel();
     $scope.cntrLabel = 'percent';
     $scope.$digest();
     expect(ctrl.getCenterLabelText().bigText).toContain('%');
   });
 
-  it("should show no center label", function() {
+  it("should show no center label", function () {
     compileDonutCenterLabel();
     $scope.cntrLabel = 'none';
     $scope.$digest();
@@ -108,7 +112,7 @@ describe('Directive: pfDonutPctChart', function() {
     expect(ctrl.getCenterLabelText().smText).toBe('');
   });
 
-  it("should show 'used' center label", function() {
+  it("should show 'used' center label", function () {
     compileDonutCenterLabel();
     $scope.cntrLabel = 'used';
     $scope.$digest();
@@ -116,7 +120,7 @@ describe('Directive: pfDonutPctChart', function() {
   });
 
 
-  it("should use center label funtion", function() {
+  it("should use center label funtion", function () {
     compileDonutCenterLabel();
 
     $scope.config.centerLabelFn = function () {
@@ -133,7 +137,7 @@ describe('Directive: pfDonutPctChart', function() {
     expect(ctrl.getCenterLabelText().smText).toBe('');
   });
 
-  it("should show empty chart when the dataAvailable is set to false", function() {
+  it("should show empty chart when the dataAvailable is set to false", function () {
     element = compileDonut('<pf-donut-pct-chart config="config" data="data"></pf-donut-pct-chart>');
     var emptyChart = element.find('.empty-chart-content');
     expect(emptyChart.length).toBe(0);

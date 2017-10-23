@@ -4,11 +4,11 @@ angular.module('patternfly.wizard').controller('DetailsGeneralController', ['$ro
 
     $scope.reviewTemplate = "test/wizard/review-template.html";
 
-    $scope.onShow = function() {
+    $scope.onShow = function () {
       $scope.detailsGeneralComplete = false;
     };
 
-    $scope.updateName = function() {
+    $scope.updateName = function () {
       $scope.detailsGeneralComplete = angular.isDefined($scope.data.name) && $scope.data.name.length > 0;
     };
   }
@@ -41,7 +41,7 @@ angular.module('patternfly.wizard').controller('SummaryController', ['$rootScope
       $timeout(function () {
         $scope.pageShown = false;  // done so the next time the page is shown it updates
       });
-    }
+    };
   }
 ]);
 
@@ -49,9 +49,9 @@ angular.module('patternfly.wizard').controller('DeploymentController', ['$rootSc
   function ($rootScope, $scope, $timeout) {
     'use strict';
 
-    $scope.onShow = function() {
+    $scope.onShow = function () {
       $scope.deploymentComplete = false;
-      $timeout(function() {
+      $timeout(function () {
         $scope.deploymentComplete = true;
       }, 2500);
     };

@@ -20,7 +20,7 @@ describe('Component:  pfCardView', function () {
     scope.$digest();
   };
 
-  function basicSetup() {
+  function basicSetup () {
     $scope.systemModel = [
       {uuid: '1', name: 'One', size: 291445030, capacity: 8200000000},
       {uuid: '2', name: 'Two', size: 1986231544, capacity: 8700000000},
@@ -42,7 +42,7 @@ describe('Component:  pfCardView', function () {
     compileHTML(htmlTmp, $scope);
   }
 
-  function paginationSetup() {
+  function paginationSetup () {
     $scope.systemModel = [
       {uuid: '1', name: 'One', size: 291445030, capacity: 8200000000},
       {uuid: '2', name: 'Two', size: 1986231544, capacity: 8700000000},
@@ -312,7 +312,7 @@ describe('Component:  pfCardView', function () {
     expect(element.find('.card-content').length).toBe(2);
   });
 
-  it('should change the page size when selected from dropdown', function() {
+  it('should change the page size when selected from dropdown', function () {
     paginationSetup();
 
     //Get pageSizeDropdown

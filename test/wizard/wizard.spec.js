@@ -1,11 +1,11 @@
 describe('Component:  pfWizard', function () {
-  var $scope,
-      $rootScope,
-      $compile,
-      $httpBackend,
-      $templateCache,
-      $timeout,
-      element;
+  var $scope;
+  var $rootScope;
+  var $compile;
+  var $httpBackend;
+  var $templateCache;
+  var $timeout;
+  var element;
 
   // load the controller's module
   beforeEach(module(
@@ -62,7 +62,7 @@ describe('Component:  pfWizard', function () {
     };
 
     var startDeploy = function () {
-      $timeout(function() { }, 2000);
+      $timeout(function () { }, 2000);
       $scope.deployInProgress = true;
     };
 
@@ -101,7 +101,7 @@ describe('Component:  pfWizard', function () {
     initializeWizard();
   };
 
-  var setupWizard = function(wizardHtml) {
+  var setupWizard = function (wizardHtml) {
     setupWizardScope();
 
     var modalHtml = $templateCache.get(wizardHtml);

@@ -1,6 +1,6 @@
 describe('pf-bootstrap-select', function () {
-
-  var $scope, $compile;
+  var $scope;
+  var $compile;
 
   beforeEach(module('patternfly.select'));
 
@@ -53,7 +53,7 @@ describe('pf-bootstrap-select', function () {
       expect(bsSelItems.length).toBe($scope.options.length);
       expect(bsSelItems.text()).toBe('abc');
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.options.push('d');
       });
 
@@ -86,7 +86,7 @@ describe('pf-bootstrap-select', function () {
       expect(bsSelected.length).toBe(1);
       expect(bsSelected.text()).toBe('a');
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.modelValue = $scope.options[1];
       });
 
@@ -99,7 +99,7 @@ describe('pf-bootstrap-select', function () {
       expect(bsSelected.length).toBe(1);
       expect(bsSelected.text()).toBe('b');
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.modelValue = $scope.options[2];
       });
 
