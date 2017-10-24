@@ -106,4 +106,10 @@ describe('Directive: pfUtilizationBarChart', function() {
     expect(emptyChart.length).toBe(1);
   });
 
+  it("should handle no data given", function() {
+    element = compileChart('<pf-utilization-bar-chart chart-data=data2 chart-title=title units=units></pf-utilization-bar-chart>', $scope);
+    utilizationBar = angular.element(element).find('.progress-bar-remaining').css('width');
+    expect(utilizationBar).toBe("100%");
+  });
+
 });

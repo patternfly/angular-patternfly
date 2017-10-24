@@ -5,9 +5,11 @@
  *
  * @param {string} headTitle Title for the card
  * @param {string=} subTitle Sub-Title for the card
+ * @param {string=} spinnerText Text for the card spinner
  * @param {boolean=} showTopBorder Show/Hide the blue top border. True shows top border, false (default) hides top border
  * @param {boolean=} showTitlesSeparator Show/Hide the grey line between the title and sub-title.
  * True (default) shows the line, false hides the line
+ * @param {boolean=} showSpinner Show/Hide the spinner for loading state. True shows the spinner, false (default) hides the spinner
  * @param {object=} footer footer configuration properties:<br/>
  * <ul style='list-style-type: none'>
  * <li>.iconClass  - (optional) the icon to show on the bottom left of the footer panel
@@ -45,10 +47,20 @@
           footer="footerConfig" filter="filterConfig" style="width: 50%">
         Card Contents
      </pf-card>
+     <label class="label-title">Loading State</label>
+     <pf-card show-spinner="dataLoading" spinner-text="Loading" head-title="Card Title" sub-title="Card Subtitle" show-top-border="true" filter="filterConfigHeader" style="width: 50%">
+       Card Contents
+     </pf-card>
    </div>
  </file>
  <file name="script.js">
- angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
+ angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope, $timeout ) {
+
+       $scope.dataLoading = true;
+
+       $timeout(function () {
+         $scope.dataLoading = false;
+       }, 3000 );
 
        $scope.footerConfig = {
          'iconClass' : 'fa fa-flag',
