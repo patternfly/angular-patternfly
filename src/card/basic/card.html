@@ -1,15 +1,21 @@
-<div ng-class="$ctrl.showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'">
+<div class="card-pf" ng-class="{'card-pf-accented': $ctrl.showTopBorder === 'true'}">
   <div ng-if="$ctrl.showHeader()" ng-class="$ctrl.shouldShowTitlesSeparator ? 'card-pf-heading' : 'card-pf-heading-no-bottom'">
-    <div ng-if="$ctrl.showFilterInHeader()" ng-include="'card/basic/card-filter.html'"></div>
+    <div ng-if="$ctrl.showFilterInHeader()" class="card-pf-footer-in-header" ng-class="{'hide-for-spinner': $ctrl.showSpinner}" ng-include="'card/basic/card-filter.html'"></div>
     <h2 class="card-pf-title">{{$ctrl.headTitle}}</h2>
   </div>
-
   <span ng-if="$ctrl.subTitle" class="card-pf-subtitle">{{$ctrl.subTitle}}</span>
 
-  <div class="card-pf-body">
-    <div ng-transclude></div>
+  <div class="card-pf-body" ng-class="{'show-spinner': $ctrl.showSpinner}">
+    <div ng-class="{'hide-for-spinner': $ctrl.showSpinner}" ng-transclude></div>
+    <div ng-if="$ctrl.showSpinner" class="spinner-container">
+      <div class="loading-indicator">
+        <span class="spinner spinner-lg" aria-hidden="true"></span>
+        <span ng-if="$ctrl.spinnerText" class="loading-text">{{$ctrl.spinnerText}}</span>
+        <label ng-if="!$ctrl.spinnerText" class="sr-only">Loading</label>
+      </div>
+    </div>
   </div>
-  <div ng-if="$ctrl.footer" class="card-pf-footer">
+  <div ng-if="$ctrl.footer" class="card-pf-footer" ng-class="{'hide-for-spinner': $ctrl.showSpinner}">
     <div ng-if="$ctrl.showFilterInFooter()" ng-include="'card/basic/card-filter.html'"></div>
     <p>
       <a ng-if="$ctrl.footer.href" href="{{$ctrl.footer.href}}" ng-class="{'card-pf-link-with-icon':$ctrl.footer.iconClass,'card-pf-link':!$ctrl.footer.iconClass}">

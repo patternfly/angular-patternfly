@@ -29,6 +29,41 @@
   }
 }
 
+.card-pf {
+  .hide-for-spinner {
+    opacity: 0;
+  }
+  .card-pf-body {
+    &.show-spinner {
+      position: relative;
+    }
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: -20px;
+      bottom: 0;
+
+      .loading-indicator {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+
+        .loading-text {
+          font-size: 16px;
+          margin-left: 10px;
+        }
+
+        .spinner.spinner-lg {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
 .card-pf-heading-no-bottom {
   margin: 0 -20px 0px;
   padding: 0 20px 0;

@@ -172,8 +172,16 @@ angular.module('patternfly.charts').component('pfUtilizationBarChart', {
       prevChartData = angular.copy(ctrl.chartData);
       prevLayout = angular.copy(ctrl.layout);
 
+      if (!ctrl.chartData) {
+        return;
+      }
+
       //Calculate the percentage used
-      ctrl.chartData.percentageUsed = Math.round(100 * (ctrl.chartData.used / ctrl.chartData.total));
+      if (!isNaN(ctrl.chartData.used) && !isNaN(ctrl.chartData.total) && (ctrl.chartData.total > 0)) {
+        ctrl.chartData.percentageUsed = Math.round(100 * (ctrl.chartData.used / ctrl.chartData.total));
+      } else {
+        ctrl.chartData.percentageUsed = 0;
+      }
 
       if (ctrl.thresholdError || ctrl.thresholdWarning) {
         ctrl.isError = (ctrl.chartData.percentageUsed >= ctrl.thresholdError);
@@ -201,11 +209,11 @@ angular.module('patternfly.charts').component('pfUtilizationBarChart', {
     };
 
     ctrl.usedTooltipMessage = function () {
-      return ctrl.usedTooltipFunction ? ctrl.usedTooltipFunction() : ctrl.chartData.percentageUsed + '% Used';
+      return ctrl.usedTooltipFunction ? ctrl.usedTooltipFunction() : _.get(ctrl.chartData, 'percentageUsed', 'N/A') + '% Used';
     };
 
     ctrl.availableTooltipMessage = function () {
-      return ctrl.availableTooltipFunction ? ctrl.availableTooltipFunction() : (100 - ctrl.chartData.percentageUsed) + '% Available';
+      return ctrl.availableTooltipFunction ? ctrl.availableTooltipFunction() : (100 - _.get(ctrl.chartData, 'percentageUsed', 0)) + '% Available';
     };
   }
 });
