@@ -85,6 +85,36 @@ describe('Component: pfCard', function() {
 
     });
 
+    it("should show and hide the spinner", function() {
+
+      // When data is loaded, spinner should be hidden
+      $scope.dataLoading = false;
+      element = compileCard('<pf-card head-title="My card title" show-spinner="dataLoading" sub-title="My card subtitle title" show-top-border="false">Inner content goes here</pf-card>', $scope);
+      cardClass = angular.element(element).find('.spinner-lg');
+      expect(cardClass.length).toBe(0);
+
+      // When data is loading, spinner should be present
+      $scope.dataLoading = true;
+      $scope.$digest();
+      cardClass = angular.element(element).find('.spinner-lg');
+      expect(cardClass.length).toBe(1);
+    });
+
+    it("should show and hide the spinner text", function() {
+
+      // When no spinner text is given, it should be undefined
+      element = compileCard('<pf-card head-title="My card title" show-spinner="dataLoading" sub-title="My card subtitle title" show-top-border="false">Inner content goes here</pf-card>', $scope);
+      cardClass = angular.element(element).find('.loading-text');
+      expect(cardClass.html()).toBeUndefined();
+
+      // When data is loading, spinner text should be present
+      $scope.dataLoading = true;
+      element = compileCard('<pf-card head-title="My card title" show-spinner="dataLoading" spinner-text="Test Loading Message" sub-title="My card subtitle title" show-top-border="false">Inner content goes here</pf-card>', $scope);
+      cardClass = angular.element(element).find('.loading-text');
+      expect(cardClass.html()).toContain('Test Loading Message');
+
+    });
+
     it("should hide the action bar footer by default", function() {
 
       // by default, if footer not defined, footer should not be shown
