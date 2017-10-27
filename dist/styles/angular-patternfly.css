@@ -35,6 +35,33 @@ accordion > .panel-group .panel-open .panel-title > a:before {
   position: relative;
   top: -1px;
 }
+.card-pf .hide-for-spinner {
+  opacity: 0;
+}
+.card-pf .card-pf-body.show-spinner {
+  position: relative;
+}
+.card-pf .card-pf-body .spinner-container {
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: -20px;
+  bottom: 0;
+}
+.card-pf .card-pf-body .spinner-container .loading-indicator {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.card-pf .card-pf-body .spinner-container .loading-indicator .loading-text {
+  font-size: 16px;
+  margin-left: 10px;
+}
+.card-pf .card-pf-body .spinner-container .loading-indicator .spinner.spinner-lg {
+  display: inline-block;
+}
 .card-pf-heading-no-bottom {
   margin: 0 -20px 0px;
   padding: 0 20px 0;
