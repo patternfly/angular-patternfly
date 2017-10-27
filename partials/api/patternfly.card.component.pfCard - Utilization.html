@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/card/basic/card.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/c4193f1/src/card/basic/card.component.js#L86" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCard - Utilization</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/card/basic/card.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/254e74a/src/card/basic/card.component.js#L95" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCard - Utilization</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.card</code>
 </span>
 </div>
@@ -10,16 +10,20 @@
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-card - -utilization
        head-title="{string}"
        [sub-title="{string}"]
+       [spinner-text="{string}"]
        [show-top-border="{boolean}"]
        [show-titles-separator="{boolean}"]
+       [show-spinner="{boolean}"]
        [footer="{object}"]
        [filter="{object}"]&gt;
 &lt;/pf-card - -utilization&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>headTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-utilization-page"><p>Title for the card</p>
 </div></td></tr><tr><td>subTitle <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-utilization-page"><p>Sub-Title for the card</p>
+</div></td></tr><tr><td>spinnerText <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-utilization-page"><p>Text for the card spinner</p>
 </div></td></tr><tr><td>showTopBorder <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-utilization-page"><p>Show/Hide the blue top border. True shows top border, false (default) hides top border</p>
 </div></td></tr><tr><td>showTitlesSeparator <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-utilization-page"><p>Show/Hide the grey line between the title and sub-title.
 True (default) shows the line, false hides the line</p>
+</div></td></tr><tr><td>showSpinner <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-utilization-page"><p>Show/Hide the spinner for loading state. True shows the spinner, false (default) hides the spinner</p>
 </div></td></tr><tr><td>footer <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-utilization-page"><p>footer configuration properties:<br/></p>
 <p><ul style='list-style-type: none'></p>
 <p><li>.iconClass  - (optional) the icon to show on the bottom left of the footer panel</p>
@@ -46,7 +50,7 @@ True (default) shows the line, false hides the line</p>
 <script type="text/ng-template" id="index.html-5">
   <div ng-controller="ChartCtrl">
     <label class="label-title">Card With Multiple Utilization Bars</label>
-    <pf-card head-title="System Resources" show-top-border="true" style="width: 65%">
+    <pf-card head-title="System Resources" show-spinner="dataLoading" spinner-text="Loading" show-top-border="true">
       <pf-utilization-bar-chart chart-data=data2 chart-title=title2 layout=layoutInline units=units2 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
       <pf-utilization-bar-chart chart-data=data3 chart-title=title3 layout=layoutInline units=units3 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
       <pf-utilization-bar-chart chart-data=data4 chart-title=title4 layout=layoutInline units=units4 threshold-error="85" threshold-warning="60"></pf-utilization-bar-chart>
@@ -58,37 +62,44 @@ True (default) shows the line, false hides the line</p>
 <div class="tab-pane" title="script.js">
 <pre class="prettyprint linenums" ng-set-text="script.js-6"></pre>
 <script type="text/ng-template" id="script.js-6">
-angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
+angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope, $timeout ) {
+
+      $scope.dataLoading = true;
 
       $scope.title2 = 'Memory';
       $scope.units2 = 'GB';
 
-      $scope.data2 = {
-        'used': '25',
-        'total': '100'
-      };
-
       $scope.title3 = 'CPU Usage';
       $scope.units3 = 'MHz';
 
-      $scope.data3 = {
-        'used': '420',
-        'total': '500'
-      };
-
       $scope.title4 = 'Disk Usage';
       $scope.units4 = 'TB';
-      $scope.data4 = {
-        'used': '350',
-        'total': '500'
-      };
 
       $scope.title5 = 'Disk I/O';
-      $scope.units5 = 'I/Ops';
-      $scope.data5 = {
-        'used': '450',
-        'total': '500'
-      };
+        $scope.units5 = 'I/Ops';
+
+      $timeout(function () {
+        $scope.dataLoading = false;
+
+        $scope.data2 = {
+          'used': '25',
+          'total': '100'
+        };
+
+        $scope.data3 = {
+          'used': '420',
+          'total': '500'
+        };
+
+        $scope.data4 = {
+          'used': '350',
+          'total': '500'
+        };
+        $scope.data5 = {
+          'used': '450',
+          'total': '500'
+        };
+     }, 3000 );
 
       $scope.layoutInline = {
         'type': 'inline'

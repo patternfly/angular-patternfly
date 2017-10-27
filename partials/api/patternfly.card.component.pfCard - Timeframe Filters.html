@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/card/examples/card-timeframe.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/c4193f1/src/card/examples/card-timeframe.js#L84" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCard - Timeframe Filters</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/card/examples/card-timeframe.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/254e74a/src/card/examples/card-timeframe.js#L96" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCard - Timeframe Filters</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.card</code>
 </span>
 </div>
@@ -10,16 +10,20 @@
 <div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-card - -timeframe -filters
        head-title="{string}"
        [sub-title="{string}"]
+       [spinner-text="{string}"]
        [show-top-border="{boolean}"]
        [show-titles-separator="{boolean}"]
+       [show-spinner="{boolean}"]
        [footer="{object}"]
        [filter="{object}"]&gt;
 &lt;/pf-card - -timeframe -filters&gt;</pre>
 <h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>headTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-timeframe-filters-page"><p>Title for the card</p>
 </div></td></tr><tr><td>subTitle <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-timeframe-filters-page"><p>Sub-Title for the card</p>
+</div></td></tr><tr><td>spinnerText <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-timeframe-filters-page"><p>Text for the card spinner</p>
 </div></td></tr><tr><td>showTopBorder <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-timeframe-filters-page"><p>Show/Hide the blue top border. True shows top border, false (default) hides top border</p>
 </div></td></tr><tr><td>showTitlesSeparator <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-timeframe-filters-page"><p>Show/Hide the grey line between the title and sub-title.
 True (default) shows the line, false hides the line</p>
+</div></td></tr><tr><td>showSpinner <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-timeframe-filters-page"><p>Show/Hide the spinner for loading state. True shows the spinner, false (default) hides the spinner</p>
 </div></td></tr><tr><td>footer <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-card-component-page patternfly-card-component-pfcard-timeframe-filters-page"><p>footer configuration properties:<br/></p>
 <p><ul style='list-style-type: none'></p>
 <p><li>.iconClass  - (optional) the icon to show on the bottom left of the footer panel</p>
@@ -56,13 +60,23 @@ card footer.  If set to &#39;header&#39;, the filter dropdown will appear in the
          footer="footerConfig" filter="filterConfig" style="width: 50%">
        Card Contents
     </pf-card>
+    <label class="label-title">Loading State</label>
+    <pf-card show-spinner="dataLoading" spinner-text="Loading" head-title="Card Title" sub-title="Card Subtitle" show-top-border="true" filter="filterConfigHeader" style="width: 50%">
+      Card Contents
+    </pf-card>
   </div>
 </script>
 </div>
 <div class="tab-pane" title="script.js">
 <pre class="prettyprint linenums" ng-set-text="script.js-8"></pre>
 <script type="text/ng-template" id="script.js-8">
-angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
+angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope, $timeout ) {
+
+      $scope.dataLoading = true;
+
+      $timeout(function () {
+        $scope.dataLoading = false;
+      }, 3000 );
 
       $scope.footerConfig = {
         'iconClass' : 'fa fa-flag',
