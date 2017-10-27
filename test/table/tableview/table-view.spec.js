@@ -33,7 +33,7 @@ describe('Component: pfTableView', function () {
       {itemField: 'uuid', header: 'ID'},
       {itemField: 'name', header: 'Name', htmlTemplate: "name_template.html", colActionFn: onNameClick},
       {itemField: 'size', header: 'Size'},
-      {itemField: 'capacity', header: 'Capacity', templateFn: function(value) { return '<span class="custom-template2">' + value + '</span>' }}
+      {itemField: 'capacity', header: 'Capacity', templateFn: function(value, item) { return '<span id="' + item.uuid + '" class="custom-template2">' + value + '</span>' }}
     ];
 
     $scope.items = [
@@ -154,7 +154,8 @@ describe('Component: pfTableView', function () {
     expect(customSpans.length).toBe(5);
     customSpans.each(function(i) {
       var result = $(this).parent().html();
-      var expected = '<span class="custom-template2">' + $scope.items[i].capacity + '</span>';
+      var item = $scope.items[i];
+      var expected = '<span id="' + item.uuid + '" class="custom-template2">' + item.capacity + '</span>';
       expect(result).toBe(expected);
     });
   });
