@@ -1,6 +1,6 @@
 {
   "name": "angular-patternfly",
-  "version": "0.0.0-semantically-released",
+  "version": "4.12.0",
   "dependencies": {
     "angular": {
       "version": "1.5.11",
