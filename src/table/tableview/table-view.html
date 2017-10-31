@@ -20,7 +20,7 @@
       <td ng-repeat="col in $ctrl.columns" ng-init="key = col.itemField; value = item[key]">
         <span ng-if="!col.htmlTemplate && !col.templateFn">{{value}}</span>
         <span ng-if="col.htmlTemplate" ng-include="col.htmlTemplate"></span>
-        <span ng-if="col.templateFn" ng-bind-html="$ctrl.trustAsHtml(col.templateFn(value))"></span>
+        <span ng-if="col.templateFn" ng-bind-html="$ctrl.trustAsHtml(col.templateFn(value, item))"></span>
       </td>
 
       <td ng-if="$ctrl.actionButtons && $ctrl.actionButtons.length > 0" class="table-view-pf-actions" ng-repeat="actionButton in $ctrl.actionButtons">
