@@ -20,7 +20,7 @@
   * <ul style='list-style-type: none'>
   *   <li>.header     - (string) Text label for a column header
   *   <li>.itemField    - (string) Item field to associate with a particular column.
-  *   <li>.templateFn - (function) (optional) Template function used to render each cell of the column. Pro: more performant than `htmlTemplate`. Con: doesn't support AngularJS directives in the template, therefore it doesn't support things like ng-click. Example: <pre>templateFn: value => `<span class="text-danger">${value}</span>`</pre>
+  *   <li>.templateFn - (function(value, item)) (optional) Template function used to render each cell of the column. Pro: more performant than `htmlTemplate`. Con: doesn't support AngularJS directives in the template, therefore it doesn't support things like ng-click. Example: <pre>templateFn: (value, item) => `<a href="${item.id}">${value}</a>`</pre>
   *   <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Pro: supports AngularJS directives in the template. Con: poor performance on large tables. Ex: htmlTemplate="name_template.html".  The template will be used to render each cell of the column.
   *        Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. 'key' is the item attribute name; which should equal the itemFld of a column.
   *       'value' is the item[key] value.
@@ -110,7 +110,7 @@
             { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
             { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
             { header: "Address", itemField: "address"},
-            { header: "City", itemField: "city", templateFn: function(value) { return '<span class="text-success">' + value + '</span>' } },
+            { header: "City", itemField: "city", templateFn: function(value, item) { return '<a href="#' + item.name + '" title="' + item.address + '">' + value + '</span>' } },
             { header: "State", itemField: "state"}
           ];
 
