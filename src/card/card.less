@@ -29,6 +29,10 @@
   }
 }
 
+.card-pf.card-pf-aggregate-status .card-pf-body .spinner-container {
+  position: static;
+}
+
 .card-pf {
   .hide-for-spinner {
     opacity: 0;
@@ -60,6 +64,25 @@
           display: inline-block;
         }
       }
+    }
+  }
+}
+
+.card-pf-info-status .card-pf-body .spinner-container{
+  top: 0px;
+  height: 100%;
+  &.with-title {
+    top: 12px;
+  }
+}
+
+.card-pf-aggregate-status-mini {
+  .card-pf-body {
+    &.show-spinner {
+      height: 40px;
+    }
+    .spinner-container {
+      top: -22px;
     }
   }
 }
@@ -112,7 +135,6 @@
 
 .card-pf-info-status {
   display: flex;
-  margin: 0 10px;
   .card-pf-info-image {
     display: flex;
     align-items: center;
@@ -132,5 +154,8 @@
       margin-top: 10px;
       margin-bottom: 15px;
     }
+  }
+  .show-spinner {
+    width: 100%;
   }
 }

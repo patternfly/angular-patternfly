@@ -98,6 +98,49 @@ describe('Component: pfInfoStatusCard', function () {
       expect(cardClass).toBeFalsy();
     });
 
+    it("should show and hide the spinner", function() {
+
+      // When data is loaded, spinner should be hidden
+      $scope.dataLoading = false;
+      element = compileCard('<pf-info-status-card status="infoStatus2" show-spinner="dataLoading"></pf-info-status-card>', $scope);
+      cardClass = angular.element(element).find('.spinner-lg');
+      expect(cardClass.length).toBe(0);
+
+      // When data is loading, spinner should be present
+      $scope.dataLoading = true;
+      $scope.$digest();
+      cardClass = angular.element(element).find('.spinner-lg');
+      expect(cardClass.length).toBe(1);
+    });
+
+    it("should show and hide the spinner text", function() {
+
+      // When no spinner text is given, it should be undefined
+      element = compileCard('<pf-info-status-card status="infoStatus2" show-spinner="dataLoading"></pf-info-status-card>', $scope);
+      cardClass = angular.element(element).find('.loading-text');
+      expect(cardClass.html()).toBeUndefined();
+
+      // When data is loading, spinner text should be present
+      $scope.dataLoading = true;
+      element = compileCard('<pf-info-status-card status="infoStatus2" show-spinner="dataLoading" spinner-text="Test Loading Message"></pf-info-status-card>', $scope);
+      cardClass = angular.element(element).find('.loading-text');
+      expect(cardClass.html()).toContain('Test Loading Message');
+    });
+
+    it("should have a loading card height when specified", function() {
+
+      // When a height is specified it should be present
+      $scope.dataLoading = true;
+      element = compileCard('<pf-info-status-card status="infoStatus2" spinner-card-height="200px" show-spinner="dataLoading" spinner-text="Test Loading Message"></pf-info-status-card>', $scope);
+      cardClass = angular.element(element).find('.card-pf');
+      expect(cardClass.css('height')).toBe('200px');
+
+      // When a height is not specified there should be none
+      element = compileCard('<pf-info-status-card status="infoStatus2" show-spinner="dataLoading" spinner-text="Test Loading Message"></pf-info-status-card>', $scope);
+      cardClass = angular.element(element).find('.card-pf');
+      expect(cardClass.css('height')).toBe('0px');
+    });
+
     it('should set of the iconImage value', function () {
 
       $scope.status = {
