@@ -1,9 +1,9 @@
 <div>
   <div class="modal-header" ng-if="!hideHeader">
-    <button type="button" class="close wizard-pf-dismiss" aria-label="Close" ng-click="onCancel()" ng-if="!embedInPage">
-      <span aria-hidden="true">&times;</span>
+    <button type="button" class="close wizard-pf-dismiss" aria-hidden="true" aria-label="Close" ng-click="onCancel()" ng-if="!embedInPage">
+       <span class="pficon pficon-close"></span>
     </button>
-    <dt class="modal-title">{{title}}</dt>
+    <h4 class="modal-title">{{title}}</h4>
   </div>
   <div class="modal-body wizard-pf-body clearfix">
     <!-- step area -->
@@ -13,6 +13,7 @@
           <a ng-click="stepClick(step)" ng-class="{'disabled': !allowStepIndicatorClick(step)}">
             <span class="wizard-pf-step-number">{{$index + 1}}</span>
             <span class="wizard-pf-step-title">{{step.title}}</span>
+            <span class="wizard-pf-step-title-substep" ng-repeat="substep in step.steps track by $index" ng-class="{'active': substep.selected}">{{substep.title}}</span>
           </a>
         </li>
       </ul>

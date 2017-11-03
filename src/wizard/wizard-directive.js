@@ -64,10 +64,10 @@
         </div>
         <div pf-wizard-substep step-title="Details - Extra" next-enabled="true" step-id="details-extra" step-priority="1" show-review="true" show-review-details="true" review-template="review-second-template.html">
           <form class="form-horizontal">
-            <div pf-form-group pf-label="Lorem" required>
+            <div pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
               <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text" required/>
             </div>
-            <div pf-form-group pf-label="Ipsum">
+            <div pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10">
               <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
             </div>
           </form>
@@ -76,10 +76,10 @@
       <div pf-wizard-step step-title="Second Step" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
         <form class="form-horizontal">
           <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
-          <div pf-form-group pf-label="Lorem">
+          <div pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10">
             <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
           </div>
-          <div pf-form-group pf-label="Ipsum">
+          <div pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10">
             <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
           </div>
         </form>
@@ -94,10 +94,10 @@
     <div ng-controller="DetailsGeneralController">
        <div pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
          <form class="form-horizontal">
-           <div pf-form-group pf-label="Name" required>
+           <div pf-form-group pf-label="Name" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
             <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
            </div>
-           <div pf-form-group pf-label="Description">
+           <div pf-form-group pf-label="Description" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10">
             <input id="new-description" name="description" ng-model="data.description" type="text" />
            </div>
          </form>
