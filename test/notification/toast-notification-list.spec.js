@@ -1,5 +1,4 @@
 describe('Component: pfToastNotificationList', function () {
-
   var $scope;
   var $compile;
   var element;
@@ -155,7 +154,7 @@ describe('Component: pfToastNotificationList', function () {
     expect(closeButton.length).toBe(0);
 
     // No Menu Actions
-    $scope.notifications.forEach(function(nextItem) {
+    $scope.notifications.forEach(function (nextItem) {
       nextItem.menuActions = undefined;
     });
 

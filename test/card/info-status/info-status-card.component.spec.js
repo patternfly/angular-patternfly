@@ -1,5 +1,8 @@
 describe('Component: pfInfoStatusCard', function () {
-  var $scope, $compile, element, cardClass;
+  var $scope;
+  var $compile;
+  var element;
+  var cardClass;
 
   beforeEach(module('patternfly.card', 'card/info-status/info-status-card.html'));
 

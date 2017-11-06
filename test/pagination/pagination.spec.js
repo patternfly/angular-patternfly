@@ -27,7 +27,7 @@ describe('Component: pfPagination', function () {
     var pageSizeIncrements = element.find('.display-length-increment');
     expect(pageSizeIncrements.length).toBe(6);
     expect(angular.element(pageSizeIncrements[0]).text().trim()).toBe('5');
-    expect(angular.element(pageSizeIncrements[pageSizeIncrements.length-1]).text().trim()).toBe('100');
+    expect(angular.element(pageSizeIncrements[pageSizeIncrements.length - 1]).text().trim()).toBe('100');
 
     expect(angular.element(element.find('.selected')).text().trim()).toBe('5');
   });
@@ -41,7 +41,7 @@ describe('Component: pfPagination', function () {
     var pageSizeIncrements = element.find('.display-length-increment');
     expect(pageSizeIncrements.length).toBe(2);
     expect(angular.element(pageSizeIncrements[0]).text().trim()).toBe('50');
-    expect(angular.element(pageSizeIncrements[pageSizeIncrements.length-1]).text().trim()).toBe('75');
+    expect(angular.element(pageSizeIncrements[pageSizeIncrements.length - 1]).text().trim()).toBe('75');
 
     expect(angular.element(element.find('.selected')).text().trim()).toBe('75');
   });
@@ -146,7 +146,7 @@ describe('Component: pfPagination', function () {
     expect(angular.element(element.find('.pagination-pf-pages')).text().trim()).toBe('13');
   });
 
-  it('should change the page size when selected from dropdown', function() {
+  it('should change the page size when selected from dropdown', function () {
     $scope.pageSize = 10;
     $scope.pageNumber = 1;
     $scope.numTotalItems = 126;

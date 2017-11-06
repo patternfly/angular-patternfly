@@ -1,5 +1,11 @@
-describe('Directive: pfUtilizationBarChart', function() {
-  var $scope, $compile, $sanitize, element, utilizationBar, title, subTitle;
+describe('Directive: pfUtilizationBarChart', function () {
+  var $scope;
+  var $compile;
+  var $sanitize;
+  var element;
+  var utilizationBar;
+  var title;
+  var subTitle;
 
   beforeEach(module(
     'patternfly.charts',
@@ -7,13 +13,13 @@ describe('Directive: pfUtilizationBarChart', function() {
     'charts/utilization-bar/utilization-bar-chart.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$sanitize_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$sanitize_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $sanitize = _$sanitize_;
   }));
 
-  beforeEach(function() {
+  beforeEach(function () {
 
     $scope.data = {
       'used': '8',
@@ -33,17 +39,17 @@ describe('Directive: pfUtilizationBarChart', function() {
     return el;
   };
 
-  it("should set the width of the inner bar to be 80%", function() {
+  it("should set the width of the inner bar to be 80%", function () {
     utilizationBar = angular.element(element).find('.progress-bar').css('width');
     expect(utilizationBar).toBe("80%");
   });
 
-  it("should set aria-valuenow values", function() {
+  it("should set aria-valuenow values", function () {
     used = angular.element(element).find('.progress-bar').not('.progress-bar-remaining');
     expect(used.attr('aria-valuenow')).toBe("80");
   });
 
-  it("should set the charts title and usage label", function() {
+  it("should set the charts title and usage label", function () {
     title = angular.element(element).find('.progress-description').html();
     expect(title).toBe("CPU Usage");
 
@@ -56,7 +62,7 @@ describe('Directive: pfUtilizationBarChart', function() {
     expect(subTitle).toBe("80% Used");
   });
 
-  it("should set the layout to be 'inline', and use custom widths", function() {
+  it("should set the layout to be 'inline', and use custom widths", function () {
     $scope.layoutInline = {
       'type': 'inline',
       'titleLabelWidth': '120px',
@@ -73,7 +79,7 @@ describe('Directive: pfUtilizationBarChart', function() {
     expect(utilizationBar).toBe("60px");
   });
 
-  it("should set the error and warning thresholds", function() {
+  it("should set the error and warning thresholds", function () {
     element = compileChart("<pf-utilization-bar-chart chart-data=data threshold-error='85' threshold-warning='45' chart-title=title units=units></pf-utilization-bar-chart>", $scope);
 
     utilizationBar = angular.element(element).find('.progress-bar-warning');
@@ -85,7 +91,7 @@ describe('Directive: pfUtilizationBarChart', function() {
     expect(utilizationBar.length).toBe(1);
   });
 
-  it("should use custom footer labels", function() {
+  it("should use custom footer labels", function () {
     $scope.custfooter = '<strong>500 TB</strong> Total';
 
     element = compileChart("<pf-utilization-bar-chart chart-data=data threshold-error='85' threshold-warning='45' chart-title=title chart-footer=custfooter units=units></pf-utilization-bar-chart>", $scope);
@@ -94,7 +100,7 @@ describe('Directive: pfUtilizationBarChart', function() {
     expect(subTitle).toBe("<strong>500 TB</strong> Total");
   });
 
-  it("should show empty chart when the dataAvailable is set to false", function() {
+  it("should show empty chart when the dataAvailable is set to false", function () {
     var emptyChart = element.find('.empty-chart-content');
     expect(emptyChart.length).toBe(0);
 
@@ -106,7 +112,7 @@ describe('Directive: pfUtilizationBarChart', function() {
     expect(emptyChart.length).toBe(1);
   });
 
-  it("should handle no data given", function() {
+  it("should handle no data given", function () {
     element = compileChart('<pf-utilization-bar-chart chart-data=data2 chart-title=title units=units></pf-utilization-bar-chart>', $scope);
     utilizationBar = angular.element(element).find('.progress-bar-remaining').css('width');
     expect(utilizationBar).toBe("100%");

@@ -693,7 +693,7 @@ describe('Component:  pfVerticalNavigation', function () {
 
   it('should throw and error if uiSref is used when $state is undefined', function () {
     var wellDefinedItem = element.find('.nav-pf-vertical > .list-group > .list-group-item:nth-child(2) > a');
-    expect(function() {
+    expect(function () {
       wellDefinedItem.click();
     }).toThrow(new Error("uiSref is defined on item, but no $state has been injected. Did you declare a dependency on \"ui.router\" module in your app?"));
   });
@@ -703,25 +703,25 @@ describe('Component:  pfVerticalNavigation', function () {
 describe('Directive:  pfVerticalNavigation with ui.router', function () {
   // Setting up some dummy controllers and some dummy states
   angular.module('mockApp', ['ui.router'])
-    .controller('Controller0', function() {
-    this.message = 'Page 0';
-  }).controller('Controller1', function() {
-    this.message = 'Page 1';
-  }).config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise("/state0");
+    .controller('Controller0', function () {
+      this.message = 'Page 0';
+    }).controller('Controller1', function () {
+      this.message = 'Page 1';
+    }).config(function ($stateProvider, $urlRouterProvider) {
+      $urlRouterProvider.otherwise("/state0");
 
-    $stateProvider.state('state0', {
-      url: "/state0",
-      controller: 'Controller0',
-      controllerAs: 'vm',
-      template: '<!-- -->'
-    }).state('state1', {
-      url: "/state1",
-      controller: 'Controller1',
-      controllerAs: 'vm',
-      template: '<!-- -->'
+      $stateProvider.state('state0', {
+        url: "/state0",
+        controller: 'Controller0',
+        controllerAs: 'vm',
+        template: '<!-- -->'
+      }).state('state1', {
+        url: "/state1",
+        controller: 'Controller1',
+        controllerAs: 'vm',
+        template: '<!-- -->'
+      });
     });
-  });
 
   var $state;
   var $scope;
@@ -818,7 +818,7 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
   it('should throw and error if both uiSref and href are used on an item', function () {
     var badDefinedItem = element.find('.nav-pf-vertical > .list-group > .list-group-item:nth-child(2) > a');
 
-    expect( function() {
+    expect( function () {
       badDefinedItem.click();
     }).toThrow(new Error('Using both uiSref and href on an item is not supported.'));
   });

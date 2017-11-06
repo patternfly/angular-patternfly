@@ -23,7 +23,7 @@ describe('Component:  pfListView', function () {
     scope.$digest();
   };
 
-  function basicSetup() {
+  function basicSetup () {
     $scope.systemModel = [
       {uuid: '1', name: 'One', size: 291445030, capacity: 8200000000},
       {uuid: '2', name: 'Two', size: 1986231544, capacity: 8700000000},
@@ -36,7 +36,7 @@ describe('Component:  pfListView', function () {
       selectedItems: []
     };
     updateCount = 0;
-    $scope.updateActionForItemFn = function(action, item) {
+    $scope.updateActionForItemFn = function (action, item) {
       if (updateCount === 2) {
         action.isDisabled = true;
       }
@@ -46,15 +46,15 @@ describe('Component:  pfListView', function () {
       updateCount++;
     };
 
-    $scope.enableButtonForItemFn = function(action, item) {
-      return (action.name !=='Action 2') || (item.uuid !== '2');
+    $scope.enableButtonForItemFn = function (action, item) {
+      return (action.name !== 'Action 2') || (item.uuid !== '2');
     };
 
-    $scope.hideMenuForItemFn = function(item) {
+    $scope.hideMenuForItemFn = function (item) {
       return (item.uuid === '2');
     };
 
-    $scope.getMenuClassForItemFn = function(item) {
+    $scope.getMenuClassForItemFn = function (item) {
       var menuClass = '';
       if (item.uuid === '3') {
         menuClass = 'test-class';
@@ -135,7 +135,7 @@ describe('Component:  pfListView', function () {
     compileHTML(htmlTmp, $scope);
   }
 
-  function paginationSetup() {
+  function paginationSetup () {
     $scope.systemModel = [
       {uuid: '1', name: 'One', size: 291445030, capacity: 8200000000},
       {uuid: '2', name: 'Two', size: 1986231544, capacity: 8700000000},
@@ -366,7 +366,7 @@ describe('Component:  pfListView', function () {
     expect(buttons.length).toBe(items.length * 2);
   });
 
-  it('should have the proper button class applied', function() {
+  it('should have the proper button class applied', function () {
     basicSetup();
 
     var items = element.find('.list-group-item');
@@ -727,7 +727,7 @@ describe('Component:  pfListView', function () {
     expect(element.find('.list-group-item').length).toBe(2);
   });
 
-  it('should change the page size when selected from dropdown', function() {
+  it('should change the page size when selected from dropdown', function () {
     paginationSetup();
 
     //Get pageSizeDropdown

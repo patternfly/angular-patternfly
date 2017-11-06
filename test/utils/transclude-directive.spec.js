@@ -1,14 +1,14 @@
 angular.module('patternfly.pfTranscludeTestHelper',['patternfly.utils'])
-  .controller( 'TestUtilCtrl', function($scope) {
+  .controller( 'TestUtilCtrl', function ($scope) {
   })
-  .config(function($provide){
-    $provide.decorator('ngTranscludeDirective', ['$delegate', function($delegate) {
+  .config(function ($provide) {
+    $provide.decorator('ngTranscludeDirective', ['$delegate', function ($delegate) {
       // Remove the original directive
       $delegate.shift();
       return $delegate;
     }]);
   })
-  .directive( 'transcludeSibling', function() {
+  .directive( 'transcludeSibling', function () {
     return {
       restrict: 'EAC',
       transclude: true,
@@ -18,9 +18,9 @@ angular.module('patternfly.pfTranscludeTestHelper',['patternfly.utils'])
       '  <input id="directiveId" value="{{$id}}">' +
       '  <div pf-transclude></div>' +
       '</div>'
-    }
+    };
   })
-  .directive( 'transcludeParent', function() {
+  .directive( 'transcludeParent', function () {
     return {
       restrict: 'EAC',
       transclude: true,
@@ -30,9 +30,9 @@ angular.module('patternfly.pfTranscludeTestHelper',['patternfly.utils'])
       '  <input id="directiveId" value="{{$id}}">' +
       '  <div pf-transclude="parent"></div>' +
       '</div>'
-    }
+    };
   })
-  .directive( 'transcludeChild', function() {
+  .directive( 'transcludeChild', function () {
     return {
       restrict: 'EAC',
       transclude: true,
@@ -42,7 +42,7 @@ angular.module('patternfly.pfTranscludeTestHelper',['patternfly.utils'])
       '  <input id="directiveId" value="{{$id}}">' +
       '  <div pf-transclude="child"></div>' +
       '</div>'
-    }
+    };
   })
 ;
 

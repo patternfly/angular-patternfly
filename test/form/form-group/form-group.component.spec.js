@@ -1,17 +1,19 @@
-describe('Directive: pfFormGroup', function() {
-  var $scope, $compile, element;
+describe('Directive: pfFormGroup', function () {
+  var $scope;
+  var $compile;
+  var element;
 
   beforeEach(module(
     'patternfly.form',
     'form/form-group/form-group.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
   }));
 
-  beforeEach(function() {
+  beforeEach(function () {
     element = '<form name="testForm">' +
                 '<pf-form-group pf-label="Name" required>' +
                     '<input id="name" ' +
@@ -28,11 +30,11 @@ describe('Directive: pfFormGroup', function() {
     $scope.$digest();
   });
 
-  it("should add a 'form-control' class to the input", function() {
+  it("should add a 'form-control' class to the input", function () {
     expect(element.find('input').hasClass('form-control')).toBe(true);
   });
 
-  it("should display validation error messages if they exist", function() {
+  it("should display validation error messages if they exist", function () {
     $scope.testForm.name.$error.messages = ['Error message'];
     $scope.$digest();
 
@@ -40,7 +42,7 @@ describe('Directive: pfFormGroup', function() {
     expect(element.find('li').length).toBeGreaterThan(0);
   });
 
-  it("should set the form group to an error state if the form is invalid and dirty", function() {
+  it("should set the form group to an error state if the form is invalid and dirty", function () {
     $scope.testForm.name.$dirty = true;
     $scope.$digest();
 
@@ -49,11 +51,11 @@ describe('Directive: pfFormGroup', function() {
     expect(element.find('.has-error').length).toBeGreaterThan(0);
   });
 
-  it("should not set the form group to an error state if the form is invalid but not dirty", function() {
+  it("should not set the form group to an error state if the form is invalid but not dirty", function () {
     expect(element.find('.has-errors').length).toBe(0);
   });
 
-  it("should do nothing if valid and dirty", function() {
+  it("should do nothing if valid and dirty", function () {
     $scope.testForm.name.$dirty = true;
     $scope.$digest();
 

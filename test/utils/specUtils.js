@@ -1,5 +1,5 @@
 
-function eventFire(el, etype){
+function eventFire (el, etype) {
   if (el.fireEvent) {
     (el.fireEvent('on' + etype));
   } else {

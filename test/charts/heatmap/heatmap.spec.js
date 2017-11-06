@@ -1,6 +1,11 @@
 
-describe('Component: pfHeatmap', function() {
-  var $scope, $compile, element, block, tooltip, color;
+describe('Component: pfHeatmap', function () {
+  var $scope;
+  var $compile;
+  var element;
+  var block;
+  var tooltip;
+  var color;
 
   beforeEach(module(
     'patternfly.charts',
@@ -9,7 +14,7 @@ describe('Component: pfHeatmap', function() {
     'charts/heatmap/heatmap-legend.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $timeout = _$timeout_;
@@ -22,7 +27,7 @@ describe('Component: pfHeatmap', function() {
     return angular.element(el);
   };
 
-  beforeEach(function() {
+  beforeEach(function () {
     $scope.title = 'Utilization';
     $scope.data = [
       {'id': 9,'value': 0.96,'tooltip': 'Node 8 : My OpenShift Provider<br>96% : 96 Used of 100 Total<br>4 Available'},
@@ -35,19 +40,19 @@ describe('Component: pfHeatmap', function() {
   });
 
 
-  it("should set the heatmap title", function() {
+  it("should set the heatmap title", function () {
     element = compileChart('<pf-heatmap chart-title="title" data="data"></pf-heatmap>',$scope);
 
     expect(angular.element(element).find('h3').html()).toBe('Utilization');
   });
 
-  it("should generate 7 blocks", function() {
+  it("should generate 7 blocks", function () {
     element = compileChart('<pf-heatmap chart-title="title" data="data"></pf-heatmap>',$scope);
 
     expect(angular.element(element).find('.heatmap-pf-svg').find('rect').length).toBe(7);
   });
 
-  it("should set color and tooltip of the block based on defaults", function() {
+  it("should set color and tooltip of the block based on defaults", function () {
     element = compileChart('<pf-heatmap chart-title="title" data="data"></pf-heatmap>',$scope);
 
     block = angular.element(element).find('.heatmap-pf-svg').children().first();
@@ -56,11 +61,11 @@ describe('Component: pfHeatmap', function() {
     expect(tooltip).toBe("'Node 8 : My OpenShift Provider<br>96% : 96 Used of 100 Total<br>4 Available'");
 
     color = block.attr('style');
-    var result = color.trim() == 'fill: #ce0000;' || color.trim() == 'fill: rgb(206, 0, 0);';
+    var result = color.trim() === 'fill: #ce0000;' || color.trim() === 'fill: rgb(206, 0, 0);';
     expect(result).toBe(true);
   });
 
-  it("should block color based on color pattern overrides", function() {
+  it("should block color based on color pattern overrides", function () {
     $scope.legendLabels = ['< 60%','70%', '70-80%' ,'80-90%', '> 90%'];
     $scope.thresholds = [0.6, 0.7, 0.8, 0.9];
     $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#ff0000'];
@@ -71,11 +76,11 @@ describe('Component: pfHeatmap', function() {
 
     color = block.attr('style');
 
-    var result = color.trim() == 'fill: #ff0000;' || color.trim() == 'fill: rgb(255, 0, 0);';
+    var result = color.trim() === 'fill: #ff0000;' || color.trim() === 'fill: rgb(255, 0, 0);';
     expect(result).toBe(true);
   });
 
-  it("should set color based on threshold overrides", function() {
+  it("should set color based on threshold overrides", function () {
     $scope.legendLabels = ['< 60%','70%', '70-80%' ,'80-90%', '> 98%'];
     $scope.thresholds = [0.6, 0.7, 0.8, 0.98];
     $scope.heatmapColorPattern = ['#d4f0fa', '#F9D67A', '#EC7A08', '#CE0000', '#ff0000'];
@@ -84,24 +89,24 @@ describe('Component: pfHeatmap', function() {
     block = angular.element(element).find('.heatmap-pf-svg').children().first();
     color = block.attr('style');
 
-    var result = color.trim() == 'fill: #ce0000;' || color.trim() == 'fill: rgb(206, 0, 0);';
+    var result = color.trim() === 'fill: #ce0000;' || color.trim() === 'fill: rgb(206, 0, 0);';
     expect(result).toBe(true);
   });
 
-  it("should show a legend by default", function() {
+  it("should show a legend by default", function () {
     element = compileChart('<pf-heatmap chart-title="title" data="data"></pf-heatmap>',$scope);
     var legend = element.find('.heatmap-pf-legend-container');
     expect(legend.length).toBe(1);
   });
 
-  it("should not show a legend when set not to", function() {
+  it("should not show a legend when set not to", function () {
     $scope.showLegend = false;
     element = compileChart('<pf-heatmap chart-title="title" data="data" show-legend="showLegend"></pf-heatmap>',$scope);
     var legend = element.find('.heatmap-pf-legend-container');
     expect(legend.length).toBe(0);
   });
 
-  it("should show empty chart when the chartDataAvailable flag is set to false", function() {
+  it("should show empty chart when the chartDataAvailable flag is set to false", function () {
     $scope.chartDataAvailable = true;
     element = compileChart('<pf-heatmap chart-title="title" data="data" chart-data-available="chartDataAvailable" show-legend="showLegend"></pf-heatmap>',$scope);
 

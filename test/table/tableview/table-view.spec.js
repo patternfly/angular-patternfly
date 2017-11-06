@@ -28,12 +28,18 @@ describe('Component: pfTableView', function () {
     $scope.result = "You clicked on " + name;
   }
 
-  function basicSetup() {
+  function basicSetup () {
     $scope.columns = [
       {itemField: 'uuid', header: 'ID'},
       {itemField: 'name', header: 'Name', htmlTemplate: "name_template.html", colActionFn: onNameClick},
       {itemField: 'size', header: 'Size'},
-      {itemField: 'capacity', header: 'Capacity', templateFn: function(value, item) { return '<span id="' + item.uuid + '" class="custom-template2">' + value + '</span>' }}
+      {
+        itemField: 'capacity',
+        header: 'Capacity',
+        templateFn: function (value, item) {
+          return '<span id="' + item.uuid + '" class="custom-template2">' + value + '</span>';
+        }
+      }
     ];
 
     $scope.items = [
@@ -52,7 +58,7 @@ describe('Component: pfTableView', function () {
     compileHTML(htmlTmp, $scope);
   }
 
-  function paginationSetup() {
+  function paginationSetup () {
     $scope.columns = [
       {itemField: 'uuid', header: 'ID'},
       {itemField: 'name', header: 'Name'},
@@ -152,7 +158,7 @@ describe('Component: pfTableView', function () {
     basicSetup();
     var customSpans = element.find('.custom-template2');
     expect(customSpans.length).toBe(5);
-    customSpans.each(function(i) {
+    customSpans.each(function (i) {
       var result = $(this).parent().html();
       var item = $scope.items[i];
       var expected = '<span id="' + item.uuid + '" class="custom-template2">' + item.capacity + '</span>';
@@ -191,7 +197,7 @@ describe('Component: pfTableView', function () {
     expect(angular.element(element.find('.pagination-pf-pages')).text().trim()).toBe('4');
   });
 
-  it('should change the page size when selected from dropdown', function() {
+  it('should change the page size when selected from dropdown', function () {
     paginationSetup();
 
     var ctrl = element.isolateScope().$ctrl;
