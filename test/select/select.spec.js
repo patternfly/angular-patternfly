@@ -99,7 +99,7 @@ describe('Component:  pfSelect', function () {
 
     var onSelectCalled = false;
     var selectedItem = null;
-    $scope.onSelect = function(item) {
+    $scope.onSelect = function (item) {
       onSelectCalled = true;
       selectedItem = item;
     };

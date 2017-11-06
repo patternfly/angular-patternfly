@@ -1,9 +1,13 @@
-describe('Component: pfAggregateStatusCard', function() {
-  var $scope, $compile, element, cardClass, notifications;
+describe('Component: pfAggregateStatusCard', function () {
+  var $scope;
+  var $compile;
+  var element;
+  var cardClass;
+  var notifications;
 
   beforeEach(module('patternfly.card', 'card/aggregate-status/aggregate-status-card.html'));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
   }));
@@ -16,7 +20,7 @@ describe('Component: pfAggregateStatusCard', function() {
       return el;
     };
 
-    it("should set the title link, count, and icons class", function() {
+    it("should set the title link, count, and icons class", function () {
 
       $scope.status = {
         "title":"Nodes",
@@ -42,7 +46,7 @@ describe('Component: pfAggregateStatusCard', function() {
       expect(cardClass).toBeFalsy();
     });
 
-    it("No link should be present in the title", function() {
+    it("No link should be present in the title", function () {
 
       $scope.status = {
         "title":"Nodes",
@@ -56,7 +60,7 @@ describe('Component: pfAggregateStatusCard', function() {
       expect(angular.element(element).find('.card-pf-title').find('a').length).toBe(0);
     });
 
-    it("should set the notifications", function() {
+    it("should set the notifications", function () {
 
       $scope.status = {
         "title":"Nodes",
@@ -64,16 +68,16 @@ describe('Component: pfAggregateStatusCard', function() {
         "href":"#",
         "iconClass": "fa fa-shield",
         "notifications":[
-         {
-           "iconClass":"pficon pficon-error-circle-o",
-           "count":4,
-           "href":"#"
-         },
-         {
-           "iconClass":"pficon pficon-warning-triangle-o",
-           "count":1
-         }
-       ]
+          {
+            "iconClass":"pficon pficon-error-circle-o",
+            "count":4,
+            "href":"#"
+          },
+          {
+            "iconClass":"pficon pficon-warning-triangle-o",
+            "count":1
+          }
+        ]
       };
 
       element = compileCard('<pf-aggregate-status-card status="status"></pf-aggregate-status-card>', $scope);
@@ -96,7 +100,7 @@ describe('Component: pfAggregateStatusCard', function() {
       expect(notifications.eq(1).find('span')).toHaveClass('pficon pficon-warning-triangle-o');
     });
 
-    it("should show the top border", function() {
+    it("should show the top border", function () {
       element = compileCard('<pf-aggregate-status-card show-top-border="true"></pf-aggregate-status-card>', $scope);
 
       // showTopBorder set to true, results in having the .card-pf-accented class
@@ -105,7 +109,7 @@ describe('Component: pfAggregateStatusCard', function() {
 
     });
 
-    it("should hide the top border", function() {
+    it("should hide the top border", function () {
       element = compileCard('<pf-aggregate-status-card show-top-border="false"></pf-aggregate-status-card>', $scope);
 
       // showTopBorder set to false, results in not having the .card-pf-accented class
@@ -113,7 +117,7 @@ describe('Component: pfAggregateStatusCard', function() {
       expect(cardClass).toBeFalsy();
     });
 
-    it("should show mini layout", function() {
+    it("should show mini layout", function () {
 
       $scope.status = {
         "title":"Nodes",
@@ -147,15 +151,14 @@ describe('Component: pfAggregateStatusCard', function() {
 
     });
 
-    it("should show mini layout, and hide optional items", function() {
+    it("should show mini layout, and hide optional items", function () {
 
       $scope.status = {
         "title":"Nodes",
         "count":793,
-        "notification":
-          {
-            "count":6
-          }
+        "notification": {
+          "count":6
+        }
       };
 
       element = compileCard('<pf-aggregate-status-card status="status" layout="mini"></pf-aggregate-status-card>', $scope);
@@ -180,10 +183,9 @@ describe('Component: pfAggregateStatusCard', function() {
       $scope.status = {
         "title":"Nodes",
         "count":793,
-        "notification":
-          {
-            "iconClass":"pficon pficon-error-circle-o"
-          }
+        "notification": {
+          "iconClass":"pficon pficon-error-circle-o"
+        }
       };
 
       element = compileCard('<pf-aggregate-status-card status="status" layout="mini"></pf-aggregate-status-card>', $scope);
@@ -197,7 +199,7 @@ describe('Component: pfAggregateStatusCard', function() {
       expect(notifications.eq(0).find('span').eq(1).html()).not.toBe('6');
     });
 
-    it("should set of the iconImage value", function() {
+    it("should set of the iconImage value", function () {
 
       $scope.aggStatusAlt = {
         "title":"Providers",

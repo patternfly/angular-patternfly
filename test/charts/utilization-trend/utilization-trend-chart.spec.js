@@ -1,5 +1,9 @@
-describe('Component: pfUtilizationTrendChart', function() {
-  var $scope, $compile, $timeout, element, isolateScope;
+describe('Component: pfUtilizationTrendChart', function () {
+  var $scope;
+  var $compile;
+  var $timeout;
+  var element;
+  var isolateScope;
 
   beforeEach(module(
     'patternfly.charts',
@@ -9,13 +13,13 @@ describe('Component: pfUtilizationTrendChart', function() {
     'charts/sparkline/sparkline-chart.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$timeout_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _$timeout_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
     $timeout = _$timeout_;
   }));
 
-  beforeEach(function() {
+  beforeEach(function () {
 
     $scope.config = {
       title: 'Memory',
@@ -53,31 +57,31 @@ describe('Component: pfUtilizationTrendChart', function() {
     return element;
   };
 
-  it("should show used for the center label by default", function() {
+  it("should show used for the center label by default", function () {
     element = compileChart('<pf-utilization-trend-chart config="config" chart-data="data" donut-config="donutConfig" sparkline-config="sparklineConfig"></pf-utilization-trend-chart>',$scope);
 
     expect(isolateScope.centerLabel).toBe('used');
   });
 
-  it("should show 'Available' for the current label by default", function() {
+  it("should show 'Available' for the current label by default", function () {
     element = compileChart('<pf-utilization-trend-chart config="config" chart-data="data" donut-config="donutConfig" sparkline-config="sparklineConfig"></pf-utilization-trend-chart>',$scope);
 
     expect(isolateScope.currentText).toBe('Available');
     expect(isolateScope.currentValue).toBe(24);
   });
 
-  it("should show the correct available value when only used and total are given", function() {
+  it("should show the correct available value when only used and total are given", function () {
     element = compileChart('<pf-utilization-trend-chart config="config" chart-data="data" donut-config="donutConfig" sparkline-config="sparklineConfig"></pf-utilization-trend-chart>',$scope);
 
     expect(isolateScope.chartData.available).toBe(24);
   });
 
-  it("should show correct units", function() {
+  it("should show correct units", function () {
     element = compileChart('<pf-utilization-trend-chart config="config" chart-data="data" donut-config="donutConfig" sparkline-config="sparklineConfig"></pf-utilization-trend-chart>',$scope);
     expect(isolateScope.config.units).toBe('GB');
   });
 
-  it("should update the current and center labels when attribute changes", function() {
+  it("should update the current and center labels when attribute changes", function () {
     $scope.cLabel = 'used';
     element = compileChart('<pf-utilization-trend-chart config="config" chart-data="data" center-label="cLabel" donut-config="donutConfig" sparkline-config="sparklineConfig"></pf-utilization-trend-chart',$scope);
 
@@ -93,7 +97,7 @@ describe('Component: pfUtilizationTrendChart', function() {
     expect(isolateScope.currentValue).toBe(76);
   });
 
-  it("should show empty chart when the dataAvailable flag is set to false", function() {
+  it("should show empty chart when the dataAvailable flag is set to false", function () {
     element = compileChart('<pf-utilization-trend-chart config="config" chart-data="data" donut-config="donutConfig" sparkline-config="sparklineConfig"></pf-utilization-trend-chart>',$scope);
 
     var emptyChart = element.find('.empty-chart-content');

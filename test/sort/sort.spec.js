@@ -112,7 +112,7 @@ describe('Directive:  pfSort', function () {
     expect(sortIcon.length).toBe(1);
   });
 
-  it ('should notify when a new sort field is chosen', function() {
+  it ('should notify when a new sort field is chosen', function () {
     var notified = false;
     var chosenField = '';
     var chosenDir = '';
@@ -137,7 +137,7 @@ describe('Directive:  pfSort', function () {
     expect(chosenDir).toBeTruthy();
   });
 
-  it ('should notify when the sort direction changes', function() {
+  it ('should notify when the sort direction changes', function () {
     var notified = false;
     var chosenField = '';
     var chosenDir = '';

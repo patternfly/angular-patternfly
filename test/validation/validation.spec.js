@@ -1,6 +1,6 @@
 describe('pf-validation', function () {
-
-  var $scope, $compile;
+  var $scope;
+  var $compile;
 
   beforeEach(module('patternfly.validation'));
 
@@ -21,8 +21,8 @@ describe('pf-validation', function () {
       return el;
     };
 
-    var validationFunc = function(input){
-      if (input === 'abc'){
+    var validationFunc = function (input) {
+      if (input === 'abc') {
         return true;
       }
       return false;
@@ -64,14 +64,14 @@ describe('pf-validation', function () {
       expect(inputPage.find('div.col-sm-10')).not.toHaveClass('has-error');
       expect(inputPage.find('span')).toHaveClass('ng-hide');
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.bar = 'abcd';
       });
 
       expect(inputPage.find('div.col-sm-10')).toHaveClass('has-error');
       expect(inputPage.find('span')).not.toHaveClass('ng-hide');
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.bar = 'abc';
       });
 
@@ -89,13 +89,13 @@ describe('pf-validation', function () {
 
       expect($scope.myForm.foo.$valid).toBe(true);
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.bar = 'abcd';
       });
 
       expect($scope.myForm.foo.$valid).toBe(false);
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.bar = 'abc';
       });
 
@@ -138,14 +138,14 @@ describe('pf-validation', function () {
       expect(inputPage.find('div.col-sm-10')).not.toHaveClass('has-error');
       expect(inputPage.find('span')).toHaveClass('ng-hide');
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.switch = false;
       });
 
       expect(inputPage.find('div.col-sm-10')).toHaveClass('has-error');
       expect(inputPage.find('span')).not.toHaveClass('ng-hide');
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.switch = true;
       });
 
@@ -164,7 +164,7 @@ describe('pf-validation', function () {
       expect(inputPage.find('div.col-sm-10')).not.toHaveClass('has-error');
       expect(inputPage.find('span')).toHaveClass('ng-hide');
 
-      $scope.$apply(function() {
+      $scope.$apply(function () {
         $scope.myForm.foo.$setValidity('foo', false);
       });
 

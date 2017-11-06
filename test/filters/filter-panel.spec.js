@@ -92,7 +92,7 @@ describe('Directive:  pfFilterPanel', function () {
     init();
 
     // [cateogry: [value 1 x] [value 2 x] ]
-    var categoryTags = element.find('.pf-filter-label-category')
+    var categoryTags = element.find('.pf-filter-label-category');
     var tagOne = angular.element(categoryTags[0]).text();
     var tagOneValue = angular.element(element.find('.single-label')).text();
     var tagTwo = angular.element(categoryTags[1]).text();

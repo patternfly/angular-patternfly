@@ -1,5 +1,4 @@
 describe('Component: pfToastNotification', function () {
-
   var $scope;
   var $compile;
   var element;

@@ -108,7 +108,7 @@ describe('Directive:  pfFilter', function () {
     expect(element.find('.clear-filters').length).toBe(1);
   });
 
-  it ('should add a dropdown select when a select type is chosen', function() {
+  it ('should add a dropdown select when a select type is chosen', function () {
     var filterSelect = element.find('.filter-select');
     var fields = element.find('.filter-field');
 
@@ -122,7 +122,7 @@ describe('Directive:  pfFilter', function () {
     expect(items.length).toBe($scope.filterConfig.fields[2].filterValues.length + 1); // +1 for the null value
   });
 
-  it ('should add a dropdown complex-select when a select type is chosen', function() {
+  it ('should add a dropdown complex-select when a select type is chosen', function () {
     var filterSelect = element.find('.filter-select');
     var fields = element.find('.filter-field');
 
@@ -192,7 +192,7 @@ describe('Directive:  pfFilter', function () {
     expect(clearButtons.length).toBe(0);
   });
 
-  it('should not show selected results when selectedCount and totalCount are undefined', function() {
+  it('should not show selected results when selectedCount and totalCount are undefined', function () {
     $scope.filterConfig.selectedCount = undefined;
     $scope.filterConfig.totalCount = undefined;
     $scope.$digest();
@@ -200,7 +200,7 @@ describe('Directive:  pfFilter', function () {
     expect(element.find('.pf-table-view-selected-label').length).toBe(0);
   });
 
-  it('should show selected results and totalCount are defined', function() {
+  it('should show selected results and totalCount are defined', function () {
     $scope.filterConfig.selectedCount = 0;
     $scope.filterConfig.totalCount = 10;
     $scope.$digest();
@@ -208,7 +208,7 @@ describe('Directive:  pfFilter', function () {
     expect(element.find('.pf-table-view-selected-label').text()).toContain('0 of 10 selected');
   });
 
-  it('should show results inline only when specified', function() {
+  it('should show results inline only when specified', function () {
     expect(element.find('.filter-pf.inline-filter-pf').length).toBe(0);
 
     $scope.filterConfig.inlineResults = true;
@@ -218,7 +218,7 @@ describe('Directive:  pfFilter', function () {
     expect(element.find('.filter-pf.inline-filter-pf').length).toBe(1);
   });
 
-  it('should show the total count in the results only when specified', function() {
+  it('should show the total count in the results only when specified', function () {
     $scope.filterConfig.appliedFilters = [
       {
         id: 'address',
@@ -238,7 +238,7 @@ describe('Directive:  pfFilter', function () {
     expect(element.find('.toolbar-pf-results h5').text()).toContain('5 of 10 Results');
   });
 
-  it('should use the given results label when specified', function() {
+  it('should use the given results label when specified', function () {
     $scope.filterConfig.showTotalCountResults = true;
     $scope.filterConfig.resultsCount = 1;
     $scope.filterConfig.totalCount = 1;

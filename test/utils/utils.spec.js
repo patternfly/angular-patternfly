@@ -1,18 +1,22 @@
 describe('pf-utils', function () {
-
-  var merged, config, defaultConfig, pfUtils;
+  var merged;
+  var config;
+  var defaultConfig;
+  var pfUtils;
 
   beforeEach(module('patternfly.utils'));
   beforeEach(inject(function ($injector) {
     pfUtils = $injector.get('pfUtils');
   }));
 
-  beforeEach(function() {
+  beforeEach(function () {
     defaultConfig = {
       'units'    : 'GB',
       'legend'   : {'show':false},
       'color'    : {'pattern':['blue','green']},
-      'tooltipFn': function () {return 'tooltip for defaultConfig'},
+      'tooltipFn': function () {
+        return 'tooltip for defaultConfig';
+      },
       'donutDeepCp'    : {
         "label": {"show":false}
       },
@@ -25,7 +29,9 @@ describe('pf-utils', function () {
       'units': 'MHz',
       'legend'   : {'show':true},
       'color'    : {'pattern':['blue','red']},
-      'tooltipFn': function () {return 'tooltip for config'},
+      'tooltipFn': function () {
+        return 'tooltip for config';
+      },
       'donutDeepCp'    : {
         "label": {"show": true}
       },

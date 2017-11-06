@@ -1,5 +1,9 @@
-describe('Directive: pfTrendsChart', function() {
-  var $scope, $compile, element, isolateScope, trendCard;
+describe('Directive: pfTrendsChart', function () {
+  var $scope;
+  var $compile;
+  var element;
+  var isolateScope;
+  var trendCard;
 
   beforeEach(module(
     'patternfly.charts',
@@ -9,12 +13,12 @@ describe('Directive: pfTrendsChart', function() {
     'charts/sparkline/sparkline-chart.html'
   ));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_) {
+  beforeEach(inject(function (_$compile_, _$rootScope_) {
     $compile = _$compile_;
     $scope = _$rootScope_;
   }));
 
-  beforeEach(function() {
+  beforeEach(function () {
 
     $scope.config = {
       chartId  : 'testSparklineChart',
@@ -44,17 +48,17 @@ describe('Directive: pfTrendsChart', function() {
     return angular.element(el);
   };
 
-  it("should show the last data point of sparkline chart as the trend heading", function() {
+  it("should show the last data point of sparkline chart as the trend heading", function () {
     expect(element.find('.trend-title-big-pf').html()).toBe("76");
     expect(element.find('.trend-title-small-pf').html()).toBe("MHz");
   });
 
-  it("should show the correct card heading and time frame", function() {
+  it("should show the correct card heading and time frame", function () {
     expect(element.find('.trend-header-pf').html()).toBe("Network Utilization Trends");
     expect(element.find('.trend-footer-pf').html()).toBe("Last 15 Minutes");
   });
 
-  it("should show the percentage in the trend heading", function() {
+  it("should show the percentage in the trend heading", function () {
 
     $scope.config.valueType = 'percentage';
     $scope.$digest();
@@ -63,7 +67,7 @@ describe('Directive: pfTrendsChart', function() {
     expect(element.find('.trend-title-small-pf').html()).toBe("of 100 MHz");
   });
 
-  it("should show large or small trend card layouts", function() {
+  it("should show large or small trend card layouts", function () {
     // by default, should show a large card
     trendCard = element.find('.trend-card-large-pf');
     expect(trendCard.length).toBe(1);
@@ -83,7 +87,7 @@ describe('Directive: pfTrendsChart', function() {
     expect(trendCard.hasClass('trend-card-small-pf')).toBe(false);
   });
 
-  it("should show compact card layout", function() {
+  it("should show compact card layout", function () {
     $scope.config.layout = 'compact';
     $scope.$digest();
 
@@ -95,7 +99,7 @@ describe('Directive: pfTrendsChart', function() {
     expect(trendCard.length).toBe(1);
   });
 
-  it("should push/pull label to the right when compactLabelPosition is 'right'", function() {
+  it("should push/pull label to the right when compactLabelPosition is 'right'", function () {
     $scope.config.layout = 'compact';
     $scope.config.compactLabelPosition = 'right';
     $scope.$digest();
@@ -107,7 +111,7 @@ describe('Directive: pfTrendsChart', function() {
     expect(trendCard.hasClass('col-sm-pull-2')).toEqual(true);
   });
 
-  it("should show inline card layout", function() {
+  it("should show inline card layout", function () {
     $scope.config.layout = 'inline';
     $scope.$digest();
 
@@ -125,7 +129,7 @@ describe('Directive: pfTrendsChart', function() {
     expect(trendCard.html()).toBe('76 of 100 MHz');
   });
 
-  it("should show empty chart when the dataAvailable is set to false", function() {
+  it("should show empty chart when the dataAvailable is set to false", function () {
     var emptyChart = element.find('.empty-chart-content');
     expect(emptyChart.length).toBe(0);
 

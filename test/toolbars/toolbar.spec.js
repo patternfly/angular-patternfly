@@ -175,7 +175,7 @@ describe('Directive:  pfToolbar', function () {
     expect(element.find('.clear-filters').length).toBe(1);
   });
 
-  it ('should add a dropdown select when a select type is chosen', function() {
+  it ('should add a dropdown select when a select type is chosen', function () {
     var filterSelect = element.find('.filter-select');
     var fields = element.find('.filter-field');
 
@@ -396,7 +396,7 @@ describe('Directive:  pfToolbar', function () {
     expect(sortIcon.length).toBe(1);
   });
 
-  it ('should notify when a new sort field is chosen', function() {
+  it ('should notify when a new sort field is chosen', function () {
     var notified = false;
     var chosenField = '';
     var chosenDir = '';
@@ -421,7 +421,7 @@ describe('Directive:  pfToolbar', function () {
     expect(chosenDir).toBeTruthy();
   });
 
-  it ('should notify when the sort direction changes', function() {
+  it ('should notify when the sort direction changes', function () {
     var notified = false;
     var chosenField = '';
     var chosenDir = '';

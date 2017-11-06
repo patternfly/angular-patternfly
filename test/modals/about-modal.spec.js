@@ -20,7 +20,7 @@ describe('Component:  pfABoutModal', function () {
     return element;
   };
 
-  var closeModal = function(scope) {
+  var closeModal = function (scope) {
     scope.isOpen = false;
     scope.$digest();
 
@@ -41,7 +41,7 @@ describe('Component:  pfABoutModal', function () {
     return angular.element(document.querySelector('.modal'));
   };
 
-  var openModal = function(scope) {
+  var openModal = function (scope) {
     scope.isOpen = true;
     scope.$digest();
   };
@@ -64,7 +64,7 @@ describe('Component:  pfABoutModal', function () {
     $scope.open = function () {
       $scope.isOpen = true;
     };
-    $scope.onClose = function() {
+    $scope.onClose = function () {
       $scope.isOpen = false;
     };
   });
