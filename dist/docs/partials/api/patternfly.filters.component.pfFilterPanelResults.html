@@ -1,0 +1,32 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/filters/filter-panel/filter-panel-results-component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3d04a16/src/filters/filter-panel/filter-panel-results-component.js#L30" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfFilterPanelResults</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">patternfly.filters</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-filters-component-page patternfly-filters-component-pffilterpanelresults-page"><p>Component for the filter panel results
+<br><br></p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-filter-panel-results
+       config="{object}"&gt;
+&lt;/pf-filter-panel-results&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-filters-component-page patternfly-filters-component-pffilterpanelresults-page"><p>configuration settings for the filter panel results:<br/></p>
+<ul style='list-style-type: none'>
+<li>.appliedFilters - (Array) List of the currently applied filters. Used to render the filter results tags and returned
+in the <code>onFilterChange</code> function where it can be used to filter a set of items.
+<ul style='list-style-type: none'>
+<li>.id          - (String) Id for the filter, useful for comparisons
+<li>.title       - (String) The title to display for the filter results tag
+<li>.values      - (Array) The value(s) to display for the filter results tag. Ie. [title: [value1 x] [value2 x]]
+</ul>
+<li>.resultsCount   - (int) The number of results returned after the current applied filters have been applied
+<li>.totalCount     - (int) The total number of items before any filters have been applied. The &#39;m&#39; in the label: &#39;n&#39; of &#39;m&#39;
+<li>.resultsLabel   - (String) Optional label for the result units.  Default is &quot;Results&quot;.  Ex: &quot;&#39;n&#39; of &#39;m&#39; Results&quot;
+<li>.onFilterChange - ( function(appliedFilters, changedFilterId, changedFilterValue) ) Function to call when the applied
+filters list changes.  Triggered by user clicking on &#39;x&#39; or &#39;Clear All Filters&#39; in the filter result tags.
+<code>changedFilterId</code> and <code>changedFilterValue</code> are returned after user clicks on an &#39;x&#39; in a tag to
+denote which filter and filter value was cleared.  <code>changedFilterId</code> and <code>changedFilterValue</code> are
+not returned when &#39;Clear All Filters&#39; link is clicked.
+</ul></div></td></tr></tbody></table></div>
+</div>

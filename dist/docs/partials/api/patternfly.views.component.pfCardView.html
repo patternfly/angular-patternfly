@@ -1,0 +1,326 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/cardview/card-view.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3d04a16/src/views/cardview/card-view.component.js#L313" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfCardView</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">patternfly.views</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>Component for rendering cards in a view
+<br><br></p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-card-view
+       config="{object}"
+       page-config="{object}"
+       empty-state-config="{object}"
+       empty-state-action-buttons="{array}"
+       items="{Array}"&gt;
+&lt;/pf-card-view&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>configuration settings for the cards:<br/></p>
+<ul style='list-style-type: none'>
+<li>.showSelectBox          - (boolean) Show item selection boxes for each item, default is true
+<li>.selectItems            - (boolean) Allow card selection, default is false
+<li>.dlbClick               - (boolean) Handle double clicking (item remains selected on a double click). Default is false.
+<li>.multiSelect            - (boolean) Allow multiple card selections, selectItems must also be set, not applicable when dblClick is true. Default is false
+<li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
+<li>.selectedItems          - (array) Current set of selected items
+<li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
+<li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+<li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
+<li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
+<li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
+<li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
+<li>.itemsAvailable         - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
+</ul></div></td></tr><tr><td>pageConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>Optional pagination configuration object.  Since all properties are optional it is ok to specify: &#39;pageConfig = {}&#39; to indicate that you want to
+use pagination with the default parameters.</p>
+<ul style='list-style-type: none'>
+  <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+  <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of &quot;Items per Page&quot;.  Default is 10 items per page
+  <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the &#39;per page&#39; dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
+</ul></div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr><tr><td>emptyStateActionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">Array</a></td><td><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><p>the data to be shown in the cards<br/></p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="patternfly-views-component-page patternfly-views-component-pfcardview-page"><h4 id="example_source">Source</h4>
+<div source-edit="patternfly.views" source-edit-deps="angular.js patternfly.utils script.js" source-edit-html="index.html-82" source-edit-css="" source-edit-js="script.js-83" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div class="tabbable"><div class="tab-pane" title="index.html">
+<pre class="prettyprint linenums" ng-set-text="index.html-82" ng-html-wrap-loaded="patternfly.views angular.js patternfly.utils script.js"></pre>
+<script type="text/ng-template" id="index.html-82">
+  <style>
+    hr {
+     display: block;
+     height: 10px;
+     border: 0;
+     border-top: 1px solid #525252;
+     margin: 1em 0;
+     padding: 0;
+    }
+  </style>
+  <div ng-controller="ViewCtrl" class="row" style="display:inline-block; width: 100%;">
+    <div class="col-md-12">
+      <pf-card-view id="exampleCardView"
+          config="config"
+          page-config="pageConfig"
+          empty-state-config="emptyStateConfig"
+          items="items"
+          empty-state-action-buttons="emptyStateActionButtons">
+        <div class="col-md-12">
+          <span>{{item.name}}</span>
+        </div>
+        <div class="col-md-12">
+          <span>{{item.address}}</span>
+        </div>
+        <div class="col-md-12">
+          <span>{{item.city}}, {{item.state}}</span>
+        </div>
+      </pf-card-view>
+    </div>
+    <hr class="col-md-12">
+    <div class="col-md-12">
+      <form role="form">
+        <div class="form-group">
+          <label>Selection</label>
+          </br>
+          <label class="radio-inline">
+            <input type="radio" ng-model="selectType" value="checkbox" ng-change="updateSelectionType()">Checkbox</input>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" ng-model="selectType" value="card" ng-change="updateSelectionType()">Card</input>
+          </label>
+          <label class="radio-inline">
+            <input type="radio" ng-model="selectType" value="none" ng-change="updateSelectionType()">None</input>
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-12">
+      <form role="form">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="config.dblClick" ng-disabled="!config.selectItems">Double Click</input>
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="config.multiSelect" ng-disabled="config.dblClick || !config.selectItems">Multi Select</input>
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-12">
+      <form role="form">
+        <div class="form-group">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="showDisabled">Show Disabled Cards</input>
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+          </label>
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="showPagination" ng-change="togglePagination()">Show Pagination</input>
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-12">
+      <label class="events-label">Events: </label>
+    </div>
+    <div class="col-md-12">
+      <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+    </div>
+  </div>
+</script>
+</div>
+<div class="tab-pane" title="script.js">
+<pre class="prettyprint linenums" ng-set-text="script.js-83"></pre>
+<script type="text/ng-template" id="script.js-83">
+angular.module('patternfly.views').controller('ViewCtrl', ['$scope',
+function ($scope) {
+       $scope.showPagination = false;
+       $scope.eventText = '';
+       var handleSelect = function (item, e) {
+         $scope.eventText = item.name + ' selected\n' + $scope.eventText;
+       };
+       var handleSelectionChange = function (selectedItems, e) {
+         $scope.eventText = selectedItems.length + ' items selected\n' + $scope.eventText;
+       };
+       var handleClick = function (item, e) {
+         $scope.eventText = item.name + ' clicked\n' + $scope.eventText;
+       };
+       var handleDblClick = function (item, e) {
+         $scope.eventText = item.name + ' double clicked\n' + $scope.eventText;
+       };
+       var handleCheckBoxChange = function (item, selected, e) {
+         $scope.eventText = item.name + ' checked: ' + item.selected + '\n' + $scope.eventText;
+       };
+       $scope.togglePagination = function () {
+         if ($scope.showPagination) {
+           $scope.pageConfig = {
+              pageSize: 5
+           }
+         } else {
+           delete $scope.pageConfig;
+         }
+       };
+
+       var checkDisabledItem = function(item) {
+         return $scope.showDisabled && (item.name === "John Smith");
+       };
+
+       $scope.selectType = 'checkbox';
+       $scope.updateSelectionType = function() {
+         if ($scope.selectType === 'checkbox') {
+           $scope.config.selectItems = false;
+           $scope.config.showSelectBox = true;
+         } else if ($scope.selectType === 'card') {
+           $scope.config.selectItems = true;
+           $scope.config.showSelectBox = false;
+         } else {
+           $scope.config.selectItems = false;
+           $scope.config.showSelectBox = false;
+         }
+       };
+
+       $scope.showDisabled = false;
+
+       $scope.config = {
+         selectItems: false,
+         itemsAvailable: true,
+         multiSelect: false,
+         dblClick: false,
+         selectionMatchProp: 'name',
+         selectedItems: [],
+         checkDisabled: checkDisabledItem,
+         showSelectBox: true,
+         onSelect: handleSelect,
+         onSelectionChange: handleSelectionChange,
+         onCheckBoxChange: handleCheckBoxChange,
+         onClick: handleClick,
+         onDblClick: handleDblClick
+       };
+
+       $scope.items = [
+         {
+           name: "Fred Flintstone",
+           address: "20 Dinosaur Way",
+           city: "Bedrock",
+           state: "Washingstone"
+         },
+         {
+           name: "John Smith",
+           address: "415 East Main Street",
+           city: "Norfolk",
+           state: "Virginia"
+         },
+         {
+           name: "Frank Livingston",
+           address: "234 Elm Street",
+           city: "Pittsburgh",
+           state: "Pennsylvania"
+         },
+         {
+           name: "Judy Green",
+           address: "2 Apple Boulevard",
+           city: "Cincinatti",
+           state: "Ohio"
+         },
+         {
+           name: "Pat Thomas",
+           address: "50 Second Street",
+           city: "New York",
+           state: "New York"
+         },
+         {
+           name: "Betty Rubble",
+           address: "30 Dinosaur Way",
+           city: "Bedrock",
+           state: "Washingstone"
+         },
+         {
+           name: "Martha Smith",
+           address: "415 East Main Street",
+           city: "Norfolk",
+           state: "Virginia"
+         },
+         {
+           name: "Liz Livingston",
+           address: "234 Elm Street",
+           city: "Pittsburgh",
+           state: "Pennsylvania"
+         },
+         {
+           name: "Howard McGovern",
+           address: "22 Oak Street",
+           city: "Denver",
+           state: "Colorado"
+         },
+         {
+           name: "Joyce Brown",
+           address: "72 Bourbon Way",
+           city: "Nashville",
+           state: "Tennessee"
+         },
+         {
+           name: "Mike Nichols",
+           address: "21 Jump Street",
+           city: "Hollywood",
+           state: "California"
+         },
+         {
+           name: "Mark Edwards",
+           address: "17 Cross Street",
+           city: "Boston",
+           state: "Massachusetts"
+         },
+         {
+           name: "Chris Thomas",
+           address: "50 Second Street",
+           city: "New York",
+           state: "New York"
+         }
+       ];
+
+       var performEmptyStateAction = function (action) {
+         $scope.eventText = action.name + "\r\n" + $scope.eventText;
+       };
+
+       $scope.emptyStateConfig = {
+         icon: 'pficon-warning-triangle-o',
+         title: 'No Items Available',
+         info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+         helpLink: {
+           label: 'For more information please see',
+           urlLabel: 'pfExample',
+           url : '#/api/patternfly.views.component:pfEmptyState'
+         }
+       };
+
+       $scope.emptyStateActionButtons = [
+         {
+           name: 'Main Action',
+           title: 'Perform an action',
+           actionFn: performEmptyStateAction,
+           type: 'main'
+         },
+         {
+           name: 'Secondary Action 1',
+           title: 'Perform an action',
+           actionFn: performEmptyStateAction
+         },
+         {
+           name: 'Secondary Action 2',
+           title: 'Perform an action',
+           actionFn: performEmptyStateAction
+         },
+         {
+           name: 'Secondary Action 3',
+           title: 'Perform an action',
+           actionFn: performEmptyStateAction
+         }
+       ];
+     }
+]);
+</script>
+</div>
+</div><h4 id="example_demo">Demo</h4>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.views" ng-set-html="index.html-82" ng-eval-javascript="script.js-83"></div>
+</div></div>
+</div>

@@ -1,0 +1,30 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/filters/simple-filter/filter-fields-component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3d04a16/src/filters/simple-filter/filter-fields-component.js#L28" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfFilterFields</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">patternfly.filters</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-filters-component-page patternfly-filters-component-pffilterfields-page"><p>Directive for the filter bar&#39;s filter entry components
+<br><br></p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-filter-fields
+       config="{object}"&gt;
+&lt;/pf-filter-fields&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-filters-component-page patternfly-filters-component-pffilterfields-page"><p>configuration settings for the filters:<br/></p>
+<ul style='list-style-type: none'>
+<li>.fields          - (Array) List of filterable fields containing:
+<ul style='list-style-type: none'>
+<li>.id          - (String) Optional unique Id for the filter field, useful for comparisons
+<li>.title       - (String) The title to display for the filter field
+<li>.placeholder - (String) Text to display when no filter value has been entered
+<li>.filterMultiselect - (Boolean) In <code>complex-select</code>, allow selection of multiple categories and values. Optional, default is <code>false</code>
+<li>.filterType  - (String) The filter input field type (any html input type, or &#39;select&#39; for a single select box or &#39;complex-select&#39; for a category select box)
+<li>.filterValues - (Array) List of valid select values used when filterType is &#39;select&#39; or &#39;complex-select&#39; (in where these values serve as case insensitve keys for .filterCategories objects)
+<li>.filterCategories - (Array of (Objects)) For &#39;complex-select&#39; only, array of objects whoes keys (case insensitive) match the .filterValues, these objects include each of the filter fields above (sans .placeholder)
+<li>.filterCategoriesPlaceholder - (String) Text to display in <code>complex-select</code> category value select when no filter value has been entered, Optional
+<li>.filterDelimiter - (String) Delimiter separating &#39;complex-select&#39; category and value. Optional, default is a space, &#39; &#39;
+</ul>
+<li>.appliedFilters - (Array) List of the currently applied filters
+</ul></div></td></tr></tbody></table></div>
+</div>

@@ -1,0 +1,614 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-with-toolbar.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3d04a16/src/table/tableview/examples/table-view-with-toolbar.js#L595" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - with Toolbar</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">patternfly.table</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Example configuring a table view with a toolbar.<br><br>
+Please see <a href="#/api/patternfly.toolbars.component:pfToolbar">pfToolbar</a> for use in Toolbar View Switcher</p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pf-table-view - with -toolbar
+     config="{object}"
+     dt-options="{object}"
+     page-config="{object}"
+     items="{array}"
+     columns="{array}"
+     action-buttons="{array}"
+     menu-actions="{array}"
+     empty-state-config="{object}"
+     empty-state-action-buttons="{array}"&gt;
+   ...
+&lt;/ANY&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Optional configuration object</p>
+<ul style='list-style-type: none'>
+  <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
+  <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  <li>.itemsAvailable      - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
+  <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
+</ul></div></td></tr><tr><td>dtOptions</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Optional angular-datatables DTOptionsBuilder configuration object. Note: paginationType, displayLength, and dom:&quot;p&quot; are no longer being used for pagination, but are allowed for backward compatibility.
+Please switch to prefered &#39;pageConfig&#39; settings for pf pagination controls.
+Other dtOptions can still be used, such as &#39;order&#39; See <a href="http://l-lin.github.io/angular-datatables/archives/#/api">angular-datatables: DTOptionsBuilder</a></p>
+</div></td></tr><tr><td>pageConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Optional pagination configuration object.  Since all properties are optional it is ok to specify: &#39;pageConfig = {}&#39; to indicate that you want to
+use pagination with the default parameters.</p>
+<ul style='list-style-type: none'>
+  <li>.pageNumber  - (number) Optional Initial page number to display. Default is page 1.
+  <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of &quot;Items per Page&quot;.  Default is 10 items per page
+  <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the &#39;per page&#39; dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
+</ul></div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Array of items to display in the table view.</p>
+</div></td></tr><tr><td>columns</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Array of table column information to display in the table&#39;s header row and optionaly render the cells of a column.</p>
+<p><ul style='list-style-type: none'>
+  <li>.header     - (string) Text label for a column header
+  <li>.itemField    - (string) Item field to associate with a particular column.
+  <li>.templateFn - (function(value, item)) (optional) Template function used to render each cell of the column. Pro: more performant than <code>htmlTemplate</code>. Con: doesn&#39;t support AngularJS directives in the template, therefore it doesn&#39;t support things like ng-click. Example: <pre class="prettyprint linenums">templateFn: (value, item) =&gt; `&lt;a href="${item.id}"&gt;${value}&lt;/a&gt;`</pre>
+  <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Pro: supports AngularJS directives in the template. Con: poor performance on large tables. Ex: htmlTemplate=&quot;name_template.html&quot;.  The template will be used to render each cell of the column.
+       Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. &#39;key&#39; is the item attribute name; which should equal the itemFld of a column.
+      &#39;value&#39; is the item[key] value.
+      <pre class="prettyprint linenums">
+        &lt;script type="text/ng-template" id="name_template.html"&gt;
+          &lt;a href="" ng-click="$ctrl.handleColAction(key, value)"&gt;{{value}}&lt;/a&gt;
+        &lt;/script&gt;
+      </pre>
+  <li>.colActionFn - (function) (optional) Callback function used for the column. &#39;value&#39; is passed as a paramenter to the
+       callback function.
+</ul></p>
+<p><strong>Tip:</strong> For templating, use <code>tempateFn</code> unless you really need to use AngularJS directives. <code>templateFn</code> performs better than <code>htmlTemplate</code>.</p></div></td></tr><tr><td>actionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>List of action buttons in each row</p>
+<ul style='list-style-type: none'>
+  <li>.name - (String) The name of the action, displayed on the button
+  <li>.title - (String) Optional title, used for the tooltip
+  <li>.actionFn - (function(action)) Function to invoke when the action selected
+</ul></div></td></tr><tr><td>menuActions</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>List of actions for dropdown menu in each row</p>
+<ul style='list-style-type: none'>
+  <li>.name - (String) The name of the action, displayed on the button
+  <li>.title - (String) Optional title, used for the tooltip
+  <li>.actionFn - (function(action)) Function to invoke when the action selected
+</ul></div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr><tr><td>emptyStateActionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><p>Optional buttons to display under the icon, title, and informational paragraph.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="patternfly-table-component-page patternfly-table-component-pftableview-with-toolbar-page"><h4 id="example_source">Source</h4>
+<div source-edit="patternfly.tableview.demo" source-edit-deps="angular.js modules.js script.js" source-edit-html="index.html-72" source-edit-css="" source-edit-js="modules.js script.js-73" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div class="tabbable"><div class="tab-pane" title="index.html">
+<pre class="prettyprint linenums" ng-set-text="index.html-72" ng-html-wrap-loaded="patternfly.tableview.demo angular.js modules.js script.js"></pre>
+<script type="text/ng-template" id="index.html-72">
+  <style>
+    .truncate-text-container {
+        position: relative;
+        max-width: 100%;
+        padding: 0 !important;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: flex;
+        vertical-align: text-bottom !important;
+    }
+    .truncate-text-ellipsis {
+        position: absolute;
+        white-space: nowrap;
+        overflow-y: visible;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        max-width: 100%;
+        min-width: 0;
+        top: 0;
+        left: 0;
+    }
+    .truncate-text-container:after,
+    .truncate-text-ellipsis:after {
+        content: '-';
+        display: inline-block;
+        visibility: hidden;
+        width: 0;
+    }
+  </style>
+  <div ng-controller="ViewCtrl" class="row example-container">
+    <div class="col-md-12">
+      <pf-toolbar id="exampleToolbar" config="toolbarConfig"></pf-toolbar>
+    </div>
+    <div class="col-md-12" ng-if="showComponent">
+      <pf-table-view config="tableConfig"
+                     empty-state-config="emptyStateConfig"
+                     dt-options="dtOptions"
+                     page-config="pageConfig"
+                     columns="columns"
+                     items="items"
+                     action-buttons="tableActionButtons"
+                     menu-actions="tableMenuActions">
+      </pf-table-view>
+    </div>
+    <hr class="col-md-12">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="tableConfig.itemsAvailable" ng-change="updateItemsAvailable()">Items Available</input>
+        </label>
+        <!-- TODO: I don't know why this comment is neccesary, but if I remove it I get error:
+             Error: [$compile:ctreq] Controller 'tabbable', required by directive 'tabPane', can't be found!
+             I've wasted too much time trying to fix this!  Something to do with ngDoc's <file> directives
+        --!>
+      </div>
+      <div class="form-group">
+        <label class="checkbox-inline">
+          <input type="checkbox" ng-model="tableConfig.showCheckboxes" ng-change="addNewComponentToDOM()">Show Checkboxes</input>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <label class="actions-label">Actions: </label>
+    </div>
+    <div class="col-md-12">
+      <textarea rows="6" class="col-md-12">{{actionsText}}</textarea>
+    </div>
+    <script type="text/ng-template" id="status_template.html">
+      <span ng-if="value === 'error'" class="pficon pficon-error-circle-o"></span>
+      <span ng-if="value === 'warning'" class="pficon pficon-warning-triangle-o"></span>
+      <span ng-if="value === 'ok'" class="pficon pficon-ok"></span>
+      {{value}}
+    </script>
+    <script type="text/ng-template" id="name_template.html">
+      <a href="" ng-click="$ctrl.handleColAction(key, value)">{{value}}</a>
+    </script>
+    <script type="text/ng-template" id="address_template.html">
+      <span class="truncate-text-container">
+        <span class="truncate-text-ellipsis" title="{{value}}">
+          {{value}}
+        </span>
+      </span>
+    </script>
+  </div>
+</script>
+</div>
+<div class="tab-pane" title="modules.js">
+<pre class="prettyprint linenums" ng-set-text="modules.js"></pre>
+<script type="text/ng-template" id="modules.js">
+  angular.module('patternfly.tableview.demo', ['patternfly.toolbars','patternfly.table']);
+</script>
+</div>
+<div class="tab-pane" title="script.js">
+<pre class="prettyprint linenums" ng-set-text="script.js-73"></pre>
+<script type="text/ng-template" id="script.js-73">
+angular.module('patternfly.tableview.demo').controller('ViewCtrl', ['$scope', '$timeout', 'pfViewUtils', '$filter',
+  function ($scope, $timeout, pfViewUtils, $filter) {
+    $scope.actionsText = "";
+
+    $scope.columns = [
+      {
+        header: "Status",
+        itemField: "status",
+        htmlTemplate: "status_template.html"
+      },
+      {
+        header: "Name",
+        itemField: "name",
+        htmlTemplate: "name_template.html",
+        colActionFn: onNameClick
+      },
+      {
+        header: "Age",
+        itemField: "age",
+        templateFn: function(value) {
+          var className = value > 30 ? 'text-success' : 'text-warning';
+          return '<span class="' + className + '">' + value + '</span>';
+        }
+      },
+      {
+        header: "Address",
+        itemField: "address",
+        htmlTemplate: "address_template.html"
+      },
+      {
+        header: "BirthMonth",
+        itemField: "birthMonth"
+      }
+    ];
+
+    // dtOptions paginationType, displayLength, and dom:"p" are no longer being
+    // used, but are allowed for backward compatibility.
+    // Please switch to prefered 'pageConfig' settings for pf pagination controls
+    // Other dtOptions can still be used, such as 'order'
+    // $scope.dtOptions = {
+    //  paginationType: 'full',
+    //  displayLength: 10,
+    //  dom: "tp"
+    // }
+
+    // New pagination config settings
+    $scope.pageConfig = {
+      pageNumber: 1,
+      pageSize: 10,
+      pageSizeIncrements: [5, 10, 15]
+    };
+
+    $scope.allItems = [
+      {
+        status: "error",
+        name: "Fred Flintstone",
+        age: 57,
+        address: "20 Dinosaur Way, Bedrock, Washingstone",
+        birthMonth: 'February'
+      },
+      {
+        status: "ok",
+        name: "John Smith",
+        age: 23,
+        address: "415 East Main Street, Norfolk, Virginia",
+        birthMonth: 'October'
+      },
+      {
+        status: "warning",
+        name: "Frank Livingston",
+        age: 71,
+        address: "234 Elm Street, Pittsburgh, Pennsylvania",
+        birthMonth: 'March'
+      },
+      {
+        status: "ok",
+        name: "Judy Green",
+        age: 21,
+        address: "2 Apple Boulevard, Cincinatti, Ohio",
+        birthMonth: 'December'
+      },
+      {
+        status: "ok",
+        name: "Pat Thomas",
+        age: 19,
+        address: "50 Second Street, New York, New York",
+        birthMonth: 'February'
+      },
+      {
+        status: "error",
+        name: "Linda McGovern",
+        age: 32,
+        address: "22 Oak Stree, Denver, Colorado",
+        birthMonth: 'March'
+      },
+      {
+        status: "warning",
+        name: "Jim Brown",
+        age: 55,
+        address: "72 Bourbon Way. Nashville. Tennessee",
+        birthMonth: 'March'
+      },
+      {
+        status: "ok",
+        name: "Holly Nichols",
+        age: 34,
+        address: "21 Jump Street, Hollywood, California",
+        birthMonth: 'March'
+      },
+      {
+        status: "ok",
+        name: "Wilma Flintstone",
+        age: 47,
+        address: "20 Dinosaur Way, Bedrock, Washingstone",
+        birthMonth: 'February'
+      },
+      {
+        status: "warning",
+        name: "Jane Smith",
+        age: 22,
+        address: "415 East Main Street, Norfolk, Virginia",
+        birthMonth: 'April'
+      },
+      {
+        status: "error",
+        name: "Liz Livingston",
+        age: 65,
+        address: "234 Elm Street, Pittsburgh, Pennsylvania",
+        birthMonth: 'November'
+      },
+      {
+        status: "ok",
+        name: "Jim Green",
+        age: 23,
+        address: "2 Apple Boulevard, Cincinatti, Ohio",
+        birthMonth: 'January'
+      },
+      {
+        status: "ok",
+        name: "Chris Thomas",
+        age: 21,
+        address: "50 Second Street, New York, New York",
+        birthMonth: 'October'
+      },
+      {
+        status: "error",
+        name: "Larry McGovern",
+        age: 34,
+        address: "22 Oak Stree, Denver, Colorado",
+        birthMonth: 'September'
+      },
+      {
+        status: "warning",
+        name: "July Brown",
+        age: 51,
+        address: "72 Bourbon Way. Nashville. Tennessee",
+        birthMonth: 'May'
+      },
+      {
+        status: "error",
+        name: "Henry Nichols",
+        age: 36,
+        address: "21 Jump Street, Hollywood, California",
+        birthMonth: 'March'
+      }
+    ];
+
+    $scope.items = $scope.allItems;
+
+    var matchesFilter = function (item, filter) {
+      var match = true;
+
+      if (filter.id === 'name') {
+        match = item.name.match(filter.value) !== null;
+      } else if (filter.id === 'age') {
+        match = item.age === parseInt(filter.value);
+      } else if (filter.id === 'address') {
+        match = item.address.match(filter.value) !== null;
+      } else if (filter.id === 'birthMonth') {
+        match = item.birthMonth === filter.value;
+      } else if (filter.id === 'status') {
+        match = item.status === filter.value;
+      }
+      return match;
+    };
+
+    var matchesFilters = function (item, filters) {
+      var matches = true;
+
+      filters.forEach(function(filter) {
+        if (!matchesFilter(item, filter)) {
+          matches = false;
+          return false;
+        }
+      });
+      return matches;
+    };
+
+    var applyFilters = function (filters) {
+      $scope.items = [];
+      if (filters && filters.length > 0) {
+        $scope.allItems.forEach(function (item) {
+          if (matchesFilters(item, filters)) {
+            $scope.items.push(item);
+          }
+        });
+      } else {
+        $scope.items = $scope.allItems;
+      }
+    };
+
+    var filterChange = function (filters) {
+      applyFilters(filters);
+      $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+    };
+
+    var performAction = function (action) {
+      var selectedItems = $filter('filter')($scope.allItems, {selected: true});
+      if(!selectedItems) {
+        selectedItems = [];
+      }
+      $scope.actionsText = "Toolbar Action: " + action.name + " on " + selectedItems.length + " selected items\n" + $scope.actionsText;
+    };
+
+    var performTableAction = function (action, item) {
+      $scope.actionsText = "Table Row Action on '" + item.name + "' : " + action.name + "\r\n" + $scope.actionsText;
+    };
+
+    function handleCheckBoxChange (item) {
+      var selectedItems = $filter('filter')($scope.allItems, {selected: true});
+      if (selectedItems) {
+        $scope.toolbarConfig.filterConfig.selectedCount = selectedItems.length;
+      }
+    }
+
+    function onNameClick (name) {
+       $scope.actionsText = "You clicked on " + name + "\n" + $scope.actionsText;
+    }
+
+    $scope.filterConfig = {
+      fields: [
+        {
+          id: 'status',
+          title:  'Status',
+          placeholder: 'Filter by Status...',
+          filterType: 'select',
+          filterValues: ['error', 'warning', 'ok']
+        },
+        {
+          id: 'name',
+          title:  'Name',
+          placeholder: 'Filter by Name...',
+          filterType: 'text'
+        },
+        {
+          id: 'age',
+          title:  'Age',
+          placeholder: 'Filter by Age...',
+          filterType: 'text'
+        },
+        {
+          id: 'address',
+          title:  'Address',
+          placeholder: 'Filter by Address...',
+          filterType: 'text'
+        },
+        {
+          id: 'birthMonth',
+          title:  'Birth Month',
+          placeholder: 'Filter by Birth Month...',
+          filterType: 'select',
+          filterValues: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        }
+      ],
+      resultsCount: $scope.items.length,
+      totalCount: $scope.allItems.length,
+      appliedFilters: [],
+      onFilterChange: filterChange
+    };
+
+    var monthVals = {
+      'January': 1,
+      'February': 2,
+      'March': 3,
+      'April': 4,
+      'May': 5,
+      'June': 6,
+      'July': 7,
+      'August': 8,
+      'September': 9,
+      'October': 10,
+      'November': 11,
+      'December': 12
+    };
+
+    $scope.toolbarActionsConfig = {
+      primaryActions: [
+        {
+          name: 'Action 1',
+          title: 'Do the first thing',
+          actionFn: performAction
+        },
+        {
+          name: 'Action 2',
+          title: 'Do something else',
+          actionFn: performAction
+        }
+      ],
+      moreActions: [
+        {
+          name: 'Action',
+          title: 'Perform an action',
+          actionFn: performAction
+        },
+        {
+          name: 'Another Action',
+          title: 'Do something else',
+          actionFn: performAction
+        },
+        {
+          name: 'Disabled Action',
+          title: 'Unavailable action',
+          actionFn: performAction,
+          isDisabled: true
+        },
+        {
+          name: 'Something Else',
+          title: '',
+          actionFn: performAction
+        },
+        {
+          isSeparator: true
+        },
+        {
+          name: 'Grouped Action 1',
+          title: 'Do something',
+          actionFn: performAction
+        },
+        {
+          name: 'Grouped Action 2',
+          actionFn: performAction,
+          title: 'Do something similar'
+        }
+      ],
+      actionsInclude: true
+    };
+
+    $scope.toolbarConfig = {
+      filterConfig: $scope.filterConfig,
+      sortConfig: $scope.sortConfig,
+      actionsConfig: $scope.toolbarActionsConfig,
+      isTableView: true
+    };
+
+    $scope.tableConfig = {
+      onCheckBoxChange: handleCheckBoxChange,
+      selectionMatchProp: "name",
+      itemsAvailable: true,
+      showCheckboxes: true
+    };
+
+    $scope.emptyStateConfig = {
+      icon: 'pficon-warning-triangle-o',
+      title: 'No Items Available',
+      info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+      helpLink: {
+         label: 'For more information please see',
+         urlLabel: 'pfExample',
+         url : '#/api/patternfly.views.component:pfEmptyState'
+      }
+    };
+
+    $scope.tableActionButtons = [
+      {
+        name: 'Action',
+        title: 'Perform an action',
+        actionFn: performTableAction
+      }
+    ];
+
+    $scope.tableMenuActions = [
+      {
+        name: 'Action',
+        title: 'Perform an action',
+        actionFn: performTableAction
+      },
+      {
+        name: 'Another Action',
+        title: 'Do something else',
+        actionFn: performTableAction
+      },
+      {
+        name: 'Disabled Action',
+        title: 'Unavailable action',
+        actionFn: performTableAction,
+        isDisabled: true
+      },
+      {
+        name: 'Something Else',
+        title: '',
+        actionFn: performTableAction
+      },
+      {
+        isSeparator: true
+      },
+      {
+        name: 'Grouped Action 1',
+        title: 'Do something',
+        actionFn: performTableAction
+      },
+      {
+        name: 'Grouped Action 2',
+        title: 'Do something similar',
+        actionFn: performTableAction
+      }
+    ];
+
+    $scope.updateItemsAvailable = function () {
+      if(!$scope.tableConfig.itemsAvailable) {
+        $scope.toolbarConfig.filterConfig.resultsCount = 0;
+        $scope.toolbarConfig.filterConfig.totalCount = 0;
+        $scope.toolbarConfig.filterConfig.selectedCount = 0;
+     } else {
+        $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
+        $scope.toolbarConfig.filterConfig.totalCount = $scope.allItems.length;
+        handleCheckBoxChange();
+      }
+    };
+
+    $scope.showComponent = true;
+
+    $scope.addNewComponentToDOM = function () {
+      $scope.showComponent = false;
+      $timeout(() => $scope.showComponent = true);
+
+    };
+  }
+]);
+</script>
+</div>
+</div><h4 id="example_demo">Demo</h4>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.tableview.demo" ng-set-html="index.html-72" ng-eval-javascript="modules.js script.js-73"></div>
+</div></div>
+</div>

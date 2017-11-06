@@ -1,0 +1,73 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/pagination/pagination.component.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3d04a16/src/pagination/pagination.component.js#L58" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfPagination</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">patternfly.pagination</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-pagination-component-page patternfly-pagination-component-pfpagination-page"><p>Component for pagination controls used in various views (list, card, table)</p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-pagination
+       page-number="{number}"
+       num-total-items="{number}"
+       page-size-increments="{Array&lt;Number&gt;}"
+       page-size="{number}"&gt;
+&lt;/pf-pagination&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>pageNumber</td><td><a href="" class="label type-hint type-hint-number">number</a></td><td><div class="patternfly-pagination-component-page patternfly-pagination-component-pfpagination-page"><p>The current page number</p>
+</div></td></tr><tr><td>numTotalItems</td><td><a href="" class="label type-hint type-hint-number">number</a></td><td><div class="patternfly-pagination-component-page patternfly-pagination-component-pfpagination-page"><p>The total number of items in the data set.  When a filter is applied, update the <code>numTotalItems</code>
+accordingly.</p>
+</div></td></tr><tr><td>pageSizeIncrements</td><td><a href="" class="label type-hint type-hint-array">Array&lt;Number&gt;</a></td><td><div class="patternfly-pagination-component-page patternfly-pagination-component-pfpagination-page"><p>(optional) Page size increments for the &#39;per page&#39; dropdown.  If not
+specified, the default values are: [5, 10, 20, 40, 80, 100]</p>
+</div></td></tr><tr><td>pageSize</td><td><a href="" class="label type-hint type-hint-number">number</a></td><td><div class="patternfly-pagination-component-page patternfly-pagination-component-pfpagination-page"><p>(optional) The initial page size to use.  If not specified, the default will be
+the first increment in the <code>pageSizeIncrements</code> array.</p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="patternfly-pagination-component-page patternfly-pagination-component-pfpagination-page"><h4 id="example_source">Source</h4>
+<div source-edit="patternfly.pagination" source-edit-deps="angular.js script.js" source-edit-html="index.html-63" source-edit-css="" source-edit-js="script.js-64" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div class="tabbable"><div class="tab-pane" title="index.html">
+<pre class="prettyprint linenums" ng-set-text="index.html-63" ng-html-wrap-loaded="patternfly.pagination angular.js script.js"></pre>
+<script type="text/ng-template" id="index.html-63">
+  <div ng-controller="PageCtrl">
+    <div class="col-md-12">
+      <div ng-repeat="item in items | startFrom:(pageNumber - 1)*pageSize | limitTo:pageSize" class="col-md-12">
+        <div class="row">
+          <div class="col-md-3">
+            <span>{{item.id}}</span>
+          </div>
+          <div class="col-md-7">
+            <span>{{item.status}}</span>
+          </div>
+          <div class="col-md-2">
+            <span>{{item.value}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <pf-pagination
+        page-size="pageSize"
+        page-number="pageNumber"
+        num-total-items="numTotalItems">
+    </pf-pagination>
+  </div>
+</script>
+</div>
+<div class="tab-pane" title="script.js">
+<pre class="prettyprint linenums" ng-set-text="script.js-64"></pre>
+<script type="text/ng-template" id="script.js-64">
+angular.module( 'patternfly.pagination').controller( 'PageCtrl', function( $scope ) {
+  $scope.pageSize = 10;
+  $scope.pageNumber = 1;
+
+  $scope.items = [];
+  for(i = 1; i <= 126; i++) {
+     $scope.items.push({id: i, status: 'Ok', value: Math.floor(Math.random() * (1000 - 1 + 1)) + 1});
+  }
+
+  $scope.numTotalItems = $scope.items.length;
+});
+</script>
+</div>
+</div><h4 id="example_demo">Demo</h4>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.pagination" ng-set-html="index.html-63" ng-eval-javascript="script.js-64"></div>
+</div></div>
+</div>

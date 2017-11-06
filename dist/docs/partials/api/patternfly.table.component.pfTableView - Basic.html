@@ -1,0 +1,361 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/table/tableview/examples/table-view-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3d04a16/src/table/tableview/examples/table-view-basic.js#L341" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfTableView - Basic</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">patternfly.table</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Component for rendering a simple table view.<br><br>
+See <a href="#/api/patternfly.table.component:pfTableView%20-%20with%20Toolbar">pfTableView - with Toolbar</a> for use with a Toolbar<br>
+See <a href="#/api/patternfly.toolbars.component:pfToolbar">pfToolbar</a> for use in Toolbar View Switcher</p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pf-table-view - -basic
+     config="{object}"
+     dt-options="{object}"
+     items="{array}"
+     columns="{array}"
+     action-buttons="{array}"
+     menu-actions="{array}"
+     empty-state-config="{object}"
+     empty-state-action-buttons="{array}"&gt;
+   ...
+&lt;/ANY&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>config</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional configuration object</p>
+<ul style='list-style-type: none'>
+  <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is &#39;uuid&#39;
+  <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
+  <li>.itemsAvailable      - (boolean) If &#39;false&#39;, displays the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component.
+  <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
+</ul></div></td></tr><tr><td>dtOptions</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional angular-datatables DTOptionsBuilder configuration object.  See <a href="http://l-lin.github.io/angular-datatables/archives/#/api">angular-datatables: DTOptionsBuilder</a></p>
+</div></td></tr><tr><td>items</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Array of items to display in the table view.</p>
+</div></td></tr><tr><td>columns</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Array of table column information to display in the table&#39;s header row and optionaly render the cells of a column.</p>
+<p><ul style='list-style-type: none'>
+  <li>.header     - (string) Text label for a column header
+  <li>.itemField    - (string) Item field to associate with a particular column.
+  <li>.templateFn - (function(value, item)) (optional) Template function used to render each cell of the column. Pro: more performant than <code>htmlTemplate</code>. Con: doesn&#39;t support AngularJS directives in the template, therefore it doesn&#39;t support things like ng-click. Example: <pre class="prettyprint linenums">templateFn: (value, item) =&gt; `&lt;a href="${item.id}"&gt;${value}&lt;/a&gt;`</pre>
+  <li>.htmlTemplate - (string) (optional) id/name of an embedded ng/html template. Pro: supports AngularJS directives in the template. Con: poor performance on large tables. Ex: htmlTemplate=&quot;name_template.html&quot;.  The template will be used to render each cell of the column.
+       Use <code>handleColAction(key, value)</code> in the template to call the <code>colActionFn</code> callback function you specify. &#39;key&#39; is the item attribute name; which should equal the itemFld of a column.
+      &#39;value&#39; is the item[key] value.
+  <pre class="prettyprint linenums">
+    &lt;script type="text/ng-template" id="name_template.html"&gt;
+      &lt;a href="" ng-click="$ctrl.handleColAction(key, value)"&gt;{{value}}&lt;/a&gt;
+    &lt;/script&gt;
+  </pre>
+  <li>.colActionFn - (function) (optional) Callback function used for the column. &#39;value&#39; is passed as a paramenter to the
+       callback function.
+</ul></p>
+<p><strong>Tip:</strong> For templating, use <code>tempateFn</code> unless you really need to use AngularJS directives. <code>templateFn</code> performs better than <code>htmlTemplate</code>.</p></div></td></tr><tr><td>actionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>List of action buttons in each row</p>
+<ul style='list-style-type: none'>
+  <li>.name - (String) The name of the action, displayed on the button
+  <li>.title - (String) Optional title, used for the tooltip
+  <li>.actionFn - (function(action)) Function to invoke when the action selected
+</ul></div></td></tr><tr><td>menuActions</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>List of actions for dropdown menu in each row</p>
+<ul style='list-style-type: none'>
+  <li>.name - (String) The name of the action, displayed on the button
+  <li>.title - (String) Optional title, used for the tooltip
+  <li>.actionFn - (function(action)) Function to invoke when the action selected
+</ul></div></td></tr><tr><td>emptyStateConfig</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional configuration settings for the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr><tr><td>emptyStateActionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><p>Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the <a href="#/api/patternfly.views.component:pfEmptyState">Empty State</a> component</p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="patternfly-table-component-page patternfly-table-component-pftableview-basic-page"><h4 id="example_source">Source</h4>
+<div source-edit="patternfly.tableview.demo" source-edit-deps="angular.js module.js controller.js service.js" source-edit-html="index.html-71" source-edit-css="" source-edit-js="module.js controller.js service.js" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div class="tabbable"><div class="tab-pane" title="index.html">
+<pre class="prettyprint linenums" ng-set-text="index.html-71" ng-html-wrap-loaded="patternfly.tableview.demo angular.js module.js controller.js service.js"></pre>
+<script type="text/ng-template" id="index.html-71">
+<div ng-controller="TableCtrl" class="row example-container">
+  <div class="col-md-12" ng-if="showComponent">
+    <pf-table-view id="exampleTableView"
+          config="config"
+          empty-state-config="emptyStateConfig"
+          dt-options="dtOptions"
+          columns="columns"
+          items="items"
+          action-buttons="actionButtons"
+          menu-actions="menuActions"
+          empty-state-action-buttons="emptyStateActionButtons">
+    </pf-table-view>
+  </div>
+  <hr class="col-md-12">
+  <div class="col-md-12" style="padding-top: 12px;">
+    <div class="form-group">
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="config.itemsAvailable">Items Available</input>
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="config.showCheckboxes" ng-change="addNewComponentToDOM()">Show Checkboxes</input>
+      </label>
+    </div>
+  </div>
+  <div class="col-md-12">
+        <div class="col-md-12" style="padding-top: 12px;">
+          <label style="font-weight:normal;vertical-align:center;">Events: </label>
+        </div>
+        <div class="col-md-12">
+          <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+        </div>
+  </div>
+  <script type="text/ng-template" id="status_template.html">
+    <span ng-if="value === 'error'" class="pficon pficon-error-circle-o"></span>
+    <span ng-if="value === 'warning'" class="pficon pficon-warning-triangle-o"></span>
+    <span ng-if="value === 'ok'" class="pficon pficon-ok"></span>
+    {{value}}
+  </script>
+  <script type="text/ng-template" id="name_template.html">
+    <a href="" ng-click="$ctrl.handleColAction(key, value)">{{value}}</a>
+  </script>
+</script>
+</div>
+<div class="tab-pane" title="module.js">
+<pre class="prettyprint linenums" ng-set-text="module.js"></pre>
+<script type="text/ng-template" id="module.js">
+  angular.module('patternfly.tableview.demo', ['patternfly.views','patternfly.table']);
+</script>
+</div>
+<div class="tab-pane" title="controller.js">
+<pre class="prettyprint linenums" ng-set-text="controller.js"></pre>
+<script type="text/ng-template" id="controller.js">
+angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope', '$timeout', 'itemsService',
+function ($scope, $timeout, itemsService) {
+        $scope.dtOptions = {
+          order: [[2, "asc"]],
+        };
+
+        $scope.columns = [
+          { header: "Status", itemField: "status", htmlTemplate: "status_template.html" },
+          { header: "Name", itemField: "name", htmlTemplate: "name_template.html", colActionFn: onNameClick },
+          { header: "Address", itemField: "address"},
+          { header: "City", itemField: "city", templateFn: function(value, item) { return '<a href="#' + item.name + '" title="' + item.address + '">' + value + '</span>' } },
+          { header: "State", itemField: "state"}
+        ];
+
+        $scope.items = null;
+
+        $scope.eventText = "";
+
+        $scope.config = {
+          onCheckBoxChange: handleCheckBoxChange,
+          selectionMatchProp: "name",
+          itemsAvailable: true,
+          showCheckboxes: true
+        };
+
+        var performEmptyStateAction = function (action) {
+          $scope.eventText = action.name + "\r\n" + $scope.eventText;
+        };
+
+        $scope.emptyStateConfig = {
+          icon: 'pficon-warning-triangle-o',
+          title: 'No Items Available',
+          info: "This is the Empty State component. The goal of a empty state pattern is to provide a good first impression that helps users to achieve their goals. It should be used when a view is empty because no objects exists and you want to guide the user to perform specific actions.",
+          helpLink: {
+            label: 'For more information please see',
+            urlLabel: 'pfExample',
+            url : '#/api/patternfly.views.component:pfEmptyState'
+          }
+        };
+
+        $scope.emptyStateActionButtons = [
+          {
+            name: 'Main Action',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction,
+            type: 'main'
+          },
+          {
+            name: 'Secondary Action 1',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          },
+          {
+            name: 'Secondary Action 2',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          },
+          {
+            name: 'Secondary Action 3',
+            title: 'Perform an action',
+            actionFn: performEmptyStateAction
+          }
+        ];
+
+        function handleCheckBoxChange (item) {
+          $scope.eventText = item.name + ' checked: ' + item.selected + '\r\n' + $scope.eventText;
+        };
+
+        var performAction = function (action, item) {
+          $scope.eventText = item.name + " : " + action.name + "\r\n" + $scope.eventText;
+        };
+
+        function onNameClick (name) {
+          $scope.eventText = "You clicked on " + name + "\n" + $scope.eventText;
+        }
+
+        $scope.actionButtons = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          }
+        ];
+
+        $scope.menuActions = [
+          {
+            name: 'Action',
+            title: 'Perform an action',
+            actionFn: performAction
+          },
+          {
+            name: 'Another Action',
+            title: 'Do something else',
+            actionFn: performAction
+          },
+          {
+            name: 'Disabled Action',
+            title: 'Unavailable action',
+            actionFn: performAction,
+            isDisabled: true
+          },
+          {
+            name: 'Something Else',
+            title: '',
+            actionFn: performAction
+          },
+          {
+            isSeparator: true
+          },
+          {
+            name: 'Grouped Action 1',
+            title: 'Do something',
+            actionFn: performAction
+          },
+          {
+            name: 'Grouped Action 2',
+            title: 'Do something similar',
+            actionFn: performAction
+          }
+        ];
+
+        $scope.showComponent = true;
+
+        $scope.addNewComponentToDOM = function () {
+          $scope.showComponent = false;
+          $timeout(() => $scope.showComponent = true);
+        };
+
+        (function init() {
+          itemsService.getItems()
+            .then(items => $scope.items = items);
+        })();
+      }
+    ]);
+  </script>
+</div>
+<div class="tab-pane" title="service.js">
+<pre class="prettyprint linenums" ng-set-text="service.js"></pre>
+<script type="text/ng-template" id="service.js">
+  angular.module('patternfly.tableview.demo').service('itemsService', ['$q', function($q) {
+
+    this.getItems = function() {
+      return $q((resolve, reject) => {
+        setTimeout(function() {
+          let items = [
+            {
+            status: "error",
+            name: "Fred Flintstone",
+            address: "20 Dinosaur Way",
+            city: "Bedrock",
+            state: "Washingstone"
+            },
+            {
+            status: "error",
+            name: "John Smith",
+            address: "415 East Main Street",
+            city: "Norfolk",
+            state: "Virginia",
+            },
+            {
+            status: "warning",
+            name: "Frank Livingston",
+            address: "234 Elm Street",
+            city: "Pittsburgh",
+            state: "Pennsylvania"
+            },
+            {
+            status: "ok",
+            name: "Linda McGovern",
+            address: "22 Oak Street",
+            city: "Denver",
+            state: "Colorado"
+            },
+            {
+            status: "error",
+            name: "Jim Brown",
+            address: "72 Bourbon Way",
+            city: "Nashville",
+            state: "Tennessee"
+            },
+            {
+            status: "ok",
+            name: "Holly Nichols",
+            address: "21 Jump Street",
+            city: "Hollywood",
+            state: "California"
+            },
+            {
+            status: "error",
+            name: "Marie Edwards",
+            address: "17 Cross Street",
+            city: "Boston",
+            state: "Massachusetts"
+            },
+            {
+            status: "ok",
+            name: "Pat Thomas",
+            address: "50 Second Street",
+            city: "New York",
+            state: "New York"
+            },
+            {
+            status: "warning",
+            name: "Mike Bird",
+            address: "50 Forth Street",
+            city: "New York",
+            state: "New York"
+            },
+            {
+            status: "error",
+            name: "Cheryl Taylor",
+            address: "2 Main Street",
+            city: "New York",
+            state: "New York"
+            },
+            {
+            status: "ok",
+            name: "Ren DiLorenzo",
+            address: "10 Chase Lane",
+            city: "Boston",
+            state: "Massacusetts"
+            },
+            {
+            status: "ok",
+            name: "Kim Livingston",
+            address: "5 Tree Hill Lane",
+            city: "Boston",
+            state: "Massacusetts"
+            }
+          ];
+          resolve(items);
+        }, 10);
+      });
+    }
+
+  }]);
+</script>
+</div>
+</div><h4 id="example_demo">Demo</h4>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.tableview.demo" ng-set-html="index.html-71" ng-eval-javascript="module.js controller.js service.js"></div>
+</div></div>
+</div>

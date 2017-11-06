@@ -1,0 +1,23 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/views/view-utils.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/3d04a16/src/views/view-utils.js#L23" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfViewUtils</code>
+<div><span class="hint">service in module <code ng:non-bindable="">patternfly.views</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-views-pfviewutils-page"><p>A utility constant to return view objects used for Dashboard, Card, Table, List, and Topology view switcher types.</p>
+</div></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="patternfly-views-pfviewutils-page"><pre class="prettyprint linenums">
+$scope.viewsConfig = {
+  views: [pfViewUtils.getListView(), pfViewUtils.getCardView(), pfViewUtils.getTableView()]
+};
+</pre>
+Each getXxxxView() returns an object:</p>
+<p><ul style='list-style-type: none'>
+   <li>.id - (String) Unique id for the view, used for comparisons
+   <li>.title - (String) Optional title, uses as a tooltip for the view selector
+   <li>.iconClass - (String) Icon class to use for the view selector
+</ul>
+Please see <a href="#/api/patternfly.toolbars.component:pfToolbar">pfToolbar</a> for use in Toolbar View Switcher</p>
+</div></div>
+</div>
