@@ -1,4 +1,4 @@
-# Angular-PatternFly Community Meeting - November 27, 2017 10AM EDT
+# Angular PatternFly Community Meeting: November 27, 2017 10AM EDT
 
 ## Call Information:
 Join on bluejeans with your browser by using the following link:
