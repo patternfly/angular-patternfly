@@ -152,7 +152,7 @@ describe('Directive:  pfFilterPanel', function () {
     expect(tagOne).toContain("Value 2");
     expect(tagOne).not.toContain("Value 3");
 
-    var clearAll = element.find('.clear-filters');
+    var clearAll = element.find('.clear-filters a');
     expect(clearAll.length).toBe(1);
     eventFire(clearAll[0], 'click');
     $scope.$digest();
