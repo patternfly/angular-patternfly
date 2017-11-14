@@ -5,7 +5,10 @@
  *
  * @param {string} headTitle Title for the card
  * @param {string=} subTitle Sub-Title for the card
+ * @param {string=} spinnerText Text for the card spinner
+ * @param {string=} spinnerCardHeight Height to set for the card when data is loading and spinner is shown
  * @param {boolean=} showTopBorder Show/Hide the blue top border. True shows top border, false (default) hides top border
+ * @param {boolean=} showSpinner Show/Hide the spinner for loading state. True shows the spinner, false (default) hides the spinner
  * @param {boolean=} showTitlesSeparator Show/Hide the grey line between the title and sub-title.
  * True (default) shows the line, false hides the line
  * @param {object=} footer footer configuration properties:<br/>
@@ -38,21 +41,26 @@
      <pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
        <pf-trends-chart config="configSingle" chart-data="dataSingle"></pf-trends-chart>
      </pf-card>
-      <pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
-        <pf-trends-chart config="configRightLabel" chart-data="dataSingle"></pf-trends-chart>
-      </pf-card>
+     <pf-card head-title="Cluster Utilization" show-top-border="true" show-spinner="dataLoading" spinner-text="Loading" footer="footerConfig" filter="filterConfig" style="width: 50%">
+       <pf-trends-chart config="configRightLabel" chart-data="dataSingle"></pf-trends-chart>
+     </pf-card>
      <label class="label-title">Card with Multiple Trends</label>
-     <pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
-          show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
+     <pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false" show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
        <pf-trends-chart config="configVirtual" chart-data="dataVirtual"></pf-trends-chart>
        <pf-trends-chart config="configPhysical" chart-data="dataPhysical"></pf-trends-chart>
        <pf-trends-chart config="configMemory" chart-data="dataMemory"></pf-trends-chart>
      </pf-card>
-    </div>
    </div>
+ </div>
  </file>
  <file name="script.js">
- angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
+ angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope, $timeout ) {
+
+       $scope.dataLoading = true;
+
+       $timeout(function () {
+         $scope.dataLoading = false;
+       }, 3000 );
 
        $scope.footerConfig = {
          'iconClass' : 'fa fa-flag',

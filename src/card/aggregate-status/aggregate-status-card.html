@@ -1,4 +1,4 @@
-<div ng-if="!$ctrl.isMiniLayout" class="card-pf card-pf-aggregate-status" ng-class="{'card-pf-accented': $ctrl.shouldShowTopBorder, 'card-pf-aggregate-status-alt': $ctrl.isAltLayout}">
+<div ng-if="!$ctrl.isMiniLayout" class="card-pf card-pf-aggregate-status" ng-class="{'card-pf-accented': $ctrl.shouldShowTopBorder, 'card-pf-aggregate-status-alt': $ctrl.isAltLayout}" ng-style="$ctrl.showSpinner ? $ctrl.spinnerHeight : {}">
   <h2 class="card-pf-title">
     <a href="{{$ctrl.status.href}}" ng-if="$ctrl.status.href">
       <image ng-if="$ctrl.status.iconImage" ng-src="{{$ctrl.status.iconImage}}" alt="" class="card-pf-icon-image"></image>
@@ -13,8 +13,15 @@
       <span class="card-pf-aggregate-status-title">{{$ctrl.status.title}}</span>
     </span>
   </h2>
-  <div class="card-pf-body">
-    <p class="card-pf-aggregate-status-notifications">
+  <div class="card-pf-body" ng-class="{'show-spinner': $ctrl.showSpinner}">
+    <div ng-if="$ctrl.showSpinner" class="spinner-container">
+      <div class="loading-indicator">
+        <span class="spinner spinner-lg" aria-hidden="true"></span>
+        <span ng-if="$ctrl.spinnerText" class="loading-text">{{$ctrl.spinnerText}}</span>
+        <label ng-if="!$ctrl.spinnerText" class="sr-only">Loading</label>
+      </div>
+    </div>
+    <p class="card-pf-aggregate-status-notifications" ng-class="{'hide-for-spinner': $ctrl.showSpinner}">
       <span class="card-pf-aggregate-status-notification" ng-repeat="notification in $ctrl.status.notifications">
         <a href="{{notification.href}}" ng-if="notification.href">
           <image ng-if="notification.iconImage" ng-src="{{notification.iconImage}}" alt="" class="card-pf-icon-image"></image>
@@ -28,7 +35,7 @@
     </p>
   </div>
 </div>
-<div ng-if="$ctrl.isMiniLayout" class="card-pf card-pf-aggregate-status card-pf-aggregate-status-mini" ng-class="{'card-pf-accented': $ctrl.shouldShowTopBorder}">
+<div ng-if="$ctrl.isMiniLayout" class="card-pf card-pf-aggregate-status card-pf-aggregate-status-mini" ng-class="{'card-pf-accented': $ctrl.shouldShowTopBorder}" ng-style="$ctrl.showSpinner ? $ctrl.spinnerHeight : {}">
   <h2 class="card-pf-title">
     <a ng-if="$ctrl.status.href" href="{{$ctrl.status.href}}">
       <image ng-if="$ctrl.status.iconImage" ng-src="{{$ctrl.status.iconImage}}" alt="" class="card-pf-icon-image"></image>
@@ -41,7 +48,14 @@
       {{$ctrl.status.title}}
     </span>
   </h2>
-  <div class="card-pf-body">
+  <div class="card-pf-body" ng-class="{'show-spinner': $ctrl.showSpinner}">
+    <div ng-if="$ctrl.showSpinner" class="spinner-container">
+      <div class="loading-indicator">
+        <span class="spinner spinner-lg" aria-hidden="true"></span>
+        <span ng-if="$ctrl.spinnerText" class="loading-text">{{$ctrl.spinnerText}}</span>
+        <label ng-if="!$ctrl.spinnerText" class="sr-only">Loading</label>
+      </div>
+    </div>
     <p ng-if="$ctrl.status.notification.iconImage || $ctrl.status.notification.iconClass || $ctrl.status.notification.count" class="card-pf-aggregate-status-notifications">
       <span class="card-pf-aggregate-status-notification">
         <a ng-if="$ctrl.status.notification.href" href="{{$ctrl.status.notification.href}}">

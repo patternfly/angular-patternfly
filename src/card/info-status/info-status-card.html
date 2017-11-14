@@ -1,11 +1,10 @@
-<div class="card-pf card-pf-info-status"
-     ng-class="{'card-pf-accented': $ctrl.shouldShowTopBorder}">
-  <div class="card-pf-info-image">
+<div class="card-pf card-pf-info-status" ng-class="{'card-pf-accented': $ctrl.shouldShowTopBorder}" ng-style="$ctrl.showSpinner ? $ctrl.spinnerHeight : {}">
+  <div class="card-pf-info-image" ng-if="$ctrl.status.iconImage || $ctrl.status.iconClass">
     <img ng-if="$ctrl.status.iconImage" ng-src="{{$ctrl.status.iconImage}}" alt=""
          class="info-img"/>
     <span class="info-icon {{$ctrl.status.iconClass}}"></span>
   </div>
-  <div class="card-pf-info-content">
+  <div class="card-pf-info-content card-pf-body" ng-class="{'show-spinner': $ctrl.showSpinner}">
     <h2 class="card-pf-title" ng-if="$ctrl.status.title">
       <a href="{{$ctrl.status.href}}" ng-if="$ctrl.status.href">
         <span class="">{{$ctrl.status.title}}</span>
@@ -14,9 +13,18 @@
         <span class="">{{$ctrl.status.title}}</span>
       </span>
     </h2>
-    <div ng-if="$ctrl.shouldShowHtmlContent" class="card-pf-info-item" ng-bind-html="$ctrl.trustAsHtml(item)"
-         ng-repeat="item in $ctrl.status.info track by $index"></div>
-    <div ng-if="!$ctrl.shouldShowHtmlContent" class="card-pf-info-item" ng-bind="item"
-         ng-repeat="item in $ctrl.status.info track by $index"></div>
+    <div ng-if="$ctrl.showSpinner" class="spinner-container" ng-class="{'with-title' : $ctrl.status.title}">
+      <div class="loading-indicator">
+        <span class="spinner spinner-lg" aria-hidden="true"></span>
+        <span ng-if="$ctrl.spinnerText" class="loading-text">{{$ctrl.spinnerText}}</span>
+        <label ng-if="!$ctrl.spinnerText" class="sr-only">Loading</label>
+      </div>
+    </div>
+    <span ng-if="!$ctrl.showSpinner">
+      <div ng-if="$ctrl.shouldShowHtmlContent" class="card-pf-info-item" ng-bind-html="$ctrl.trustAsHtml(item)"
+           ng-repeat="item in $ctrl.status.info track by $index"></div>
+      <div ng-if="!$ctrl.shouldShowHtmlContent" class="card-pf-info-item" ng-bind="item"
+           ng-repeat="item in $ctrl.status.info track by $index"></div>
+    </span>
   </div>
 </div>

@@ -2909,6 +2909,9 @@ var pfCanvas = {};
  *   </ul>
  * </ul>
  * @param {boolean=} show-top-border Show/hide the top border, true shows top border, false (default) hides top border
+ * @param {boolean=} showSpinner Show/Hide the spinner for loading state. True shows the spinner, false (default) hides the spinner
+ * @param {string=} spinnerText Text for the card spinner
+ * @param {string=} spinnerCardHeight Height to set for the card when data is loading and spinner is shown
  * @param {string=} layout Various alternative layouts the aggregate status card may have:<br/>
  * <ul style='list-style-type: none'>
  * <li>'mini' displays a mini aggregate status card.  Note: when using 'mini' layout, only one notification can be specified in the status object
@@ -2923,50 +2926,75 @@ var pfCanvas = {};
  <example module="patternfly.card">
 
  <file name="index.html">
-   <div ng-controller="CardDemoCtrl" style="display:inline-block;">
-     <div class="col-md-10">
-       <label>With Top Border</label>
-       <pf-aggregate-status-card status="status" show-top-border="true"></pf-aggregate-status-card>
-       <br/>
-       <label>No Top Border</label>
-       <pf-aggregate-status-card status="status"></pf-aggregate-status-card>
-       <br/>
-       <label>layout = "mini"</label>
-       <pf-aggregate-status-card status="miniAggStatus" show-top-border="true" layout="mini"></pf-aggregate-status-card>
-       <pf-aggregate-status-card status="miniAggStatus2" show-top-border="true" layout="mini"></pf-aggregate-status-card>
-       <br/>
-       <label>layout = "tall"</label>
-       <pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" layout="tall"></pf-aggregate-status-card>
-       <br/>
-       <label>Alternate Layout</label>
-       <i>(depreciated, use layout = 'tall' instead)</i>
-       </br></br>
-       <pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" alt-layout="true"></pf-aggregate-status-card>
+   <div ng-controller="CardDemoCtrl" class="container-fluid">
+     <div class="row">
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>With Top Border</label>
+         <pf-aggregate-status-card status="status" show-top-border="true" show-spinner="dataLoading" spinner-text="Loading" spinner-card-height="90"></pf-aggregate-status-card>
+       </div>
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>No Top Border</label>
+         <pf-aggregate-status-card status="status2"></pf-aggregate-status-card>
+       </div>
+     </div>
+     <div class="row">
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>layout = "mini"</label>
+         <pf-aggregate-status-card status="miniAggStatus" show-top-border="true" layout="mini"></pf-aggregate-status-card>
+         <pf-aggregate-status-card status="miniAggStatus2" show-top-border="true" layout="mini"></pf-aggregate-status-card>
+       </div>
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>layout = "tall"</label>
+         <pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" layout="tall"></pf-aggregate-status-card>
+       </div>
+     </div>
+     <div class="row">
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>Alternate Layout</label>
+         <br>
+         <i>(depreciated, use layout = 'tall' instead)</i>
+         <pf-aggregate-status-card status="aggStatusAlt" show-top-border="true" alt-layout="true"></pf-aggregate-status-card>
+       </div>
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>Loading State</label>
+         <br>
+         <br>
+         <pf-aggregate-status-card status="aggStatusAlt2" spinner-card-height="140" show-top-border="true" show-spinner="dataLoading" spinner-text="Loading" layout="tall"></pf-aggregate-status-card>
+       </div>
      </div>
    </div>
  </file>
 
  <file name="script.js">
-   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window ) {
+ angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window, $timeout ) {
     var imagePath = $window.IMAGE_PATH || "img";
+
+    $scope.dataLoading = true;
+
     $scope.status = {
       "title":"Nodes",
-      "count":793,
       "href":"#",
       "iconClass": "fa fa-shield",
-      "notifications":[
-        {
-          "iconClass":"pficon pficon-error-circle-o",
-          "count":4,
-          "href":"#"
-        },
-        {
-          "iconClass":"pficon pficon-warning-triangle-o",
-          "count":1
-        }
-      ]
+      "notifications":[]
     };
 
+      $scope.status2 = {
+        "title":"Nodes",
+        "count":793,
+        "href":"#",
+        "iconClass": "fa fa-shield",
+        "notifications":[
+          {
+            "iconClass":"pficon pficon-error-circle-o",
+            "count":4,
+            "href":"#"
+          },
+          {
+            "iconClass":"pficon pficon-warning-triangle-o",
+            "count":1
+          }
+        ]
+      };
     $scope.aggStatusAlt = {
       "title":"Providers",
       "count":3,
@@ -2982,28 +3010,72 @@ var pfCanvas = {};
           "href":"#"
         }
       ]
-     };
+    };
 
-     $scope.miniAggStatus = {
+      $scope.aggStatusAlt2 = {
+        "title":"Providers",
+        "notifications":[]
+      };
+
+    $timeout(function () {
+      $scope.dataLoading = false;
+
+      $scope.status = {
+        "title":"Nodes",
+        "count":793,
+        "href":"#",
+        "iconClass": "fa fa-shield",
+        "notifications":[
+          {
+            "iconClass":"pficon pficon-error-circle-o",
+            "count":4,
+            "href":"#"
+          },
+          {
+            "iconClass":"pficon pficon-warning-triangle-o",
+            "count":1
+          }
+        ]
+      };
+
+      $scope.aggStatusAlt2 = {
+        "title":"Providers",
+        "count":3,
+        "notifications":[
+          {
+            "iconImage": imagePath + "/kubernetes.svg",
+            "count":1,
+            "href":"#"
+          },
+          {
+            "iconImage": imagePath + "/OpenShift-logo.svg",
+            "count":2,
+            "href":"#"
+          }
+        ]
+      };
+    }, 6000 );
+
+    $scope.miniAggStatus = {
       "iconClass":"pficon pficon-container-node",
       "title":"Nodes",
       "count":52,
       "href":"#",
       "notification": {
-          "iconClass":"pficon pficon-error-circle-o",
-          "count":3
-        }
-     };
+        "iconClass":"pficon pficon-error-circle-o",
+        "count":3
+      }
+    };
 
-     $scope.miniAggStatus2 = {
+    $scope.miniAggStatus2 = {
       "iconClass":"pficon pficon-cluster",
       "title":"Adipiscing",
       "count":9,
       "href":"#",
       "notification":{
-          "iconClass":"pficon pficon-ok"
-        }
-     };
+        "iconClass":"pficon pficon-ok"
+      }
+    };
    });
  </file>
 
@@ -3014,6 +3086,9 @@ angular.module( 'patternfly.card' ).component('pfAggregateStatusCard', {
   bindings: {
     status: '=',
     showTopBorder: '@?',
+    showSpinner: '<?',
+    spinnerText: '@?',
+    spinnerCardHeight: '@?',
     altLayout: '@?',
     layout: '@?'
   },
@@ -3025,6 +3100,11 @@ angular.module( 'patternfly.card' ).component('pfAggregateStatusCard', {
       ctrl.shouldShowTopBorder = (ctrl.showTopBorder === 'true');
       ctrl.isAltLayout = (ctrl.altLayout === 'true' || ctrl.layout === 'tall');
       ctrl.isMiniLayout = (ctrl.layout === 'mini');
+      ctrl.showSpinner = ctrl.showSpinner === true;
+
+      if (ctrl.spinnerCardHeight) {
+        ctrl.spinnerHeight = {'height': ctrl.spinnerCardHeight};
+      }
     };
   }
 });
@@ -3275,7 +3355,10 @@ angular.module('patternfly.card').component('pfCard', {
  *
  * @param {string} headTitle Title for the card
  * @param {string=} subTitle Sub-Title for the card
+ * @param {string=} spinnerText Text for the card spinner
+ * @param {string=} spinnerCardHeight Height to set for the card when data is loading and spinner is shown
  * @param {boolean=} showTopBorder Show/Hide the blue top border. True shows top border, false (default) hides top border
+ * @param {boolean=} showSpinner Show/Hide the spinner for loading state. True shows the spinner, false (default) hides the spinner
  * @param {boolean=} showTitlesSeparator Show/Hide the grey line between the title and sub-title.
  * True (default) shows the line, false hides the line
  * @param {object=} footer footer configuration properties:<br/>
@@ -3308,21 +3391,26 @@ angular.module('patternfly.card').component('pfCard', {
      <pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
        <pf-trends-chart config="configSingle" chart-data="dataSingle"></pf-trends-chart>
      </pf-card>
-      <pf-card head-title="Cluster Utilization" show-top-border="true" footer="footerConfig" filter="filterConfig" style="width: 50%">
-        <pf-trends-chart config="configRightLabel" chart-data="dataSingle"></pf-trends-chart>
-      </pf-card>
+     <pf-card head-title="Cluster Utilization" show-top-border="true" show-spinner="dataLoading" spinner-text="Loading" footer="footerConfig" filter="filterConfig" style="width: 50%">
+       <pf-trends-chart config="configRightLabel" chart-data="dataSingle"></pf-trends-chart>
+     </pf-card>
      <label class="label-title">Card with Multiple Trends</label>
-     <pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false"
-          show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
+     <pf-card head-title="Performance" sub-title="Last 30 Days" show-top-border="false" show-titles-separator="false" style="width: 65%" footer="actionBarConfig">
        <pf-trends-chart config="configVirtual" chart-data="dataVirtual"></pf-trends-chart>
        <pf-trends-chart config="configPhysical" chart-data="dataPhysical"></pf-trends-chart>
        <pf-trends-chart config="configMemory" chart-data="dataMemory"></pf-trends-chart>
      </pf-card>
-    </div>
    </div>
+ </div>
  </file>
  <file name="script.js">
- angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope ) {
+ angular.module( 'demo', ['patternfly.charts', 'patternfly.card'] ).controller( 'ChartCtrl', function( $scope, $timeout ) {
+
+       $scope.dataLoading = true;
+
+       $timeout(function () {
+         $scope.dataLoading = false;
+       }, 3000 );
 
        $scope.footerConfig = {
          'iconClass' : 'fa fa-flag',
@@ -3441,6 +3529,9 @@ angular.module('patternfly.card').component('pfCard', {
  * </ul>
  * @param {boolean=} show-top-border Show/hide the top border, true shows top border, false (default) hides top border
  * @param {boolean} htmlContent Flag to allow HTML content within the info options
+ * @param {boolean=} showSpinner Show/Hide the spinner for loading state. True shows the spinner, false (default) hides the spinner
+ * @param {string=} spinnerText Text for the card spinner
+ * @param {string=} spinnerCardHeight Height to set for the card when data is loading and spinner is shown
  *
  * @description
  * Component for easily displaying textual information
@@ -3449,23 +3540,36 @@ angular.module('patternfly.card').component('pfCard', {
  <example module="patternfly.card">
 
  <file name="index.html">
-   <div ng-controller="CardDemoCtrl" style="display:inline-block;">
-     <div class="col-md-10">
-       <label>With Top Border, Icon Class, Href</label>
-       <pf-info-status-card status="infoStatus" show-top-border="true"></pf-info-status-card>
-       <br/>
-       <label>No Top Border, Icon Image, No Title</label>
-       <pf-info-status-card status="infoStatusTitless"></pf-info-status-card>
-       <br/>
-       <label>With HTML</label>
-       <pf-info-status-card status="infoStatusAlt" html-content="true"></pf-info-status-card>
+   <div ng-controller="CardDemoCtrl" class="container-fluid">
+     <div class="row">
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>With Top Border, Icon Class, Href</label>
+         <pf-info-status-card status="infoStatus" show-top-border="true"></pf-info-status-card>
+       </div>
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>No Top Border, Icon Image, No Title</label>
+         <pf-info-status-card status="infoStatusTitless"></pf-info-status-card>
+       </div>
+     </div>
+     <div class="row">
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>With HTML</label>
+         <pf-info-status-card status="infoStatusAlt" html-content="true" show-spinner="dataLoading" spinner-card-height="145" spinner-text="Loading"></pf-info-status-card>
+       </div>
+       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+         <label>Loading State</label>
+         <pf-info-status-card status="infoStatus2" show-top-border="true" spinner-card-height="165" show-spinner="dataLoading" spinner-text="Loading"></pf-info-status-card>
+       </div>
      </div>
    </div>
  </file>
 
  <file name="script.js">
-   angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window ) {
+ angular.module( 'patternfly.card' ).controller( 'CardDemoCtrl', function( $scope, $window, $timeout ) {
     var imagePath = $window.IMAGE_PATH || "img";
+
+    $scope.dataLoading = true;
+
     $scope.infoStatus = {
       "title":"TinyCore-local",
       "href":"#",
@@ -3478,6 +3582,11 @@ angular.module('patternfly.card').component('pfCard', {
       ]
     };
 
+    $scope.infoStatus2 = {
+        "title":"TinyCore-local",
+        "iconClass": "fa fa-shield"
+    };
+
     $scope.infoStatusTitless = {
       "iconImage": imagePath + "/OpenShift-logo.svg",
       "info":[
@@ -3488,15 +3597,33 @@ angular.module('patternfly.card').component('pfCard', {
         ]
     };
 
-    $scope.infoStatusAlt = {
-      "title":"Favorite Things",
-      "iconClass":"fa fa-heart",
-      "info":[
-        "<i class='fa fa-coffee'>",
-        "<i class='fa fa-motorcycle'>",
-        "<b>Tacos</b>"
-      ]
-    };
+    $scope.infoStatusAlt = {};
+
+    $timeout(function () {
+      $scope.dataLoading = false;
+
+      $scope.infoStatus2 = {
+        "title":"TinyCore-local",
+        "href":"#",
+        "iconClass": "fa fa-shield",
+        "info":[
+          "VM Name: aapdemo002",
+          "Host Name: localhost.localdomian",
+          "IP Address: 10.9.62.100",
+          "Power status: on"
+        ]
+      };
+
+      $scope.infoStatusAlt = {
+        "title":"Favorite Things",
+        "iconClass":"fa fa-heart",
+        "info":[
+          "<i class='fa fa-coffee'>",
+          "<i class='fa fa-motorcycle'>",
+          "<b>Tacos</b>"
+        ]
+      };
+    }, 6000 );
    });
  </file>
 
@@ -3507,6 +3634,9 @@ angular.module( 'patternfly.card' ).component('pfInfoStatusCard', {
   bindings: {
     status: '=',
     showTopBorder: '@?',
+    showSpinner: '<?',
+    spinnerText: '@?',
+    spinnerCardHeight: '@?',
     htmlContent: '@?'
   },
   templateUrl: 'card/info-status/info-status-card.html',
@@ -3516,9 +3646,14 @@ angular.module( 'patternfly.card' ).component('pfInfoStatusCard', {
     ctrl.$onInit = function () {
       ctrl.shouldShowTopBorder = (ctrl.showTopBorder === 'true');
       ctrl.shouldShowHtmlContent = (ctrl.htmlContent === 'true');
+      ctrl.showSpinner = ctrl.showSpinner === true;
       ctrl.trustAsHtml = function (html) {
         return $sce.trustAsHtml(html);
       };
+
+      if (ctrl.spinnerCardHeight) {
+        ctrl.spinnerHeight = {'height': ctrl.spinnerCardHeight};
+      }
     };
   }]
 });
@@ -18414,7 +18549,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
   'use strict';
 
   $templateCache.put('card/aggregate-status/aggregate-status-card.html',
-    "<div ng-if=!$ctrl.isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': $ctrl.shouldShowTopBorder, 'card-pf-aggregate-status-alt': $ctrl.isAltLayout}\"><h2 class=card-pf-title><a href={{$ctrl.status.href}} ng-if=$ctrl.status.href><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> <span class=card-pf-aggregate-status-title>{{$ctrl.status.title}}</span></a> <span ng-if=!$ctrl.status.href><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> <span class=card-pf-aggregate-status-title>{{$ctrl.status.title}}</span></span></h2><div class=card-pf-body><p class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in $ctrl.status.notifications\"><a href={{notification.href}} ng-if=notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=$ctrl.isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': $ctrl.shouldShowTopBorder}\"><h2 class=card-pf-title><a ng-if=$ctrl.status.href href={{$ctrl.status.href}}><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=$ctrl.status.iconClass class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> {{$ctrl.status.title}}</a> <span ng-if=!$ctrl.status.href><span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> {{$ctrl.status.title}}</span></h2><div class=card-pf-body><p ng-if=\"$ctrl.status.notification.iconImage || $ctrl.status.notification.iconClass || $ctrl.status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=$ctrl.status.notification.href href={{$ctrl.status.notification.href}}><image ng-if=$ctrl.status.notification.iconImage ng-src={{$ctrl.status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=$ctrl.status.notification.iconClass class={{$ctrl.status.notification.iconClass}}></span><span ng-if=$ctrl.status.notification.count>{{$ctrl.status.notification.count}}</span></a> <span ng-if=!$ctrl.status.notification.href><image ng-if=$ctrl.status.notification.iconImage ng-src={{$ctrl.status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=$ctrl.status.notification.iconClass class={{$ctrl.status.notification.iconClass}}></span><span ng-if=$ctrl.status.notification.count>{{$ctrl.status.notification.count}}</span></span></span></p></div></div>"
+    "<div ng-if=!$ctrl.isMiniLayout class=\"card-pf card-pf-aggregate-status\" ng-class=\"{'card-pf-accented': $ctrl.shouldShowTopBorder, 'card-pf-aggregate-status-alt': $ctrl.isAltLayout}\" ng-style=\"$ctrl.showSpinner ? $ctrl.spinnerHeight : {}\"><h2 class=card-pf-title><a href={{$ctrl.status.href}} ng-if=$ctrl.status.href><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> <span class=card-pf-aggregate-status-title>{{$ctrl.status.title}}</span></a> <span ng-if=!$ctrl.status.href><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> <span class=card-pf-aggregate-status-title>{{$ctrl.status.title}}</span></span></h2><div class=card-pf-body ng-class=\"{'show-spinner': $ctrl.showSpinner}\"><div ng-if=$ctrl.showSpinner class=spinner-container><div class=loading-indicator><span class=\"spinner spinner-lg\" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div><p class=card-pf-aggregate-status-notifications ng-class=\"{'hide-for-spinner': $ctrl.showSpinner}\"><span class=card-pf-aggregate-status-notification ng-repeat=\"notification in $ctrl.status.notifications\"><a href={{notification.href}} ng-if=notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=$ctrl.isMiniLayout class=\"card-pf card-pf-aggregate-status card-pf-aggregate-status-mini\" ng-class=\"{'card-pf-accented': $ctrl.shouldShowTopBorder}\" ng-style=\"$ctrl.showSpinner ? $ctrl.spinnerHeight : {}\"><h2 class=card-pf-title><a ng-if=$ctrl.status.href href={{$ctrl.status.href}}><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=$ctrl.status.iconClass class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> {{$ctrl.status.title}}</a> <span ng-if=!$ctrl.status.href><span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> {{$ctrl.status.title}}</span></h2><div class=card-pf-body ng-class=\"{'show-spinner': $ctrl.showSpinner}\"><div ng-if=$ctrl.showSpinner class=spinner-container><div class=loading-indicator><span class=\"spinner spinner-lg\" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div><p ng-if=\"$ctrl.status.notification.iconImage || $ctrl.status.notification.iconClass || $ctrl.status.notification.count\" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=$ctrl.status.notification.href href={{$ctrl.status.notification.href}}><image ng-if=$ctrl.status.notification.iconImage ng-src={{$ctrl.status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=$ctrl.status.notification.iconClass class={{$ctrl.status.notification.iconClass}}></span><span ng-if=$ctrl.status.notification.count>{{$ctrl.status.notification.count}}</span></a> <span ng-if=!$ctrl.status.notification.href><image ng-if=$ctrl.status.notification.iconImage ng-src={{$ctrl.status.notification.iconImage}} alt=\"\" class=card-pf-icon-image></image><span ng-if=$ctrl.status.notification.iconClass class={{$ctrl.status.notification.iconClass}}></span><span ng-if=$ctrl.status.notification.count>{{$ctrl.status.notification.count}}</span></span></span></p></div></div>"
   );
 
 
@@ -18429,7 +18564,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 
 
   $templateCache.put('card/info-status/info-status-card.html',
-    "<div class=\"card-pf card-pf-info-status\" ng-class=\"{'card-pf-accented': $ctrl.shouldShowTopBorder}\"><div class=card-pf-info-image><img ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=\"info-img\"> <span class=\"info-icon {{$ctrl.status.iconClass}}\"></span></div><div class=card-pf-info-content><h2 class=card-pf-title ng-if=$ctrl.status.title><a href={{$ctrl.status.href}} ng-if=$ctrl.status.href><span>{{$ctrl.status.title}}</span></a> <span ng-if=!$ctrl.status.href><span>{{$ctrl.status.title}}</span></span></h2><div ng-if=$ctrl.shouldShowHtmlContent class=card-pf-info-item ng-bind-html=$ctrl.trustAsHtml(item) ng-repeat=\"item in $ctrl.status.info track by $index\"></div><div ng-if=!$ctrl.shouldShowHtmlContent class=card-pf-info-item ng-bind=item ng-repeat=\"item in $ctrl.status.info track by $index\"></div></div></div>"
+    "<div class=\"card-pf card-pf-info-status\" ng-class=\"{'card-pf-accented': $ctrl.shouldShowTopBorder}\" ng-style=\"$ctrl.showSpinner ? $ctrl.spinnerHeight : {}\"><div class=card-pf-info-image ng-if=\"$ctrl.status.iconImage || $ctrl.status.iconClass\"><img ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt=\"\" class=\"info-img\"> <span class=\"info-icon {{$ctrl.status.iconClass}}\"></span></div><div class=\"card-pf-info-content card-pf-body\" ng-class=\"{'show-spinner': $ctrl.showSpinner}\"><h2 class=card-pf-title ng-if=$ctrl.status.title><a href={{$ctrl.status.href}} ng-if=$ctrl.status.href><span>{{$ctrl.status.title}}</span></a> <span ng-if=!$ctrl.status.href><span>{{$ctrl.status.title}}</span></span></h2><div ng-if=$ctrl.showSpinner class=spinner-container ng-class=\"{'with-title' : $ctrl.status.title}\"><div class=loading-indicator><span class=\"spinner spinner-lg\" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div><span ng-if=!$ctrl.showSpinner><div ng-if=$ctrl.shouldShowHtmlContent class=card-pf-info-item ng-bind-html=$ctrl.trustAsHtml(item) ng-repeat=\"item in $ctrl.status.info track by $index\"></div><div ng-if=!$ctrl.shouldShowHtmlContent class=card-pf-info-item ng-bind=item ng-repeat=\"item in $ctrl.status.info track by $index\"></div></span></div></div>"
   );
 
 }]);

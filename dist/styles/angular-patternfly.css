@@ -35,6 +35,9 @@ accordion > .panel-group .panel-open .panel-title > a:before {
   position: relative;
   top: -1px;
 }
+.card-pf.card-pf-aggregate-status .card-pf-body .spinner-container {
+  position: static;
+}
 .card-pf .hide-for-spinner {
   opacity: 0;
 }
@@ -61,6 +64,19 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 }
 .card-pf .card-pf-body .spinner-container .loading-indicator .spinner.spinner-lg {
   display: inline-block;
+}
+.card-pf-info-status .card-pf-body .spinner-container {
+  top: 0px;
+  height: 100%;
+}
+.card-pf-info-status .card-pf-body .spinner-container.with-title {
+  top: 12px;
+}
+.card-pf-aggregate-status-mini .card-pf-body.show-spinner {
+  height: 40px;
+}
+.card-pf-aggregate-status-mini .card-pf-body .spinner-container {
+  top: -22px;
 }
 .card-pf-heading-no-bottom {
   margin: 0 -20px 0px;
@@ -102,7 +118,6 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 }
 .card-pf-info-status {
   display: flex;
-  margin: 0 10px;
 }
 .card-pf-info-status .card-pf-info-image {
   display: flex;
@@ -123,6 +138,9 @@ accordion > .panel-group .panel-open .panel-title > a:before {
 .card-pf-info-status .card-pf-info-content .card-pf-title {
   margin-top: 10px;
   margin-bottom: 15px;
+}
+.card-pf-info-status .show-spinner {
+  width: 100%;
 }
 pf-c3-chart {
   display: block;
