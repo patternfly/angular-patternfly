@@ -26,7 +26,7 @@ describe('Component: pfAggregateStatusCard', function () {
         "title":"Nodes",
         "count":793,
         "href":"#",
-        "iconClass": "fa fa-shield",
+        "iconClass": "fa fa-shield"
       };
 
       element = compileCard('<pf-aggregate-status-card status="status"></pf-aggregate-status-card>', $scope);
@@ -115,6 +115,49 @@ describe('Component: pfAggregateStatusCard', function () {
       // showTopBorder set to false, results in not having the .card-pf-accented class
       cardClass = angular.element(element).find('.card-pf').hasClass('card-pf-accented');
       expect(cardClass).toBeFalsy();
+    });
+
+    it("should show and hide the spinner", function() {
+
+      // When data is loaded, spinner should be hidden
+      $scope.dataLoading = false;
+      element = compileCard('<pf-aggregate-status-card status="aggStatusAlt2" show-spinner="dataLoading"></pf-aggregate-status-card>', $scope);
+      cardClass = angular.element(element).find('.spinner-lg');
+      expect(cardClass.length).toBe(0);
+
+      // When data is loading, spinner should be present
+      $scope.dataLoading = true;
+      $scope.$digest();
+      cardClass = angular.element(element).find('.spinner-lg');
+      expect(cardClass.length).toBe(1);
+    });
+
+    it("should show and hide the spinner text", function() {
+
+      // When no spinner text is given, it should be undefined
+      element = compileCard('<pf-aggregate-status-card status="aggStatusAlt2" show-spinner="dataLoading"></pf-aggregate-status-card>', $scope);
+      cardClass = angular.element(element).find('.loading-text');
+      expect(cardClass.html()).toBeUndefined();
+
+      // When data is loading, spinner text should be present
+      $scope.dataLoading = true;
+      element = compileCard('<pf-aggregate-status-card status="aggStatusAlt2" show-spinner="dataLoading" spinner-text="Test Loading Message"></pf-aggregate-status-card>', $scope);
+      cardClass = angular.element(element).find('.loading-text');
+      expect(cardClass.html()).toContain('Test Loading Message');
+    });
+
+    it("should have a loading card height when specified", function() {
+
+      // When a height is specified it should be present
+      $scope.dataLoading = true;
+      element = compileCard('<pf-aggregate-status-card status="aggStatusAlt2" spinner-card-height="150" show-spinner="dataLoading" spinner-text="Test Loading Message"></pf-aggregate-status-card>', $scope);
+      cardClass = angular.element(element).find('.card-pf');
+      expect(cardClass.css('height')).toBe('150px');
+
+      // When a height is not specified there should be none
+      element = compileCard('<pf-aggregate-status-card status="aggStatusAlt2" show-spinner="dataLoading" spinner-text="Test Loading Message"></pf-aggregate-status-card>', $scope);
+      cardClass = angular.element(element).find('.card-pf');
+      expect(cardClass.css('height')).toBe('0px');
     });
 
     it("should show mini layout", function () {
@@ -226,5 +269,4 @@ describe('Component: pfAggregateStatusCard', function () {
       expect(angular.element(imageElements[1]).attr('src')).toBe('img/OpenShift-logo.svg');
     });
   });
-
 });
