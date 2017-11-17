@@ -34,57 +34,67 @@
  * @example
 <example module="patternfly.filters">
   <file name="index.html">
-    <div ng-controller="ViewCtrl" class="row example-container">
-      <div class="col-md-12">
-        <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
-      </div>
-      <hr class="col-md-12">
-      </br></br>
-      <div class="col-sm-4">
-        <form role="form">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="filterConfig.inlineResults">Inline results</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="col-sm-4">
-        <form role="form">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="filterConfig.showTotalCountResults">Show total count in results</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <hr class="col-md-12">
-      <div class="col-md-12">
-        <label class="events-label">Valid Items: </label>
-      </div>
-      <div class="col-md-12">
-        <div ng-repeat="item in items" class="col-md-12 cfme-row-column">
-          <div class="row">
-            <div class="col-md-3">
-              <span>{{item.name}}</span>
-            </div>
-            <div class="col-md-7">
-              <span>{{item.address}}</span>
-            </div>
-            <div class="col-md-2">
-              <span>{{item.birthMonth}}</span>
-            </div>
-            <div class="col-md-4">
-              <span>{{item.car}}</span>
-            </div>
-          </div>
+    <div ng-controller="ViewCtrl" class="example-container">
+      <div class="row">
+        <div class="col-sm-12">
+          <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
         </div>
       </div>
-      <div class="col-md-12">
-        <label class="events-label">Current Filters: </label>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+        </div>
+        <div class="col-xs-4">
+          <form role="form">
+            <div class="form-group">
+              <label class="checkbox-inline">
+                <input type="checkbox" ng-model="filterConfig.inlineResults">Inline results</input>
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="col-xs-8">
+          <form role="form">
+            <div class="form-group">
+              <label class="checkbox-inline">
+                <input type="checkbox" ng-model="filterConfig.showTotalCountResults">Show total count in results</input>
+              </label>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="col-md-12">
-        <textarea rows="5" class="col-md-12">{{filtersText}}</textarea>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+        </div>
+        <div class="col-sm-12">
+          <label class="events-label">Valid Items: </label>
+        </div>
+      </div>
+      <div ng-repeat="item in items" class="row">
+        <div class="col-xs-6 col-sm-3">
+          <span>{{item.name}}</span>
+        </div>
+        <div class="col-xs-6 col-sm-4">
+          <span>{{item.address}}</span>
+        </div>
+        <div class="hidden-xs col-sm-2">
+          <span>{{item.birthMonth}}</span>
+        </div>
+        <div class="hidden-xs col-sm-3">
+          <span>{{item.car}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+        </div>
+        <div class="col-xs-12">
+          <label class="events-label">Current Filters: </label>
+        </div>
+        <div class="col-xs-12">
+          <textarea class="col-xs-12" rows="5">{{filtersText}}</textarea>
+        </div>
       </div>
     </div>
   </file>
