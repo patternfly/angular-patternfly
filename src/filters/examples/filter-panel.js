@@ -59,24 +59,24 @@
       <div class="col-md-12">
         <div class="col-md-12 cfme-row-column">
           <div class="row">
-            <div class="col-md-2"><b>ID</b></div>
-            <div class="col-md-2"><b>Keyword</b></div>
-            <div class="col-md-4"><b>Category One</b></div>
-            <div class="col-md-4"><b>Category Two</b></div>
+            <div class="col-xs-3 col-md-2"><b>ID</b></div>
+            <div class="col-xs-3 col-md-2"><b>Keyword</b></div>
+            <div class="col-xs-3 col-md-4"><b>Category One</b></div>
+            <div class="col-sx-3 col-md-4"><b>Category Two</b></div>
           </div>
         </div>
         <div ng-repeat="item in items" class="col-md-12 cfme-row-column">
           <div class="row">
-             <div class="col-md-2">
+             <div class="col-xs-3 col-md-2">
                <span>{{item.id}}</span>
             </div>
-            <div class="col-md-2">
+            <div class="col-xs-3 col-md-2">
               <span>{{item.keyword}}</span>
             </div>
-            <div class="col-md-4">
+            <div class="col-xs-3 col-md-4">
               <span>{{item.categoryOne}}</span>
             </div>
-            <div class="col-md-4">
+            <div class="col-xs-3 col-md-4">
               <span>{{item.categoryTwo}}</span>
             </div>
           </div>
