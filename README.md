@@ -164,7 +164,7 @@ Note:
 
    Add the npm dependencies:
    ```shell
-   $ npm install components-jqueryui --save
+   $ npm install jquery-ui --save
    $ npm install angular-dragdrop --save
    $ npm install angular-svg-base-fix --save
    ```
@@ -174,7 +174,7 @@ Note:
    ```html
     <!-- jquery before angular.js -->
     <script src="node_modules/angular-patternfly/node_modules/patternfly/node_modules/jquery/dist/jquery.js"></script>
-    <script src="node_modules/components-jqueryui/jquery-ui.min.js"></script>
+    <script src="node_modules/jquery-ui/ui/core.js"></script>
 
     <!-- angular-dragdrop and angular-svg-base-fix after angular.js -->
     <script src="node_modules/angular-dragdrop/src/angular-dragdrop.js"></script>
