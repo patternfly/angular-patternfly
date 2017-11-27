@@ -7422,24 +7422,24 @@ angular.module('patternfly.charts').component('pfUtilizationTrendChart', {
       <div class="col-md-12">
         <div class="col-md-12 cfme-row-column">
           <div class="row">
-            <div class="col-md-2"><b>ID</b></div>
-            <div class="col-md-2"><b>Keyword</b></div>
-            <div class="col-md-4"><b>Category One</b></div>
-            <div class="col-md-4"><b>Category Two</b></div>
+            <div class="col-xs-3 col-md-2"><b>ID</b></div>
+            <div class="col-xs-3 col-md-2"><b>Keyword</b></div>
+            <div class="col-xs-3 col-md-4"><b>Category One</b></div>
+            <div class="col-sx-3 col-md-4"><b>Category Two</b></div>
           </div>
         </div>
         <div ng-repeat="item in items" class="col-md-12 cfme-row-column">
           <div class="row">
-             <div class="col-md-2">
+             <div class="col-xs-3 col-md-2">
                <span>{{item.id}}</span>
             </div>
-            <div class="col-md-2">
+            <div class="col-xs-3 col-md-2">
               <span>{{item.keyword}}</span>
             </div>
-            <div class="col-md-4">
+            <div class="col-xs-3 col-md-4">
               <span>{{item.categoryOne}}</span>
             </div>
-            <div class="col-md-4">
+            <div class="col-xs-3 col-md-4">
               <span>{{item.categoryTwo}}</span>
             </div>
           </div>
@@ -7760,57 +7760,67 @@ angular.module('patternfly.charts').component('pfUtilizationTrendChart', {
  * @example
 <example module="patternfly.filters">
   <file name="index.html">
-    <div ng-controller="ViewCtrl" class="row example-container">
-      <div class="col-md-12">
-        <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
-      </div>
-      <hr class="col-md-12">
-      </br></br>
-      <div class="col-sm-4">
-        <form role="form">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="filterConfig.inlineResults">Inline results</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <div class="col-sm-4">
-        <form role="form">
-          <div class="form-group">
-            <label class="checkbox-inline">
-              <input type="checkbox" ng-model="filterConfig.showTotalCountResults">Show total count in results</input>
-            </label>
-          </div>
-        </form>
-      </div>
-      <hr class="col-md-12">
-      <div class="col-md-12">
-        <label class="events-label">Valid Items: </label>
-      </div>
-      <div class="col-md-12">
-        <div ng-repeat="item in items" class="col-md-12 cfme-row-column">
-          <div class="row">
-            <div class="col-md-3">
-              <span>{{item.name}}</span>
-            </div>
-            <div class="col-md-7">
-              <span>{{item.address}}</span>
-            </div>
-            <div class="col-md-2">
-              <span>{{item.birthMonth}}</span>
-            </div>
-            <div class="col-md-4">
-              <span>{{item.car}}</span>
-            </div>
-          </div>
+    <div ng-controller="ViewCtrl" class="example-container">
+      <div class="row">
+        <div class="col-sm-12">
+          <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
         </div>
       </div>
-      <div class="col-md-12">
-        <label class="events-label">Current Filters: </label>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+        </div>
+        <div class="col-xs-4">
+          <form role="form">
+            <div class="form-group">
+              <label class="checkbox-inline">
+                <input type="checkbox" ng-model="filterConfig.inlineResults">Inline results</input>
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="col-xs-8">
+          <form role="form">
+            <div class="form-group">
+              <label class="checkbox-inline">
+                <input type="checkbox" ng-model="filterConfig.showTotalCountResults">Show total count in results</input>
+              </label>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="col-md-12">
-        <textarea rows="5" class="col-md-12">{{filtersText}}</textarea>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+        </div>
+        <div class="col-sm-12">
+          <label class="events-label">Valid Items: </label>
+        </div>
+      </div>
+      <div ng-repeat="item in items" class="row">
+        <div class="col-xs-6 col-sm-3">
+          <span>{{item.name}}</span>
+        </div>
+        <div class="col-xs-6 col-sm-4">
+          <span>{{item.address}}</span>
+        </div>
+        <div class="hidden-xs col-sm-2">
+          <span>{{item.birthMonth}}</span>
+        </div>
+        <div class="hidden-xs col-sm-3">
+          <span>{{item.car}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr>
+        </div>
+        <div class="col-xs-12">
+          <label class="events-label">Current Filters: </label>
+        </div>
+        <div class="col-xs-12">
+          <textarea class="col-xs-12" rows="5">{{filtersText}}</textarea>
+        </div>
       </div>
     </div>
   </file>
@@ -18626,12 +18636,12 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
   'use strict';
 
   $templateCache.put('filters/filter-panel/filter-panel-results.html',
-    "<span class=filter-pf><span class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? \"Results\" : $ctrl.config.resultsLabel}}</h5><p ng-if=$ctrl.config.appliedFilters.length>Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span ng-if=\"filter.values.length === 1\" class=\"active-filter label label-info single-label\"><span class=pf-filter-label-category>{{filter.title}}:</span> {{filter.values[0]}} <a><span ng-click=\"$ctrl.clearFilter(filter, filter.values[0])\" class=\"pficon pficon-close\"></span></a></span> <span ng-if=\"filter.values.length > 1\" class=\"active-filter label pf-filter-label-category\">{{filter.title}}:<ul class=\"list-inline category-values\"><li ng-repeat=\"value in filter.values\"><span class=\"active-filter label label-info\">{{value}} <a><span ng-click=\"$ctrl.clearFilter(filter, value)\" class=\"pficon pficon-close\"></span></a></span></li></ul></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p></span></span>"
+    "<div class=filter-pf><div class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? \"Results\" : $ctrl.config.resultsLabel}}</h5><p class=filter-pf-active-label ng-if=$ctrl.config.appliedFilters.length>Active filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\" class=filter-pf-category-item><span class=\"label pf-filter-category-label\" ng-class=\"{'label-info': filter.values.length === 1, 'multiples': filter.values.length > 1}\">{{filter.title}}:<ul class=\"list-inline filter-pf-category-values\"><li ng-repeat=\"value in filter.values\"><span class=\"label label-info\">{{value}} <a href=javascript:void(0);><span ng-click=\"$ctrl.clearFilter(filter, value)\" class=\"pficon pficon-close\"></span></a></span></li></ul></span></li></ul><p><a href=javascript:void(0); ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p></div></div>"
   );
 
 
   $templateCache.put('filters/filter-panel/filter-panel.html',
-    "<div class=filter-pf><span class=\"dropdown primary-action\" uib-dropdown><button class=\"btn btn-default dropdown-toggle\" uib-dropdown-toggle type=button>Filter <span class=caret></span></button><div ng-transclude class=dropdown-menu ng-click=$event.stopPropagation()></div></span><pf-filter-panel-results config=$ctrl.config></pf-filter-panel-results></div>"
+    "<div class=\"filter-pf inline-filter-pf\"><span class=\"dropdown primary-action\" uib-dropdown><button class=\"btn btn-default dropdown-toggle\" uib-dropdown-toggle type=button>Filter <span class=caret></span></button><div ng-transclude class=dropdown-menu ng-click=$event.stopPropagation()></div></span><pf-filter-panel-results config=$ctrl.config></pf-filter-panel-results></div>"
   );
 
 
@@ -18641,7 +18651,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 
 
   $templateCache.put('filters/simple-filter/filter-results.html',
-    "<div class=filter-pf><div class=\"row toolbar-pf-results\"><div class=col-sm-12><span ng-if=\"$ctrl.config.showTotalCountResults !== true || $ctrl.config.totalCount === undefined || $ctrl.config.appliedFilters.length === 0\"><h5 ng-if=\"$ctrl.config.resultsCount === 1\">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if=\"$ctrl.config.resultsCount !== 1\">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span> <span ng-if=\"$ctrl.config.showTotalCountResults === true && $ctrl.config.totalCount !== undefined && $ctrl.config.appliedFilters.length > 0\"><h5 ng-if=\"$ctrl.config.totalCount === 1\">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if=\"$ctrl.config.totalCount !== 1\">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span><p ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active Filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a><span class=\"pficon pficon-close\" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p><div ng-if=\"$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined\" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div><!-- /col --></div><!-- /row --></div>"
+    "<div class=filter-pf><div class=toolbar-pf-results><span ng-if=\"$ctrl.config.showTotalCountResults !== true || $ctrl.config.totalCount === undefined || $ctrl.config.appliedFilters.length === 0\"><h5 ng-if=\"$ctrl.config.resultsCount === 1\">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if=\"$ctrl.config.resultsCount !== 1\">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span> <span ng-if=\"$ctrl.config.showTotalCountResults === true && $ctrl.config.totalCount !== undefined && $ctrl.config.appliedFilters.length > 0\"><h5 ng-if=\"$ctrl.config.totalCount === 1\">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if=\"$ctrl.config.totalCount !== 1\">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span><p class=filter-pf-active-label ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active Filters:</p><ul class=list-inline><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a href=javascript:void(0);><span class=\"pficon pficon-close\" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a href=javascript:void(0); class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p><div ng-if=\"$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined\" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div></div>"
   );
 
 
