@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/filters/examples/filter.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/8a0a5f4/src/filters/examples/filter.js#L242" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfFilter</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/filters/examples/filter.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/e88e685/src/filters/examples/filter.js#L252" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfFilter</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.filters</code>
 </span>
 </div>
@@ -40,57 +40,67 @@
 <div class="tabbable"><div class="tab-pane" title="index.html">
 <pre class="prettyprint linenums" ng-set-text="index.html-35" ng-html-wrap-loaded="patternfly.filters angular.js script.js"></pre>
 <script type="text/ng-template" id="index.html-35">
-  <div ng-controller="ViewCtrl" class="row example-container">
-    <div class="col-md-12">
-      <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
-    </div>
-    <hr class="col-md-12">
-    </br></br>
-    <div class="col-sm-4">
-      <form role="form">
-        <div class="form-group">
-          <label class="checkbox-inline">
-            <input type="checkbox" ng-model="filterConfig.inlineResults">Inline results</input>
-          </label>
-        </div>
-      </form>
-    </div>
-    <div class="col-sm-4">
-      <form role="form">
-        <div class="form-group">
-          <label class="checkbox-inline">
-            <input type="checkbox" ng-model="filterConfig.showTotalCountResults">Show total count in results</input>
-          </label>
-        </div>
-      </form>
-    </div>
-    <hr class="col-md-12">
-    <div class="col-md-12">
-      <label class="events-label">Valid Items: </label>
-    </div>
-    <div class="col-md-12">
-      <div ng-repeat="item in items" class="col-md-12 cfme-row-column">
-        <div class="row">
-          <div class="col-md-3">
-            <span>{{item.name}}</span>
-          </div>
-          <div class="col-md-7">
-            <span>{{item.address}}</span>
-          </div>
-          <div class="col-md-2">
-            <span>{{item.birthMonth}}</span>
-          </div>
-          <div class="col-md-4">
-            <span>{{item.car}}</span>
-          </div>
-        </div>
+  <div ng-controller="ViewCtrl" class="example-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <pf-filter id="exampleFilter" config="filterConfig"></pf-filter>
       </div>
     </div>
-    <div class="col-md-12">
-      <label class="events-label">Current Filters: </label>
+    <div class="row">
+      <div class="col-xs-12">
+        <hr>
+      </div>
+      <div class="col-xs-4">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="filterConfig.inlineResults">Inline results</input>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="col-xs-8">
+        <form role="form">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" ng-model="filterConfig.showTotalCountResults">Show total count in results</input>
+            </label>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="col-md-12">
-      <textarea rows="5" class="col-md-12">{{filtersText}}</textarea>
+    <div class="row">
+      <div class="col-xs-12">
+        <hr>
+      </div>
+      <div class="col-sm-12">
+        <label class="events-label">Valid Items: </label>
+      </div>
+    </div>
+    <div ng-repeat="item in items" class="row">
+      <div class="col-xs-6 col-sm-3">
+        <span>{{item.name}}</span>
+      </div>
+      <div class="col-xs-6 col-sm-4">
+        <span>{{item.address}}</span>
+      </div>
+      <div class="hidden-xs col-sm-2">
+        <span>{{item.birthMonth}}</span>
+      </div>
+      <div class="hidden-xs col-sm-3">
+        <span>{{item.car}}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <hr>
+      </div>
+      <div class="col-xs-12">
+        <label class="events-label">Current Filters: </label>
+      </div>
+      <div class="col-xs-12">
+        <textarea class="col-xs-12" rows="5">{{filtersText}}</textarea>
+      </div>
     </div>
   </div>
 </script>
