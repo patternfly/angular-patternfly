@@ -13895,7 +13895,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
 
       for (i = 0; i < anNodes.length; ++i) {
         rowData = anNodes[i].cells;
-        if (rowData !== null) {
+        if (rowData !== null && rowData.length > ctrl.selectionMatchPropColNum) {
           visibleRows.push(_.trim(rowData[ctrl.selectionMatchPropColNum].innerText));
         }
       }
