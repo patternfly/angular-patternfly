@@ -92,9 +92,10 @@ describe('Directive:  pfFilterPanel', function () {
     init();
 
     // [cateogry: [value 1 x] [value 2 x] ]
-    var categoryTags = element.find('.pf-filter-label-category');
+    var categoryTags = element.find('.pf-filter-category-label');
     var tagOne = angular.element(categoryTags[0]).text();
-    var tagOneValue = angular.element(element.find('.single-label')).text();
+    var tagValues = element.find('.label.label-info');
+    var tagOneValue = angular.element(tagValues[0]).text();
     var tagTwo = angular.element(categoryTags[1]).text();
     expect(categoryTags.length).toBe(2);
     expect(tagOne).toContain("Keyword");
@@ -125,7 +126,7 @@ describe('Directive:  pfFilterPanel', function () {
     init();
 
     // Filter Tag = [cateogry: [value 1 x] [value 2 x] ...]
-    var categoryTags = element.find('.pf-filter-label-category');
+    var categoryTags = element.find('.pf-filter-category-label');
     expect(categoryTags.length).toBe(2);
 
     var clearFilterLinks =  element.find('.pficon-close');
@@ -135,7 +136,7 @@ describe('Directive:  pfFilterPanel', function () {
     eventFire(clearFilterLinks[0], 'click');
     $scope.$digest();
 
-    categoryTags = element.find('.active-filter.label.pf-filter-label-category');
+    categoryTags = element.find('.label.pf-filter-category-label');
     expect(categoryTags.length).toBe(1);
 
     // Clear one of the Category One filters
@@ -152,9 +153,9 @@ describe('Directive:  pfFilterPanel', function () {
     expect(tagOne).toContain("Value 2");
     expect(tagOne).not.toContain("Value 3");
 
-    var clearAll = element.find('.clear-filters');
-    expect(clearAll.length).toBe(1);
-    eventFire(clearAll[0], 'click');
+    var clearAll = element.find('.toolbar-pf-results > p');
+    expect(clearAll.length).toBe(2);
+    eventFire(clearAll[1], 'click');
     $scope.$digest();
 
     categoryTags = element.find('.active-filter.label.pf-filter-label-category');
