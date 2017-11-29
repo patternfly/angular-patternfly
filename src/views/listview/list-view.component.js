@@ -19,7 +19,7 @@ angular.module('patternfly.views').component('pfListView', {
     expandedContent: '?listExpandedContent'
   },
   templateUrl: 'views/listview/list-view.html',
-  controller: function ($window, $element) {
+  controller: function ($window, $element, $timeout) {
     'use strict';
     var ctrl = this;
     var prevPageConfig, prevItems;
@@ -27,17 +27,24 @@ angular.module('patternfly.views').component('pfListView', {
     var setDropMenuLocation = function (parentDiv) {
       var dropButton = parentDiv.querySelector('.dropdown-toggle');
       var dropMenu =  parentDiv.querySelector('.dropdown-menu');
-      var parentRect = $element[0].getBoundingClientRect();
+
+      var parentRect = $element[0].querySelector('.list-view-pf.list-view-pf-view').getBoundingClientRect();
       var buttonRect = dropButton.getBoundingClientRect();
       var menuRect = dropMenu.getBoundingClientRect();
-      var menuTop = buttonRect.top - menuRect.height;
-      var menuBottom = buttonRect.top + buttonRect.height + menuRect.height;
 
-      if ((menuBottom <= parentRect.top + parentRect.height) || (menuTop < parentRect.top)) {
+      var buttonTop = buttonRect.top - parentRect.top;
+      var buttonBottom = buttonTop + buttonRect.height;
+      var menuTop = buttonTop - menuRect.height;
+      var menuBottom = buttonBottom + menuRect.height;
+
+      if ((menuBottom <= parentRect.height) || (menuTop < 0)) {
         ctrl.dropdownClass = 'dropdown';
       } else {
         ctrl.dropdownClass = 'dropup';
       }
+
+      // OK to display the menu now
+      ctrl.kebabMenuReady = true;
     };
 
     ctrl.defaultConfig = {
@@ -123,7 +130,10 @@ angular.module('patternfly.views').component('pfListView', {
       // update the actions based on the current item
       ctrl.updateActions(item);
 
-      $window.requestAnimationFrame(function () {
+      // Hide the kebab until we determine dropup or dropdown to avoid flicker
+      ctrl.kebabMenuReady = false;
+
+      $timeout(function() {
         var parentDiv = undefined;
         var nextElement;
 
@@ -132,7 +142,7 @@ angular.module('patternfly.views').component('pfListView', {
           if (nextElement.className.indexOf('dropdown-kebab-pf') !== -1) {
             parentDiv = nextElement;
             if (nextElement.className.indexOf('open') !== -1) {
-              setDropMenuLocation (parentDiv);
+              setDropMenuLocation(parentDiv);
             }
           }
           nextElement = nextElement.parentElement;
