@@ -53,7 +53,7 @@
   </file>
   <file name="wizard-container.html">
   <pf-wizard wizard-title="Wizard Title"
-    wizard-ready="deployProviderReady"
+    wizard-ready="wizardReady"
     on-finish="finishedWizard()"
     on-cancel="cancelDeploymentWizard()"
     next-title="nextButtonTitle"
@@ -199,9 +199,12 @@
           ipsum: ''
         };
         $scope.secondaryLoadInformation = 'ipsum dolor sit amet, porta at suspendisse ac, ut wisi vivamus, lorem sociosqu eget nunc amet.';
+
+        $scope.wizardReady = false;
         $timeout(function () {
-          $scope.deployReady = true;
+          $scope.wizardReady = true;
         }, 1000);
+
         $scope.nextButtonTitle = "Next >";
       };
 
