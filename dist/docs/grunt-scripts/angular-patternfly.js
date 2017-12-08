@@ -17273,7 +17273,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
   </file>
   <file name="wizard-container.html">
   <pf-wizard wizard-title="Wizard Title"
-    wizard-ready="deployProviderReady"
+    wizard-ready="wizardReady"
     on-finish="finishedWizard()"
     on-cancel="cancelDeploymentWizard()"
     next-title="nextButtonTitle"
@@ -17419,9 +17419,12 @@ angular.module('patternfly.views').component('pfEmptyState', {
           ipsum: ''
         };
         $scope.secondaryLoadInformation = 'ipsum dolor sit amet, porta at suspendisse ac, ut wisi vivamus, lorem sociosqu eget nunc amet.';
+
+        $scope.wizardReady = false;
         $timeout(function () {
-          $scope.deployReady = true;
+          $scope.wizardReady = true;
         }, 1000);
+
         $scope.nextButtonTitle = "Next >";
       };
 
@@ -18154,27 +18157,27 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
   bindings: {
     title: '@',
     wizardTitle: '@',
-    hideIndicators: '=?',
+    hideIndicators: '<?',
     activeStepTitleOnly: '<?',
     hideSidebar: '@',
     hideHeader: '@',
     hideBackButton: '@',
     sidebarClass: '@',
     stepClass: '@',
-    contentHeight: '=?',
+    contentHeight: '<?',
     currentStep: '<?',
-    cancelTitle: '=?',
-    backTitle: '=?',
-    nextTitle: '=?',
-    backCallback: '=?',
-    nextCallback: '=?',
+    cancelTitle: '<?',
+    backTitle: '<?',
+    nextTitle: '<?',
+    backCallback: '<?',
+    nextCallback: '<?',
     onFinish: '&',
     onCancel: '&',
-    wizardReady: '=?',
-    wizardDone: '=?',
-    loadingWizardTitle: '=?',
-    loadingSecondaryInformation: '=?',
-    embedInPage: '=?',
+    wizardReady: '<?',
+    wizardDone: '<?',
+    loadingWizardTitle: '<?',
+    loadingSecondaryInformation: '<?',
+    embedInPage: '<?',
     onStepChanged: '&?'
   },
   templateUrl: 'wizard/wizard.html',
@@ -18359,6 +18362,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     ctrl.allowStepIndicatorClick = function (step) {
       return step.allowClickNav &&
         !ctrl.wizardDone &&
+        ctrl.selectedStep &&
         ctrl.selectedStep.okToNavAway &&
         (ctrl.selectedStep.nextEnabled || (step.stepPriority < ctrl.selectedStep.stepPriority)) &&
         (ctrl.selectedStep.prevEnabled || (step.stepPriority > ctrl.selectedStep.stepPriority));
@@ -18366,6 +18370,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 
     ctrl.stepClick = function (step) {
       if (step.allowClickNav &&
+        ctrl.selectedStep &&
         !ctrl.wizardDone &&
         ctrl.selectedStep.okToNavAway &&
         (ctrl.selectedStep.nextEnabled || (step.stepPriority < ctrl.selectedStep.stepPriority)) &&

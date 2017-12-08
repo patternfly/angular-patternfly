@@ -3,27 +3,27 @@ angular.module('patternfly.wizard').component('pfWizard', {
   bindings: {
     title: '@',
     wizardTitle: '@',
-    hideIndicators: '=?',
+    hideIndicators: '<?',
     activeStepTitleOnly: '<?',
     hideSidebar: '@',
     hideHeader: '@',
     hideBackButton: '@',
     sidebarClass: '@',
     stepClass: '@',
-    contentHeight: '=?',
+    contentHeight: '<?',
     currentStep: '<?',
-    cancelTitle: '=?',
-    backTitle: '=?',
-    nextTitle: '=?',
-    backCallback: '=?',
-    nextCallback: '=?',
+    cancelTitle: '<?',
+    backTitle: '<?',
+    nextTitle: '<?',
+    backCallback: '<?',
+    nextCallback: '<?',
     onFinish: '&',
     onCancel: '&',
-    wizardReady: '=?',
-    wizardDone: '=?',
-    loadingWizardTitle: '=?',
-    loadingSecondaryInformation: '=?',
-    embedInPage: '=?',
+    wizardReady: '<?',
+    wizardDone: '<?',
+    loadingWizardTitle: '<?',
+    loadingSecondaryInformation: '<?',
+    embedInPage: '<?',
     onStepChanged: '&?'
   },
   templateUrl: 'wizard/wizard.html',
@@ -208,6 +208,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
     ctrl.allowStepIndicatorClick = function (step) {
       return step.allowClickNav &&
         !ctrl.wizardDone &&
+        ctrl.selectedStep &&
         ctrl.selectedStep.okToNavAway &&
         (ctrl.selectedStep.nextEnabled || (step.stepPriority < ctrl.selectedStep.stepPriority)) &&
         (ctrl.selectedStep.prevEnabled || (step.stepPriority > ctrl.selectedStep.stepPriority));
@@ -215,6 +216,7 @@ angular.module('patternfly.wizard').component('pfWizard', {
 
     ctrl.stepClick = function (step) {
       if (step.allowClickNav &&
+        ctrl.selectedStep &&
         !ctrl.wizardDone &&
         ctrl.selectedStep.okToNavAway &&
         (ctrl.selectedStep.nextEnabled || (step.stepPriority < ctrl.selectedStep.stepPriority)) &&
