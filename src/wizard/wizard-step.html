@@ -1,4 +1,4 @@
-<section ng-show="selected" ng-class="{current: selected, done: completed}">
+<section ng-show="selected" class="wizard-pf-row" ng-class="{current: selected, done: completed}" style="height: inherit;">
   <div ng-if="!wizard.hideSidebar" class="wizard-pf-sidebar" ng-style="contentStyle"  ng-class="wizard.sidebarClass" ng-if="substeps === true">
     <ul class="list-group">
       <li class="list-group-item" ng-class="{active: step.selected}" ng-repeat="step in getEnabledSteps()">
