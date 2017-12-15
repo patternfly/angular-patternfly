@@ -194,6 +194,22 @@ Note:
     </style>
     ```
 
+#### Less to Sass Conversion
+
+During the build process Less files are converted to Sass files in `/dist/sass`.  Then the Sass files are compiled into `/dist/sass/angular-patternfly.css`. If you would like to copy the Sass generated css into the main `/dist/styles` directory, execute:
+
+```
+grunt build --sass
+```
+
+This task will copy `/dist/sass/angular-patternfly.css` to `/dist/styles/angular-patternfly.css`.  Then the build process will minimize the css in `/dist/styles`.
+
+The Less to Sass Conversion step will be accomplished and managed as a part of any Pull Request which includes Less file changes. Although contributors may want to build and test their style changes with Sass before submitting a Pull Request, this step should always be tested and validated by reviewers before a style change is merged and released. If a contributor is having issues with Sass conversion that they cannot resolve, Pull Request reviewers will need to ensure that the Sass conversion step is successfully accomplished, tested, and included in the Pull Request before it is approved and merged.
+
+For more detailed information, please read [PatternFly Less to Sass Conversion](https://github.com/patternfly/patternfly#less-to-sass-conversion)
+
+*Note:* When a Less file is added/deleted/renamed it needs to be updated in the main Less import file `/styles/angular-patternfly.less` and the main Sass import file `styles/_angular-patternfly.scss`.
+
 ### Using with Webpack
 
 In order to use Angular-Patternfly in a Webpack-bundled application there are some things you need to keep in mind:
