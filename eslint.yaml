@@ -11,7 +11,7 @@ globals:
 rules:
   strict: [2, "function"]
   quotes: 0
-  camelcase: 2
+  camelcase: 1
   indent: [2, 2]
   new-cap:
     - 2

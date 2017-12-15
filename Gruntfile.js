@@ -5,6 +5,9 @@ module.exports = function (grunt) {
 
   function init () {
 
+    // '--sass' command line argument exists?
+    var sassBuild = grunt.option('sass');
+
     grunt.initConfig({
       availabletasks: {
         tasks: {
@@ -94,6 +97,23 @@ module.exports = function (grunt) {
           dest: 'dist/less/dependencies/patternfly',
           expand: true,
           flatten: true
+        },
+        distsass: {
+          src: ['styles/_angular-patternfly.scss'],
+          dest: 'dist/sass',
+          expand: true,
+          flatten: true
+        },
+        sassBuild:{
+          files: [
+            {
+              // copy css built from sass into dist/styles
+              expand: true,
+              cwd: 'dist/sass',
+              src: ['**/*.css', '**/*.map'],
+              dest: 'dist/styles/'
+            }
+          ]
         }
       },
       'string-replace': {
@@ -112,6 +132,128 @@ module.exports = function (grunt) {
               pattern: '../node_modules/patternfly/dist/less',
               replacement: 'dependencies/patternfly'
             }]
+          }
+        }
+      },
+      lessToSass: {
+        convert_within_custom_replacements: {
+          files: [
+            {
+              expand: true,
+              cwd: 'styles',
+              src: ['**/*.less', '!angular-patternfly.less'],
+              dest: 'dist/sass/',
+              rename: function(dest, src) {
+                return dest + '_' + src.replace('.less', '.scss');
+              }
+            },
+            {
+              expand: true,
+              cwd: 'src',
+              src: ['**/*.less'],
+              dest: 'dist/sass/',
+              rename: function(dest, src) {
+                return dest + '_' + src.split('/').pop().replace('.less', '.scss');
+              }
+            }
+          ],
+          options: {
+            excludes: ['variables', 'default'],
+            replacements: [
+              {
+                // Customize variable conversion to include newer css reserved words.
+                pattern: /(?!@debug|@import|@media|@keyframes|@font-face|@include|@extend|@mixin|@supports|@-\w)@/gi,
+                replacement: '$',
+                order: 0
+              },
+              {
+                // Add !default flag to variable declarations without leading whitespace.
+                pattern: /^(\$.*?:.*?);(\s*\/\/.*)?$/mgi,
+                replacement: '$1 !default;$2',
+                order: 2
+              },
+              {
+                // Include mixins with no arguments
+                pattern: /(\s+)\.([\w\-]+)\(\)/gi,
+                replacement: '$1@include $2()',
+                order: 3
+              },
+              {
+                // Interpolates second ampersand where double ampersands are used
+                pattern: /\&\&/gi,
+                replacement: '&#{&}',
+                order: 20
+              },
+              {
+                // Interpolates ampersands that directly follow (are touching) a definition
+                // e.g. somedef& becomes somedef#{&}
+                pattern: /(\w+)\&/gi,
+                replacement: '$1#{&}',
+                order: 30
+              },
+              {
+                // Namespaced mixins are detected as includes by default conversion
+                // process. Remove namespacing by concatenating namespace and mixin name.
+                // #gradient {
+                //    @include striped(){...}
+                // }
+                //
+                // becomes
+                //
+                // @mixin gradient-striped(){...}
+                pattern: /^#([\w\-]+)\s*{\s*@include\s*([\w\-]*)\((.*)\)\s*{([\s\S]*?)}\s*}/mgi,
+                replacement: '@mixin $1-$2($3){$4}',
+                order: 40
+              },
+              // Fix invocation of namespaced mixins. Replace #namespace > .mixin()
+              // or #namespace.mixin() with @include namespace-mixin()
+              {
+                pattern: /#(\w*)\s*\>?\s*\.(\w*)(\(.*\))/gi,
+                replacement: '@include $1-$2$3',
+                order: 50
+              },
+              {
+                // Remove "!default" flag from mixin declarations
+                pattern: /@mixin.*!default.*/gi,
+                replacement: function(match) {
+                  return match.replace(/\s*!default\s*/gi, '');
+                },
+                order: 60
+              },
+              {
+                // Replace semi-colons with commas in mixins and includes
+                pattern: /(@mixin |@include )([\w\-]*)\s*(\(.*\))(\s*[{;]?)/gi,
+                replacement: function(match, p1, p2, p3, p4) {
+                  return p1 + p2 + p3.replace(/;/g, ',') + p4;
+                },
+                order: 70
+              },
+              {
+                // Fix bug in grunt-less-to-sass that puts "!important" inside mixin and css function parens.
+                pattern: /^(\s*[\w\-]*:\s*[\w\-]*)\((.*?)\s*!important.*\)(.*);(.*)$/mgi,
+                replacement: '$1($2) !important$3;$4',
+                order: 80
+              },
+              {
+                pattern: /\&:extend\((.*)\)/gi,
+                replacement: '@extend $1',
+                order: 90
+              },
+            ]
+          }
+        }
+      },
+      sass: {
+        patternfly: {
+          files: {
+            'dist/sass/angular-patternfly.css': ['styles/build.scss']
+          },
+          options: {
+            outputStyle: 'expanded',
+            includePaths: [
+              'dist/sass',
+              'node_modules/patternfly/dist/sass'
+            ]
           }
         }
       },
@@ -355,7 +497,13 @@ module.exports = function (grunt) {
       }
     });
 
-    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:img', 'copy:distimg', 'copy:distless', 'copy:distlessDependencies']);
+    grunt.registerTask('shipcss', function() {
+      if (sassBuild) {
+        grunt.task.run('copy:sassBuild');
+      }
+    });
+
+    grunt.registerTask('copymain', ['copy:docdata', 'copy:fa', 'copy:img', 'copy:distimg', 'copy:distless', 'copy:distlessDependencies', 'copy:distsass']);
 
     // You can specify which modules to build as arguments of the build task.
     grunt.registerTask('build', 'Create bootstrap build files', function () {
@@ -375,7 +523,23 @@ module.exports = function (grunt) {
         concatSrc = 'src/**/*.js';
       }
 
-      grunt.task.run(['clean', 'lint', 'test', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'string-replace', 'ngdocs', 'clean:templates']);
+      grunt.task.run([
+        'clean',
+        'lint',
+        'test',
+        'ngtemplates',
+        'concat',
+        'ngAnnotate',
+        'uglify:build',
+        'less',
+        'lessToSass',
+        'sass',
+        'shipcss',
+        'cssmin',
+        'copymain',
+        'string-replace',
+        'ngdocs',
+        'clean:templates']);
     });
 
     // Runs all the tasks of build with the exception of tests
