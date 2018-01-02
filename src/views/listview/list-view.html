@@ -62,8 +62,8 @@
                ng-dblclick="$ctrl.dblClick($event, item)">
           </div>
         </div>
-        <div class="list-group-item-container container-fluid" ng-transclude="expandedContent" ng-if="$ctrl.config.useExpandingRows && item.isExpanded"></div>
       </div>
+      <div class="list-group-item-container container-fluid" ng-transclude="expandedContent" ng-if="$ctrl.config.useExpandingRows && item.isExpanded"></div>
     </div>
     <pf-pagination ng-if="$ctrl.pageConfig.showPaginationControls && $ctrl.config.itemsAvailable === true"
       page-size="$ctrl.pageConfig.pageSize"
