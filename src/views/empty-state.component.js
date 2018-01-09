@@ -107,7 +107,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
   templateUrl: 'views/empty-state.html',
   controller: function ($filter) {
     'use strict';
-    var ctrl = this;
+    var ctrl = this, prevConfig;
 
     ctrl.defaultConfig = {
       title: 'No Items Available'
@@ -121,11 +121,23 @@ angular.module('patternfly.views').component('pfEmptyState', {
     };
 
     ctrl.updateConfig = function () {
+      prevConfig = angular.copy(ctrl.config);
       _.defaults(ctrl.config, ctrl.defaultConfig);
+      if (ctrl.config.helpLink && angular.isUndefined(ctrl.config.helpLink.url)) {
+        // if no url specified, set url to not redirect.  ie. just do urlAction
+        ctrl.config.helpLink.url = "javascript:void(0)";
+      }
     };
 
     ctrl.$onChanges = function (changesObj) {
       if ((changesObj.config && !changesObj.config.isFirstChange()) ) {
+        ctrl.updateConfig();
+      }
+    };
+
+    ctrl.$doCheck = function () {
+      // do a deep compare on config
+      if (!angular.equals(ctrl.config, prevConfig)) {
         ctrl.updateConfig();
       }
     };
