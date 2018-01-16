@@ -6,7 +6,7 @@
       {{$ctrl.config.resultsLabel === undefined ? "Results" : $ctrl.config.resultsLabel}}
     </h5>
     <p class="filter-pf-active-label" ng-if="$ctrl.config.appliedFilters.length">Active filters:</p>
-    <ul class="list-inline">
+    <ul class="list-inline" ng-if="$ctrl.config.appliedFilters.length">
       <li ng-repeat="filter in $ctrl.config.appliedFilters" class="filter-pf-category-item">
       <span class="label pf-filter-category-label" ng-class="{'label-info': filter.values.length === 1, 'multiples': filter.values.length > 1}">
         {{filter.title}}:
