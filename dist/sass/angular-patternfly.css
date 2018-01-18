@@ -703,6 +703,7 @@ pf-topology {
 
 pf-filter-panel .dropdown > .dropdown-menu, pf-filter-panel .input-group-btn > .dropdown-menu {
   margin-top: 5px;
+  opacity: .95;
 }
 
 pf-filter-panel input:-moz-placeholder {

@@ -292,10 +292,13 @@
 .datepicker-inline {
   width: 220px;
 }
-.datepicker.datepicker-rtl {
+.datepicker-rtl {
   direction: rtl;
 }
-.datepicker.datepicker-rtl table tr td span {
+.datepicker-rtl.dropdown-menu {
+  left: auto;
+}
+.datepicker-rtl table tr td span {
   float: right;
 }
 .datepicker-dropdown {
@@ -1066,6 +1069,10 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.focus {
 .datepicker .next:hover,
 .datepicker tfoot tr th:hover {
   background: #f1f1f1;
+}
+.datepicker .prev.disabled,
+.datepicker .next.disabled {
+  visibility: hidden;
 }
 .datepicker .cw {
   font-size: 10px;
@@ -2603,6 +2610,12 @@ select.selectpicker {
 .blank-slate-pf .blank-slate-pf-secondary-action {
   margin-top: 20px;
 }
+.blank-slate-pf button {
+  margin-right: 5px;
+}
+.blank-slate-pf button:last-of-type {
+  margin-right: 0;
+}
 .combobox-container.combobox-selected .glyphicon-remove {
   display: inline-block;
 }
@@ -3749,6 +3762,44 @@ fieldset[disabled] .btn-experimental-pf.active {
   background-color: #92d400;
   border-color: #92d400;
 }
+.filter-pf-category-select {
+  display: -ms-flexbox;
+  display: flex;
+}
+.filter-pf-category-select-value {
+  border-left-width: 0;
+}
+.filter-pf-category-item {
+  margin-bottom: 5px;
+}
+.filter-pf-category-label {
+  font-weight: 700;
+  margin-right: 5px;
+  padding: 5px 0 6px 5px;
+}
+.filter-pf-select .caret {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+}
+.filter-pf-select-dropdown {
+  background-color: #fff;
+  background-image: none;
+  color: #8b8d8f;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  padding-right: 25px;
+  text-align: left;
+}
+.filter-pf-select-dropdown .caret {
+  font-style: normal;
+}
+.filter-pf-active-label {
+  margin-right: 5px;
+}
 .footer-pf-alt,
 .footer-pf {
   background-color: #030303;
@@ -3816,6 +3867,9 @@ fieldset[disabled] .btn-experimental-pf.active {
 .pficon-blueprint:before {
   content: "\e915";
 }
+.pficon-catalog:before {
+  content: "\e939";
+}
 .pficon-chat:before {
   content: "\e928";
 }
@@ -3854,6 +3908,9 @@ fieldset[disabled] .btn-experimental-pf.active {
 }
 .pficon-edit:before {
   content: "\e60a";
+}
+.pficon-enhancement:before {
+  content: "\e93a";
 }
 .pficon-enterprise:before {
   content: "\e906";
@@ -5038,6 +5095,262 @@ a.disabled {
 }
 .login-pf .container .submit {
   text-align: right;
+}
+.login-pf-page .login-pf-brand {
+  margin-top: 20px;
+  max-width: 360px;
+  width: 70%;
+}
+@media (min-width: 768px) {
+  .login-pf-page .login-pf-brand {
+    margin-top: 62px;
+  }
+}
+.login-pf-page .login-pf-page-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .login-pf-page .login-pf-page-header {
+    margin-bottom: 40px;
+  }
+}
+.login-pf-page .login-pf-page-header p {
+  color: #fff;
+  font-size: 14px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+.login-pf-page .card-pf {
+  padding: 10px 20px 30px 20px;
+  margin-bottom: 0;
+}
+@media (min-width: 768px) {
+  .login-pf-page .card-pf {
+    padding: 20px 40px 30px 40px;
+  }
+}
+.login-pf-page .card-pf p {
+  color: #72767b;
+}
+.login-pf-page .form-control {
+  height: 36px;
+}
+.login-pf-page .checkbox-label {
+  color: #72767b;
+  font-weight: 300;
+  margin-bottom: 15px;
+}
+@media (min-width: 768px) {
+  .login-pf-page .checkbox-label {
+    margin: 0;
+  }
+}
+.login-pf-page .btn-primary {
+  margin-top: 40px;
+}
+.login-pf-page .login-pf-header {
+  margin-bottom: 20px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+}
+@media (min-width: 768px) {
+  .login-pf-page .login-pf-header {
+    margin-bottom: 30px;
+  }
+}
+.login-pf-page .login-pf-header h1,
+.login-pf-page .login-pf-header p {
+  text-align: center;
+}
+.login-pf-page .login-pf-header h1 {
+  font-size: 16px;
+}
+@media (min-width: 768px) {
+  .login-pf-page .login-pf-header h1 {
+    font-size: 24px;
+  }
+}
+.login-pf-page .login-pf-header .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+  width: auto;
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+}
+.login-pf-page .login-pf-header .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .dropdown-toggle {
+  color: #4d5258;
+  background: none;
+  padding: 0 15px 0 0;
+  font-weight: 300;
+}
+.login-pf-page .login-pf-header .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .dropdown-toggle:not(:focus) {
+  box-shadow: none;
+  border: 1px solid transparent;
+}
+.login-pf-page .login-pf-header .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) .dropdown-toggle .caret {
+  right: 0;
+}
+.login-pf-page .login-pf-signup {
+  margin: 40px 0 0;
+  font-size: 15px;
+  text-align: center;
+}
+.login-pf-page .login-pf-signup a {
+  margin-left: 10px;
+}
+.login-pf-page .login-pf-settings {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.login-pf-page .login-pf-page-footer {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+      justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.login-pf-page .login-pf-page-footer-links {
+  display: -ms-flexbox;
+  display: flex;
+  margin: 60px 0 0 0;
+}
+.login-pf-page .login-pf-page-footer-links li:not(:last-of-type) {
+  position: relative;
+  margin: 0 20px 0 0;
+}
+.login-pf-page .login-pf-page-footer-links li:not(:last-of-type):after {
+  content: ".";
+  color: #fff;
+  position: absolute;
+  top: 0px;
+  right: -10px;
+}
+.login-pf-page .login-pf-page-footer-link {
+  color: #fff;
+  font-size: 14px;
+}
+.login-pf-page .login-pf-page-footer-sso-services {
+  -ms-flex: 1 0 100%;
+      flex: 1 0 100%;
+  margin-top: 40px;
+  text-align: center;
+  color: #fff;
+}
+.login-pf-page .login-pf-page-footer-sso-services-logos {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  -ms-flex-pack: center;
+      justify-content: center;
+}
+.login-pf-page .login-pf-page-footer-sso-services-logos li {
+  margin: 0 5px 5px;
+}
+.login-pf-page.login-pf-page-accounts {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.login-pf-page .login-pf-accounts {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  max-width: 840px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.login-pf-page .login-pf-accounts .login-pf-header,
+.login-pf-page .login-pf-accounts .login-pf-signup {
+  -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+}
+.login-pf-page .login-pf-social-section {
+  -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  .login-pf-page .login-pf-social-section {
+    -ms-flex: 0 1 50%;
+        flex: 0 1 50%;
+    max-width: 50%;
+  }
+}
+@media (min-width: 768px) {
+  .login-pf-page .login-pf-social-section:first-of-type {
+    padding-right: 40px;
+  }
+  .login-pf-page .login-pf-social-section:last-of-type {
+    padding-left: 39px;
+    border-left: 1px solid #d1d1d1;
+  }
+}
+.login-pf-page .login-pf-social {
+  margin: 40px 0 0 0;
+}
+@media (min-width: 768px) {
+  .login-pf-page .login-pf-social {
+    margin: 0;
+  }
+  .login-pf-page .login-pf-social-double-col {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+        justify-content: space-between;
+  }
+  .login-pf-page .login-pf-social-double-col .login-pf-social-link {
+    -ms-flex-preferred-size: 48%;
+        flex-basis: 48%;
+  }
+}
+.login-pf-page .login-pf-social:not(.login-pf-social-all) .login-pf-social-link-more {
+  display: none;
+}
+.login-pf-page .login-pf-social-link {
+  margin-bottom: 15px;
+}
+.login-pf-page .login-pf-social-link a {
+  display: block;
+  padding: 7px 0;
+  font-size: 14px;
+  background: #f5f5f5;
+  text-align: center;
+  color: #72767b;
+}
+.login-pf-page .login-pf-social-link a img {
+  margin: 0 10px 0 0;
+  width: 20px;
+  height: 20px;
+}
+.login-pf-page .login-pf-social-link a:hover {
+  text-decoration: none;
+  background: #ededed;
+}
+.login-pf-page .login-pf-social-toggle {
+  float: right;
+  padding: 0;
+}
+.login-pf-page .login-pf-social-toggle .caret {
+  margin-left: 5px;
+}
+.login-pf-page .login-pf-social-toggle-active .caret {
+  -ms-transform: rotate(-180deg);
+      transform: rotate(-180deg);
 }
 .navbar-pf {
   background: #030303;
@@ -6924,7 +7237,6 @@ table.dataTable th:active {
 @media (min-width: 768px) {
   .toolbar-pf-actions .toolbar-pf-filter {
     padding-left: 0;
-    width: 25%;
   }
 }
 .toolbar-pf-view-selector {
@@ -8055,6 +8367,8 @@ table.dataTable th:active {
       align-items: center;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   font-weight: 700;
 }
 @media (min-width: 768px) {
@@ -8310,4 +8624,133 @@ table.dataTable th:active {
   .wizard-pf-sidebar .list-group-item > a {
     width: 18em;
   }
+}
+.wizard-pf-steps-alt,
+.wizard-pf-steps-alt ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.wizard-pf-steps-alt {
+  margin-left: 15px;
+  margin-top: 15px;
+  background-image: linear-gradient(to right, transparent 11px, #d1d1d1 11px, #d1d1d1 13px, transparent 13px);
+}
+@media (min-width: 768px) {
+  .wizard-pf-steps-alt {
+    display: none;
+  }
+}
+.wizard-pf-steps-alt-indicator {
+  position: relative;
+}
+.wizard-pf-steps-alt-indicator:after {
+  color: #4d5258;
+  content: "\f107";
+  display: block;
+  font-family: FontAwesome;
+  font-size: 24px;
+  font-weight: 500;
+  position: absolute;
+  right: 17px;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+}
+@media (min-width: 768px) {
+  .wizard-pf-steps-alt-indicator:after {
+    display: none;
+  }
+}
+.wizard-pf-steps-alt-indicator.active:after {
+  content: "\f106";
+}
+.wizard-pf-step-alt {
+  margin-bottom: 10px;
+}
+.wizard-pf-step-alt a {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex: 1;
+      flex: 1;
+}
+.wizard-pf-step-alt a:hover {
+  text-decoration: none;
+}
+.wizard-pf-step-alt a:hover .wizard-pf-step-alt-title {
+  color: #39a5dc;
+}
+.wizard-pf-step-alt ul {
+  margin-left: 11px;
+}
+.wizard-pf-step-alt .wizard-pf-step-alt-title {
+  margin-left: 5px;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+}
+.wizard-pf-step-alt .wizard-pf-step-alt-number {
+  -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
+}
+.wizard-pf-step-alt.active .wizard-pf-step-alt-number {
+  background-color: #39a5dc;
+  border-color: #39a5dc;
+  cursor: default;
+  color: #fff;
+}
+.wizard-pf-step-alt.active .wizard-pf-step-alt-title {
+  color: #39a5dc;
+}
+.wizard-pf-step-alt.active .wizard-pf-step-alt-substep:first-of-type {
+  margin-top: 2px;
+}
+.wizard-pf-step-alt.viewed .wizard-pf-step-alt-number {
+  color: #030303;
+  background-color: #fff;
+  border-color: #39a5dc;
+}
+.wizard-pf-step-alt-number {
+  background-color: #fff;
+  border-radius: 50%;
+  border: solid 2px #bbb;
+  color: #bbb;
+  font-size: 12px;
+  font-weight: 700;
+  height: 24px;
+  width: 24px;
+  display: inline-block;
+  text-align: center;
+}
+.wizard-pf-step-alt-title {
+  color: #030303;
+  font-weight: 700;
+  text-transform: capitalize;
+  display: inline-block;
+}
+.wizard-pf-step-alt-substep {
+  display: -ms-flexbox;
+  display: flex;
+}
+.wizard-pf-step-alt-substep a {
+  padding: 5px 0 5px 18px;
+  color: #393f44;
+}
+.wizard-pf-step-alt-substep:not(.disabled).active,
+.wizard-pf-step-alt-substep:not(.disabled):hover {
+  background-color: #ededed;
+  background-image: linear-gradient(to right, #39a5dc 2px, transparent 2px);
+}
+.wizard-pf-step-alt-substep:not(.disabled).active a,
+.wizard-pf-step-alt-substep:not(.disabled):hover a {
+  color: #39a5dc;
+}
+.wizard-pf-step-alt-substep.active a {
+  font-weight: 700;
+}
+.wizard-pf-step-alt-substep.disabled {
+  cursor: not-allowed;
+}
+.wizard-pf-step-alt-substep.disabled a {
+  pointer-events: none;
 }
