@@ -1,7 +1,7 @@
 {
   "author": "Red Hat",
   "name": "angular-patternfly",
-  "version": "4.14.4",
+  "version": "4.14.5",
   "license": "Apache-2.0",
   "description": "Angular extension of the PatternFly project.",
   "keywords": [
