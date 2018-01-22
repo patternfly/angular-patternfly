@@ -74,7 +74,7 @@ describe('Component:  pfEmptyState', function () {
     expect(element.find('.pficon-add-circle-o').length).toBe(1);
     expect(element.find('.blank-state-pf-title').text()).toContain('Empty State Title');
     expect(element.find('.blank-state-pf-info').text()).toContain('This is the Empty State component');
-    expect(element.find('.blank-state-pf-helpLink').text()).toContain('For more information please see');
+    expect(element.find('.blank-state-pf-helpLink-label').text()).toContain('For more information please see');
     expect(element.find('a').text()).toContain('pfExample');
     expect(element.find('a').prop('href')).toContain('#/api/patternfly.views.component:pfEmptyState');
     element.find('.blank-state-pf-helpLink').click();
