@@ -123,10 +123,6 @@ angular.module('patternfly.views').component('pfEmptyState', {
     ctrl.updateConfig = function () {
       prevConfig = angular.copy(ctrl.config);
       _.defaults(ctrl.config, ctrl.defaultConfig);
-      if (ctrl.config && ctrl.config.helpLink && angular.isUndefined(ctrl.config.helpLink.url)) {
-        // if no url specified, set url to not redirect.  ie. just do urlAction
-        ctrl.config.helpLink.url = "javascript:void(0)";
-      }
     };
 
     ctrl.$onChanges = function (changesObj) {
