@@ -11,7 +11,7 @@
   <p id="blank-state-pf-helpLink-{{$id}}" class="blank-state-pf-helpLink-label" ng-if="$ctrl.config.helpLink">
     {{$ctrl.config.helpLink.label}}
     <a ng-if="$ctrl.config.helpLink.url" class="blank-state-pf-helpLink" ng-click="$ctrl.config.helpLink.urlAction()" href="{{$ctrl.config.helpLink.url}}">{{$ctrl.config.helpLink.urlLabel}}</a>
-    <button ng-if="!$ctrl.config.helpLink.url" class="btn blank-state-pf-helpbutton btn-link" ng-click="$ctrl.config.helpLink.urlAction()">{{$ctrl.config.helpLink.urlLabel}}</button>.
+    <button ng-if="!$ctrl.config.helpLink.url" class="btn blank-state-pf-helpbutton btn-link" ng-click="$ctrl.config.helpLink.urlAction()">{{$ctrl.config.helpLink.urlLabel}}</button>
   </p>
   <div ng-if="$ctrl.hasMainActions()" class="blank-slate-pf-main-action">
     <button class="btn btn-primary btn-lg"
