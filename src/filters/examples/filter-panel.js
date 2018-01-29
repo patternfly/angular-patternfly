@@ -235,13 +235,25 @@
 
         $scope.onKeywordKeyPress = function(keyEvent) {
           if (keyEvent.which === 13 && $scope.filterPanelModel[0].value.length > 0) {
-            // store new keywoard filter value in values array
-            $scope.filterPanelModel[0].values.push($scope.filterPanelModel[0].value);
+            var currentKeyword = $scope.filterPanelModel[0].value;
+            if(!keywordFilterExists(currentKeyword)) {
+              // store new keywoard filter value in values array
+              $scope.filterPanelModel[0].values.push(currentKeyword);
+              applyFilters();
+            }
             // remove the keyword value to show placeholder text
             delete $scope.filterPanelModel[0].value;
-            applyFilters();
           }
         };
+
+        var keywordFilterExists = function (keyword) {
+          return _.some( $scope.filterPanelModel[0].values, function(existingKeyword) {
+            // case sensitive
+            //   return keyword === existingKeyword;
+            // case insensitive:
+            return keyword.toLowerCase() === existingKeyword.toLowerCase();
+          });
+        }
 
         var applyFilters = function () {
           var newAppliedFilters = [];
