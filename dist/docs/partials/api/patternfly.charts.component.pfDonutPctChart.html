@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/donut/examples/donut-pct-chart.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/cc7e9f8/src/charts/donut/examples/donut-pct-chart.js#L403" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfDonutPctChart</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/charts/donut/examples/donut-pct-chart.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/6e7de99/src/charts/donut/examples/donut-pct-chart.js#L436" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfDonutPctChart</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.charts</code>
 </span>
 </div>
@@ -22,6 +22,7 @@ See <a href="http://c3js.org/reference.html">http://c3js.org/reference.html</a> 
        config="{object}"
        data="{object}"
        [center-label="{string}"]
+       [tooltip="{string}"]
        [chart-height="{int}"]
        on-threshold-change="{function (threshold)}"&gt;
 &lt;/pf-donut-pct-chart&gt;</pre>
@@ -55,6 +56,12 @@ See <a href="http://c3js.org/reference.html">http://c3js.org/reference.html</a> 
 <li> &#39;available&#39; - displays the Available amount in the center label
 <li> &#39;percent&#39;   - displays the Usage Percent of the Total amount in the center label
 <li> &#39;none&#39;      - does not display the center label
+</ul></div></td></tr><tr><td>tooltip <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-charts-component-page patternfly-charts-component-pfdonutpctchart-page"><p>specifies the value to show in the tooltip when hovering Used or Available chart segments
+<strong>Values:</strong></p>
+<ul style='list-style-type: none'>
+<li> &#39;percent&#39; - displays the Used or Available percentage of the Total in the tooltop (default)
+<li> &#39;amount&#39;  - displays the Used or Available amount and units in the tooltip
+<li> &#39;both&#39;    - displays both the percentage and amount in the tooltip
 </ul></div></td></tr><tr><td>chartHeight <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-int">int</a></td><td><div class="patternfly-charts-component-page patternfly-charts-component-pfdonutpctchart-page"><p>height of the donut chart</p>
 </div></td></tr><tr><td>on-threshold-change</td><td><a href="" class="label type-hint type-hint-function">function (threshold</a></td><td><div class="patternfly-charts-component-page patternfly-charts-component-pfdonutpctchart-page"><p>user defined function to handle when thresolds change <br/>
 <strong>&#39;threshold&#39; Values:</strong></p>
@@ -116,8 +123,29 @@ See <a href="http://c3js.org/reference.html">http://c3js.org/reference.html</a> 
           <pf-donut-pct-chart config="pctConfig" data="pctData" center-label="pctLabel"></pf-donut-pct-chart>
         </div>
         <div class="col-md-3 text-center">
-          <label>center-label = 'none'</label>
+         <label>center-label = 'none'</label>
+         <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></pf-donut-pct-chart>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <hr>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <label>tooltip = 'percent'</label>
           <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></pf-donut-pct-chart>
+        </div>
+        <div class="col-md-4 text-center">
+          <label>tooltip = 'amount'</label>
+          <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel" tooltip="tooltipAmount"></pf-donut-pct-chart>
+        </div>
+        <div class="col-md-4 text-center">
+          <label>tooltip = 'both'</label>
+          <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel" tooltip="tooltipBoth"></pf-donut-pct-chart>
         </div>
       </div>
 
@@ -306,6 +334,10 @@ See <a href="http://c3js.org/reference.html">http://c3js.org/reference.html</a> 
     $scope.noLabel = "none";
 
     //start demo 3rd row
+    $scope.tooltipAmount = "amount";
+    $scope.tooltipBoth = "both";
+
+    //start demo 4th row
     $scope.configOrientationLeft = {
       'units': 'GB',
       'thresholds':{'warning':'60','error':'90'},
@@ -374,7 +406,7 @@ See <a href="http://c3js.org/reference.html">http://c3js.org/reference.html</a> 
       'total': '1000'
     };
 
-    //start demo 4th row
+    //start demo 5th row
     $scope.custConfig = {
       'chartId': 'custChart',
       'units': 'MHz',

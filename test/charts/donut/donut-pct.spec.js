@@ -51,6 +51,10 @@ describe('Directive: pfDonutPctChart', function () {
     element = compileDonut('<pf-donut-pct-chart config="config" data="data" center-label="cntrLabel"></pf-donut-pct-chart>');
   };
 
+  var compileTooltipDonut = function () {
+    element = compileDonut('<pf-donut-pct-chart config="config" data="data" tooltip="tooltip"></pf-donut-pct-chart>');
+  };
+
   it("should have an external label", function () {
     compileSimpleDonut();
     expect(element.find('.pct-donut-chart-pf-right').length).toEqual(1);
@@ -119,7 +123,6 @@ describe('Directive: pfDonutPctChart', function () {
     expect(ctrl.getCenterLabelText().smText).toContain('Used');
   });
 
-
   it("should use center label funtion", function () {
     compileDonutCenterLabel();
 
@@ -149,5 +152,52 @@ describe('Directive: pfDonutPctChart', function () {
     expect(emptyChart.length).toBe(1);
   });
 
+  it('should have percentage in the tooltip content', function() {
+    var d = [{
+      name: "Used",
+      ratio: .35,
+      value: 350
+    }];
+    compileSimpleDonut();
+    expect(ctrl.donutTooltip().contents(d)).toContain('35% Used');
+  });
+
+  it('should have value and units in tooltip content', function() {
+    var d = [{
+      name: "Used",
+      ratio: .35,
+      value: 350
+    }];
+    compileTooltipDonut();
+    $scope.tooltip = "amount";
+    $scope.$digest();
+    expect(ctrl.donutTooltip().contents(d)).toContain('350 MHz Used');
+  });
+
+  it('should have value, units, and percentage in tooltip content', function() {
+    var d = [{
+      name: "Used",
+      ratio: .35,
+      value: 350
+    }];
+    compileTooltipDonut();
+    $scope.tooltip = "both";
+    $scope.$digest();
+    expect(ctrl.donutTooltip().contents(d)).toContain('350 MHz Used');
+    expect(ctrl.donutTooltip().contents(d)).toContain('35%');
+  });
+
+  it('should have use config.tooltipFn for tooltip content', function() {
+    var d = [{
+      name: "Used",
+      ratio: .35,
+      value: 350
+    }];
+    $scope.config.tooltipFn = function(d) {
+      return "This is the tooltip content.";
+    };
+    compileSimpleDonut();
+    expect(ctrl.donutTooltip().contents(d)).toContain('This is the tooltip content.');
+  });
 });
 
