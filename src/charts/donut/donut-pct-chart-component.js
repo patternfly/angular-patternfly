@@ -2,6 +2,7 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
   bindings: {
     config: '<',
     data: '<',
+    tooltip: '<',
     chartHeight: '<?',
     centerLabel: '<?',
     onThresholdChange: '&'
@@ -67,19 +68,31 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
     ctrl.donutTooltip = function () {
       return {
         contents: function (d) {
-          var tooltipHtml;
-
+          // Default to percent format
+          var tooltipContent =
+            '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+              Math.round(d[0].ratio * 100) + '% ' + d[0].name +
+            '</span>';
           if (ctrl.config.tooltipFn) {
-            tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
-                              ctrl.config.tooltipFn(d) +
-                         '</span>';
-          } else {
-            tooltipHtml = '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
-                      Math.round(d[0].ratio * 100) + '%' + ' ' + ctrl.config.units + ' ' + d[0].name +
-                   '</span>';
+            tooltipContent =
+              '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                ctrl.config.tooltipFn(d) +
+              '</span>';
+          } else if (ctrl.tooltip === "amount") {
+            tooltipContent =
+              '<span class="donut-tooltip-pf" style="white-space: nowrap;">' +
+                d[0].value + ' ' + ctrl.config.units + ' ' + d[0].name +
+              '</span>';
+          } else if (ctrl.tooltip === "both") {
+            tooltipContent =
+              '<table class="c3-tooltip"><tbody><tr>' +
+                '<td>' +
+                  d[0].value + ' ' + ctrl.config.units + ' ' + d[0].name +
+                '</td><td>' +
+                  Math.round(d[0].ratio * 100) + '%' +
+              '</td></tr></tbody></table>';
           }
-
-          return tooltipHtml;
+          return tooltipContent;
         }
       };
     };

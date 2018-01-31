@@ -54,6 +54,14 @@
  * <li> 'none'      - does not display the center label
  * </ul>
  *
+ * @param {string=} tooltip specifies the value to show in the tooltip when hovering Used or Available chart segments
+ * <strong>Values:</strong>
+ * <ul style='list-style-type: none'>
+ * <li> 'percent' - displays the Used or Available percentage of the Total in the tooltop (default)
+ * <li> 'amount'  - displays the Used or Available amount and units in the tooltip
+ * <li> 'both'    - displays both the percentage and amount in the tooltip
+ * </ul>
+ *
  * @param {int=} chartHeight height of the donut chart
  * @param {function (threshold)} on-threshold-change user defined function to handle when thresolds change <br/>
  * <strong>'threshold' Values:</strong>
@@ -114,8 +122,29 @@
              <pf-donut-pct-chart config="pctConfig" data="pctData" center-label="pctLabel"></pf-donut-pct-chart>
            </div>
            <div class="col-md-3 text-center">
-             <label>center-label = 'none'</label>
+            <label>center-label = 'none'</label>
+            <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></pf-donut-pct-chart>
+           </div>
+         </div>
+
+         <div class="row">
+           <div class="col-md-12">
+             <hr>
+           </div>
+         </div>
+
+         <div class="row">
+           <div class="col-md-4 text-center">
+             <label>tooltip = 'percent'</label>
              <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel"></pf-donut-pct-chart>
+           </div>
+           <div class="col-md-4 text-center">
+             <label>tooltip = 'amount'</label>
+             <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel" tooltip="tooltipAmount"></pf-donut-pct-chart>
+           </div>
+           <div class="col-md-4 text-center">
+             <label>tooltip = 'both'</label>
+             <pf-donut-pct-chart config="noneConfig" data="noneData" center-label="noLabel" tooltip="tooltipBoth"></pf-donut-pct-chart>
            </div>
          </div>
 
@@ -302,6 +331,10 @@
        $scope.noLabel = "none";
 
        //start demo 3rd row
+       $scope.tooltipAmount = "amount";
+       $scope.tooltipBoth = "both";
+
+       //start demo 4th row
        $scope.configOrientationLeft = {
          'units': 'GB',
          'thresholds':{'warning':'60','error':'90'},
@@ -370,7 +403,7 @@
          'total': '1000'
        };
 
-       //start demo 4th row
+       //start demo 5th row
        $scope.custConfig = {
          'chartId': 'custChart',
          'units': 'MHz',
