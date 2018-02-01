@@ -9,7 +9,7 @@
       <h5 ng-if="$ctrl.config.totalCount !== 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5>
     </span>
     <p class="filter-pf-active-label" ng-if="$ctrl.config.appliedFilters.length > 0">Active Filters:</p>
-    <ul class="list-inline">
+    <ul class="list-inline" ng-if="$ctrl.config.appliedFilters.length > 0">
       <li ng-repeat="filter in $ctrl.config.appliedFilters">
       <span class="active-filter label label-info">
         {{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}}
