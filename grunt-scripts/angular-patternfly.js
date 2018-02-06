@@ -10491,29 +10491,32 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
  * @description
  *   Component for rendering a notification drawer. This provides a common mechanism to handle how the notification
  *   drawer should look and behave without mandating the look of the notification group heading or notification body.
- *   <br><br>
- *   The notification groups must be passed to create each group in the drawer. Each notification
- *   group must include a collection of notifications to be shown for that group, the collection MUST be called 'notifications'.
- *   Each notification should have an 'unread' field in order to style unread notifications and hide/show the Mark All Unread button if desired.
- *   You must provide the source for the heading, sub-heading, and notification body to show the content you desire for each.
- *   Pass a customScope object containing any scope variables/functions you need to access from the included source, access these
- *   via handlers.<your handler> in your included source.
- *
- *   Each notification group can add a 'noNotificationsText' field to override the text specifically for that group. If not supplied the overall
- *   text given will be used for the group if that is supplied. Otherwise, the default empty message is displayed.
- *
- *   <br><br>
- *     The pfNotificationDrawer has stylings pre-set from Patternfly (http://www.patternfly.org/) for use within the
- *     navbar-pf and navbar-pf-vertical containers. If neither is being used, the top and height should be set such that the
- *     drawer will take up the entire viewport vertically. For instance:<br>
- *     <p style="margin-left: 20px;">
- *       .my-nav-container .drawer-pf {<br>
- *       &nbsp;&nbsp;height: calc(~"100vh - 46px");<br>
- *       &nbsp;&nbsp;top: 26px;</br>
- *       }
- *     </p>
- *     Note, this should be bottom aligned with the trigger, and leave a 20px at the bottom of the viewport.
- *   <br><br>
+ *   <br>
+ *   <span class="label-title">Configuration Requirements:</span>
+ *   <ul>
+ *     <li>The notification groups must be passed to create each group in the drawer. Each notification group must include a collection of notifications to be shown for that group, the collection MUST be called 'notifications'.</li>
+ *     <li>Each notification should have an 'unread' field in order to style unread notifications and hide/show the Mark All Unread button if desired.</li>
+ *     <li>You must provide the source for the heading, sub-heading, and notification body to show the content you desire for each notification.</li>
+ *     <li>
+ *       The pfNotificationDrawer has stylings pre-set from Patternfly (http://www.patternfly.org/) for use within the
+ *       navbar-pf and navbar-pf-vertical containers. If neither is being used, the top and height should be set such that the
+ *       drawer will take up the entire viewport vertically.<br>
+ *       For instance:<br>
+ *       <p style="margin-left: 20px;">
+ *         .my-nav-container .drawer-pf {<br>
+ *         &nbsp;&nbsp;height: calc(~"100vh - 46px");<br>
+ *         &nbsp;&nbsp;top: 26px;</br>
+ *         }
+ *       </p>
+ *       Note, this should be bottom aligned with the trigger, and leave a 20px at the bottom of the viewport.
+ *     </li>
+ *   </ul>
+ *   <span class="label-title">Other Configuration Options:</span>
+ *   <ul>
+ *   <li> Pass a customScope object containing any scope variables/functions you need to access from the included source, access these
+ *   via handlers.<your handler> in your included source.</li>
+ *     <li>Each notification group can add a 'noNotificationsText' field to override the text specifically for that group. If not supplied the overall text given will be used for the group if that is supplied. Otherwise, the default empty message is displayed.</li>
+ *   </ul>
  *
  * @param {boolean} drawerHidden Flag if the drawer is currently hidden
  * @param {boolean} allowExpand Flag if the drawer can be expanded. Optional, default: false
