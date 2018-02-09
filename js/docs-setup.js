@@ -500,7 +500,7 @@ NG_DOCS={
     "jquery.js",
     "bootstrap.min.js",
     "bootstrap-select.js",
-    "jquery-ui.min.js",
+    "jquery-ui.js",
     "jquery.dataTables.js",
     "dataTables.select.js",
     "moment.js",
