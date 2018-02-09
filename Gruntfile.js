@@ -330,7 +330,7 @@ module.exports = function (grunt) {
             'node_modules/jquery/dist/jquery.js',
             'node_modules/bootstrap/dist/js/bootstrap.min.js',
             'node_modules/bootstrap-select/js/bootstrap-select.js',
-            'node_modules/components-jqueryui/jquery-ui.min.js',
+            'node_modules/jquery-ui-dist/jquery-ui.js',
             'node_modules/datatables.net/js/jquery.dataTables.js',
             'node_modules/datatables.net-select/js/dataTables.select.js',
             'node_modules/moment/moment.js',
