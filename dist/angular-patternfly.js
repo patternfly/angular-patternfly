@@ -14159,7 +14159,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
         <pf-list-view config="listConfig"
                       page-config="pageConfig"
                       items="items"
-                      empty-state-config="emptyStateConfig">
+                      empty-state-config="items.length === 0 && filterConfig.appliedFilters.length > 0 ? noItemsConfig : emptyStateConfig">
           <div class="list-view-pf-description">
             <div class="list-group-item-heading">
               {{item.name}}
@@ -14182,7 +14182,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
         <pf-card-view config="listConfig"
                       page-config="pageConfig"
                       items="items"
-                      empty-state-config="emptyStateConfig">
+                      empty-state-config="items.length === 0 && filterConfig.appliedFilters.length > 0 ? noItemsConfig : emptyStateConfig">
           <div class="col-md-12">
             <span>{{item.name}}</span>
           </div>
@@ -14199,7 +14199,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
                        page-config="pageConfig"
                        columns="columns"
                        items="items"
-                       empty-state-config="emptyStateConfig">
+                       empty-state-config="items.length === 0 && filterConfig.appliedFilters.length > 0 ? noItemsConfig : emptyStateConfig">
         </pf-table-view>
       </div>
       <hr class="col-md-12">
@@ -14360,6 +14360,11 @@ angular.module('patternfly.pagination').component('pfPagination', {
         } else {
           $scope.items = $scope.allItems;
         }
+      };
+
+      var clearFilters = function() {
+        filterChange([]);
+        $scope.filterConfig.appliedFilters = [];
       };
 
       var filterChange = function (filters) {
@@ -14560,6 +14565,15 @@ angular.module('patternfly.pagination').component('pfPagination', {
            label: 'For more information please see',
            urlLabel: 'pfExample',
            url : '#/api/patternfly.views.component:pfEmptyState'
+        }
+      };
+
+      $scope.noItemsConfig = {
+        title: 'No Results Match the Filter Criteria',
+        info: 'The active filters are hiding all items.',
+        helpLink: {
+          urlLabel: 'Clear All Filters',
+          urlAction: clearFilters
         }
       };
 
