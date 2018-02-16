@@ -7,6 +7,7 @@
 angular.module('patternfly', [
   'patternfly.autofocus',
   'patternfly.card',
+  'patternfly.datepicker',
   'patternfly.filters',
   'patternfly.form',
   'patternfly.modals',
