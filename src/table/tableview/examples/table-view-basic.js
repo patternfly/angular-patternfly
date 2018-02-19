@@ -1,10 +1,10 @@
 /**
   * @ngdoc directive
-  * @name patternfly.table.component:pfTableView - Basic
+  * @name patternfly.table.component:pfTableView-Basic
   *
   * @description
   * Component for rendering a simple table view.<br><br>
-  * See {@link patternfly.table.component:pfTableView%20-%20with%20Toolbar pfTableView - with Toolbar} for use with a Toolbar<br>
+  * See {@link patternfly.table.component:pfTableView-with-Toolbar pfTableView - with Toolbar} for use with a Toolbar<br>
   * See {@link patternfly.toolbars.component:pfToolbar pfToolbar} for use in Toolbar View Switcher
   *
   * @param {object} config Optional configuration object
