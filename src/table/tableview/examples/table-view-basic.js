@@ -103,7 +103,9 @@
   angular.module('patternfly.tableview.demo').controller('TableCtrl', ['$scope', '$timeout', 'itemsService',
   function ($scope, $timeout, itemsService) {
           $scope.dtOptions = {
-            order: [[2, "asc"]],
+            // order column(s) should NOT account for 1st checkbox column, table component will adjust col. numbers accordingly
+            // Sort by City, then Name
+            order: [[3, "asc"], [1, "desc"]],
           };
 
           $scope.columns = [
