@@ -692,6 +692,7 @@ table.dataTable.no-footer {
 }
 table.dataTable {
   margin: 0;
+  border-collapse: collapse;
 }
 table.dataTable thead .sorting_asc {
   background-image: none !important;
