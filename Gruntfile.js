@@ -136,7 +136,9 @@ module.exports = function (grunt) {
         }
       },
       lessToSass: {
+        /* eslint-disable */
         convert_within_custom_replacements: {
+          /* eslint-enable */
           files: [
             {
               expand: true,

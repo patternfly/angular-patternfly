@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.table.component:pfTableView - with Toolbar
+ * @name patternfly.table.component:pfTableView-with-Toolbar
  *
  * @description
  * Example configuring a table view with a toolbar.<br><br>
