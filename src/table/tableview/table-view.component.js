@@ -14,7 +14,7 @@ angular.module('patternfly.table').component('pfTableView', {
   templateUrl: 'table/tableview/table-view.html',
   controller: function (DTOptionsBuilder, DTColumnDefBuilder, $element, pfUtils, $log, $filter, $timeout, $sce) {
     'use strict';
-    var ctrl = this, prevDtOptions, prevItems, prevPageConfig;
+    var ctrl = this, prevDtOptions, prevItems, prevPageConfig, prevShowCheckboxes;
 
     // Once datatables is out of active development I'll remove log statements
     ctrl.debug = false;
@@ -25,7 +25,7 @@ angular.module('patternfly.table').component('pfTableView', {
     ctrl.defaultDtOptions = {
       autoWidth: false,
       destroy: true,
-      order: [[1, "asc"]],
+      order: [[0, "asc"]],  //default to 1st (col 0) for sorting, updateConfigOptions() will adjust based on showCheckboxes
       dom: "t",
       paging: false,
       select: {
@@ -117,20 +117,23 @@ angular.module('patternfly.table').component('pfTableView', {
         ctrl.dtOptions.displayLength = Number(ctrl.dtOptions.displayLength);
       }
 
+      _.defaults(ctrl.dtOptions, ctrl.defaultDtOptions);
+      _.defaults(ctrl.config, ctrl.defaultConfig);
+
+      if (ctrl.config.showCheckboxes !== prevShowCheckboxes) {
+        // adjust column numbers based on whether or not there is a checkbox column
+        // multi-col order may be used.  Ex:  [[ 0, 'asc' ], [ 1, 'desc' ]]
+        _.each(ctrl.dtOptions.order, function (col) {
+          col[0] = ctrl.config.showCheckboxes ? col[0] + 1 : col[0] - 1;
+          col[0] = col[0] < 0 ? 0 : col[0];  //no negative col numbers
+        });
+      }
+
       // Need to deep watch changes in dtOptions and items
       prevDtOptions = angular.copy(ctrl.dtOptions);
       prevItems = angular.copy(ctrl.items);
       prevPageConfig = angular.copy(ctrl.pageConfig);
-
-      // Setting bound variables to new variables loses it's one way binding
-      //   ctrl.dtOptions = pfUtils.merge(ctrl.defaultDtOptions, ctrl.dtOptions);
-      //   ctrl.config = pfUtils.merge(ctrl.defaultConfig, ctrl.config);
-
-      // Instead, use _.defaults to update the existing variable
-      _.defaults(ctrl.dtOptions, ctrl.defaultDtOptions);
-      _.defaults(ctrl.config, ctrl.defaultConfig);
-      // may need to use _.defaultsDeep, but not currently available in
-      // lodash-amd a-pf is using
+      prevShowCheckboxes = angular.copy(ctrl.config.showCheckboxes);
 
       if (!validSelectionMatchProp()) {
         angular.forEach(ctrl.columns, function (col) {
