@@ -453,6 +453,11 @@ module.exports = function (grunt) {
           cwd: 'src/',
           src: ['pagination/**/*.html'],
           dest: 'templates/pagination.js'
+        },
+        'patternfly.datepicker' : {
+          cwd: 'src/',
+          src: ['datepicker/**/*.html'],
+          dest: 'templates/datepicker.js'
         }
       },
       // ng-annotate tries to make the code safe for minification automatically
