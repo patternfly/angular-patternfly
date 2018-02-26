@@ -24,6 +24,15 @@ angular.module('patternfly.card', ['ui.bootstrap']);
 angular.module('patternfly.charts', ['patternfly.utils', 'ui.bootstrap', 'ngSanitize']);
 
 ;/**
+ * @name  patternfly datepicker
+ *
+ * @description
+ *   Datepicker module for patternfly.
+ *
+ */
+angular.module('patternfly.datepicker', ['ui.bootstrap']);
+
+;/**
  * @name  patternfly card
  *
  * @description
@@ -86,6 +95,7 @@ angular.module('patternfly.pagination', ['ui.bootstrap'])
 angular.module('patternfly', [
   'patternfly.autofocus',
   'patternfly.card',
+  'patternfly.datepicker',
   'patternfly.filters',
   'patternfly.form',
   'patternfly.modals',
@@ -7407,6 +7417,94 @@ angular.module('patternfly.charts').component('pfUtilizationTrendChart', {
     };
   }]
 });
+;angular.module('patternfly.datepicker').component('pfBootstrapDatepicker', {
+  bindings: {
+    date: '<',
+    format: '@?',
+    dateOptions: '<?',
+    isOpen: '<?',
+    popupPlacement: '@?'
+  },
+  templateUrl: 'datepicker/datepicker.html',
+  controller: function () {
+    'use strict';
+
+    var ctrl = this;
+
+    ctrl.defaultDateOptions = {
+      showWeeks : false,
+      formatDay : "d"
+    };
+    ctrl.defaultIsOpen = false;
+
+    ctrl.$onInit = function () {
+      ctrl.format = "MM/dd/yyyy";
+      ctrl.showButtonBar = true;
+      ctrl.popupPlacement = "auto bottom-left";
+
+      if (angular.isUndefined(ctrl.dateOptions)) {
+        ctrl.dateOptions = {};
+      }
+      _.defaults(ctrl.dateOptions, ctrl.defaultDateOptions);
+      _.defaults(ctrl.isOpen, ctrl.defaultIsOpen);
+    };
+
+    ctrl.$onChanges = function (changes) {
+      _.defaults(ctrl.isOpen, ctrl.defaultIsOpen);
+    };
+
+  }
+});
+;/**
+ * @ngdoc directive
+ * @name patternfly.datepicker.componenet:pfBootstrapDatepicker
+ * @element pf-bootstrap-datepicker
+ *
+ * @param {date} date Must be a Javascript Date - to be displayed in the input. Can be left empty.
+ * @param {string} format Optional date format for displayed dates ('MM/dd/yyyy' by default).
+ * @param {boolean} isOpen Optional boolean for determining whether or not to have the datepicker default to open (false by default).
+ * @param {string} popupPlacement Optional configuration string used to position the popup datepicker relative to the input element. See {@link https://angular-ui.github.io/bootstrap/#datepickerPopup Angular UI Datepicker Popup}.
+ * @param {object} dateOptions Optional uib-datepicker configuration object. See {@link https://angular-ui.github.io/bootstrap/#datepicker Angular UI Datepicker}.
+ *
+ * @description
+ * A wrapper for the Angular UI {@link http://angular-ui.github.io/bootstrap/#!#datepickerPopup datepicker}.
+ *
+ * @example
+ <example module="patternfly.datepicker">
+
+   <file name="index.html">
+      <div ng-controller="DemoBootstrapDatepicker">
+          <pf-bootstrap-datepicker
+                   date="date">
+          </pf-bootstrap-datepicker>
+          <pf-bootstrap-datepicker
+                   date=""
+                   format="{{format1}}"
+                   is-open="isOpen"
+                   popup-placement="{{popupPlacement}}"
+                   date-options="dateOptions">
+          </pf-bootstrap-datepicker>
+      </div>
+   </file>
+
+   <file name="script.js">
+   angular.module('patternfly.datepicker').controller('DemoBootstrapDatepicker', function( $scope ) {
+
+      // first datepicker
+      $scope.date = new Date("Jan 1, 2000");
+
+      // second datepicker
+      $scope.format1 = "MM/dd/yy";
+      $scope.dateOptions = {
+        showWeeks : true
+      };
+      $scope.isOpen = true;
+      $scope.popupPlacement = "bottom-left";
+   });
+   </file>
+
+   </example>
+ */
 ;/**
  * @ngdoc directive
  * @name patternfly.filters.component:pfFilterPanel
@@ -18732,6 +18830,14 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 
   $templateCache.put('charts/utilization-trend/utilization-trend-chart.html',
     "<div class=utilization-trend-chart-pf ng-class=\"{'data-unavailable-pf': $ctrl.chartData.dataAvailable === false}\"><h3>{{$ctrl.config.title}}</h3><div class=current-values><h1 class=\"available-count pull-left\">{{$ctrl.currentValue}}</h1><div class=\"available-text pull-left\"><div><span>{{$ctrl.currentText}}</span></div><div><span>of {{$ctrl.chartData.total}} {{$ctrl.config.units}}</span></div></div></div><div class=donut-chart-pf><pf-donut-pct-chart ng-if=\"$ctrl.chartData.dataAvailable !== false\" config=$ctrl.donutConfig data=$ctrl.chartData center-label=$ctrl.centerLabel></pf-donut-pct-chart><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=231></pf-empty-chart></div><div ng-if=\"$ctrl.chartData.dataAvailable !== false\" class=sparkline-chart><pf-sparkline-chart config=$ctrl.sparklineConfig chart-data=$ctrl.chartData chart-height=$ctrl.sparklineChartHeight show-x-axis=$ctrl.showSparklineXAxis show-y-axis=$ctrl.showSparklineYAxis></pf-sparkline-chart></div><span class=\"pull-left legend-text\">{{$ctrl.legendLeftText}}</span> <span class=\"pull-right legend-text\">{{$ctrl.legendRightText}}</span></div>"
+  );
+
+}]);
+;angular.module('patternfly.datepicker').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('datepicker/datepicker.html',
+    "<p class=input-group><input class=\"form-control datepicker\" ng-model=$ctrl.date uib-datepicker-popup={{$ctrl.format}} datepicker-options=$ctrl.dateOptions is-open=$ctrl.isOpen ng-required=true close-text=Close show-button-bar=$ctrl.showButtonBar popup-placement=\"{{$ctrl.popupPlacement}}\"> <span class=input-group-btn><button type=button class=\"btn btn-default datepicker\" ng-click=\"$ctrl.isOpen = !$ctrl.isOpen\"><i class=\"glyphicon glyphicon-calendar\"></i></button></span></p>"
   );
 
 }]);
