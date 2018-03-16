@@ -19,7 +19,7 @@ describe('Component:  pfVerticalNavigation', function () {
     $compile(element)(scope);
 
     scope.$digest();
-    isolateScope = element.isolateScope();
+    isolateScope = element.find("pf-vertical-navigation").isolateScope();
   };
 
   beforeEach(function () {
@@ -697,6 +697,13 @@ describe('Component:  pfVerticalNavigation', function () {
       wellDefinedItem.click();
     }).toThrow(new Error("uiSref is defined on item, but no $state has been injected. Did you declare a dependency on \"ui.router\" module in your app?"));
   });
+
+  it('should trigger a $digest when resizing', inject(function($window) {
+    spyOn(isolateScope, '$digest');
+    $window.innerWidth = 767;
+    angular.element($window).triggerHandler('resize');
+    expect(isolateScope.$digest).toHaveBeenCalled();
+  }));
 });
 
 
@@ -749,7 +756,7 @@ describe('Directive:  pfVerticalNavigation with ui.router', function () {
     $compile(element)(scope);
 
     scope.$digest();
-    isolateScope = element.isolateScope();
+    isolateScope = element.find("pf-vertical-navigation").isolateScope();
   };
 
   beforeEach(function () {
