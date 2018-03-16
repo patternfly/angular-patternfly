@@ -15,7 +15,7 @@ angular.module('patternfly.navigation').component('pfVerticalNavigation', {
   //replace: true,
   templateUrl: 'navigation/vertical-navigation.html',
   transclude: true,
-  controller: function ($window, $timeout, $injector, $location, $rootScope) {
+  controller: function ($window, $timeout, $injector, $location, $rootScope, $scope) {
     'use strict';
     var routeChangeListener,
       ctrl = this,
@@ -552,6 +552,8 @@ angular.module('patternfly.navigation').component('pfVerticalNavigation', {
       // Need to bind to resize event
       angular.element($window).on('resize', function () {
         checkNavState();
+        // Trigger a digest to apply any updates done above
+        $scope.$digest();
       });
     };
 
