@@ -54,7 +54,7 @@ angular.module('patternfly.form', []);
  *   Modal module for patternfly.
  *
  */
-angular.module('patternfly.modals', ['ui.bootstrap.modal', 'ui.bootstrap.tpls']);
+angular.module('patternfly.modals', ['ui.bootstrap.modal', 'ui.bootstrap.tpls', 'ngSanitize', 'ngAnimate']);
 ;/**
  * @name  patternfly navigation
  *
@@ -8903,61 +8903,7 @@ angular.module('patternfly.filters').component('pfFilterResults', {
     }
   };
 }]);
-;/**
- * @ngdoc directive
- * @name patternfly.modals.component:pfAboutModal
- * @restrict E
- *
- * @description
- * Component for rendering modal windows.
- *
- * @param {string=} additionalInfo Text explaining the version or copyright
- * @param {string=} copyright Product copyright information
- * @param {string=} imgAlt The alt text for the corner grahpic
- * @param {string=} imgSrc The source for the corner grahpic
- * @param {boolean=} isOpen Flag indicating that the modal should be opened
- * @param {function=} onClose Function to call when modal is closed
- * @param {object=} productInfo data for the modal:<br/>
- * <ul style='list-style-type: none'>
- * <li>.product - the product label
- * <li>.version - the product version
- * </ul>
- * @param {string=} title The product title for the modal
- *
- * @example
- <example module="patternfly.modals">
-   <file name="index.html">
-     <div ng-controller="ModalCtrl">
-       <button ng-click="open()" class="btn btn-default">Launch About Modal</button>
-       <pf-about-modal is-open="isOpen" on-close="onClose()" additional-info="additionalInfo"
-            product-info="productInfo" title="title" copyright="copyright" img-alt="imgAlt" img-src="imgSrc"></pf-about-modal>
-     </div>
-   </file>
-   <file name="script.js">
-     angular.module('patternfly.modals').controller('ModalCtrl', function ($scope) {
-       $scope.additionalInfo = "Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum " +
-         "laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. " +
-         "Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.";
-       $scope.copyright = "Trademark and Copyright Information";
-       $scope.imgAlt = "Patternfly Symbol";
-       $scope.imgSrc = "img/logo-alt.svg";
-       $scope.title = "Product Title";
-       $scope.productInfo = [
-         { name: 'Version', value: '1.0.0.0.20160819142038_51be77c' },
-         { name: 'Server Name', value: 'Localhost' },
-         { name: 'User Name', value: 'admin' },
-         { name: 'User Role', value: 'Administrator' }];
-       $scope.open = function () {
-         $scope.isOpen = true;
-       };
-       $scope.onClose = function() {
-         $scope.isOpen = false;
-       };
-     });
-   </file>
- </example>
- */
-angular.module('patternfly.modals')
+;angular.module('patternfly.modals')
 
 .directive("pfAboutModalTransclude", ["$parse", function ($parse) {
   'use strict';
@@ -8990,87 +8936,471 @@ angular.module('patternfly.modals')
     };
   }
 })
-.component('pfAboutModal', {
+  .component('pfAboutModal', {
+    bindings: {
+      additionalInfo: '=?',
+      copyright: '=?',
+      close: "&onClose",
+      imgAlt: '=?',
+      imgSrc: '=?',
+      isOpen: '<?',
+      productInfo: '=',
+      title: '=?'
+    },
+    templateUrl: 'modals/about-modal/about-modal.html',
+    transclude: true,
+    controller: ["$uibModal", "$transclude", function ($uibModal, $transclude) { //$uibModal, $transclude, $window
+      'use strict';
+      var ctrl = this;
+
+      // The ui-bootstrap modal only supports either template or templateUrl as a way to specify the content.
+      // When the content is retrieved, it is compiled and linked against the provided scope by the $uibModal service.
+      // Unfortunately, there is no way to provide transclusion there.
+      //
+      // The solution below embeds a placeholder directive (i.e., pfAboutModalTransclude) to append the transcluded DOM.
+      // The transcluded DOM is from a different location than the modal, so it needs to be handed over to the
+      // placeholder directive. Thus, we're passing the actual DOM, not the parsed HTML.
+      ctrl.openModal = function () {
+        $uibModal.open({
+          component: 'pfModalContent',
+          resolve: {
+            content: function () {
+              var transcludedContent;
+              $transclude(function (clone) {
+                transcludedContent = clone;
+              });
+              return transcludedContent;
+            },
+            additionalInfo: function () {
+              return ctrl.additionalInfo;
+            },
+            copyright: function () {
+              return ctrl.copyright;
+            },
+            close: function () {
+              return ctrl.close;
+            },
+            imgAlt: function () {
+              return ctrl.imgAlt;
+            },
+            imgSrc: function () {
+              return ctrl.imgSrc;
+            },
+            isOpen: function () {
+              return ctrl.isOpen;
+            },
+            productInfo: function () {
+              return ctrl.productInfo;
+            },
+            title: function () {
+              return ctrl.title;
+            }
+          }
+        })
+        .result.then(
+          function () {
+            ctrl.close(); // closed
+          },
+          function () {
+            ctrl.close(); // dismissed
+          }
+        );
+      };
+      ctrl.$onInit = function () {
+        if (ctrl.isOpen === undefined) {
+          ctrl.isOpen = false;
+        }
+      };
+
+      ctrl.$onChanges = function (changesObj) {
+        if (changesObj.isOpen && changesObj.isOpen.currentValue === true) {
+          ctrl.openModal();
+        }
+      };
+    }]
+  });
+;/**
+ * @ngdoc directive
+ * @name patternfly.modals.component:pfAboutModal
+ * @restrict E
+ *
+ * @description
+ * Component for rendering modal windows.
+ *
+ * @param {string=} additionalInfo Text explaining the version or copyright
+ * @param {string=} copyright Product copyright information
+ * @param {string=} imgAlt The alt text for the corner grahpic
+ * @param {string=} imgSrc The source for the corner grahpic
+ * @param {boolean=} isOpen Flag indicating that the modal should be opened
+ * @param {function=} onClose Function to call when modal is closed
+ * @param {object=} productInfo data for the modal:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.product - the product label
+ * <li>.version - the product version
+ * </ul>
+ * @param {string=} title The product title for the modal
+ *
+ * @example
+ <example module="patternfly.modals">
+ <file name="index.html">
+ <div ng-controller="ModalCtrl">
+ <button ng-click="open()" class="btn btn-default">Launch About Modal</button>
+ <pf-about-modal is-open="isOpen" on-close="onClose()" additional-info="additionalInfo"
+ product-info="productInfo" title="title" copyright="copyright" img-alt="imgAlt" img-src="imgSrc"></pf-about-modal>
+ </div>
+ </file>
+ <file name="script.js">
+ angular.module('patternfly.modals').controller('ModalCtrl', function ($scope) {
+       $scope.additionalInfo = "Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum " +
+         "laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. " +
+         "Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.";
+       $scope.copyright = "Trademark and Copyright Information";
+       $scope.imgAlt = "Patternfly Symbol";
+       $scope.imgSrc = "img/logo-alt.svg";
+       $scope.title = "Product Title";
+       $scope.productInfo = [
+         { name: 'Version', value: '1.0.0.0.20160819142038_51be77c' },
+         { name: 'Server Name', value: 'Localhost' },
+         { name: 'User Name', value: 'admin' },
+         { name: 'User Role', value: 'Administrator' }];
+       $scope.open = function () {
+         $scope.isOpen = true;
+       };
+       $scope.onClose = function() {
+         $scope.isOpen = false;
+       };
+     });
+ </file>
+ </example>
+ */
+
+;/**
+ * @ngdoc directive
+ * @name patternfly.modals.componenet:pfModalOverlay
+ * @element pfModalOverlay
+ * @restrict E
+ *
+ * @description
+ * The Modal Overlay pattern provides a way to quickly load and display important information to the user without navigating
+ * away from the current page. It utilizes the {@link https://angular-ui.github.io/bootstrap/#modal Angular UI modal}
+ * and Patternfly styling. Use cases for Modal Overlays can vary a great deal, but some examples include the following:
+ * <ul>
+ * <li>To remind or prompt users
+ * <li>To load dialogs that require user input before advancing
+ * <li>To load tasks which require a user’s full attention, such as stepping through a wizard flow
+ * <li>To present important information or warnings
+ * </ul>
+ *
+ * @param {boolean} showModal Flag for setting modal to hide/show by default
+ * @param {function} onClose Function to call when the modal is closed<br/>
+ * Note: the parameter passed to the on-close function must be named 'dismissCause'
+ * @param {string} modalId Id of the modal
+ * @param {string} modalTitle The title of the modal displayed in the header
+ * @param {string} modalBodyTemplate Path to html template for modal body
+ * @param {array} actionButtons array of button objects. Each button can have the following properties:<br/>
+ * <ul style='list-style-type: none'>
+ * <li>.label        - the text to display on the button
+ * <li>.class        - (optional) classes to add to the button
+ * <li>.actionFn     - (optional) user defined function to call when the button is clicked
+ * <li>.isDisabled   - (optional) boolean true if the button should be disabled by default
+ * <li>.isCancel     - (optional) boolean true is the button should cancel and dismiss the modal
+ * </ul>
+ * @param {string=} titleId Id of the title. "modalTitle" by default
+ * @param {boolean=} hideCloseIcon Flag indicating that the modal should hide the 'x' close icon.
+ * @param {boolean=} backgroundClose Flag indicating that the modal should close if user clicks background. False by default
+ * @param {function=} onBackgroundClick Function to call when the user clicks the background.
+ * Return true if clicking background should close the modal, false otherwise.<br/>
+ * Note: backgroundClose needs to be set to true in order for the onBackgroundClick event to fire.
+ * @param {boolean=} isForm Flag indicating that the modal body will contain a form which should be valid before an action button is enabled
+ * @param {object=} modalBodyScope Object containing the scope for the modalBodyTemplate
+ *
+ * @example
+ <example module="patternfly.modals">
+
+ <file name="index.html">
+ <div ng-controller="DemoModalOverlayCtrl" class="example-container">
+    <button ng-click="open()" class="btn btn-default">Launch Form Example</button>
+    <pf-modal-overlay show-modal="showModal"
+          on-close="onClose(dismissCause)"
+          modal-id="modalId"
+          modal-title="modalTitle"
+          background-close="backgroundClose"
+          on-background-click="onBackgroundClick"
+          is-form="isForm"
+          modal-body-template="template"
+          modal-body-scope="formScope"
+          action-buttons="actionButtons">
+    </pf-modal-overlay>
+
+   <button ng-click="open2()" class="btn btn-default">Launch Confirmation Example</button>
+   <pf-modal-overlay show-modal="showModal2"
+         on-close="onClose2(dismissCause)"
+         modal-id="modalId2"
+         modal-title="modalTitle2"
+         title-id="titleId2"
+         hide-close-icon="hideCloseIcon2"
+         modal-body-template="template2"
+         action-buttons="actionButtons2">
+    </pf-modal-overlay>
+   <div>
+      <label class="actions-label">Actions: </label>
+   </div>
+   <div>
+      <textarea rows="3" class="col-md-12">{{actionsText}}</textarea>
+   </div>
+ </div>
+ </file>
+
+ <file name="script.js">
+ angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function( $scope ) {
+
+      $scope.actionsText = "";
+
+      // first example
+      $scope.open = function () {
+          $scope.showModal = true;
+       };
+      $scope.onClose = function(dismissCause) {
+          $scope.showModal = false;
+          $scope.actionsText = "First Modal closed via: " + dismissCause + "\n" + $scope.actionsText;
+       };
+
+      $scope.modalId = "demoModal1";
+      $scope.modalTitle = "First Demo Title";
+      $scope.backgroundClose = true;
+      $scope.onBackgroundClick = function() {
+        if(!$scope.formScope.allowBackgroundDismissal) {
+          $scope.actionsText = "Backdrop clicked, but dismissal using background is not allowed\n" + $scope.actionsText;
+          $scope.formScope.showNotAllowedMsg = true;
+          return false;
+        }
+        $scope.formScope.showNotAllowedMsg = false;
+        return true;
+      };
+      $scope.isForm = true;
+      $scope.template = "demo-form.html";
+      $scope.formScope = {
+        inputs: {
+          first: "",
+          second: "test",
+          third: ""
+        },
+        allowBackgroundDismissal: false,
+        showNotAllowedMsg: false
+      };
+      $scope.actionButtons = [
+          {
+            label: "Cancel",
+            isCancel: true
+          },
+          {
+            label: "Save",
+            class: "btn-primary custom-class",
+            actionFn: function() {
+                $scope.actionsText = "inputs {" +
+                    "\n    first: " + $scope.formScope.inputs.first +
+                    "\n    second: " + $scope.formScope.inputs.second +
+                    "\n    third: " + $scope.formScope.inputs.third +
+                    "\n}" + $scope.actionsText;
+            }
+          }];
+
+      // second example
+      $scope.open2 = function () {
+          $scope.showModal2 = true;
+       };
+      $scope.onClose2 = function(dismissCause) {
+          $scope.showModal2 = false;
+          $scope.actionsText = "Second Modal closed via: " + dismissCause + "\n" + $scope.actionsText;
+       };
+
+      $scope.modalId2 = "demoModal2";
+      $scope.modalTitle2 = "Second Demo Title";
+      $scope.titleId2 = "demoTitle2";
+      $scope.hideCloseIcon2 = true;
+      $scope.template2 = "demo-info.html";
+      $scope.actionButtons2 = [
+          {
+            label: "Cancel",
+            isCancel: true
+          },
+          {
+            label: "OK",
+            class: "btn-primary"
+          }];
+ });
+ </file>
+
+ <file name="demo-form.html">
+   <ng-form name="demoForm" class="form-horizontal">
+     <div class="form-group">
+       <label class="col-sm-3 control-label required-pf" for="textInput">Field One</label>
+       <div class="col-sm-9">
+        <input type="text" id="textInput" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.first" ng-required="true"/>
+       </div>
+     </div>
+     <div class="form-group">
+       <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
+       <div class="col-sm-9">
+         <input type="text" id="textInput2" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.second"/>
+       </div>
+     </div>
+     <div class="form-group">
+       <label class="col-sm-3 control-label" for="textInput3">Field Three</label>
+       <div class="col-sm-9">
+         <input type="text" id="textInput3" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.third"/>
+       </div>
+     </div>
+     <div class="form-group">
+       <div class="col-sm-offset-3 col-sm-9">
+         <div class="checkbox">
+           <label>
+              <input type="checkbox" ng-model="$ctrl.modalBodyScope.allowBackgroundDismissal"> Allow background dismissal
+           </label>
+         </div>
+         <div ng-show="$ctrl.modalBodyScope.showNotAllowedMsg" class="col-sm-12 has-error">
+            <span class="help-block">Background dismissal is not allowed!</span>
+         </div>
+       </div>
+     </div>
+   </ng-form>
+ </file>
+
+ <file name="demo-info.html">
+   <div class="row">
+    <div class="col-md-12">Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.</div>
+   </div>
+ </file>
+ </example>
+ */
+;angular.module('patternfly.modals')
+  .component('pfModalOverlay', {
+    bindings: {
+      showModal: '<',
+      close: "&onClose",
+      modalId: '=',
+      modalTitle: "=",
+      titleId: "=?",
+      hideCloseIcon: "<?",
+      backgroundClose: "<?",
+      onBackgroundClick: "=?",
+      isForm: "<?",
+      modalBodyTemplate: "=",
+      modalBodyScope: "=?",
+      actionButtons: "<"
+    },
+    templateUrl: 'modals/modal-overlay/modal-overlay.html',
+    controller: ["$uibModal", function ( $uibModal ) {
+      'use strict';
+
+      var ctrl = this;
+
+      ctrl.open = function () {
+        $uibModal.open({
+          component: 'pfModalOverlayContent',
+          backdrop: ctrl.backgroundClose ? true : 'static',
+          resolve: {
+            modalId: function () {
+              return ctrl.modalId;
+            },
+            titleId: function () {
+              return ctrl.titleId || "modalTitle";
+            },
+            modalTitle: function () {
+              return ctrl.modalTitle;
+            },
+            hideCloseIcon: function () {
+              return ctrl.hideCloseIcon;
+            },
+            onBackgroundClick: function() {
+              return ctrl.onBackgroundClick;
+            },
+            isForm: function() {
+              return ctrl.isForm;
+            },
+            modalBodyTemplate: function() {
+              return ctrl.modalBodyTemplate;
+            },
+            modalBodyScope: function() {
+              return ctrl.modalBodyScope;
+            },
+            actionButtons: function () {
+              return ctrl.actionButtons;
+            }
+          }
+        })
+          .result.then(
+          function (dismissCause) {
+            ctrl.close({'dismissCause': dismissCause}); // closed
+          },
+          function (dismissCause) {
+            ctrl.close({'dismissCause': dismissCause}); // dismissed
+          }
+        );
+      };
+
+      ctrl.$onInit = function () {
+        if (ctrl.showModal === undefined) {
+          ctrl.showModal = false;
+        }
+      };
+
+      ctrl.$onChanges = function (changesObj) {
+        if (changesObj.showModal && changesObj.showModal.currentValue === true) {
+          ctrl.open();
+        }
+      };
+    }]
+  });
+
+
+angular.module('patternfly.modals').component('pfModalOverlayContent', {
+  templateUrl: 'modal-overlay-template.html',
   bindings: {
-    additionalInfo: '=?',
-    copyright: '=?',
-    close: "&onClose",
-    imgAlt: '=?',
-    imgSrc: '=?',
-    isOpen: '<?',
-    productInfo: '=',
-    title: '=?'
+    resolve: '<',
+    close: '&',
+    dismiss: '&'
   },
-  templateUrl: 'modals/about-modal.html',
-  transclude: true,
-  controller: ["$uibModal", "$transclude", function ($uibModal, $transclude) { //$uibModal, $transclude, $window
+  controller: ["$scope", function ($scope) {
     'use strict';
     var ctrl = this;
 
-    // The ui-bootstrap modal only supports either template or templateUrl as a way to specify the content.
-    // When the content is retrieved, it is compiled and linked against the provided scope by the $uibModal service.
-    // Unfortunately, there is no way to provide transclusion there.
-    //
-    // The solution below embeds a placeholder directive (i.e., pfAboutModalTransclude) to append the transcluded DOM.
-    // The transcluded DOM is from a different location than the modal, so it needs to be handed over to the
-    // placeholder directive. Thus, we're passing the actual DOM, not the parsed HTML.
-    ctrl.openModal = function () {
-      //$window.console.log('hi mom');
-      $uibModal.open({
-        component: 'pfModalContent',
-        resolve: {
-          content: function () {
-            var transcludedContent;
-            $transclude(function (clone) {
-              transcludedContent = clone;
-            });
-            return transcludedContent;
-          },
-          additionalInfo: function () {
-            return ctrl.additionalInfo;
-          },
-          copyright: function () {
-            return ctrl.copyright;
-          },
-          close: function () {
-            return ctrl.close;
-          },
-          imgAlt: function () {
-            return ctrl.imgAlt;
-          },
-          imgSrc: function () {
-            return ctrl.imgSrc;
-          },
-          isOpen: function () {
-            return ctrl.isOpen;
-          },
-          productInfo: function () {
-            return ctrl.productInfo;
-          },
-          title: function () {
-            return ctrl.title;
+    ctrl.$onInit = function () {
+      ctrl.modalId = ctrl.resolve.modalId;
+      ctrl.titleId = ctrl.resolve.titleId || "modalTitle";
+      ctrl.modalTitle = ctrl.resolve.modalTitle;
+      ctrl.hideCloseIcon = ctrl.resolve.hideCloseIcon || false;
+      ctrl.modalBodyTemplate = ctrl.resolve.modalBodyTemplate;
+      ctrl.modalBodyScope = ctrl.resolve.modalBodyScope;
+      ctrl.actionButtons = ctrl.resolve.actionButtons;
+      ctrl.isForm = ctrl.resolve.isForm;
+      ctrl.onBackgroundClick = ctrl.resolve.onBackgroundClick;
+
+      ctrl.ok = function (label, actionFn) {
+        if (typeof actionFn === "function") {
+          actionFn();
+        }
+        ctrl.close({$value: label});
+      };
+
+      ctrl.cancel = function (actionFn) {
+        if (typeof actionFn === "function") {
+          actionFn();
+        }
+        ctrl.dismiss({$value: 'cancel'});
+      };
+
+      $scope.$on('modal.closing', function(event, reason, closed) {
+        if (reason === "backdrop click" || reason === "escape key press") {
+          event.preventDefault();
+          if ( typeof ctrl.onBackgroundClick === "function" && ctrl.onBackgroundClick()) {
+            ctrl.dismiss({$value: 'backdropClick'});
+          } else {
+            // onBackgroundClick' returned false, may have changed ctrl vars; execute $digest to refresh view
+            $scope.$digest();
           }
         }
-      })
-        .result.then(
-        function () {
-          ctrl.close(); // closed
-        },
-        function () {
-          ctrl.close(); // dismissed
-        }
-      );
-    };
-    ctrl.$onInit = function () {
-      if (ctrl.isOpen === undefined) {
-        ctrl.isOpen = false;
-      }
-    };
-
-    ctrl.$onChanges = function (changesObj) {
-      if (changesObj.isOpen && changesObj.isOpen.currentValue === true) {
-        ctrl.openModal();
-      }
+      });
     };
   }]
 });
@@ -18887,7 +19217,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 ;angular.module('patternfly.modals').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('modals/about-modal.html',
+  $templateCache.put('modals/about-modal/about-modal.html',
     "<script type=text/ng-template id=about-modal-template.html><div class=\"about-modal-pf\">\n" +
     "    <div class=\"modal-header\">\n" +
     "      <button type=\"button\" class=\"close\" ng-click=\"$ctrl.close()\" aria-hidden=\"true\">\n" +
@@ -18907,6 +19237,30 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     "    </div>\n" +
     "    <div class=\"modal-footer\">\n" +
     "      <img ng-if=\"$ctrl.imgSrc\" ng-src=\"{{$ctrl.imgSrc}}\" alt=\"{{$ctrl.imgAlt}}\"/>\n" +
+    "    </div>\n" +
+    "  </div></script>"
+  );
+
+
+  $templateCache.put('modals/modal-overlay/modal-overlay.html',
+    "<script type=text/ng-template id=modal-overlay-template.html><div class=\"modal-overlay\" ng-attr-id=\"{{$ctrl.modalId}}\" tabindex=\"-1\" aria-labelledby=\"$ctrl.titleId\" aria-hidden=\"true\">\n" +
+    "    <div class=\"modal-header\">\n" +
+    "      <button type=\"button\" class=\"close\" ng-click=\"$ctrl.cancel()\" aria-hidden=\"true\" aria-label=\"Close\" ng-if=\"!$ctrl.hideCloseIcon\">\n" +
+    "        <span class=\"pficon pficon-close\"></span>\n" +
+    "      </button>\n" +
+    "      <h4 class=\"modal-title\" ng-attr-id=\"{{$ctrl.titleId}}\">{{$ctrl.modalTitle}}</h4>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-body\">\n" +
+    "      <form name=\"pfModalOverlayForm\" ng-show=\"$ctrl.isForm\">\n" +
+    "        <span ng-if=\"$ctrl.modalBodyTemplate\" ng-include=\"$ctrl.modalBodyTemplate\"></span>\n" +
+    "      </form>\n" +
+    "      <span ng-if=\"!$ctrl.isForm\" ng-include=\"$ctrl.modalBodyTemplate\"></span>\n" +
+    "    </div>\n" +
+    "    <div class=\"modal-footer\">\n" +
+    "      <button ng-repeat=\"actionButton in $ctrl.actionButtons\"\n" +
+    "              class=\"btn {{actionButton.class || 'btn-default'}}\"\n" +
+    "              ng-click=\"actionButton.isCancel ? $ctrl.cancel(actionButton.actionFn) : $ctrl.ok(actionButton.label, actionButton.actionFn)\"\n" +
+    "              ng-disabled=\"(pfModalOverlayForm.$invalid && !actionButton.isCancel) || actionButton.isDisabled\">{{actionButton.label}}</button>\n" +
     "    </div>\n" +
     "  </div></script>"
   );

@@ -1438,3 +1438,8 @@ table.dataTable tbody td {
 .content-view-pf-pagination .form-group .per-page-label {
   padding-left: 10px;
 }
+
+.modal-overlay .modal-body {
+  max-height: 70vh;
+  overflow-x: hidden;
+}

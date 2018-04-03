@@ -248,6 +248,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "patternfly.modals.componenet:pfModalOverlay",
+      "shortName": "pfModalOverlay",
+      "type": "directive",
+      "moduleName": "patternfly.modals",
+      "shortDescription": "The Modal Overlay pattern provides a way to quickly load and display important information to the user without navigating",
+      "keywords": "$ctrl $scope action action-buttons actionbuttons actionbuttons2 actionfn actions-label actionstext add advancing allow allowbackgrounddismissal allowed angular ante api array attention backdrop background background-close backgroundclose bibendum body boolean btn btn-default btn-primary button call cancel cases checkbox class classes clicked clicking clicks close closed col-md-12 col-sm-12 col-sm-3 col-sm-9 col-sm-offset-3 commodo componenet confirmation consequat control-label controller current custom-class deal default defined demo demo-form demo-info demoform demomodal1 demomodal2 demomodaloverlayctrl demotitle2 dialogs dignissim directive disabled dismiss dismissal dismisscause display displayed egestas enabled event example example-container examples false feugiat fire flag flow form form-control form-group form-horizontal formscope full function fusce github great has-error header help-block hide hide-close-icon hidecloseicon hidecloseicon2 html https iaculis icon include indicating input inputs interdum io ipsum is-form iscancel isdisabled isform js label laoreet lectus list-style-type load lorem modal modal-body-scope modal-body-template modal-id modal-title modalbodyscope modalbodytemplate modalid modalid2 modals modaltitle modaltitle2 module named navigating neque ng-click ng-controller ng-model ng-required ng-show note nulla object objects odio on-background-click on-close onbackgroundclick onclose onclose2 open open2 order overlay overlays parameter passed path pattern patternfly pfmodaloverlay placerat prompt properties quam remind require required-pf return risus row rows save scope script second sed semper set setting show-modal showmodal showmodal2 shownotallowedmsg stepping style styling suscipit suspendisse tasks template template2 tempus test text textinput textinput2 textinput3 third three title title-id titleid titleid2 tristique true type ui urna user users ut utilizes valid vary vel vestibulum warnings wizard"
+    },
+    {
+      "section": "api",
       "id": "patternfly.modals.component:pfAboutModal",
       "shortName": "pfAboutModal",
       "type": "directive",
