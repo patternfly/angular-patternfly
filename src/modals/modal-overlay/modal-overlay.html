@@ -1,0 +1,22 @@
+<script type="text/ng-template" id="modal-overlay-template.html">
+  <div class="modal-overlay" ng-attr-id="{{$ctrl.modalId}}" tabindex="-1" aria-labelledby="$ctrl.titleId" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" ng-click="$ctrl.cancel()" aria-hidden="true" aria-label="Close" ng-if="!$ctrl.hideCloseIcon">
+        <span class="pficon pficon-close"></span>
+      </button>
+      <h4 class="modal-title" ng-attr-id="{{$ctrl.titleId}}">{{$ctrl.modalTitle}}</h4>
+    </div>
+    <div class="modal-body">
+      <form name="pfModalOverlayForm" ng-show="$ctrl.isForm">
+        <span ng-if="$ctrl.modalBodyTemplate" ng-include="$ctrl.modalBodyTemplate"></span>
+      </form>
+      <span ng-if="!$ctrl.isForm" ng-include="$ctrl.modalBodyTemplate"></span>
+    </div>
+    <div class="modal-footer">
+      <button ng-repeat="actionButton in $ctrl.actionButtons"
+              class="btn {{actionButton.class || 'btn-default'}}"
+              ng-click="actionButton.isCancel ? $ctrl.cancel(actionButton.actionFn) : $ctrl.ok(actionButton.label, actionButton.actionFn)"
+              ng-disabled="(pfModalOverlayForm.$invalid && !actionButton.isCancel) || actionButton.isDisabled">{{actionButton.label}}</button>
+    </div>
+  </div>
+</script>

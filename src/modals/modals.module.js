@@ -5,4 +5,4 @@
  *   Modal module for patternfly.
  *
  */
-angular.module('patternfly.modals', ['ui.bootstrap.modal', 'ui.bootstrap.tpls']);
+angular.module('patternfly.modals', ['ui.bootstrap.modal', 'ui.bootstrap.tpls', 'ngSanitize', 'ngAnimate']);

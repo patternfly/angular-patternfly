@@ -5,7 +5,7 @@ describe('Component:  pfABoutModal', function () {
   // load the controller's module
   beforeEach(module(
     'patternfly.modals',
-    'modals/about-modal.html'
+    'modals/about-modal/about-modal.html'
   ));
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {
@@ -177,5 +177,6 @@ describe('Component:  pfABoutModal', function () {
     compileHtml(modalHtml, $scope);
     var transclude = angular.element(getModal()).find('.product-versions-pf');
     expect(angular.element(transclude).find('ul').length).toBe(0);
+    closeModal($scope);
   });
 });

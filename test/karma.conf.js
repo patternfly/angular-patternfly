@@ -17,6 +17,7 @@ module.exports = function (config) {
       'node_modules/patternfly/dist/js/patternfly.js',
       'node_modules/angular/angular.js',
       'node_modules/angular-sanitize/angular-sanitize.js',
+      'node_modules/angular-animate/angular-animate.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
       'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
