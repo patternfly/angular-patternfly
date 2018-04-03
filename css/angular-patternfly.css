@@ -1269,3 +1269,7 @@ table.dataTable tbody td {
 .uib-datepicker-popup .uib-button-bar .uib-close {
   display: none;
 }
+.modal-overlay .modal-body {
+  max-height: 70vh;
+  overflow-x: hidden;
+}
