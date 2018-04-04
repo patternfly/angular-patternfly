@@ -90,6 +90,9 @@ Note:
 
     <!-- Angular-Sanitize -->
     <script src="node_modules/angular-patternfly/node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+    
+    <!-- Angular-Animate -->
+    <script src="node_modules/angular-patternfly/node_modules/angular-animate/angular-animate.js"></script>
 
     <!-- Angular-PatternFly  -->
     <script src="node_modules/angular-patternfly/dist/angular-patternfly.min.js"></script>
