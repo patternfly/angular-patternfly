@@ -62,6 +62,15 @@ describe('pf-utils', function () {
     runExpects();
   });
 
+  it('utilizationToColor should return correct colors', function () {
+    var red = pfUtils.utilizationToColor(100);
+    var green = pfUtils.utilizationToColor(0);
+    var orange = pfUtils.utilizationToColor(50);
+    expect(red).toBe('rgb(255,0,0)');
+    expect(green).toBe('rgb(0,255,0)');
+    expect(orange).toBe('rgb(254,255,0)');
+  });
+
   var runExpects = function () {
     expect(merged.units).toBe(config.units);
     expect(config.units).toBe('MHz');
