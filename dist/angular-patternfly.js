@@ -5728,6 +5728,1761 @@ angular.module('patternfly.charts').component('pfSparklineChart', {
 });
 ;/**
  * @ngdoc directive
+ * @name patternfly.charts.component:pfTopologyMap
+ * @restrict E
+ *
+ * @param {array} nodes array containing objects representing graph nodes. Each node has these attributes. Only node id is mandatory parameter.
+ * <ul style='list-style-type: none'>
+ *   <li>id: unique node identifier</li>
+ *   <li>title: node title</li>
+ *   <li>size: node radius; default value is 17</li>
+ *   <li>fileicon: this attribute specifies path to image file. eg: <b>'/some/path/to/image/image.png'</b>. File icon has higher priority than fonticon.</li>
+ *   <li>fonticon: css class of node icon eg: <b>'fa fa-info'</b> File icon has higher priority than fonticon.</li>
+ *   <li>fill: string containing color code (basic, RGB, HEX) of node background.</li>
+ *   <li>borderColor: string containing color code (basic, RGB, HEX) of node border.</li>
+ *   <li>iconColor: string containing color code (basic, RGB, HEX) of node icon, if iconType is <b>fonticon</b>.</li>
+ *   <li>opacity: number from 〈0,1〉range, representing node opacity</li>
+ *   <li>utilization: number from〈0,100〉range, representing node utilization percentage</li>
+ * </ul>
+ * @param {array} edges array of objects. Each object represents one edge between two nodes. Source and target are mandatory attributes.
+ * <ul style='list-style-type: none'>
+ *  <li>source: id of source node</li>
+ *  <li>target: id of target node</li>
+ *  <li>lineStyle: stroke style of edge; currently only <b>'dashed'</b> is avaliable</li>
+ *  <li>title: label of edge</li>
+ * </ul>
+ *
+ * @param {boolean=} show-node-labels show/hide all node tooltips
+ *
+ * @param {boolean=} show-edge-labels show/hode all edge tooltips
+ *
+ * @param {object=} tooltip-style object used for tooltip styling. This is an optional parameter.
+ * <ul style='list-style-type: none'>
+ *  <li>size: text size in px</li>
+ *  <li>font: font name. eg: <b>'Arial'</b></li>
+ *  <li>textColor: string containing color code (basic, RGB, HEX) of title text.</li>
+ *  <li>background: string containing color code (basic, RGB, HEX) of title background</li>
+ * </ul>
+ * @param {function (node) =} select-node function that return selected(clicked) node from graph
+ * @param {function (array) =} multi-select-nodes function that returns array of selected nodes. Multiple nodes are selected while holding the <b>ctrl/shift</b> key and clicking
+ * @param {function (edge) =} select-edge function that return selected(clicked) edge from graph
+ * @param {function (array) =} multi-select-edges function that returns array of selected edges. Multiple edges are selected while holding the <b>ctrl/shift</b> key and clicking
+ *
+ * @description
+ *   Component for rendering topology chart on Canvas element. This is just a simple component. It has no searching/filtering or other methods. Will only render given data and return data about selected objects.<br/>
+ *   Component also supports semantic zooming. Only distance between nodes is growing/shrinking, but node size remains the same. Canvas will zoom around the mouse cursor.
+ * @example
+   <example module="patternfly.charts">
+    <file name="index.html">
+      <div ng-controller="TopologyMapCtrl" class="container-topology">
+        <pf-topology-map
+          show-node-labels="showNodeLabels"
+          show-edge-labels="showEdgeLabels"
+          nodes="nodes"
+          edges="edges"
+          select-node="selectNode(node)"
+          tooltip-style="tooltipStyle"
+          multi-select-nodes="multiSelect(array)"
+          select-edge="selectEdge(edge)"
+          multi-select-edges="multiSelectEdges(array)"
+        >
+        </pf-topology-map>
+        <h2>Selected node:</h2>
+        <pre>{{selectedNode}}</pre>
+        <h2>Selected nodes:</h2>
+        <pre>{{selectedNodes}}</pre>
+        <h2>Selected edge:</h2>
+        <pre>{{selectedEdge}}</pre>
+        <h2>Selected edges:</h2>
+        <pre>{{selectedEdges}}</pre>
+        <button ng-click="changeData()">Change data</button><br/>
+        <label>Show node labels</label><input type="checkbox" ng-model="showNodeLabels"/><br/>
+        <label>Show edge labels</label><input type="checkbox" ng-model="showEdgeLabels"/><br/>
+      </div>
+    </file>
+    <file name="script.js">
+      angular.module( 'patternfly.charts' ).controller( 'TopologyMapCtrl', function( $scope, $rootScope ) {
+        $scope.tooltipStyle = {
+          size: 12,
+          font: 'Arial',
+          textColor: 'white',
+          background: 'rgba(0, 0, 0, .5)',
+        }
+        $scope.showEdgeLabels = false;
+        $scope.showNodeLabels = false;
+        $scope.selectedNode = {};
+        $scope.selectedNodes = [];
+        $scope.selectedEdge = {};
+        $scope.selectedEdges = [];
+        $scope.selectEdge = function(edge){
+          $scope.selectedEdge = edge;
+          $scope.$apply();
+        }
+        $scope.multiSelectEdges = function(array) {
+          $scope.selectedEdges = array;
+          $scope.$apply();
+        }
+        $scope.selectNode = function(node){
+          $scope.selectedNode = node;
+          $scope.$apply()
+        };
+        $scope.multiSelect = function(array){
+          $scope.selectedNodes = array;
+          $scope.$apply();
+        }
+        $scope.changeData = function(){
+          $scope.nodes = [
+            {
+              id: '1',
+              title: 'testNode',
+              utilization: 50,
+              opacity: 0.5,
+              size: 32,
+              fonticon: "fa fa-cog",
+              iconType: "fonticon",
+            },
+            {
+              id: '2',
+              title: 'testNode2',
+              fill: '#FF0000',
+              utilization: 75,
+              fonticon: "fa fa-info",
+              iconType: "fonticon",
+              borderColor: '#AD1457'
+            },{
+              id: 'blabla',
+              title: 'testNode3',
+              fileicon: "/img/OpenShift-logo.svg",
+              iconType: "fileicon",
+              size: 64,
+              utilization: 25,
+            }
+          ];
+          $scope.edges = [
+            {source: '1', target: 'blabla', title: 'edge title'},
+            {source: 'blabla', target: '2'},
+            {source: '1', target: '2', title: '1596'}
+          ];
+        }
+        $scope.nodes = [
+          {
+            "id": 0,
+            "title": "Levy",
+            "size": 25,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 1,
+            "title": "Celina",
+            "size": 24,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 2,
+            "title": "Nancy",
+            "size": 15,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 3,
+            "title": "Yang",
+            "size": 25
+          },
+          {
+            "id": 4,
+            "title": "Gray",
+            "size": 28,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 5,
+            "title": "Maddox",
+            "size": 16,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 6,
+            "title": "Wallace",
+            "size": 27,
+            utilization: 50,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 7,
+            "title": "Bettie",
+            "size": 19,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 8,
+            "title": "Watkins",
+            "size": 20,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 9,
+            "title": "Stanton",
+            "size": 12,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 10,
+            "title": "Lindsay",
+            "size": 18
+          },
+          {
+            "id": 11,
+            "title": "Harrell",
+            "size": 27
+          },
+          {
+            "id": 12,
+            "title": "Stephanie",
+            "size": 30,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 13,
+            "title": "Mona",
+            "size": 18,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 14,
+            "title": "Natalia",
+            "size": 21,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 15,
+            "title": "Rose",
+            "size": 26,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 16,
+            "title": "Robles",
+            "size": 12,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 17,
+            "title": "Parker",
+            "size": 20,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 18,
+            "title": "Decker",
+            "size": 21,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 19,
+            "title": "Helen",
+            "size": 18
+          },
+          {
+            "id": 20,
+            "title": "Coleman",
+            "size": 30,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 21,
+            "title": "Wolf",
+            "size": 25,
+            fonticon: "fa fa-cog",
+          },
+          {
+            "id": 22,
+            "title": "Morton",
+            "size": 28,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 23,
+            "title": "Fitzpatrick",
+            "size": 16,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 24,
+            "title": "Hayden",
+            "size": 21
+          },
+          {
+            "id": 25,
+            "title": "Kaufman",
+            "size": 30,
+            fileicon: "/img/OpenShift-logo.svg",
+          },
+          {
+            "id": 26,
+            "title": "Julia",
+            "size": 15
+          },
+          {
+            "id": 27,
+            "title": "Louella",
+            "size": 16
+          },
+          {
+            "id": 28,
+            "title": "Rocha",
+            "size": 21
+          },
+          {
+            "id": 29,
+            "title": "Kimberly",
+            "size": 31
+          },
+          {
+            "id": 30,
+            "title": "Benita",
+            "size": 20
+          },
+          {
+            "id": 31,
+            "title": "Harrington",
+            "size": 27
+          },
+          {
+            "id": 32,
+            "title": "Hobbs",
+            "size": 17
+          },
+          {
+            "id": 33,
+            "title": "Fuentes",
+            "size": 26
+          },
+          {
+            "id": 34,
+            "title": "Alyce",
+            "size": 22
+          },
+          {
+            "id": 35,
+            "title": "Frank",
+            "size": 27
+          },
+          {
+            "id": 36,
+            "title": "Lawrence",
+            "size": 21
+          },
+          {
+            "id": 37,
+            "title": "Harper",
+            "size": 19
+          },
+          {
+            "id": 38,
+            "title": "Woods",
+            "size": 29
+          },
+          {
+            "id": 39,
+            "title": "Hopper",
+            "size": 25
+          },
+          {
+            "id": 40,
+            "title": "Lesley",
+            "size": 28
+          },
+          {
+            "id": 41,
+            "title": "Arlene",
+            "size": 30
+          },
+          {
+            "id": 42,
+            "title": "Mcdowell",
+            "size": 13
+          },
+          {
+            "id": 43,
+            "title": "Kristy",
+            "size": 12
+          },
+          {
+            "id": 44,
+            "title": "Janette",
+            "size": 21
+          },
+          {
+            "id": 45,
+            "title": "Charles",
+            "size": 20
+          },
+          {
+            "id": 46,
+            "title": "Houston",
+            "size": 30
+          },
+          {
+            "id": 47,
+            "title": "Renee",
+            "size": 32
+          },
+          {
+            "id": 48,
+            "title": "Leah",
+            "size": 16
+          },
+          {
+            "id": 49,
+            "title": "Marguerite",
+            "size": 31
+          },
+          {
+            "id": 50,
+            "title": "Moreno",
+            "size": 18
+          },
+          {
+            "id": 51,
+            "title": "Washington",
+            "size": 21
+          },
+          {
+            "id": 52,
+            "title": "Davis",
+            "size": 14
+          },
+          {
+            "id": 53,
+            "title": "Potts",
+            "size": 29
+          },
+          {
+            "id": 54,
+            "title": "Holly",
+            "size": 22
+          },
+          {
+            "id": 55,
+            "title": "Phillips",
+            "size": 18
+          },
+          {
+            "id": 56,
+            "title": "Santiago",
+            "size": 32
+          },
+          {
+            "id": 57,
+            "title": "Suarez",
+            "size": 24
+          },
+          {
+            "id": 58,
+            "title": "Lynnette",
+            "size": 12
+          },
+          {
+            "id": 59,
+            "title": "Gates",
+            "size": 18
+          },
+          {
+            "id": 60,
+            "title": "Aurelia",
+            "size": 14
+          },
+          {
+            "id": 61,
+            "title": "Horn",
+            "size": 30
+          },
+          {
+            "id": 62,
+            "title": "Annabelle",
+            "size": 19
+          },
+          {
+            "id": 63,
+            "title": "Snyder",
+            "size": 19
+          },
+          {
+            "id": 64,
+            "title": "Tanner",
+            "size": 24
+          },
+          {
+            "id": 65,
+            "title": "Walker",
+            "size": 26
+          },
+          {
+            "id": 66,
+            "title": "Ruthie",
+            "size": 26
+          },
+          {
+            "id": 67,
+            "title": "Beverly",
+            "size": 20
+          },
+          {
+            "id": 68,
+            "title": "Ines",
+            "size": 16
+          },
+          {
+            "id": 69,
+            "title": "Dudley",
+            "size": 17
+          },
+          {
+            "id": 70,
+            "title": "Hays",
+            "size": 19
+          },
+          {
+            "id": 71,
+            "title": "Russell",
+            "size": 32
+          },
+          {
+            "id": 72,
+            "title": "Lolita",
+            "size": 30
+          },
+          {
+            "id": 73,
+            "title": "Kasey",
+            "size": 25
+          },
+          {
+            "id": 74,
+            "title": "Abby",
+            "size": 26
+          },
+          {
+            "id": 75,
+            "title": "Mason",
+            "size": 16
+          },
+          {
+            "id": 76,
+            "title": "Wilcox",
+            "size": 12
+          },
+          {
+            "id": 77,
+            "title": "Talley",
+            "size": 27
+          },
+          {
+            "id": 78,
+            "title": "Hull",
+            "size": 31
+          },
+          {
+            "id": 79,
+            "title": "Harrison",
+            "size": 15
+          },
+          {
+            "id": 80,
+            "title": "Cooke",
+            "size": 23
+          },
+          {
+            "id": 81,
+            "title": "Sparks",
+            "size": 15
+          },
+          {
+            "id": 82,
+            "title": "Calhoun",
+            "size": 23
+          },
+          {
+            "id": 83,
+            "title": "Deborah",
+            "size": 18
+          },
+          {
+            "id": 84,
+            "title": "Glass",
+            "size": 26
+          },
+          {
+            "id": 85,
+            "title": "Butler",
+            "size": 30
+          },
+          {
+            "id": 86,
+            "title": "Barton",
+            "size": 16
+          },
+          {
+            "id": 87,
+            "title": "Carpenter",
+            "size": 19
+          },
+          {
+            "id": 88,
+            "title": "Roberta",
+            "size": 16
+          },
+          {
+            "id": 89,
+            "title": "Lester",
+            "size": 23
+          },
+          {
+            "id": 90,
+            "title": "Sonya",
+            "size": 30
+          },
+          {
+            "id": 91,
+            "title": "Newman",
+            "size": 24
+          },
+          {
+            "id": 92,
+            "title": "Barron",
+            "size": 12
+          },
+          {
+            "id": 93,
+            "title": "Jackie",
+            "size": 18
+          },
+          {
+            "id": 94,
+            "title": "Margarita",
+            "size": 20
+          },
+          {
+            "id": 95,
+            "title": "Taylor",
+            "size": 15
+          },
+          {
+            "id": 96,
+            "title": "Rose",
+            "size": 21
+          },
+          {
+            "id": 97,
+            "title": "Hammond",
+            "size": 29
+          },
+          {
+            "id": 98,
+            "title": "Berg",
+            "size": 27
+          },
+          {
+            "id": 99,
+            "title": "Dennis",
+            "size": 22
+          }
+        ]
+        $scope.edges = [
+          {
+            "source": 5,
+            "target": 6,
+            "title": "edge title"
+          },
+          {
+            "source": 42,
+            "target": 89
+          },
+          {
+            "source": 84,
+            "target": 11
+          },
+          {
+            "source": 60,
+            "target": 10
+          },
+          {
+            "source": 17,
+            "target": 74
+          },
+          {
+            "source": 28,
+            "target": 79
+          },
+          {
+            "source": 37,
+            "target": 84
+          },
+          {
+            "source": 32,
+            "target": 46
+          },
+          {
+            "source": 2,
+            "target": 24
+          },
+          {
+            "source": 33,
+            "target": 24
+          },
+          {
+            "source": 76,
+            "target": 78
+          },
+          {
+            "source": 19,
+            "target": 70
+          },
+          {
+            "source": 45,
+            "target": 36
+          },
+          {
+            "source": 74,
+            "target": 87
+          },
+          {
+            "source": 59,
+            "target": 33
+          },
+          {
+            "source": 14,
+            "target": 66
+          },
+          {
+            "source": 10,
+            "target": 35
+          },
+          {
+            "source": 77,
+            "target": 57
+          },
+          {
+            "source": 13,
+            "target": 37
+          },
+          {
+            "source": 39,
+            "target": 18
+          },
+          {
+            "source": 37,
+            "target": 3
+          },
+          {
+            "source": 14,
+            "target": 47
+          },
+          {
+            "source": 85,
+            "target": 20
+          },
+          {
+            "source": 83,
+            "target": 84
+          },
+          {
+            "source": 65,
+            "target": 98
+          },
+          {
+            "source": 96,
+            "target": 62
+          },
+          {
+            "source": 15,
+            "target": 98
+          },
+          {
+            "source": 89,
+            "target": 8
+          },
+          {
+            "source": 26,
+            "target": 49
+          },
+          {
+            "source": 14,
+            "target": 94
+          },
+          {
+            "source": 47,
+            "target": 14
+          },
+          {
+            "source": 68,
+            "target": 84
+          },
+          {
+            "source": 52,
+            "target": 3
+          },
+          {
+            "source": 66,
+            "target": 47
+          },
+          {
+            "source": 53,
+            "target": 16
+          },
+          {
+            "source": 46,
+            "target": 73
+          },
+          {
+            "source": 99,
+            "target": 27
+          },
+          {
+            "source": 84,
+            "target": 10
+          },
+          {
+            "source": 14,
+            "target": 28
+          },
+          {
+            "source": 74,
+            "target": 50
+          },
+          {
+            "source": 30,
+            "target": 37
+          },
+          {
+            "source": 49,
+            "target": 32
+          },
+          {
+            "source": 5,
+            "target": 1
+          },
+          {
+            "source": 4,
+            "target": 61
+          },
+          {
+            "source": 25,
+            "target": 45
+          },
+          {
+            "source": 29,
+            "target": 8
+          },
+          {
+            "source": 14,
+            "target": 76
+          },
+          {
+            "source": 9,
+            "target": 71
+          },
+          {
+            "source": 58,
+            "target": 47
+          },
+          {
+            "source": 72,
+            "target": 95
+          },
+          {
+            "source": 44,
+            "target": 81
+          },
+          {
+            "source": 33,
+            "target": 57
+          },
+          {
+            "source": 61,
+            "target": 87
+          },
+          {
+            "source": 56,
+            "target": 65
+          },
+          {
+            "source": 80,
+            "target": 79
+          },
+          {
+            "source": 24,
+            "target": 54
+          },
+          {
+            "source": 94,
+            "target": 67
+          },
+          {
+            "source": 5,
+            "target": 66
+          },
+          {
+            "source": 55,
+            "target": 85
+          },
+          {
+            "source": 33,
+            "target": 53
+          },
+          {
+            "source": 32,
+            "target": 39
+          },
+          {
+            "source": 41,
+            "target": 20
+          },
+          {
+            "source": 7,
+            "target": 47
+          },
+          {
+            "source": 71,
+            "target": 6
+          },
+          {
+            "source": 23,
+            "target": 61
+          },
+          {
+            "source": 41,
+            "target": 34
+          },
+          {
+            "source": 5,
+            "target": 42
+          },
+          {
+            "source": 90,
+            "target": 72
+          },
+          {
+            "source": 70,
+            "target": 49
+          },
+          {
+            "source": 99,
+            "target": 25
+          },
+          {
+            "source": 69,
+            "target": 46
+          },
+          {
+            "source": 65,
+            "target": 90
+          },
+          {
+            "source": 93,
+            "target": 72
+          },
+          {
+            "source": 7,
+            "target": 26
+          },
+          {
+            "source": 88,
+            "target": 39
+          },
+          {
+            "source": 77,
+            "target": 52
+          },
+          {
+            "source": 86,
+            "target": 38
+          },
+          {
+            "source": 47,
+            "target": 38
+          },
+          {
+            "source": 67,
+            "target": 51
+          },
+          {
+            "source": 41,
+            "target": 12
+          },
+          {
+            "source": 29,
+            "target": 71
+          },
+          {
+            "source": 86,
+            "target": 42
+          },
+          {
+            "source": 80,
+            "target": 89
+          },
+          {
+            "source": 54,
+            "target": 53
+          },
+          {
+            "source": 93,
+            "target": 25
+          },
+          {
+            "source": 28,
+            "target": 72
+          },
+          {
+            "source": 70,
+            "target": 59
+          },
+          {
+            "source": 18,
+            "target": 88
+          },
+          {
+            "source": 60,
+            "target": 4
+          },
+          {
+            "source": 19,
+            "target": 0
+          },
+          {
+            "source": 78,
+            "target": 37
+          },
+          {
+            "source": 85,
+            "target": 54
+          },
+          {
+            "source": 83,
+            "target": 44
+          },
+          {
+            "source": 84,
+            "target": 12
+          },
+          {
+            "source": 43,
+            "target": 70
+          },
+          {
+            "source": 27,
+            "target": 81
+          },
+          {
+            "source": 85,
+            "target": 55
+          },
+          {
+            "source": 53,
+            "target": 69
+          },
+          {
+            "source": 46,
+            "target": 87
+          },
+          {
+            "source": 80,
+            "target": 98
+          },
+          {
+            "source": 31,
+            "target": 10
+          },
+          {
+            "source": 49,
+            "target": 13
+          },
+          {
+            "source": 61,
+            "target": 39
+          },
+          {
+            "source": 64,
+            "target": 10
+          },
+          {
+            "source": 96,
+            "target": 58
+          },
+          {
+            "source": 43,
+            "target": 23
+          },
+          {
+            "source": 99,
+            "target": 53
+          },
+          {
+            "source": 52,
+            "target": 21
+          },
+          {
+            "source": 12,
+            "target": 88
+          },
+          {
+            "source": 5,
+            "target": 11
+          },
+          {
+            "source": 34,
+            "target": 42
+          },
+          {
+            "source": 31,
+            "target": 97
+          },
+          {
+            "source": 56,
+            "target": 49
+          },
+          {
+            "source": 27,
+            "target": 74
+          },
+          {
+            "source": 11,
+            "target": 30
+          }
+        ]
+      });
+    </file>
+   </example>
+ */
+;angular.module('patternfly.charts').component('pfTopologyMap', {
+  bindings: {
+    nodes: '<',
+    edges: '<',
+    selectNode: '&',
+    multiSelectNodes: '&',
+    tooltipStyle: '<?',
+    showNodeLabels: '<?',
+    showEdgeLabels: '<?',
+    selectEdge: '&',
+    multiSelectEdges: '&',
+  },
+  templateUrl: 'charts/topology-map/topology-map.html',
+  controller: ["$element", "pfUtils", "$scope", "$window", "$q", function  ($element, pfUtils, $scope, $window, $q) {
+    'use strict';
+    var ctrl = this;
+    ctrl.canvas = null;
+    ctrl.showNodeLabels = false;
+    ctrl.showEdgeLabels = false;
+    ctrl.scale = 1;
+    ctrl.cachedIcons = {};
+    ctrl.nodeMultiSelect = [];
+    ctrl.edgeMultiSelect = [];
+    ctrl.IE11 = !!window.MSInputMethodContext && !!document.documentMode;
+
+    this.$onInit = function () {
+      ctrl.zoom = d3.behavior.zoom()
+        .scale(1)
+        .scaleExtent([1, 8]);
+      ctrl.transform = {
+        x: ctrl.zoom.translate()[0],
+        y: ctrl.zoom.translate()[1],
+        k: ctrl.zoom.scale(),
+      };
+      ctrl.rules = ctrl.findRules();
+      ctrl.loadIcons();
+      ctrl.setUpCanvas();
+      ctrl.setUpForce();
+      ctrl.setUpDrag();
+      ctrl.setUpSelection();
+      ctrl.setUpSemanticZoom();
+      ctrl.setUpTooltips();
+    };
+
+    this.$onChanges = function (changes) {
+      if (ctrl.force) {
+        if (changes.showNodeLabels
+          && !changes.showNodeLabels.isFirstChange()
+          && changes.showNodeLabels.previousValue !== ctrl.showNodeLabels) {
+          ctrl.force.on('tick')();
+        } else if (changes.showEdgeLabels
+          && !changes.showEdgeLabels.isFirstChange()
+          && changes.showEdgeLabels.previousValue !== ctrl.showEdgeLabels) {
+          ctrl.force.on('tick')();
+        } else {
+          ctrl.loadIcons();
+          ctrl.setUpForce();
+        }
+      }
+    };
+
+    ctrl.setUpTooltips = function () {
+      var canvas = d3.select(ctrl.canvas);
+      if (ctrl.tooltipStyle) {
+        ctrl.tooltipStyle = {
+          size: ctrl.tooltipStyle.size || 12,
+          font: ctrl.tooltipStyle.font || '"Open Sans", Helvetica, Arial, sans-serif',
+          textColor: ctrl.tooltipStyle.textColor || '#FFFFFF',
+          background: ctrl.tooltipStyle.background || 'rgba(0, 0 , 0, 0.5)',
+          borderColor: ctrl.tooltipStyle.borderColor || 'transparent',
+          borderWidth: ctrl.tooltipStyle.borderWidth || 0,
+        };
+      } else {
+        ctrl.tooltipStyle = {
+          size: 12,
+          font: '"Open Sans", Helvetica, Arial, sans-serif',
+          textColor: '#FFFFFF',
+          background: 'rgba(0, 0 , 0, 0.5)',
+          borderColor: 'transparent',
+          borderWidth: 0,
+        };
+      }
+
+      canvas.on('mousemove', mouseMove);
+      function mouseMove () {
+        var node;
+        var edge;
+        if (d3.event.defaultPrevented  || ctrl.draggedNode) {
+          return;
+        }
+        ctrl.tooltip = ctrl.findNode.apply(this, ctrl.getRealCoordinates(d3.event.offsetX, d3.event.offsetY));
+        if (!ctrl.tooltip) {
+          ctrl.highlightEdge = ctrl.pointOverEdge.apply(this, ctrl.getRealCoordinates(d3.event.offsetX, d3.event.offsetY));
+        }
+        if (ctrl.tooltip || ctrl.highlightEdge) {
+          ctrl.canvas.style.cursor = 'pointer';
+        } else {
+          ctrl.canvas.style.cursor = 'auto';
+        }
+        ctrl.force.on('tick')();
+      }
+    };
+
+    this.ctrlKey = function () {
+      var platform = $window.navigator.platform;
+      if (platform === 'MacIntel') {
+        return d3.event.shiftKey;
+      }
+      return d3.event.ctrlKey || d3.event.shiftKey;
+    };
+
+    ctrl.assignNode = function (node, addKey) {
+      ctrl.selectedNode = ctrl.selectedNode && ctrl.selectedNode.id === node.id ? null : node;
+      node.fixed = ! node.fixed;
+      if (addKey) {
+        _.find(ctrl.nodeMultiSelect, function(n) {
+          return n.id === node.id;
+        }) ? _.remove(ctrl.nodeMultiSelect, function (n) {
+          return n.id === node.id;
+        }) : ctrl.nodeMultiSelect.push(node);
+      }
+      if (ctrl.nodeMultiSelect.length === 0 || !addKey) {
+        ctrl.nodeMultiSelect = [node];
+      }
+      if (ctrl.selectNode) {
+        ctrl.selectNode({node: node});
+      }
+      if (ctrl.multiSelectNodes) {
+        ctrl.multiSelectNodes({array: ctrl.nodeMultiSelect});
+      }
+      ctrl.force.on('tick')();
+    };
+
+    ctrl.setUpSelection = function () {
+      var canvas = d3.select(ctrl.canvas);
+      canvas.on('click', click);
+      function click () {
+        var node;
+        var edge;
+        var addKey = ctrl.ctrlKey();
+        if (d3.event.defaultPrevented) {
+          return;
+        }
+        node = ctrl.findNode.apply(this, ctrl.getRealCoordinates(d3.event.offsetX, d3.event.offsetY));
+        if (node && (ctrl.selectNode || ctrl.multiSelectNodes)) {
+          ctrl.assignNode(node, addKey);
+        } else {
+          edge = ctrl.pointOverEdge.apply(this, ctrl.getRealCoordinates(d3.event.offsetX, d3.event.offsetY));
+          if (edge && (ctrl.selectEdge || ctrl.multiSelectEdges)) {
+            if (addKey) {
+              _.find(ctrl.edgeMultiSelect, function(e) {
+                return _.isEqual(e, edge);
+              }) ? _.remove(ctrl.edgeMultiSelect, function (e) {
+                return _.isEqual(e, edge);
+              }) : ctrl.edgeMultiSelect.push(edge);
+            }
+            if (ctrl.edgeMultiSelect.length === 0 || !addKey) {
+              ctrl.edgeMultiSelect = [edge];
+            }
+            ctrl.selectedEdge = ctrl.selectedEdge ? _.isEqual(ctrl.selectedEdge, edge) ? null : edge : edge;
+            if (ctrl.selectEdge) {
+              ctrl.selectEdge({edge: edge});
+            }
+            if (ctrl.multiSelectEdges) {
+              ctrl.multiSelectEdges({array: ctrl.edgeMultiSelect});
+            }
+            ctrl.force.on('tick')();
+          }
+        }
+      }
+    };
+
+    $window.onresize = function (event) {
+      ctrl.setUpCanvas();
+      ctrl.force.on('tick')();
+    };
+
+    ctrl.setUpCanvas = function () {
+      var coords;
+      ctrl.canvas = $element[0].querySelector('canvas.topology-graph');
+      coords = ctrl.canvas.getBoundingClientRect();
+      ctrl.canvasW = ctrl.canvas.clientWidth;
+      ctrl.canvasH = ctrl.canvas.clientHeight;
+      ctrl.canvas.width = ctrl.canvasW;
+      ctrl.canvas.height = ctrl.canvasH;
+      ctrl.canvasX = coords.left;
+      ctrl.canvasY = coords.top;
+      ctrl.context = ctrl.canvas.getContext('2d');
+    };
+
+    ctrl.findNode = function (x, y) {
+      var result = undefined;
+      var size;
+      ctrl.force.nodes().forEach(function (node) {
+        if (Math.pow((x - node.x), 2) + Math.pow((y - node.y), 2) < Math.pow(node.size / ctrl.transform.k, 2)) {
+          size = ctrl.force.nodes().length - 1;
+          ctrl.force.nodes()[size].index = node.index;
+          ctrl.force.nodes()[node.index] = ctrl.force.nodes()[size];
+          node.index = size;
+          ctrl.force.nodes()[size] = node;
+          result = node;
+        }
+      });
+      return result;
+    };
+
+    // NOTE: formula https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Line_defined_by_two_points
+    ctrl.pointOverEdge = function(x, y) {
+      return _.find(ctrl.edges, function(edge) {
+        var x1 = edge.source.x;
+        var x2 = edge.target.x;
+        var y1 = edge.source.y;
+        var y2 = edge.target.y;
+        var distance = Math.abs((y - y2) * x1 - (x - x2) * y1 + x * y2 - y * x2) / Math.sqrt(Math.pow((y - y2),2) + Math.pow((x - x2),2));
+        var dotproduct = (x - x1) * (x2 - x1) + (y - y1) * (y2 - y1);
+        var tolerance = 10;
+        var squaredlengthba = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+        if (distance > tolerance) {
+          return false;
+        }
+        //test if the point c is between a and b
+        if (dotproduct < 0) {
+          return false;
+        }
+
+        if (dotproduct > squaredlengthba) {
+          return false;
+        }
+        return true;
+      });
+    };
+
+    ctrl.getRealCoordinates = function (x, y) {
+      return [
+        (x - ctrl.transform.x) / ctrl.transform.k,
+        (y - ctrl.transform.y) / ctrl.transform.k,
+      ];
+    };
+
+    ctrl.setUpDrag = function () {
+      var drag = d3.behavior.drag();
+      var canvas = d3.select(ctrl.canvas);
+      canvas.call(drag.on('dragstart', onDragStart).on('drag', onDrag).on('dragend', onDragEnd));
+      function onDragStart () {
+        ctrl.tooltip = undefined;
+        d3.event.sourceEvent.stopPropagation();
+        ctrl.draggedNode = ctrl.findNode.apply(this, ctrl.getRealCoordinates(d3.event.sourceEvent.offsetX, d3.event.sourceEvent.offsetY));
+      }
+      function onDrag () {
+        var newCoordinates = ctrl.getRealCoordinates(d3.event.sourceEvent.offsetX, d3.event.sourceEvent.offsetY);
+        if (ctrl.draggedNode) {
+          d3.event.sourceEvent.stopPropagation();
+          ctrl.draggedNode.px = newCoordinates[0];
+          ctrl.draggedNode.py = newCoordinates[1];
+          ctrl.draggedNode.fixed = true;
+          ctrl.force.start();
+        }
+      }
+      function onDragEnd () {
+        d3.event.sourceEvent.stopPropagation();
+        ctrl.draggedNode = undefined;
+      }
+    };
+
+    ctrl.setUpSemanticZoom = function () {
+      var canvas = d3.select(ctrl.canvas)
+        .call(ctrl.zoom.on("zoom", semanticZoom));
+      function semanticZoom () {
+        var translateX;
+        var translateY;
+        if (ctrl.draggedNode) {
+          return;
+        }
+        if (ctrl.zoom.scale() === 1) {
+          translateY = 0;
+          translateX = 0;
+        } else {
+          translateX = Math.min(0, Math.max(ctrl.zoom.translate()[0], ctrl.canvasW - ctrl.canvasW * ctrl.zoom.scale()));
+          translateY = Math.min(0, Math.max(ctrl.zoom.translate()[1], ctrl.canvasH - ctrl.canvasH * ctrl.zoom.scale()));
+        }
+        ctrl.zoom.translate([translateX, translateY]);
+        ctrl.transform = {
+          x: translateX,
+          y: translateY,
+          k: ctrl.zoom.scale(),
+        };
+        ctrl.draw();
+      }
+    };
+
+    //return coordinates after canvas transformation
+    ctrl.transformApply = function (x, y) {
+      return {
+        x: x * ctrl.transform.k + ctrl.transform.x,
+        y: y * ctrl.transform.k  + ctrl.transform.y,
+      };
+    };
+
+    ctrl.draw = function () {
+      ctrl.context.clearRect(0, 0, ctrl.canvasW, ctrl.canvasH, d3.scale.linear());
+      ctrl.drawEdges();
+      ctrl.drawNodes();
+      if (!ctrl.showNodeLabels && ctrl.tooltip && ctrl.tooltip.title) {
+        ctrl.drawNodeTooltip(ctrl.tooltip);
+      }
+      if (!ctrl.showEdgeLabels && ctrl.highlightEdge && ctrl.highlightEdge.title) {
+        ctrl.drawEdgeTooltip(ctrl.highlightEdge);
+      }
+      if (ctrl.transform.scale !== 1) {
+        ctrl.drawMiniMap();
+      }
+    };
+
+    ctrl.setUpForce = function () {
+      ctrl.force = d3.layout.force()
+        .charge(function (d, i) {
+          return i ? -500 : -2500;
+        })
+        .friction(0.5)
+        .chargeDistance(400)
+        .gravity(0)
+        .linkDistance(100)
+        .linkStrength(1)
+        .size([ctrl.canvasW, ctrl.canvasH]);
+
+      ctrl.edges.forEach(function (edge) {
+        edge.source = _.findIndex(ctrl.nodes, function (node) {
+          return node.id === edge.source;
+        });
+        edge.target = _.findIndex(ctrl.nodes, function (node) {
+          return node.id === edge.target;
+        });
+      });
+
+      ctrl.force.nodes(ctrl.nodes)
+        .links(ctrl.edges)
+        .on('tick', tick)
+        .start();
+
+      function tick () {
+        ctrl.draw();
+      }
+    };
+
+    ctrl.shouldHighlightEdge = function(edge) {
+      return _.isEqual(edge, ctrl.highlightEdge) || _.find(ctrl.edgeMultiSelect, function(e) {
+        return _.isEqual(edge, e);
+      });
+    };
+
+    ctrl.drawEdges = function () {
+      var quadtree = d3.geom.quadtree(ctrl.force.nodes());
+      ctrl.context.strokeStyle = 'rgba(150, 150, 150, 0.6)';
+      ctrl.context.lineWidth = 1;
+      ctrl.edges.forEach(function (d) {
+        var sourceCoords;
+        var targetCoords;
+        var highlight = ctrl.shouldHighlightEdge(d);
+        ctrl.context.strokeStyle = highlight ? 'rgba(0, 0, 0, .5)' : 'rgba(150, 150, 150, 0.6)';
+        quadtree.visit(ctrl.collide(d.source));
+        quadtree.visit(ctrl.collide(d.target));
+        sourceCoords = ctrl.transformApply(d.source.x, d.source.y);
+        targetCoords = ctrl.transformApply(d.target.x, d.target.y);
+        ctrl.context.beginPath();
+        ctrl.context.setLineDash([]);
+        if (d.lineStyle === 'dashed') {
+          ctrl.context.setLineDash([10, 5]);
+        }
+        ctrl.context.moveTo(sourceCoords.x, sourceCoords.y);
+        ctrl.context.lineTo(targetCoords.x, targetCoords.y);
+        if (highlight) {
+          ctrl.context.shadowBlur = 15;
+          ctrl.context.shadowOffsetX = 3;
+          ctrl.context.shadowOffsetY = 3;
+          ctrl.context.shadowColor = "rgba(0, 0, 0, 0.5)";
+        } else {
+          ctrl.context.shadowColor = 'transparent';
+        }
+        ctrl.context.stroke();
+        ctrl.context.shadowColor = 'transparent';
+        if (ctrl.showEdgeLabels && d.title) {
+          ctrl.drawEdgeTooltip(d);
+        }
+      });
+    };
+
+    ctrl.normalizeNode = function (node) {
+      node.size = node.size || 17;
+      node.x = Math.max(node.size + 1, Math.min(ctrl.canvasW - node.size - 1, node.x));
+      node.y = Math.max(node.size + 1, Math.min(ctrl.canvasH - node.size - 1, node.y));
+    };
+
+    ctrl.shouldHighlightNode = function(node) {
+      return (ctrl.tooltip && ctrl.tooltip.id === node.id) || _.find(ctrl.nodeMultiSelect, function(n) {
+        return n.id === node.id;
+      });
+    };
+
+    ctrl.drawNodes = function () {
+      var coordinates;
+      ctrl.nodes.forEach(function (node) {
+        var imgR = node.size * 0.7;
+        var highlight = ctrl.shouldHighlightNode(node);
+        ctrl.normalizeNode(node);
+        ctrl.context.globalAlpha = node.opacity || 1;
+        coordinates = ctrl.transformApply(node.x, node.y);
+        ctrl.context.beginPath();
+        ctrl.context.fillStyle = node.fill || "#FFFFFF";
+        ctrl.context.strokeStyle = node.borderColor || '#000000';
+        ctrl.context.lineWidth = highlight ? 3 : 1;
+        ctrl.context.arc(coordinates.x, coordinates.y, node.size, 0, 2 * Math.PI);
+        if (highlight) {
+          ctrl.context.shadowBlur = 20;
+          ctrl.context.shadowOffsetX = 5;
+          ctrl.context.shadowOffsetY = 5;
+          ctrl.context.shadowColor = "rgba(0, 0, 0, 0.5)";
+        } else {
+          ctrl.context.shadowColor = 'transparent';
+        }
+        ctrl.context.fill();
+        ctrl.context.shadowColor = 'transparent';
+        ctrl.context.stroke();
+
+        if (node.utilization) {
+          ctrl.context.beginPath();
+          ctrl.context.lineWidth = 5;
+          ctrl.context.arc(coordinates.x, coordinates.y, node.size, 0, ((node.utilization / 100) * 2) * Math.PI);
+          ctrl.context.strokeStyle = pfUtils.utilizationToColor(node.utilization);
+          ctrl.context.stroke();
+        }
+
+        //draw icon
+        ctrl.context.beginPath();
+        ctrl.context.fillStyle = node.iconColor || '#000000';
+        ctrl.context.textAlign = 'center';
+        ctrl.context.textBaseline = 'middle';
+        if (node.fonticon) {
+          ctrl.context.font = 'normal normal normal ' + node.size + 'px FontAwesome';
+          ctrl.context.fillText(ctrl.cachedIcons[node.fonticon].char, coordinates.x, coordinates.y);
+        } else if (node.fileicon) {
+          ctrl.context.drawImage(ctrl.cachedIcons[node.fileicon].img, coordinates.x - imgR, coordinates.y - imgR, 2 * imgR, 2 * imgR);
+        } else {
+          ctrl.context.font = 2 * imgR + 'px ' + ctrl.cachedIcons.unknown.font;
+          ctrl.context.fillText(ctrl.cachedIcons.unknown.char, coordinates.x, coordinates.y);
+        }
+        ctrl.context.globalAlpha = 1;
+        if (ctrl.showNodeLabels && node.title) {
+          ctrl.drawNodeTooltip(node);
+        }
+      });
+    };
+
+    ctrl.drawMiniMap = function () {
+      var mapX = 0.9 * ctrl.canvasW - 10,
+        mapY = 10,
+        mapW = 0.1 * ctrl.canvasW,
+        mapH = 0.1 * ctrl.canvasH;
+      ctrl.context.lineWidth = 1;
+      ctrl.context.beginPath();
+      ctrl.context.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+      ctrl.context.fillStyle = 'rgba(252, 252, 252, 0.3)';
+
+      ctrl.context.rect(mapX, mapY, mapW, mapH);
+      ctrl.context.stroke();
+      ctrl.context.fill();
+
+      ctrl.context.beginPath();
+      ctrl.context.fillStyle = 'rgba(224, 224, 224, 0.3)';
+      ctrl.context.rect(
+        mapX - ctrl.transform.x / ctrl.transform.k * 0.1,
+        mapY - ctrl.transform.y / ctrl.transform.k * 0.1,
+        mapW / ctrl.transform.k,
+        mapH / ctrl.transform.k
+      );
+      ctrl.context.stroke();
+      ctrl.context.fill();
+    };
+
+    ctrl.drawEdgeTooltip = function (edge) {
+      var sourceCoordinates = ctrl.transformApply(edge.source.x, edge.source.y);
+      var targetCoordinates = ctrl.transformApply(edge.target.x, edge.target.y);
+      var midX = sourceCoordinates.x + (targetCoordinates.x - sourceCoordinates.x) * 0.50;
+      var midY = sourceCoordinates.y + (targetCoordinates.y - sourceCoordinates.y) * 0.50;
+      var tmp = document.createElement('span');
+      var tooltipWidth;
+
+      tmp.innerHTML = edge.title;
+      tmp.style.padding = '10px';
+      tmp.style.visibility = 'hidden';
+      tmp.style.display = 'inline-block';
+      //to measure width, element must be in the actual DOM
+      document.body.appendChild(tmp);
+      tooltipWidth = tmp.clientWidth;ctrl.context.beginPath();
+
+      ctrl.context.fillStyle = "#000000";
+      ctrl.context.font = ctrl.tooltipStyle.size + 'px ' + ctrl.tooltipStyle.font;
+      ctrl.context.fillText(edge.title, midX, midY + 5);
+
+      //clean the temp element
+      document.body.removeChild(tmp);
+    };
+
+    ctrl.drawNodeTooltip = function (node) {
+      var coordinates = ctrl.transformApply(node.x, node.y);
+      var tooltipWidth = 0;
+      var offsetY = coordinates.y + node.size + ctrl.tooltipStyle.size + 5;
+      //to determine the width of tooltip, we will use actual widt of html element, because the measureText function return inconsistent values
+      var tmp = document.createElement('span');
+      tmp.innerHTML = node.title;
+      tmp.style.padding = '10px';
+      tmp.style.visibility = 'hidden';
+      tmp.style.display = 'inline-block';
+      //to measure width, element must be in the actual DOM
+      document.body.appendChild(tmp);
+      tooltipWidth = tmp.clientWidth;
+
+      ctrl.context.beginPath();
+      ctrl.context.rect(coordinates.x - tooltipWidth / 2 - 5, offsetY - ctrl.tooltipStyle.size, tooltipWidth + 10, ctrl.tooltipStyle.size + 10);
+      ctrl.context.fillStyle = ctrl.tooltipStyle.background;
+      ctrl.context.fill();
+
+      ctrl.context.lineWidth = ctrl.tooltipStyle.borderWidth;
+      ctrl.context.strokeStyle = ctrl.tooltipStyle.borderColor;
+      ctrl.context.stroke();
+
+      ctrl.context.fillStyle = ctrl.tooltipStyle.textColor;
+      ctrl.context.font = ctrl.tooltipStyle.size + 'px ' + ctrl.tooltipStyle.font;
+      ctrl.context.fillText(node.title, coordinates.x, offsetY);
+
+      //clean the temp element
+      document.body.removeChild(tmp);
+    };
+
+    ctrl.loadIcons = function () {
+      var tmp = document.createElement('i');
+      var char = '';
+      var promises = [];
+      var questionCode = ctrl.findIconUnicode('fa fa-question');
+      var q = $q.defer();
+      var code = '';
+      document.body.appendChild(tmp);
+      ctrl.cachedIcons.unknown = {};
+      tmp.className = 'hidden fa fa-question';
+      char = window.getComputedStyle(tmp, ':before').content.replace(/'|"/g, '');
+      if (ctrl.IE11 && questionCode) {
+        ctrl.cachedIcons.unknown.char = String.fromCharCode(questionCode.toUpperCase().replace('\\', '0x').replace(/'|"/g, ''));
+      } else {
+        ctrl.cachedIcons.unknown.char = char;
+      }
+      ctrl.cachedIcons.unknown.font = window.getComputedStyle(tmp, ':before').fontFamily;
+      ctrl.nodes.forEach(function (node) {
+        if (node.fileicon && !ctrl.cachedIcons[node.fileicon]) {
+          ctrl.cachedIcons[node.fileicon] = {};
+          promises.push(q.promise);
+          ctrl.cachedIcons[node.fileicon].img = new Image();
+          ctrl.cachedIcons[node.fileicon].img.src = node.fileicon;
+          ctrl.cachedIcons[node.fileicon].img.onload = function () {
+            return q.resolve();
+          };
+        } else if (node.fonticon && !ctrl.cachedIcons[node.fonticon]) {
+          ctrl.cachedIcons[node.fonticon] = {};
+          tmp.className = 'hidden ' + node.fonticon;
+          char = window.getComputedStyle(tmp, ':before').content;
+          ctrl.cachedIcons[node.fonticon].char = char.replace(/'|"/g, '');
+          if (ctrl.IE11) {
+            code = ctrl.findIconUnicode(node.fonticon).toUpperCase().replace('\\', '0x');
+            ctrl.cachedIcons[node.fonticon].char = String.fromCharCode(code.replace(/'|"/g, ''));
+          }
+          ctrl.cachedIcons[node.fonticon].font = window.getComputedStyle(tmp, ':before').fontFamily;
+        }
+      });
+      document.body.removeChild(tmp);
+    };
+
+    this.collide = function (node) {
+      var r = node.size + 22,
+        nx1 = node.x - r,
+        nx2 = node.x + r,
+        ny1 = node.y - r,
+        ny2 = node.y + r;
+      return function (quad, x1, y1, x2, y2) {
+        var x, l, y, r;
+        if (quad.point && (quad.point !== node)) {
+          x = node.x - quad.point.x;
+          y = node.y - quad.point.y;
+          l = Math.sqrt(x * x + y * y);
+          r = 30 * node.size + quad.point.radius;
+          if (l < r) {
+            l = (l - r) / l * 2.5;
+            node.x -= x *= l;
+            node.y -= y *= l;
+            quad.point.x += x;
+            quad.point.y += y;
+          }
+        }
+        return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+      };
+    };
+
+    ctrl.findRules = function () {
+      var href;
+      var index;
+      var styleSheet = _.find(document.styleSheets, function(sheet) {
+        if (sheet && sheet.href) {
+          href = sheet.href;
+          index = sheet.href.lastIndexOf('/');
+          return href.substring(index) === '/patternfly.css';
+        }
+      });
+      return styleSheet ? styleSheet.rules : undefined;
+    };
+
+    ctrl.findIconUnicode = function(fonticon) {
+      var rule;
+      var className = fonticon.substring(fonticon.indexOf(' ') + 1);
+      if (ctrl.rules) {
+        rule = _.find(ctrl.rules, function(rule) {
+          if (rule && rule.selectorText) {
+            return rule.selectorText.indexOf(className + '::before') !== -1;
+          }
+        });
+      }
+      return rule ? rule.style.content : undefined;
+    };
+  }],
+});
+;/**
+ * @ngdoc directive
  * @name patternfly.charts.component:pfTopology
  * @restrict E
  *
@@ -15509,7 +17264,9 @@ angular
     mergeDeep: function (source1, source2) {
       return mergeDeep({}, angular.copy(source1), angular.copy(source2));
     },
-
+    utilizationToColor: function (utilization) {
+      return utilizationToColor(utilization);
+    },
     colorPalette: patternfly.pfPaletteColors
   });
 })();
@@ -15531,6 +17288,53 @@ function mergeDeep (dst) {
     }
   });
   return dst;
+}
+
+function utilizationToColor (number) {
+  'use strict';
+  // as the function expects a value between 0 and 1, and green = 0° and red = 120°
+  // we convert the input to the appropriate hue value
+  var invert = 100 - number;
+  var hue = invert * 1.2 / 360;
+  // we convert hsl to rgb (saturation 100%, lightness 50%)
+  var rgb = hslToRgb(hue, 1, .5);
+  // we format to css value and return
+  return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+}
+
+function hue2rgb (p, q, t) {
+  'use strict';
+  if (t < 0) {
+    t += 1;
+  }
+  if (t > 1) {
+    t -= 1;
+  }
+  if (t < 1 / 6) {
+    return p + (q - p) * 6 * t;
+  }
+  if (t < 1 / 2) {
+    return q;
+  }
+  if (t < 2 / 3) {
+    return p + (q - p) * (2 / 3 - t) * 6;
+  }
+  return p;
+}
+
+function hslToRgb (h, s, l) {
+  'use strict';
+  var r, g, b, q, p;
+  if (s === 0) {
+    r = g = b = l; // achromatic
+  } else {
+    q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+  return [Math.floor(r * 255), Math.floor(g * 255), Math.floor(b * 255)];
 }
 ;/**
  * @ngdoc directive
@@ -19146,6 +20950,11 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 
   $templateCache.put('charts/sparkline/sparkline-chart.html',
     "<span><pf-c3-chart ng-if=\"$ctrl.chartData.dataAvailable !== false\" id={{$ctrl.sparklineChartId}} config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=$ctrl.chartHeight></pf-empty-chart></span>"
+  );
+
+
+  $templateCache.put('charts/topology-map/topology-map.html',
+    "<div class=pf-topology-map><canvas id=topology-map class=topology-graph style=\"font-family: FontAwesome\"></canvas></div>"
   );
 
 

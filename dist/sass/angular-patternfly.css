@@ -513,6 +513,10 @@ pf-topology {
   fill: #1186C1;
 }
 
+.pf-topology-map canvas.topology-graph {
+  width: 100%;
+}
+
 .card-view-pf {
   overflow: auto;
   padding-left: 2px;
