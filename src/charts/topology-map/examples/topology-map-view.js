@@ -124,7 +124,7 @@
             },{
               id: 'blabla',
               title: 'testNode3',
-              fileicon: "/img/OpenShift-logo.svg",
+              fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
               iconType: "fileicon",
               size: 64,
               utilization: 25,
@@ -170,7 +170,7 @@
             "id": 5,
             "title": "Maddox",
             "size": 16,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 6,
@@ -195,7 +195,7 @@
             "id": 9,
             "title": "Stanton",
             "size": 12,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 10,
@@ -211,7 +211,7 @@
             "id": 12,
             "title": "Stephanie",
             "size": 30,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 13,
@@ -223,7 +223,7 @@
             "id": 14,
             "title": "Natalia",
             "size": 21,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 15,
@@ -247,7 +247,7 @@
             "id": 18,
             "title": "Decker",
             "size": 21,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 19,
@@ -258,7 +258,7 @@
             "id": 20,
             "title": "Coleman",
             "size": 30,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 21,
@@ -270,13 +270,13 @@
             "id": 22,
             "title": "Morton",
             "size": 28,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 23,
             "title": "Fitzpatrick",
             "size": 16,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 24,
@@ -287,7 +287,7 @@
             "id": 25,
             "title": "Kaufman",
             "size": 30,
-            fileicon: "/img/OpenShift-logo.svg",
+            fileicon: "http://www.patternfly.org/angular-patternfly/img/patternfly-orb.svg",
           },
           {
             "id": 26,
