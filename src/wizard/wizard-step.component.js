@@ -20,6 +20,7 @@
  * @param {string=} description The step description (optional)
  * @param {object} wizardData Data passed to the step that is shared by the entire wizard
  * @param {function()=} onShow The function called when the wizard shows this step
+ * @param {object=} focusSelectors Array of selectors to be used (in the order given) to find the initial focus component for the page
  * @param {boolean=} showReview Indicates whether review information should be displayed for this step when the review step is reached
  * @param {boolean=} showReviewDetails Indicators whether the review information should be expanded by default when the review step is reached
  * @param {string=} reviewTemplate The template that should be used for the review details screen
@@ -41,6 +42,7 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
     description: '@',
     wizardData: '=',
     onShow: '=?',
+    focusSelectors: '<?',
     showReview: '@?',
     showReviewDetails: '@?',
     reviewTemplate: '@?'
@@ -217,6 +219,8 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
     };
 
     ctrl.goTo = function (step) {
+      var focusElement = null;
+
       if (ctrl.wizard.isWizardDone() || !step.okToNavAway || step === ctrl.selectedStep) {
         return;
       }
@@ -231,6 +235,29 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
           if (angular.isFunction (ctrl.selectedStep.onShow)) {
             ctrl.selectedStep.onShow();
           }
+
+          // Give time for onShow to do its thing (maybe update the selectors), then time to display the elements
+          $timeout(function () {
+            if (step.focusSelectors) {
+              _.find(step.focusSelectors, function (selector) {
+                return focusElement = document.querySelector(selector);
+              });
+            }
+
+            // Default to next button if it is enabled
+            if (!focusElement && step.nextEnabled) {
+              focusElement = document.querySelector('.wizard-pf-next');
+            }
+
+            // Use cancel button if we haven't found anything else to set focus on
+            if (!focusElement) {
+              focusElement = document.querySelector('.wizard-pf-cancel');
+            }
+
+            if (focusElement) {
+              focusElement.focus();
+            }
+          }, 300);
 
           ctrl.currentStep = step.stepTitle;
 
