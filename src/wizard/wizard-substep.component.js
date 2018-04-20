@@ -16,6 +16,7 @@
 * @param {string=} description The step description
 * @param {object} wizardData Data passed to the step that is shared by the entire wizard
 * @param {function()=} onShow The function called when the wizard shows this step
+* @param {object=} focusSelectors Array of selectors to be used (in the order given) to find the initial focus component for the page
 * @param {boolean=} showReviewDetails Indicators whether the review information should be expanded by default when the review step is reached
 * @param {string=} reviewTemplate The template that should be used for the review details screen
 */
@@ -33,6 +34,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     description: '@',
     wizardData: '=',
     onShow: '=?',
+    focusSelectors: '<?',
     showReviewDetails: '@?',
     reviewTemplate: '@?'
   },

@@ -78,17 +78,8 @@
           </form>
         </pf-wizard-substep>
       </pf-wizard-step>
-      <pf-wizard-step step-title="Second Step" next-tooltip="secondStepNextTooltip" prev-tooltip="secondStepPrevTooltip" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
-        <form class="form-horizontal">
-          <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
-          <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
-            <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
-          </pf-form-group>
-          <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
-            <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
-          </pf-form-group>
-        </form>
-      </pf-wizard-step>
+      <div ng-include="'second-step.html'">
+      </div>
       <pf-wizard-step step-title="Review" next-tooltip="reviewStepNextTooltip" prev-tooltip="reviewStepPrevTooltip" substeps="true" step-id="review" step-priority="2">
         <div ng-include="'summary.html'"></div>
         <div ng-include="'deployment.html'"></div>
@@ -97,7 +88,14 @@
   </file>
   <file name="detail-page.html">
     <div ng-controller="DetailsGeneralController">
-       <pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
+       <pf-wizard-substep step-title="General"
+                          next-enabled="detailsGeneralComplete"
+                          step-id="details-general"
+                          step-priority="0"
+                          on-show="onShow"
+                          focus-selectors="focusSelectors"
+                          review-template="{{reviewTemplate}}"
+                          show-review-details="true">
          <form class="form-horizontal">
            <pf-form-group pf-label="Name" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
               <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
@@ -135,6 +133,21 @@
         <span class="wizard-pf-review-item-value">{{data.ipsum}}</span>
       </div>
     </form>
+  </div>
+  </file>
+  <file name="second-step.html">
+  <div ng-controller="SecondStepController">
+    <pf-wizard-step focus-selectors="focusSelectors" step-title="Second Step" next-tooltip="secondStepNextTooltip" prev-tooltip="secondStepPrevTooltip" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
+      <form class="form-horizontal">
+        <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
+        <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
+          <input id="step-two-new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
+        </pf-form-group>
+        <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
+          <input id="step-two-new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
+        </pf-form-group>
+      </form>
+    </pf-wizard-step>
   </div>
   </file>
   <file name="summary.html">
@@ -262,7 +275,7 @@
 
       $scope.reviewTemplate = "review-template.html";
       $scope.detailsGeneralComplete = false;
-
+      $scope.focusSelectors = ['#new-name'];
       $scope.onShow = function() { };
 
       $scope.updateName = function() {
@@ -285,6 +298,14 @@
           $scope.data = next.$ctrl.wizardData;
         }
       }
+    }
+  ]);
+
+  angular.module('patternfly.wizard').controller('SecondStepController', ['$rootScope', '$scope',
+    function ($rootScope, $scope) {
+      'use strict';
+
+      $scope.focusSelectors = ['.invalid-classname', '#step-two-new-lorem'];
     }
   ]);
 
