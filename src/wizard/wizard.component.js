@@ -165,6 +165,8 @@ angular.module('patternfly.wizard').component('pfWizard', {
     };
 
     ctrl.goTo = function (step, resetStepNav) {
+      var focusElement = null;
+
       if (ctrl.wizardDone || (ctrl.selectedStep && !ctrl.selectedStep.okToNavAway) || step === ctrl.selectedStep) {
         return;
       }
@@ -183,6 +185,28 @@ angular.module('patternfly.wizard').component('pfWizard', {
           if (angular.isFunction(step.onShow)) {
             step.onShow();
           }
+          // Give time for onShow to do its thing (maybe update the selectors), then time to display the elements
+          $timeout(function () {
+            if (step.focusSelectors) {
+              _.find(step.focusSelectors, function (selector) {
+                return focusElement = document.querySelector(selector);
+              });
+            }
+
+            // Default to next button if it is enabled
+            if (!focusElement && step.nextEnabled) {
+              focusElement = document.querySelector('.wizard-pf-next');
+            }
+
+            // Use cancel button if we haven't found anything else to set focus on
+            if (!focusElement) {
+              focusElement = document.querySelector('.wizard-pf-cancel');
+            }
+
+            if (focusElement) {
+              focusElement.focus();
+            }
+          }, 300);
         }, 100);
 
         // Make sure current step is not undefined

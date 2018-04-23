@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/wizard/examples/wizard.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/e7e02f9/src/wizard/examples/wizard.js#L320" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfWizard</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/wizard/examples/wizard.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/ff32d39/src/wizard/examples/wizard.js#L341" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfWizard</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.wizard</code>
 </span>
 </div>
@@ -75,7 +75,7 @@ The basic structure should be:
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-wizard-component-page patternfly-wizard-component-pfwizard-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.wizard" source-edit-deps="angular.js patternfly.form script.js" source-edit-html="index.html-93 wizard-container.html detail-page.html review-template.html review-second-template.html summary.html deployment.html" source-edit-css="" source-edit-js="script.js-94" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.wizard" source-edit-deps="angular.js patternfly.form script.js" source-edit-html="index.html-93 wizard-container.html detail-page.html review-template.html review-second-template.html second-step.html summary.html deployment.html" source-edit-css="" source-edit-js="script.js-94" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
 <pre class="prettyprint linenums" ng-set-text="index.html-93" ng-html-wrap-loaded="patternfly.wizard angular.js patternfly.form script.js"></pre>
 <script type="text/ng-template" id="index.html-93">
@@ -113,17 +113,8 @@ The basic structure should be:
         </form>
       </pf-wizard-substep>
     </pf-wizard-step>
-    <pf-wizard-step step-title="Second Step" next-tooltip="secondStepNextTooltip" prev-tooltip="secondStepPrevTooltip" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
-      <form class="form-horizontal">
-        <h5 id="example_source_wizards-should-make-use-of-substeps-consistently-throughout-this-is-an-example-only">Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h5>
-        <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
-          <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
-        </pf-form-group>
-        <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
-          <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
-        </pf-form-group>
-      </form>
-    </pf-wizard-step>
+    <div ng-include="'second-step.html'">
+    </div>
     <pf-wizard-step step-title="Review" next-tooltip="reviewStepNextTooltip" prev-tooltip="reviewStepPrevTooltip" substeps="true" step-id="review" step-priority="2">
       <div ng-include="'summary.html'"></div>
       <div ng-include="'deployment.html'"></div>
@@ -135,7 +126,14 @@ The basic structure should be:
 <pre class="prettyprint linenums" ng-set-text="detail-page.html"></pre>
 <script type="text/ng-template" id="detail-page.html">
   <div ng-controller="DetailsGeneralController">
-     <pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
+     <pf-wizard-substep step-title="General"
+                        next-enabled="detailsGeneralComplete"
+                        step-id="details-general"
+                        step-priority="0"
+                        on-show="onShow"
+                        focus-selectors="focusSelectors"
+                        review-template="{{reviewTemplate}}"
+                        show-review-details="true">
        <form class="form-horizontal">
          <pf-form-group pf-label="Name" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
             <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
@@ -179,6 +177,24 @@ The basic structure should be:
       <span class="wizard-pf-review-item-value">{{data.ipsum}}</span>
     </div>
   </form>
+</div>
+</script>
+</div>
+<div class="tab-pane" title="second-step.html">
+<pre class="prettyprint linenums" ng-set-text="second-step.html"></pre>
+<script type="text/ng-template" id="second-step.html">
+<div ng-controller="SecondStepController">
+  <pf-wizard-step focus-selectors="focusSelectors" step-title="Second Step" next-tooltip="secondStepNextTooltip" prev-tooltip="secondStepPrevTooltip" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
+    <form class="form-horizontal">
+      <h5 id="example_source_wizards-should-make-use-of-substeps-consistently-throughout-this-is-an-example-only">Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h5>
+      <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
+        <input id="step-two-new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
+      </pf-form-group>
+      <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
+        <input id="step-two-new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
+      </pf-form-group>
+    </form>
+  </pf-wizard-step>
 </div>
 </script>
 </div>
@@ -315,7 +331,7 @@ angular.module('patternfly.wizard').controller('DetailsGeneralController', ['$ro
 
     $scope.reviewTemplate = "review-template.html";
     $scope.detailsGeneralComplete = false;
-
+    $scope.focusSelectors = ['#new-name'];
     $scope.onShow = function() { };
 
     $scope.updateName = function() {
@@ -338,6 +354,14 @@ angular.module('patternfly.wizard').controller('DetailsReviewController', ['$roo
         $scope.data = next.$ctrl.wizardData;
       }
     }
+  }
+]);
+
+angular.module('patternfly.wizard').controller('SecondStepController', ['$rootScope', '$scope',
+  function ($rootScope, $scope) {
+    'use strict';
+
+    $scope.focusSelectors = ['.invalid-classname', '#step-two-new-lorem'];
   }
 ]);
 
