@@ -19620,17 +19620,8 @@ angular.module('patternfly.views').component('pfEmptyState', {
           </form>
         </pf-wizard-substep>
       </pf-wizard-step>
-      <pf-wizard-step step-title="Second Step" next-tooltip="secondStepNextTooltip" prev-tooltip="secondStepPrevTooltip" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
-        <form class="form-horizontal">
-          <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
-          <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
-            <input id="new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
-          </pf-form-group>
-          <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
-            <input id="new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
-          </pf-form-group>
-        </form>
-      </pf-wizard-step>
+      <div ng-include="'second-step.html'">
+      </div>
       <pf-wizard-step step-title="Review" next-tooltip="reviewStepNextTooltip" prev-tooltip="reviewStepPrevTooltip" substeps="true" step-id="review" step-priority="2">
         <div ng-include="'summary.html'"></div>
         <div ng-include="'deployment.html'"></div>
@@ -19639,7 +19630,14 @@ angular.module('patternfly.views').component('pfEmptyState', {
   </file>
   <file name="detail-page.html">
     <div ng-controller="DetailsGeneralController">
-       <pf-wizard-substep step-title="General" next-enabled="detailsGeneralComplete" step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
+       <pf-wizard-substep step-title="General"
+                          next-enabled="detailsGeneralComplete"
+                          step-id="details-general"
+                          step-priority="0"
+                          on-show="onShow"
+                          focus-selectors="focusSelectors"
+                          review-template="{{reviewTemplate}}"
+                          show-review-details="true">
          <form class="form-horizontal">
            <pf-form-group pf-label="Name" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" required>
               <input id="new-name" name="name" ng-model="data.name" type="text" ng-change="updateName()" required/>
@@ -19677,6 +19675,21 @@ angular.module('patternfly.views').component('pfEmptyState', {
         <span class="wizard-pf-review-item-value">{{data.ipsum}}</span>
       </div>
     </form>
+  </div>
+  </file>
+  <file name="second-step.html">
+  <div ng-controller="SecondStepController">
+    <pf-wizard-step focus-selectors="focusSelectors" step-title="Second Step" next-tooltip="secondStepNextTooltip" prev-tooltip="secondStepPrevTooltip" substeps="false" step-id="configuration" step-priority="1" show-review="true" review-template="review-second-template.html" >
+      <form class="form-horizontal">
+        <h3>Wizards should make use of substeps consistently throughout (either using them or not using them).  This is an example only.</h3>
+        <pf-form-group pf-label="Lorem" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
+          <input id="step-two-new-lorem" name="lorem" ng-model="data.lorem" type="text"/>
+        </pf-form-group>
+        <pf-form-group pf-label="Ipsum" pf-label-class="col-sm-3 col-md-2" pf-input-class="col-sm-9 col-md-10" >
+          <input id="step-two-new-ipsum" name="ipsum" ng-model="data.ipsum" type="text" />
+        </pf-form-group>
+      </form>
+    </pf-wizard-step>
   </div>
   </file>
   <file name="summary.html">
@@ -19804,7 +19817,7 @@ angular.module('patternfly.views').component('pfEmptyState', {
 
       $scope.reviewTemplate = "review-template.html";
       $scope.detailsGeneralComplete = false;
-
+      $scope.focusSelectors = ['#new-name'];
       $scope.onShow = function() { };
 
       $scope.updateName = function() {
@@ -19827,6 +19840,14 @@ angular.module('patternfly.views').component('pfEmptyState', {
           $scope.data = next.$ctrl.wizardData;
         }
       }
+    }
+  ]);
+
+  angular.module('patternfly.wizard').controller('SecondStepController', ['$rootScope', '$scope',
+    function ($rootScope, $scope) {
+      'use strict';
+
+      $scope.focusSelectors = ['.invalid-classname', '#step-two-new-lorem'];
     }
   ]);
 
@@ -20062,6 +20083,7 @@ angular.module('patternfly.wizard').component('pfWizardReviewPage', {
  * @param {string=} description The step description (optional)
  * @param {object} wizardData Data passed to the step that is shared by the entire wizard
  * @param {function()=} onShow The function called when the wizard shows this step
+ * @param {object=} focusSelectors Array of selectors to be used (in the order given) to find the initial focus component for the page
  * @param {boolean=} showReview Indicates whether review information should be displayed for this step when the review step is reached
  * @param {boolean=} showReviewDetails Indicators whether the review information should be expanded by default when the review step is reached
  * @param {string=} reviewTemplate The template that should be used for the review details screen
@@ -20083,6 +20105,7 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
     description: '@',
     wizardData: '=',
     onShow: '=?',
+    focusSelectors: '<?',
     showReview: '@?',
     showReviewDetails: '@?',
     reviewTemplate: '@?'
@@ -20259,6 +20282,8 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
     };
 
     ctrl.goTo = function (step) {
+      var focusElement = null;
+
       if (ctrl.wizard.isWizardDone() || !step.okToNavAway || step === ctrl.selectedStep) {
         return;
       }
@@ -20273,6 +20298,29 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
           if (angular.isFunction (ctrl.selectedStep.onShow)) {
             ctrl.selectedStep.onShow();
           }
+
+          // Give time for onShow to do its thing (maybe update the selectors), then time to display the elements
+          $timeout(function () {
+            if (step.focusSelectors) {
+              _.find(step.focusSelectors, function (selector) {
+                return focusElement = document.querySelector(selector);
+              });
+            }
+
+            // Default to next button if it is enabled
+            if (!focusElement && step.nextEnabled) {
+              focusElement = document.querySelector('.wizard-pf-next');
+            }
+
+            // Use cancel button if we haven't found anything else to set focus on
+            if (!focusElement) {
+              focusElement = document.querySelector('.wizard-pf-cancel');
+            }
+
+            if (focusElement) {
+              focusElement.focus();
+            }
+          }, 300);
 
           ctrl.currentStep = step.stepTitle;
 
@@ -20381,6 +20429,7 @@ angular.module('patternfly.wizard').component('pfWizardStep', {
 * @param {string=} description The step description
 * @param {object} wizardData Data passed to the step that is shared by the entire wizard
 * @param {function()=} onShow The function called when the wizard shows this step
+* @param {object=} focusSelectors Array of selectors to be used (in the order given) to find the initial focus component for the page
 * @param {boolean=} showReviewDetails Indicators whether the review information should be expanded by default when the review step is reached
 * @param {string=} reviewTemplate The template that should be used for the review details screen
 */
@@ -20398,6 +20447,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     description: '@',
     wizardData: '=',
     onShow: '=?',
+    focusSelectors: '<?',
     showReviewDetails: '@?',
     reviewTemplate: '@?'
   },
@@ -20641,6 +20691,8 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     };
 
     ctrl.goTo = function (step, resetStepNav) {
+      var focusElement = null;
+
       if (ctrl.wizardDone || (ctrl.selectedStep && !ctrl.selectedStep.okToNavAway) || step === ctrl.selectedStep) {
         return;
       }
@@ -20659,6 +20711,28 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
           if (angular.isFunction(step.onShow)) {
             step.onShow();
           }
+          // Give time for onShow to do its thing (maybe update the selectors), then time to display the elements
+          $timeout(function () {
+            if (step.focusSelectors) {
+              _.find(step.focusSelectors, function (selector) {
+                return focusElement = document.querySelector(selector);
+              });
+            }
+
+            // Default to next button if it is enabled
+            if (!focusElement && step.nextEnabled) {
+              focusElement = document.querySelector('.wizard-pf-next');
+            }
+
+            // Use cancel button if we haven't found anything else to set focus on
+            if (!focusElement) {
+              focusElement = document.querySelector('.wizard-pf-cancel');
+            }
+
+            if (focusElement) {
+              focusElement.focus();
+            }
+          }, 300);
         }, 100);
 
         // Make sure current step is not undefined
