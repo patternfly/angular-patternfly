@@ -314,6 +314,7 @@ Please ensure that your PR provides the following:
 * Detailed description of the proposed changes
 * Follows the style rules for [javascript](eslint.yaml) and [html](.htmlhintrc).
 * Rebased onto the latest master commit
+* If you would like to become a maintainer, please see our [Contributing Guide](contributing.md)
 
 ### Unit Testing Required
 
