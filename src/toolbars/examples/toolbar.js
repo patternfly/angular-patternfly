@@ -13,6 +13,10 @@
  *                          See pfSimpleFilter for filter config options.
  *     <li>.sortConfig  - (Object) Optional sort config. If undefined, no sort capabilities are shown.
  *                          See pfSort for sort config options.
+ *      <li>.bulkSelectionConfig  - (Object) Optional bulk selection config. If undefined, no bulk selection capabilities are shown.
+ *          <ul style='list-style-type: none'>
+ *          <li>.bulkSelectionFn - (function(status)) This function should accept a parameter that is the state of bulk selection.  This function should handle the (states, all, none, partially)</li>
+ *          </ul>
  *     <li>.viewsConfig  - (Object) Optional configuration settings for view type selection
  *       <ul style='list-style-type: none'>
  *         <li>.views       - (Array) List of available views for selection. See pfViewUtils for standard available views
@@ -73,10 +77,6 @@
                </li>
              </ul>
            </span>
-           <button class="btn btn-default primary-action" type="button" ng-click="doAdd()">
-             <span class="fa fa-plus"></span>
-             Add Action
-           </button>
          </actions>
         </pf-toolbar>
       </div>
@@ -422,11 +422,6 @@
             name: 'Action 1',
             title: 'Do the first thing',
             actionFn: performAction
-          },
-          {
-            name: 'Action 2',
-            title: 'Do something else',
-            actionFn: performAction
           }
         ],
         moreActions: [
@@ -467,12 +462,30 @@
         ],
         actionsInclude: true
       };
-
+      $scope.bulkSelectionChanges = function(action) {
+        var selectAll = false;
+        switch(action) {
+          case 'all':
+            selectAll = true;
+          break;
+          case 'none':
+            selectAll = false;
+          break;
+        }
+        $scope.items.map((item) => {
+          item.selected = selectAll;
+        });
+        $scope.updateItemsAvailable();
+      }
+      $scope.selectionConfig = {
+        bulkSelectionFn: $scope.bulkSelectionChanges
+      }
       $scope.toolbarConfig = {
         viewsConfig: $scope.viewsConfig,
         filterConfig: $scope.filterConfig,
         sortConfig: $scope.sortConfig,
-        actionsConfig: $scope.actionsConfig
+        actionsConfig: $scope.actionsConfig,
+        bulkSelectionConfig: $scope.selectionConfig
       };
 
       $scope.listConfig = {

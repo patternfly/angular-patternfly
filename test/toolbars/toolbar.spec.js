@@ -4,12 +4,13 @@ describe('Directive:  pfToolbar', function () {
   var element;
   var $pfViewUtils;
   var performedAction;
+  var bulkSelectionState;
 
   // load the controller's module
   beforeEach(function () {
-    module('patternfly.toolbars', 'patternfly.views', 'patternfly.filters', 'toolbars/toolbar.html',
+    module('patternfly.toolbars', 'patternfly.views', 'patternfly.bulkselection', 'patternfly.filters', 'toolbars/toolbar.html',
       'filters/simple-filter/filter.html', 'filters/simple-filter/filter-fields.html', 'filters/simple-filter/filter-results.html',
-      'sort/sort.html');
+      'sort/sort.html', 'bulkselection/bulkselection.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_, pfViewUtils) {
@@ -31,7 +32,10 @@ describe('Directive:  pfToolbar', function () {
     var performAction = function (action) {
       performedAction = action;
     };
-
+    bulkSelectionState = undefined;
+    var bulkSelectionCb = function(action) {
+      bulkSelectionState = action;
+    };
     $scope.config = {
       viewsConfig: {
         views: [$pfViewUtils.getDashboardView(), $pfViewUtils.getListView(), $pfViewUtils.getCardView(), $pfViewUtils.getTableView(), $pfViewUtils.getTopologyView()]
@@ -129,6 +133,9 @@ describe('Directive:  pfToolbar', function () {
             actionFn: performAction
           }
         ]
+      },
+      bulkSelectionConfig:{
+        bulkSelectionFn: bulkSelectionCb
       }
     };
 
@@ -300,7 +307,43 @@ describe('Directive:  pfToolbar', function () {
     active = element.find('.active');
     expect(active.length).toBe(1);
   });
+  it ('should have bulk selection menu shown', function() {
+    var bulkSelectionSelector = element.find('.bulk-selection');
+    expect(bulkSelectionSelector.length).toBe(1);
+  });
+  it('should allow bulk selection to select all', function() {
+    var bulkSelectionSelector = element.find('.bulk-selection-menuicon');
+    bulkSelectionState = 'none';
+    eventFire(bulkSelectionSelector[0], 'click');
+    $scope.$apply();
+    expect(bulkSelectionState).toBe('all');
+  });
+  it('should allow bulk selection to be toggled', function() {
+    var bulkSelectionSelector = element.find('.bulk-selection-menuicon');
+    eventFire(bulkSelectionSelector[0], 'click');
+    $scope.$apply();
+    eventFire(bulkSelectionSelector[0], 'click');
+    $scope.$apply();
+    expect(bulkSelectionState).toBe('none');
+  });
+  it ('should not show bulk selection when config is not supplied', function () {
 
+    $scope.config = {
+    };
+
+    var htmlTmp = '<pf-toolbar config="config"></pf-toolbar>';
+
+    compileHTML(htmlTmp, $scope);
+
+    bulkSelectionComponent = element.find('.bulk-selection');
+    expect(bulkSelectionComponent.length).toBe(0);
+  });
+  it('should allow bulkselection dropdown to unselect all results', function() {
+    var bulkSelectionButtons = element.find('.bulk-selection .dropdown-menu a');
+    eventFire(bulkSelectionButtons[1], 'click');
+    $scope.$apply();
+    expect(bulkSelectionState).toBe('none');
+  });
   it ('should call the callback function when a view selector clicked', function () {
     var listSelector = element.find('.toolbar-pf-view-selector .btn-link');
     var functionCalled = false;

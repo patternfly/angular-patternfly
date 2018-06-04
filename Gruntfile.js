@@ -384,6 +384,11 @@ module.exports = function (grunt) {
           src: ['form/**/*.html'],
           dest: 'templates/form.js'
         },
+        'patternfly.bulkselection': {
+          cwd: 'src/',
+          src: ['bulkselection/**/*.html'],
+          dest: 'templates/bulkselection.js'
+        },
         'patternfly.navigation': {
           cwd: 'src/',
           src: ['navigation/**/*.html'],

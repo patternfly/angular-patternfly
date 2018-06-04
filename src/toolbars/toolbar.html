@@ -2,6 +2,13 @@
   <div class="row toolbar-pf" ng-class="{'table-view-pf-toolbar': $ctrl.isTableViewSelected()}">
     <div class="col-sm-12">
       <form class="toolbar-pf-actions" ng-class="{'no-filter': !$ctrl.config.filterConfig}">
+        <div class="form-group">
+          <pf-bulk-selection ng-if="$ctrl.config.bulkSelectionConfig" 
+            total-records="$ctrl.config.filterConfig.resultsCount" 
+            selected-record-count="$ctrl.config.filterConfig.selectedCount"
+            update-selection-fn="$ctrl.config.bulkSelectionConfig.bulkSelectionFn"
+            ></pf-bulk-selection>
+        </div>
         <div class="form-group toolbar-apf-filter">
           <pf-filter-fields config="$ctrl.config.filterConfig" ng-if="$ctrl.config.filterConfig" add-filter-fn="$ctrl.addFilter"></pf-filter-fields>
         </div>

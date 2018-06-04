@@ -1,0 +1,15 @@
+<div class="btn-group bulk-selection" uib-dropdown is-open="$ctrl.menuIsOpen">
+  <button class="btn btn-default" type="button" id="selectMenu" tooltip-placement="top"
+  uib-tooltip="{{'Select'}}">
+    <span class="fa bulk-selection-menuicon" ng-class="$ctrl.menuClass" ng-click="$ctrl.toggleBulkSelection()"></span>
+    <span class="caret" uib-dropdown-toggle></span>
+  </button>
+  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="selectMenu">
+    <li>
+      <a role="menuitem" tabindex="-1" ng-click="$ctrl.updateBulkSelection('all')">All</a>
+    </li>
+    <li>
+      <a role="menuitem" tabindex="-1" ng-click="$ctrl.updateBulkSelection('none')">None</a>
+    </li>
+  </ul>
+</div>

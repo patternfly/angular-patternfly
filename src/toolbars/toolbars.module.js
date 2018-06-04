@@ -9,4 +9,5 @@ angular.module('patternfly.toolbars', [
   'patternfly.utils',
   'patternfly.filters',
   'patternfly.sort',
+  'patternfly.bulkselection',
   'patternfly.views']);
