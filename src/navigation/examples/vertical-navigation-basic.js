@@ -35,6 +35,8 @@
  *   <li>.tooltip      - (string) Tooltip to display for the badge
  *   <li>.badgeClass:  - (string) Additional class(es) to add to the badge container
  *   </ul>
+ * <li>.mobileOnly     - (boolean) When set to 'true', menu item will only be displayed when browser is in mobile mode (<768px).
+ * When <code>ignoreMobile</code> flag set to 'true', <code>mobileOnly</code> items are not displayed.
  * </ul>
  * @param {function} navigateCallback function(item) Callback method invoked on a navigation item click (one with no submenus)
  * @param {function} itemClickCallback function(item) Callback method invoked on an item click
@@ -76,7 +78,7 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <li><a href="#">Preferences</a></li>
+              <li><a href="#">User Preferences</a></li>
               <li><a href="#">Logout</a></li>
             </ul>
           </li>
@@ -392,9 +394,19 @@
            href: "#/adipscing"
         },
         {
-           title: "Lorem",
-           iconClass: "fa fa-gamepad",
-           href: "#/lorem"
+           title: "Help",
+           iconClass: "fa pficon-help",
+           href: "#/help",
+           mobileOnly: true
+        },
+        {
+           title: "User",
+           iconClass: "fa pficon-user",
+           mobileOnly: true,
+           children: [
+              { title: "User Preferences" },
+              { title: "Logout" }
+           ]
         },
         {
            title: "Exit Demo"
