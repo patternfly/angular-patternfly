@@ -26,6 +26,8 @@
  *   </ul>
  * <li>.uiSref         - (string) Optional Angular UI Router state name. If specified, href must be not defined, and vice versa.
  * <li>.uiSrefOptions  - (object) Optional object to be passed to Angular UI Router $state.go() function
+ * <li>.mobileOnly     - (boolean) When set to 'true', menu item will only be displayed when browser is in mobile mode (<768px).
+ * When <code>ignoreMobile</code> flag set to 'true', <code>mobileOnly</code> items are not displayed.
  * </ul>
  * @param {function} navigateCallback function(item) Callback method invoked on a navigation item click (one with no submenus)
  * @param {function} itemClickCallback function(item) Callback method invoked on an item click
@@ -67,7 +69,7 @@
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                <li><a href="#">Preferences</a></li>
+                <li><a href="#">User Preferences</a></li>
                 <li><a href="#">Logout</a></li>
               </ul>
             </li>
@@ -125,6 +127,36 @@
                                 </p>\
                               </div>\
                             </div>'
+            })
+            .state('help', {
+                url: '/help',
+                template: '<div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\
+                              <div class="card-pf-body" style="height: 50px;">\
+                                <p class="card-pf-aggregate-status-notifications">\
+                                  State: Help\
+                                </p>\
+                              </div>\
+                            </div>'
+            })
+            .state('user-prefs', {
+                url: '/help',
+                template: '<div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\
+                              <div class="card-pf-body" style="height: 50px;">\
+                                <p class="card-pf-aggregate-status-notifications">\
+                                  State: User Preferences\
+                                </p>\
+                              </div>\
+                            </div>'
+            })
+            .state('logout', {
+                url: '/help',
+                template: '<div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\
+                              <div class="card-pf-body" style="height: 50px;">\
+                                <p class="card-pf-aggregate-status-notifications">\
+                                  State: Logout\
+                                </p>\
+                              </div>\
+                            </div>'
             });
     })
       .controller('vertNavWithRouterController', ['$scope',
@@ -145,6 +177,21 @@
               title: "Ipsum",
               iconClass : "fa fa-space-shuttle",
               uiSref: "ipsum"
+            },
+            {
+               title: "Help",
+               iconClass: "fa pficon-help",
+               uiSref: "help",
+               mobileOnly: true
+            },
+            {
+               title: "User",
+               iconClass: "fa pficon-user",
+               mobileOnly: true,
+               children: [
+                  { title: "User Preferences", uiSref: "user-prefs" },
+                  { title: "Logout", uiSref: "logout" }
+               ]
             },
             {
               title: "Exit Demo"

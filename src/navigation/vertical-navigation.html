@@ -35,7 +35,8 @@
                        'active': item.isActive,
                        'is-hover': item.isHover,
                        'mobile-nav-item-pf': item.isMobileItem && $ctrl.showMobileSecondary,
-                       'mobile-secondary-item-pf': item.isMobileItem && $ctrl.showMobileTertiary}"
+                       'mobile-secondary-item-pf': item.isMobileItem && $ctrl.showMobileTertiary,
+                       'visible-xs': item.mobileOnly}"
             ng-mouseenter="$ctrl.handlePrimaryHover(item)" ng-mouseleave="$ctrl.handlePrimaryUnHover(item)">
           <a ng-click="$ctrl.handlePrimaryClick(item, $event)">
             <span class="{{item.iconClass}}" ng-if="item.iconClass" ng-class="{hidden: $ctrl.hiddenIcons}"
