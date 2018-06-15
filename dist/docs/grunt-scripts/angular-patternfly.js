@@ -11329,6 +11329,8 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
  *   <li>.tooltip      - (string) Tooltip to display for the badge
  *   <li>.badgeClass:  - (string) Additional class(es) to add to the badge container
  *   </ul>
+ * <li>.mobileOnly     - (boolean) When set to 'true', menu item will only be displayed when browser is in mobile mode (<768px).
+ * When <code>ignoreMobile</code> flag set to 'true', <code>mobileOnly</code> items are not displayed.
  * </ul>
  * @param {function} navigateCallback function(item) Callback method invoked on a navigation item click (one with no submenus)
  * @param {function} itemClickCallback function(item) Callback method invoked on an item click
@@ -11370,7 +11372,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <li><a href="#">Preferences</a></li>
+              <li><a href="#">User Preferences</a></li>
               <li><a href="#">Logout</a></li>
             </ul>
           </li>
@@ -11686,9 +11688,19 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
            href: "#/adipscing"
         },
         {
-           title: "Lorem",
-           iconClass: "fa fa-gamepad",
-           href: "#/lorem"
+           title: "Help",
+           iconClass: "fa pficon-help",
+           href: "#/help",
+           mobileOnly: true
+        },
+        {
+           title: "User",
+           iconClass: "fa pficon-user",
+           mobileOnly: true,
+           children: [
+              { title: "User Preferences" },
+              { title: "Logout" }
+           ]
         },
         {
            title: "Exit Demo"
@@ -11965,6 +11977,8 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
  *   </ul>
  * <li>.uiSref         - (string) Optional Angular UI Router state name. If specified, href must be not defined, and vice versa.
  * <li>.uiSrefOptions  - (object) Optional object to be passed to Angular UI Router $state.go() function
+ * <li>.mobileOnly     - (boolean) When set to 'true', menu item will only be displayed when browser is in mobile mode (<768px).
+ * When <code>ignoreMobile</code> flag set to 'true', <code>mobileOnly</code> items are not displayed.
  * </ul>
  * @param {function} navigateCallback function(item) Callback method invoked on a navigation item click (one with no submenus)
  * @param {function} itemClickCallback function(item) Callback method invoked on an item click
@@ -12006,7 +12020,7 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                <li><a href="#">Preferences</a></li>
+                <li><a href="#">User Preferences</a></li>
                 <li><a href="#">Logout</a></li>
               </ul>
             </li>
@@ -12064,6 +12078,36 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
                                 </p>\
                               </div>\
                             </div>'
+            })
+            .state('help', {
+                url: '/help',
+                template: '<div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\
+                              <div class="card-pf-body" style="height: 50px;">\
+                                <p class="card-pf-aggregate-status-notifications">\
+                                  State: Help\
+                                </p>\
+                              </div>\
+                            </div>'
+            })
+            .state('user-prefs', {
+                url: '/help',
+                template: '<div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\
+                              <div class="card-pf-body" style="height: 50px;">\
+                                <p class="card-pf-aggregate-status-notifications">\
+                                  State: User Preferences\
+                                </p>\
+                              </div>\
+                            </div>'
+            })
+            .state('logout', {
+                url: '/help',
+                template: '<div class="card-pf card-pf-accented card-pf-aggregate-status" style="height: 89px;">\
+                              <div class="card-pf-body" style="height: 50px;">\
+                                <p class="card-pf-aggregate-status-notifications">\
+                                  State: Logout\
+                                </p>\
+                              </div>\
+                            </div>'
             });
     })
       .controller('vertNavWithRouterController', ['$scope',
@@ -12084,6 +12128,21 @@ angular.module('patternfly.navigation').component('pfApplicationLauncher', {
               title: "Ipsum",
               iconClass : "fa fa-space-shuttle",
               uiSref: "ipsum"
+            },
+            {
+               title: "Help",
+               iconClass: "fa pficon-help",
+               uiSref: "help",
+               mobileOnly: true
+            },
+            {
+               title: "User",
+               iconClass: "fa pficon-user",
+               mobileOnly: true,
+               children: [
+                  { title: "User Preferences", uiSref: "user-prefs" },
+                  { title: "Logout", uiSref: "logout" }
+               ]
             },
             {
               title: "Exit Demo"
@@ -21176,7 +21235,8 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
     "                       'active': item.isActive,\n" +
     "                       'is-hover': item.isHover,\n" +
     "                       'mobile-nav-item-pf': item.isMobileItem && $ctrl.showMobileSecondary,\n" +
-    "                       'mobile-secondary-item-pf': item.isMobileItem && $ctrl.showMobileTertiary}\" ng-mouseenter=$ctrl.handlePrimaryHover(item) ng-mouseleave=$ctrl.handlePrimaryUnHover(item)><a ng-click=\"$ctrl.handlePrimaryClick(item, $event)\"><span class={{item.iconClass}} ng-if=item.iconClass ng-class=\"{hidden: $ctrl.hiddenIcons}\" uib-tooltip={{item.title}} tooltip-append-to-body=true tooltip-enable={{$ctrl.navCollapsed}} tooltip-placement=bottom tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span><div ng-if=\"$ctrl.showBadges && item.badges\" class=badge-container-pf><div class=\"badge {{badge.badgeClass}}\" ng-repeat=\"badge in item.badges\" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if=\"badge.count && badge.iconClass\" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if=\"item.children && item.children.length > 0\" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click=\"$ctrl.collapseSecondaryNav(item, $event)\" ng-class=\"{'collapsed': item.secondaryCollapsed}\"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat=\"secondaryItem in item.children\" class=list-group-item ng-class=\"{'tertiary-nav-item-pf': secondaryItem.children && secondaryItem.children.length > 0,\n" +
+    "                       'mobile-secondary-item-pf': item.isMobileItem && $ctrl.showMobileTertiary,\n" +
+    "                       'visible-xs': item.mobileOnly}\" ng-mouseenter=$ctrl.handlePrimaryHover(item) ng-mouseleave=$ctrl.handlePrimaryUnHover(item)><a ng-click=\"$ctrl.handlePrimaryClick(item, $event)\"><span class={{item.iconClass}} ng-if=item.iconClass ng-class=\"{hidden: $ctrl.hiddenIcons}\" uib-tooltip={{item.title}} tooltip-append-to-body=true tooltip-enable={{$ctrl.navCollapsed}} tooltip-placement=bottom tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span><div ng-if=\"$ctrl.showBadges && item.badges\" class=badge-container-pf><div class=\"badge {{badge.badgeClass}}\" ng-repeat=\"badge in item.badges\" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if=\"badge.count && badge.iconClass\" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if=\"item.children && item.children.length > 0\" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click=\"$ctrl.collapseSecondaryNav(item, $event)\" ng-class=\"{'collapsed': item.secondaryCollapsed}\"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat=\"secondaryItem in item.children\" class=list-group-item ng-class=\"{'tertiary-nav-item-pf': secondaryItem.children && secondaryItem.children.length > 0,\n" +
     "                             'active': secondaryItem.isActive,\n" +
     "                             'is-hover': secondaryItem.isHover,\n" +
     "                             'mobile-nav-item-pf': secondaryItem.isMobileItem}\" ng-mouseenter=$ctrl.handleSecondaryHover(secondaryItem) ng-mouseleave=$ctrl.handleSecondaryUnHover(secondaryItem)><a ng-click=\"$ctrl.handleSecondaryClick(item, secondaryItem, $event)\"><span class=list-group-item-value>{{secondaryItem.title}}</span><div ng-if=\"$ctrl.showBadges && secondaryItem.badges\" class=badge-container-pf><div class=\"badge {{badge.badgeClass}}\" ng-repeat=\"badge in secondaryItem.badges\" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if=\"badge.count && badge.iconClass\" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if=\"secondaryItem.children && secondaryItem.children.length > 0\" class=nav-pf-tertiary-nav><div class=nav-item-pf-header><a class=tertiary-collapse-toggle-pf ng-click=\"$ctrl.collapseTertiaryNav(secondaryItem, $event)\" ng-class=\"{'collapsed': secondaryItem.tertiaryCollapsed}\"></a> <span>{{secondaryItem.title}}</span></div><ul class=list-group><li ng-repeat=\"tertiaryItem in secondaryItem.children\" class=list-group-item ng-class=\"{'active': tertiaryItem.isActive}\"><a ng-click=\"$ctrl.handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)\"><span class=list-group-item-value>{{tertiaryItem.title}}</span><div ng-if=\"$ctrl.showBadges && tertiaryItem.badges\" class=badge-container-pf><div class=\"badge {{badge.badgeClass}}\" ng-repeat=\"badge in tertiaryItem.badges\" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if=\"badge.count && badge.iconClass\" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a></li></ul></div></li></ul></div></li></ul></div></nav></div>"

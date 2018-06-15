@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/navigation/examples/vertical-navigation-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/bcf6d0d/src/navigation/examples/vertical-navigation-basic.js#L646" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfVerticalNavigation - Basic</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/navigation/examples/vertical-navigation-basic.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/f3e71c9/src/navigation/examples/vertical-navigation-basic.js#L658" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfVerticalNavigation - Basic</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.navigation</code>
 </span>
 </div>
@@ -48,6 +48,8 @@ selector is added to the main content container.</p>
   <li>.tooltip      - (string) Tooltip to display for the badge
   <li>.badgeClass:  - (string) Additional class(es) to add to the badge container
   </ul>
+<li>.mobileOnly     - (boolean) When set to &#39;true&#39;, menu item will only be displayed when browser is in mobile mode (&lt;768px).
+When <code>ignoreMobile</code> flag set to &#39;true&#39;, <code>mobileOnly</code> items are not displayed.
 </ul></div></td></tr><tr><td>navigateCallback</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-navigation-component-page patternfly-navigation-component-pfverticalnavigation-basic-page"><p>function(item) Callback method invoked on a navigation item click (one with no submenus)</p>
 </div></td></tr><tr><td>itemClickCallback</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-navigation-component-page patternfly-navigation-component-pfverticalnavigation-basic-page"><p>function(item) Callback method invoked on an item click</p>
 </div></td></tr><tr><td>updateActiveItemsOnClick</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-navigation-component-page patternfly-navigation-component-pfverticalnavigation-basic-page"><p>Flag if active items should be marked on click rather than on navigation change, default: false</p>
@@ -91,7 +93,7 @@ selector is added to the main content container.</p>
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <li><a href="#">Preferences</a></li>
+            <li><a href="#">User Preferences</a></li>
             <li><a href="#">Logout</a></li>
           </ul>
         </li>
@@ -646,9 +648,19 @@ angular.module('patternfly.navigation').controller('vertNavController', ['$scope
          href: "#/adipscing"
       },
       {
-         title: "Lorem",
-         iconClass: "fa fa-gamepad",
-         href: "#/lorem"
+         title: "Help",
+         iconClass: "fa pficon-help",
+         href: "#/help",
+         mobileOnly: true
+      },
+      {
+         title: "User",
+         iconClass: "fa pficon-user",
+         mobileOnly: true,
+         children: [
+            { title: "User Preferences" },
+            { title: "Logout" }
+         ]
       },
       {
          title: "Exit Demo"
