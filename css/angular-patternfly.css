@@ -1276,3 +1276,33 @@ table.dataTable tbody td {
   max-height: 70vh;
   overflow-x: hidden;
 }
+.navbar-header.ignore-mobile {
+  float: left;
+}
+.navbar-collapse.ignore-mobile {
+  width: auto;
+  border-top: 0;
+  box-shadow: none;
+  display: block;
+}
+.navbar-collapse.ignore-mobile .navbar-nav {
+  float: left;
+  margin: 0;
+}
+.navbar-collapse.ignore-mobile .navbar-nav.navbar-right {
+  float: right;
+}
+.navbar-collapse.ignore-mobile .navbar-nav.navbar-right .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+.navbar-collapse.ignore-mobile .navbar-nav > li {
+  float: left;
+}
+.navbar-collapse.ignore-mobile .navbar-nav .open .dropdown-menu {
+  position: absolute;
+  margin-top: 0;
+  background-color: #fff;
+  border: 1px solid #bbb;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
