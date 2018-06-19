@@ -1,16 +1,16 @@
-/*! Select for DataTables 1.2.5-dev
- * 2015-2017 SpryMedia Ltd - datatables.net/license/mit
+/*! Select for DataTables 1.2.6
+ * 2015-2018 SpryMedia Ltd - datatables.net/license/mit
  */
 
 /**
  * @summary     Select for DataTables
  * @description A collection of API methods, events and buttons for DataTables
  *   that provides selection options of the items in a DataTable
- * @version     1.2.5-dev
+ * @version     1.2.6
  * @file        dataTables.select.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     datatables.net/forums
- * @copyright   Copyright 2015-2017 SpryMedia Ltd.
+ * @copyright   Copyright 2015-2018 SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -54,7 +54,7 @@ var DataTable = $.fn.dataTable;
 // Version information for debugger
 DataTable.select = {};
 
-DataTable.select.version = '1.2.5-dev';
+DataTable.select.version = '1.2.6';
 
 DataTable.select.init = function ( dt ) {
 	var ctx = dt.settings()[0];
@@ -324,6 +324,7 @@ function enableMouseSelection ( dt )
 	var container = $( dt.table().container() );
 	var ctx = dt.settings()[0];
 	var selector = ctx._select.selector;
+	var matchSelection;
 
 	container
 		.on( 'mousedown.dtSelect', selector, function(e) {
@@ -335,6 +336,10 @@ function enableMouseSelection ( dt )
 					.one('selectstart.dtSelect', selector, function () {
 						return false;
 					} );
+			}
+
+			if ( window.getSelection ) {
+				matchSelection = window.getSelection();
 			}
 		} )
 		.on( 'mouseup.dtSelect', selector, function() {
@@ -354,16 +359,17 @@ function enableMouseSelection ( dt )
 				// If the element that contains the selection is not in the table, we can ignore it
 				// This can happen if the developer selects text from the click event
 				if ( ! selection.anchorNode || $(selection.anchorNode).closest('table')[0] === dt.table().node() ) {
-					if ( $.trim(selection.toString()) !== '' ) {
+					if ( selection !== matchSelection ) {
 						return;
 					}
 				}
 			}
 
 			var ctx = dt.settings()[0];
+			var wrapperClass = dt.settings()[0].oClasses.sWrapper.replace(/ /g, '.');
 
 			// Ignore clicks inside a sub-table
-			if ( $(e.target).closest('div.dataTables_wrapper')[0] != dt.table().container() ) {
+			if ( $(e.target).closest('div.'+wrapperClass)[0] != dt.table().container() ) {
 				return;
 			}
 
