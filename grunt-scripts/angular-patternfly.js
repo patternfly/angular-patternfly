@@ -15600,6 +15600,9 @@ angular.module('patternfly.pagination').component('pfPagination', {
         } else {
           $scope.items = $scope.allItems;
         }
+        if (filters && (filters.length === 0 || filters.length > 1)) {
+          $scope.addNewComponentToDOM();
+        }
       };
 
       var filterChange = function (filters) {
