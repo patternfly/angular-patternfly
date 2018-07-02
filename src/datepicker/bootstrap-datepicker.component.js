@@ -4,13 +4,14 @@ angular.module('patternfly.datepicker').component('pfBootstrapDatepicker', {
     format: '@?',
     dateOptions: '<?',
     isOpen: '<?',
-    popupPlacement: '@?'
+    popupPlacement: '@?',
+    onDateChange: '&'
   },
   templateUrl: 'datepicker/datepicker.html',
   controller: function () {
     'use strict';
 
-    var ctrl = this;
+    var ctrl = this, prevDate;
 
     ctrl.defaultDateOptions = {
       showWeeks : false,
@@ -31,8 +32,18 @@ angular.module('patternfly.datepicker').component('pfBootstrapDatepicker', {
     };
 
     ctrl.$onChanges = function (changes) {
+      prevDate = angular.copy(ctrl.date);
       _.defaults(ctrl.isOpen, ctrl.defaultIsOpen);
     };
 
+    ctrl.$doCheck = function () {
+      // do a deep compare on data
+      if (!angular.equals(ctrl.date, prevDate)) {
+        prevDate = angular.copy(ctrl.date);
+        if (ctrl.onDateChange) {
+          ctrl.onDateChange({newDate: ctrl.date});
+        }
+      }
+    };
   }
 });
