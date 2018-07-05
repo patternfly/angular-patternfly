@@ -26,8 +26,12 @@ describe('Component:  pfBootstrapDatepicker', function () {
     $scope.dateOptions = {
       showWeeks : true
     };
+    $scope.callbackExecuted = false;
+    $scope.dateChangedCallback = function (newDate) {
+      $scope.callbackExecuted = true;
+    };
 
-    var htmlTmp = '<pf-bootstrap-datepicker date="date" format="{{format}}"></pf-bootstrap-datepicker>';
+    var htmlTmp = '<pf-bootstrap-datepicker date="date" format="{{format}}" on-date-change="dateChangedCallback(newDate)"></pf-bootstrap-datepicker>';
 
     compileHTML(htmlTmp, $scope);
   });
@@ -73,6 +77,19 @@ describe('Component:  pfBootstrapDatepicker', function () {
     week = $(element.find('.uib-weeks')[0]);
     expect($("td", week).length).toBe(8);
 
+  });
+
+  it('should execute callback when date changed', function () {
+    expect($scope.callbackExecuted).toBeFalsy();
+
+    var button = element.find('button.datepicker')[0];
+    eventFire(button, 'click');
+
+    // click on the tenth date in calendar popup
+    var dateButton = element.find('button.btn-sm')[10];
+    eventFire(dateButton, 'click');
+
+    expect($scope.callbackExecuted).toBeTruthy();
   });
 
 });
