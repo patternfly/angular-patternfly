@@ -181,7 +181,7 @@ NG_DOCS={
       "type": "directive",
       "moduleName": "patternfly.datepicker",
       "shortDescription": "A wrapper for the Angular UI datepicker.",
-      "keywords": "$scope angular api boolean bottom-left componenet configuration controller date-options dateoptions datepicker datepickerpopup dates default demobootstrapdatepicker determining directive displayed element empty format format1 function github html http https input io is-open isopen jan javascript js left mm module ng-controller object open optional patternfly pf-bootstrap-datepicker popup popup-placement popupplacement position relative script second showweeks string true ui uib-datepicker wrapper"
+      "keywords": "$scope angular api boolean bottom-left called changed class col-md-12 col-sm-2 componenet configuration control-label controller date-one date-options date-two dateone dateoptions datepicker datepickerpopup dates datetwo default defined demobootstrapdatepicker determining directive displayed element empty eventtext example-container feb firstdatechanged font-weight form-group format format1 function github html http https input io is-open isopen jan javascript js left mm module ng-controller object on-date-change open optional patternfly pf-bootstrap-datepicker picker popup popup-placement popupplacement position relative row rows script second seconddatechanged showweeks string style true ui uib-datepicker updated user wrapper"
     },
     {
       "section": "api",
