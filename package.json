@@ -61,7 +61,7 @@
     "nsp": "^2.6.1",
     "patternfly-eng-release": "^3.26.54",
     "qs": "^1.0.0",
-    "semantic-release": "^6.3.6",
+    "semantic-release": "^15.0.0",
     "send": "^0.11.1",
     "uglify-js": "^2.6.0"
   },
