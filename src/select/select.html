@@ -5,12 +5,12 @@
   </button>
   <ul uib-dropdown-menu>
     <li ng-if="$ctrl.emptyValue" ng-class="{'selected': !$ctrl.selected}">
-      <a href="javascript:void(0);" role="menuitem" tabindex="-1" ng-click="$ctrl.selectItem()">
+      <a href="#" role="menuitem" tabindex="-1" ng-click="$ctrl.selectItem($event)">
         {{$ctrl.emptyValue}}
       </a>
     </li>
     <li ng-repeat="item in $ctrl.options" ng-class="{'selected': item === $ctrl.selected}">
-      <a href="javascript:void(0);" role="menuitem" tabindex="-1" ng-click="$ctrl.selectItem(item)">
+      <a href="#" role="menuitem" tabindex="-1" ng-click="$ctrl.selectItem($event, item)">
         {{$ctrl.getDisplayValue(item)}}
       </a>
     </li>

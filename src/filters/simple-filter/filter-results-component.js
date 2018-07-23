@@ -71,8 +71,10 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       ctrl.config.itemsLabelPlural = ctrl.config.itemsLabelPlural || 'Results';
     }
 
-    function clearFilter (item) {
+    function clearFilter (evt, item) {
       var newFilters = [];
+      evt.preventDefault();
+
       ctrl.config.appliedFilters.forEach(function (filter) {
         if (item.title !== filter.title || item.value !== filter.value) {
           newFilters.push(filter);
@@ -85,7 +87,9 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       }
     }
 
-    function clearAllFilters () {
+    function clearAllFilters (evt) {
+      evt.preventDefault();
+
       ctrl.config.appliedFilters = [];
 
       if (ctrl.config.onFilterChange) {

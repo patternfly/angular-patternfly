@@ -57,8 +57,9 @@ angular.module('patternfly.filters').component('pfFilterPanelResults', {
       }
     }
 
-    function clearFilter (filter, value) {
+    function clearFilter (evt, filter, value) {
       var changedFilterId = filter.id;
+      evt.preventDefault();
 
       _.pull(filter.values, value);
 
@@ -71,7 +72,9 @@ angular.module('patternfly.filters').component('pfFilterPanelResults', {
       }
     }
 
-    function clearAllFilters () {
+    function clearAllFilters (evt) {
+      evt.preventDefault();
+
       ctrl.config.appliedFilters = [];
 
       if (ctrl.config.onFilterChange) {

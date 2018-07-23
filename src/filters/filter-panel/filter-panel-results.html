@@ -13,13 +13,13 @@
         <ul class="list-inline filter-pf-category-values">
           <li ng-repeat="value in filter.values">
             <span class="label label-info">{{value}}
-              <a href="javascript:void(0);"><span ng-click="$ctrl.clearFilter(filter, value)" class="pficon pficon-close"></span></a>
+              <a href="#"><span ng-click="$ctrl.clearFilter($event, filter, value)" class="pficon pficon-close"></span></a>
             </span>
           </li>
         </ul>
       </span>
       </li>
     </ul>
-    <p><a href="javascript:void(0);" ng-click="$ctrl.clearAllFilters()" ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p>
+    <p><a href="#" ng-click="$ctrl.clearAllFilters($event)" ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p>
   </div>
 </div>
