@@ -1,0 +1,222 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/modals/examples/modal-overlay.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/4ae52da/src/modals/examples/modal-overlay.js#L200" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfModalOverlay</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">patternfly.modals</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>The Modal Overlay pattern provides a way to quickly load and display important information to the user without navigating
+away from the current page. It utilizes the <a href="https://angular-ui.github.io/bootstrap/#modal">Angular UI modal</a>
+and Patternfly styling. Use cases for Modal Overlays can vary a great deal, but some examples include the following:</p>
+<ul>
+<li>To remind or prompt users
+<li>To load dialogs that require user input before advancing
+<li>To load tasks which require a user’s full attention, such as stepping through a wizard flow
+<li>To present important information or warnings
+</ul></div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as element:<pre class="prettyprint linenums">&lt;pf-modal-overlay
+       show-modal="{boolean}"
+       on-close="{function}"
+       modal-id="{string}"
+       modal-title="{string}"
+       modal-body-template="{string}"
+       action-buttons="{array}"
+       [title-id="{string}"]
+       [hide-close-icon="{boolean}"]
+       [background-close="{boolean}"]
+       [on-background-click="{function}"]
+       [is-form="{boolean}"]
+       [modal-body-scope="{object}"]&gt;
+&lt;/pf-modal-overlay&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>showModal</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Flag for setting modal to hide/show by default</p>
+</div></td></tr><tr><td>onClose</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Function to call when the modal is closed<br/>
+Note: the parameter passed to the on-close function must be named &#39;dismissCause&#39;</p>
+</div></td></tr><tr><td>modalId</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Id of the modal</p>
+</div></td></tr><tr><td>modalTitle</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>The title of the modal displayed in the header</p>
+</div></td></tr><tr><td>modalBodyTemplate</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Path to html template for modal body</p>
+</div></td></tr><tr><td>actionButtons</td><td><a href="" class="label type-hint type-hint-array">array</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>array of button objects. Each button can have the following properties:<br/></p>
+<ul style='list-style-type: none'>
+<li>.label        - the text to display on the button
+<li>.class        - (optional) classes to add to the button
+<li>.actionFn     - (optional) user defined function to call when the button is clicked
+<li>.isDisabled   - (optional) boolean true if the button should be disabled by default
+<li>.isCancel     - (optional) boolean true is the button should cancel and dismiss the modal
+</ul></div></td></tr><tr><td>titleId <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Id of the title. &quot;modalTitle&quot; by default</p>
+</div></td></tr><tr><td>hideCloseIcon <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Flag indicating that the modal should hide the &#39;x&#39; close icon.</p>
+</div></td></tr><tr><td>backgroundClose <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Flag indicating that the modal should close if user clicks background. False by default</p>
+</div></td></tr><tr><td>onBackgroundClick <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Function to call when the user clicks the background.
+Return true if clicking background should close the modal, false otherwise.<br/>
+Note: backgroundClose needs to be set to true in order for the onBackgroundClick event to fire.</p>
+</div></td></tr><tr><td>isForm <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Flag indicating that the modal body will contain a form which should be valid before an action button is enabled</p>
+</div></td></tr><tr><td>modalBodyScope <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Object containing the scope for the modalBodyTemplate</p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><h4 id="example_source">Source</h4>
+<div source-edit="patternfly.modals" source-edit-deps="angular.js script.js" source-edit-html="index.html-49 demo-form.html demo-info.html" source-edit-css="" source-edit-js="script.js-50" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div class="tabbable"><div class="tab-pane" title="index.html">
+<pre class="prettyprint linenums" ng-set-text="index.html-49" ng-html-wrap-loaded="patternfly.modals angular.js script.js"></pre>
+<script type="text/ng-template" id="index.html-49">
+<div ng-controller="DemoModalOverlayCtrl" class="example-container">
+   <button ng-click="open()" class="btn btn-default">Launch Form Example</button>
+   <pf-modal-overlay show-modal="showModal"
+         on-close="onClose(dismissCause)"
+         modal-id="modalId"
+         modal-title="modalTitle"
+         background-close="backgroundClose"
+         on-background-click="onBackgroundClick"
+         is-form="isForm"
+         modal-body-template="template"
+         modal-body-scope="formScope"
+         action-buttons="actionButtons">
+   </pf-modal-overlay>
+
+  <button ng-click="open2()" class="btn btn-default">Launch Confirmation Example</button>
+  <pf-modal-overlay show-modal="showModal2"
+        on-close="onClose2(dismissCause)"
+        modal-id="modalId2"
+        modal-title="modalTitle2"
+        title-id="titleId2"
+        hide-close-icon="hideCloseIcon2"
+        modal-body-template="template2"
+        action-buttons="actionButtons2">
+   </pf-modal-overlay>
+  <div>
+     <label class="actions-label">Actions: </label>
+  </div>
+  <div>
+     <textarea rows="3" class="col-md-12">{{actionsText}}</textarea>
+  </div>
+</div>
+</script>
+</div>
+<div class="tab-pane" title="demo-form.html">
+<pre class="prettyprint linenums" ng-set-text="demo-form.html"></pre>
+<script type="text/ng-template" id="demo-form.html">
+  <ng-form name="demoForm" class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-3 control-label required-pf" for="textInput">Field One</label>
+      <div class="col-sm-9">
+       <input type="text" id="textInput" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.first" ng-required="true"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
+      <div class="col-sm-9">
+        <input type="text" id="textInput2" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.second"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label" for="textInput3">Field Three</label>
+      <div class="col-sm-9">
+        <input type="text" id="textInput3" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.third"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-9">
+        <div class="checkbox">
+          <label>
+             <input type="checkbox" ng-model="$ctrl.modalBodyScope.allowBackgroundDismissal"> Allow background dismissal
+          </label>
+        </div>
+        <div ng-show="$ctrl.modalBodyScope.showNotAllowedMsg" class="col-sm-12 has-error">
+           <span class="help-block">Background dismissal is not allowed!</span>
+        </div>
+      </div>
+    </div>
+  </ng-form>
+</script>
+</div>
+<div class="tab-pane" title="demo-info.html">
+<pre class="prettyprint linenums" ng-set-text="demo-info.html"></pre>
+<script type="text/ng-template" id="demo-info.html">
+  <div class="row">
+   <div class="col-md-12">Donec consequat dignissim neque, sed suscipit quam egestas in. Fusce bibendum laoreet lectus commodo interdum. Vestibulum odio ipsum, tristique et ante vel, iaculis placerat nulla. Suspendisse iaculis urna feugiat lorem semper, ut iaculis risus tempus.</div>
+  </div>
+</script>
+</div>
+<div class="tab-pane" title="script.js">
+<pre class="prettyprint linenums" ng-set-text="script.js-50"></pre>
+<script type="text/ng-template" id="script.js-50">
+angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function( $scope ) {
+
+     $scope.actionsText = "";
+
+     // first example
+     $scope.open = function () {
+         $scope.showModal = true;
+      };
+     $scope.onClose = function(dismissCause) {
+         $scope.showModal = false;
+         $scope.actionsText = "First Modal closed via: " + dismissCause + "\n" + $scope.actionsText;
+      };
+
+     $scope.modalId = "demoModal1";
+     $scope.modalTitle = "First Demo Title";
+     $scope.backgroundClose = true;
+     $scope.onBackgroundClick = function() {
+       if(!$scope.formScope.allowBackgroundDismissal) {
+         $scope.actionsText = "Backdrop clicked, but dismissal using background is not allowed\n" + $scope.actionsText;
+         $scope.formScope.showNotAllowedMsg = true;
+         return false;
+       }
+       $scope.formScope.showNotAllowedMsg = false;
+       return true;
+     };
+     $scope.isForm = true;
+     $scope.template = "demo-form.html";
+     $scope.formScope = {
+       inputs: {
+         first: "",
+         second: "test",
+         third: ""
+       },
+       allowBackgroundDismissal: false,
+       showNotAllowedMsg: false
+     };
+     $scope.actionButtons = [
+         {
+           label: "Cancel",
+           isCancel: true
+         },
+         {
+           label: "Save",
+           class: "btn-primary custom-class",
+           actionFn: function() {
+               $scope.actionsText = "inputs {" +
+                   "\n    first: " + $scope.formScope.inputs.first +
+                   "\n    second: " + $scope.formScope.inputs.second +
+                   "\n    third: " + $scope.formScope.inputs.third +
+                   "\n}" + $scope.actionsText;
+           }
+         }];
+
+     // second example
+     $scope.open2 = function () {
+         $scope.showModal2 = true;
+      };
+     $scope.onClose2 = function(dismissCause) {
+         $scope.showModal2 = false;
+         $scope.actionsText = "Second Modal closed via: " + dismissCause + "\n" + $scope.actionsText;
+      };
+
+     $scope.modalId2 = "demoModal2";
+     $scope.modalTitle2 = "Second Demo Title";
+     $scope.titleId2 = "demoTitle2";
+     $scope.hideCloseIcon2 = true;
+     $scope.template2 = "demo-info.html";
+     $scope.actionButtons2 = [
+         {
+           label: "Cancel",
+           isCancel: true
+         },
+         {
+           label: "OK",
+           class: "btn-primary"
+         }];
+});
+</script>
+</div>
+</div><h4 id="example_demo">Demo</h4>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.modals" ng-set-html="index.html-49" ng-eval-javascript="script.js-50"></div>
+</div></div>
+</div>
