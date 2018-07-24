@@ -6,7 +6,7 @@
     </button>
     <ul uib-dropdown-menu>
       <li ng-repeat="item in $ctrl.config.fields" ng-class="{'selected': item === $ctrl.config.currentField}">
-        <a href="javascript:void(0);" class="sort-field" role="menuitem" tabindex="-1" ng-click="$ctrl.selectField(item)">
+        <a href="#" class="sort-field" role="menuitem" tabindex="-1" ng-click="$ctrl.selectField($event, item)">
           {{item.title}}
         </a>
       </li>

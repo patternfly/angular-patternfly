@@ -33,7 +33,9 @@ angular.module('patternfly.select').component('pfSelect', {
       return value;
     }
 
-    function selectItem (item) {
+    function selectItem (evt, item) {
+      evt.preventDefault();
+
       ctrl.selected = item;
       if (angular.isFunction(ctrl.onSelect)) {
         ctrl.onSelect(item);

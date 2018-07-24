@@ -58,7 +58,9 @@ angular.module('patternfly.sort').component('pfSort', {
       }
     }
 
-    function selectField (field) {
+    function selectField (evt, field) {
+      evt.preventDefault();
+
       ctrl.config.currentField = field;
 
       if (ctrl.config.onSortChange) {

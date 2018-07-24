@@ -9992,8 +9992,9 @@ angular.module('patternfly.filters').component('pfFilterPanelResults', {
       }
     }
 
-    function clearFilter (filter, value) {
+    function clearFilter (evt, filter, value) {
       var changedFilterId = filter.id;
+      evt.preventDefault();
 
       _.pull(filter.values, value);
 
@@ -10006,7 +10007,9 @@ angular.module('patternfly.filters').component('pfFilterPanelResults', {
       }
     }
 
-    function clearAllFilters () {
+    function clearAllFilters (evt) {
+      evt.preventDefault();
+
       ctrl.config.appliedFilters = [];
 
       if (ctrl.config.onFilterChange) {
@@ -10271,8 +10274,10 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       ctrl.config.itemsLabelPlural = ctrl.config.itemsLabelPlural || 'Results';
     }
 
-    function clearFilter (item) {
+    function clearFilter (evt, item) {
       var newFilters = [];
+      evt.preventDefault();
+
       ctrl.config.appliedFilters.forEach(function (filter) {
         if (item.title !== filter.title || item.value !== filter.value) {
           newFilters.push(filter);
@@ -10285,7 +10290,9 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       }
     }
 
-    function clearAllFilters () {
+    function clearAllFilters (evt) {
+      evt.preventDefault();
+
       ctrl.config.appliedFilters = [];
 
       if (ctrl.config.onFilterChange) {
@@ -14678,7 +14685,9 @@ angular.module('patternfly.pagination').component('pfPagination', {
       return value;
     }
 
-    function selectItem (item) {
+    function selectItem (evt, item) {
+      evt.preventDefault();
+
       ctrl.selected = item;
       if (angular.isFunction(ctrl.onSelect)) {
         ctrl.onSelect(item);
@@ -14894,7 +14903,9 @@ angular.module('patternfly.pagination').component('pfPagination', {
       }
     }
 
-    function selectField (field) {
+    function selectField (evt, field) {
+      evt.preventDefault();
+
       ctrl.config.currentField = field;
 
       if (ctrl.config.onSortChange) {
@@ -21157,7 +21168,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
   'use strict';
 
   $templateCache.put('filters/filter-panel/filter-panel-results.html',
-    "<div class=filter-pf><div class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? \"Results\" : $ctrl.config.resultsLabel}}</h5><p class=filter-pf-active-label ng-if=$ctrl.config.appliedFilters.length>Active filters:</p><ul class=list-inline ng-if=$ctrl.config.appliedFilters.length><li ng-repeat=\"filter in $ctrl.config.appliedFilters\" class=filter-pf-category-item><span class=\"label pf-filter-category-label\" ng-class=\"{'label-info': filter.values.length === 1, 'multiples': filter.values.length > 1}\">{{filter.title}}:<ul class=\"list-inline filter-pf-category-values\"><li ng-repeat=\"value in filter.values\"><span class=\"label label-info\">{{value}} <a href=javascript:void(0);><span ng-click=\"$ctrl.clearFilter(filter, value)\" class=\"pficon pficon-close\"></span></a></span></li></ul></span></li></ul><p><a href=javascript:void(0); ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p></div></div>"
+    "<div class=filter-pf><div class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? \"Results\" : $ctrl.config.resultsLabel}}</h5><p class=filter-pf-active-label ng-if=$ctrl.config.appliedFilters.length>Active filters:</p><ul class=list-inline ng-if=$ctrl.config.appliedFilters.length><li ng-repeat=\"filter in $ctrl.config.appliedFilters\" class=filter-pf-category-item><span class=\"label pf-filter-category-label\" ng-class=\"{'label-info': filter.values.length === 1, 'multiples': filter.values.length > 1}\">{{filter.title}}:<ul class=\"list-inline filter-pf-category-values\"><li ng-repeat=\"value in filter.values\"><span class=\"label label-info\">{{value}} <a href=#><span ng-click=\"$ctrl.clearFilter($event, filter, value)\" class=\"pficon pficon-close\"></span></a></span></li></ul></span></li></ul><p><a href=# ng-click=$ctrl.clearAllFilters($event) ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p></div></div>"
   );
 
 
@@ -21172,7 +21183,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
 
 
   $templateCache.put('filters/simple-filter/filter-results.html',
-    "<div class=filter-pf><div class=toolbar-pf-results><span ng-if=\"$ctrl.config.showTotalCountResults !== true || $ctrl.config.totalCount === undefined || $ctrl.config.appliedFilters.length === 0\"><h5 ng-if=\"$ctrl.config.resultsCount === 1\">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if=\"$ctrl.config.resultsCount !== 1\">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span> <span ng-if=\"$ctrl.config.showTotalCountResults === true && $ctrl.config.totalCount !== undefined && $ctrl.config.appliedFilters.length > 0\"><h5 ng-if=\"$ctrl.config.totalCount === 1\">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if=\"$ctrl.config.totalCount !== 1\">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span><p class=filter-pf-active-label ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active Filters:</p><ul class=list-inline ng-if=\"$ctrl.config.appliedFilters.length > 0\"><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a href=javascript:void(0);><span class=\"pficon pficon-close\" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a href=javascript:void(0); class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p><div ng-if=\"$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined\" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div></div>"
+    "<div class=filter-pf><div class=toolbar-pf-results><span ng-if=\"$ctrl.config.showTotalCountResults !== true || $ctrl.config.totalCount === undefined || $ctrl.config.appliedFilters.length === 0\"><h5 ng-if=\"$ctrl.config.resultsCount === 1\">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if=\"$ctrl.config.resultsCount !== 1\">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span> <span ng-if=\"$ctrl.config.showTotalCountResults === true && $ctrl.config.totalCount !== undefined && $ctrl.config.appliedFilters.length > 0\"><h5 ng-if=\"$ctrl.config.totalCount === 1\">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if=\"$ctrl.config.totalCount !== 1\">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span><p class=filter-pf-active-label ng-if=\"$ctrl.config.appliedFilters.length > 0\">Active Filters:</p><ul class=list-inline ng-if=\"$ctrl.config.appliedFilters.length > 0\"><li ng-repeat=\"filter in $ctrl.config.appliedFilters\"><span class=\"active-filter label label-info\">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a href=#><span class=\"pficon pficon-close\" ng-click=\"$ctrl.clearFilter($event, filter)\"></span></a></span></li></ul><p><a href=# class=clear-filters ng-click=$ctrl.clearAllFilters($event) ng-if=\"$ctrl.config.appliedFilters.length > 0\">Clear All Filters</a></p><div ng-if=\"$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined\" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div></div>"
   );
 
 
@@ -21322,7 +21333,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
   'use strict';
 
   $templateCache.put('select/select.html',
-    "<div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class=\"btn btn-default\">{{$ctrl.getDisplayValue($ctrl.selected || $ctrl.emptyValue)}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-if=$ctrl.emptyValue ng-class=\"{'selected': !$ctrl.selected}\"><a href=javascript:void(0); role=menuitem tabindex=-1 ng-click=$ctrl.selectItem()>{{$ctrl.emptyValue}}</a></li><li ng-repeat=\"item in $ctrl.options\" ng-class=\"{'selected': item === $ctrl.selected}\"><a href=javascript:void(0); role=menuitem tabindex=-1 ng-click=$ctrl.selectItem(item)>{{$ctrl.getDisplayValue(item)}}</a></li></ul></div>"
+    "<div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class=\"btn btn-default\">{{$ctrl.getDisplayValue($ctrl.selected || $ctrl.emptyValue)}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-if=$ctrl.emptyValue ng-class=\"{'selected': !$ctrl.selected}\"><a href=# role=menuitem tabindex=-1 ng-click=$ctrl.selectItem($event)>{{$ctrl.emptyValue}}</a></li><li ng-repeat=\"item in $ctrl.options\" ng-class=\"{'selected': item === $ctrl.selected}\"><a href=# role=menuitem tabindex=-1 ng-click=\"$ctrl.selectItem($event, item)\">{{$ctrl.getDisplayValue(item)}}</a></li></ul></div>"
   );
 
 }]);
@@ -21330,7 +21341,7 @@ angular.module('patternfly.wizard').component('pfWizardSubstep', {
   'use strict';
 
   $templateCache.put('sort/sort.html',
-    "<div class=sort-pf><div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class=\"btn btn-default\">{{$ctrl.config.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in $ctrl.config.fields\" ng-class=\"{'selected': item === $ctrl.config.currentField}\"><a href=javascript:void(0); class=sort-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><button class=\"btn btn-link\" type=button ng-click=$ctrl.changeDirection()><span class=sort-direction ng-class=$ctrl.getSortIconClass()></span></button></div>"
+    "<div class=sort-pf><div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class=\"btn btn-default\">{{$ctrl.config.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat=\"item in $ctrl.config.fields\" ng-class=\"{'selected': item === $ctrl.config.currentField}\"><a href=# class=sort-field role=menuitem tabindex=-1 ng-click=\"$ctrl.selectField($event, item)\">{{item.title}}</a></li></ul></div><button class=\"btn btn-link\" type=button ng-click=$ctrl.changeDirection()><span class=sort-direction ng-class=$ctrl.getSortIconClass()></span></button></div>"
   );
 
 }]);
