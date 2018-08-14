@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/modals/examples/modal-overlay.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/b589e07/src/modals/examples/modal-overlay.js#L200" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfModalOverlay</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/modals/examples/modal-overlay.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/09f41ab/src/modals/examples/modal-overlay.js#L247" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfModalOverlay</code>
 <div><span class="hint">directive in module <code ng:non-bindable="">patternfly.modals</code>
 </span>
 </div>
@@ -38,9 +38,10 @@ Note: the parameter passed to the on-close function must be named &#39;dismissCa
 <ul style='list-style-type: none'>
 <li>.label        - the text to display on the button
 <li>.class        - (optional) classes to add to the button
-<li>.actionFn     - (optional) user defined function to call when the button is clicked
+<li>.actionFn     - (optional) user defined function to call when the button is clicked. May optionally return false
+to prevent closing the modal. For example to perfrom asynchronous validations.
 <li>.isDisabled   - (optional) boolean true if the button should be disabled by default
-<li>.isCancel     - (optional) boolean true is the button should cancel and dismiss the modal
+<li>.isCancel     - (optional) boolean true if the button should cancel and dismiss the modal
 </ul></div></td></tr><tr><td>titleId <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Id of the title. &quot;modalTitle&quot; by default</p>
 </div></td></tr><tr><td>hideCloseIcon <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Flag indicating that the modal should hide the &#39;x&#39; close icon.</p>
 </div></td></tr><tr><td>backgroundClose <div><em>(optional)</em></div></td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><p>Flag indicating that the modal should close if user clicks background. False by default</p>
@@ -52,9 +53,9 @@ Note: backgroundClose needs to be set to true in order for the onBackgroundClick
 </div></td></tr></tbody></table></div>
 <h2 id="example">Example</h2>
 <div class="example"><div class="patternfly-modals-componenet-page patternfly-modals-componenet-pfmodaloverlay-page"><h4 id="example_source">Source</h4>
-<div source-edit="patternfly.modals" source-edit-deps="angular.js script.js" source-edit-html="index.html-49 demo-form.html demo-info.html" source-edit-css="" source-edit-js="script.js-50" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div source-edit="patternfly.modals.demo" source-edit-deps="angular.js modules.js script.js" source-edit-html="index.html-49 demo-form.html demo-info.html" source-edit-css="" source-edit-js="modules.js script.js-50" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
 <div class="tabbable"><div class="tab-pane" title="index.html">
-<pre class="prettyprint linenums" ng-set-text="index.html-49" ng-html-wrap-loaded="patternfly.modals angular.js script.js"></pre>
+<pre class="prettyprint linenums" ng-set-text="index.html-49" ng-html-wrap-loaded="patternfly.modals.demo angular.js modules.js script.js"></pre>
 <script type="text/ng-template" id="index.html-49">
 <div ng-controller="DemoModalOverlayCtrl" class="example-container">
    <button ng-click="open()" class="btn btn-default">Launch Form Example</button>
@@ -93,16 +94,36 @@ Note: backgroundClose needs to be set to true in order for the onBackgroundClick
 <pre class="prettyprint linenums" ng-set-text="demo-form.html"></pre>
 <script type="text/ng-template" id="demo-form.html">
   <ng-form name="demoForm" class="form-horizontal">
+    <pf-inline-notification ng-if="$ctrl.modalBodyScope.firstInputInvalid"
+      pf-notification-type="$ctrl.modalBodyScope.formErrorNotification.type"
+      pf-notification-header="$ctrl.modalBodyScope.formErrorNotification.header"
+      pf-notification-message="$ctrl.modalBodyScope.formErrorNotification.message">
+    </pf-inline-notification>
     <div class="form-group">
       <label class="col-sm-3 control-label required-pf" for="textInput">Field One</label>
-      <div class="col-sm-9">
-       <input type="text" id="textInput" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.first" ng-required="true"/>
+      <div class="col-sm-9"
+           ng-class="{ 'has-error': demoForm.fieldOne.$dirty && demoForm.fieldOne.$touched && $ctrl.modalBodyScope.firstInputInvalid}">
+       <input type="text" id="textInput" name="fieldOne" class="form-control"
+              ng-model="$ctrl.modalBodyScope.inputs.first" ng-required="true"/>
+        <div class="has-error" ng-show="$ctrl.modalBodyScope.firstInputInvalid">
+          <span class="help-block">
+            Invalid value for Field One.  Only acceptable value is 'apples'
+          </span>
+        </div>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
-      <div class="col-sm-9">
-        <input type="text" id="textInput2" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.second"/>
+      <div class="col-sm-9"
+           ng-class="{ 'has-error': demoForm.fieldTwo.$dirty && demoForm.fieldTwo.$touched && demoForm.fieldTwo.$error.maxlength}" >
+        <input type="text" name="fieldTwo" id="textInput2" class="form-control"
+               ng-model="$ctrl.modalBodyScope.inputs.second"
+               ng-maxlength="$ctrl.modalBodyScope.maxLength" />
+        <div class="has-error" ng-show="demoForm.fieldTwo.$error.maxlength">
+          <span class="help-block">
+            Field Two exceeds max length of {{$ctrl.modalBodyScope.maxLength}}!
+          </span>
+        </div>
       </div>
     </div>
     <div class="form-group">
@@ -123,6 +144,9 @@ Note: backgroundClose needs to be set to true in order for the onBackgroundClick
         </div>
       </div>
     </div>
+    <div ng-if="$ctrl.modalBodyScope.validating">
+      <div class="spinner spinner-lg blank-slate-pf-icon"></div>
+    </div>
   </ng-form>
 </script>
 </div>
@@ -134,10 +158,16 @@ Note: backgroundClose needs to be set to true in order for the onBackgroundClick
   </div>
 </script>
 </div>
+<div class="tab-pane" title="modules.js">
+<pre class="prettyprint linenums" ng-set-text="modules.js"></pre>
+<script type="text/ng-template" id="modules.js">
+  angular.module('patternfly.modals.demo', ['patternfly.modals', 'patternfly.notification']);
+</script>
+</div>
 <div class="tab-pane" title="script.js">
 <pre class="prettyprint linenums" ng-set-text="script.js-50"></pre>
 <script type="text/ng-template" id="script.js-50">
-angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function( $scope ) {
+angular.module('patternfly.modals.demo').controller('DemoModalOverlayCtrl', function( $scope, $timeout ) {
 
      $scope.actionsText = "";
 
@@ -171,7 +201,15 @@ angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function(
          third: ""
        },
        allowBackgroundDismissal: false,
-       showNotAllowedMsg: false
+       showNotAllowedMsg: false,
+       maxLength: 6,
+       firstInputInvalid: false,
+       validating: false,
+       formErrorNotification: {
+         type: "danger",
+         header: "Input is not valid.",
+         message: "Fix the errors below to continue saving."
+       }
      };
      $scope.actionButtons = [
          {
@@ -182,11 +220,22 @@ angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function(
            label: "Save",
            class: "btn-primary custom-class",
            actionFn: function() {
-               $scope.actionsText = "inputs {" +
+             $scope.actionsText = "inputs {" +
                    "\n    first: " + $scope.formScope.inputs.first +
                    "\n    second: " + $scope.formScope.inputs.second +
                    "\n    third: " + $scope.formScope.inputs.third +
                    "\n}" + $scope.actionsText;
+             $scope.formScope.firstInputInvalid = false;
+             $scope.formScope.validating = true;
+             $timeout(function () {
+               $scope.formScope.validating = false;
+               if ($scope.formScope.inputs.first === 'apples') {
+                 $scope.showModal = false;
+               } else {
+                 $scope.formScope.firstInputInvalid = true;
+               }
+             }, 3000);
+             return false;
            }
          }];
 
@@ -217,6 +266,6 @@ angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function(
 </script>
 </div>
 </div><h4 id="example_demo">Demo</h4>
-<div class="well doc-example-live animate-container" ng-embed-app="patternfly.modals" ng-set-html="index.html-49" ng-eval-javascript="script.js-50"></div>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.modals.demo" ng-set-html="index.html-49" ng-eval-javascript="modules.js script.js-50"></div>
 </div></div>
 </div>

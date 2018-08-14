@@ -2,7 +2,7 @@
   'use strict';
 
   var patternfly = {
-    version: "3.51.0"
+    version: "3.54.1"
   };
 
   // definition of breakpoint sizes for tablet and desktop modes
@@ -13,10 +13,13 @@
 
   window.patternfly = patternfly;
 
-})(window);
+})(typeof window !== 'undefined' ? window : global);
 
 (function (window) {
   'use strict';
+
+  // Ensure we are assigning these to the patternfly property of the window argument, and not the implicit global patternfly
+  var patternfly = window.patternfly;
 
   // Util: PatternFly Palette colors
   patternfly.pfPaletteColors = {
@@ -101,11 +104,14 @@
     red400:        '#470000',
     red500:        '#2c0000'
   };
-})(window);
+})(typeof window !== 'undefined' ? window : global);
 
 
 (function (window) {
   'use strict';
+
+  // Ensure we are assigning these to the patternfly property of the window argument, and not the implicit global patternfly
+  var patternfly = window.patternfly;
 
   // Util: PatternFly C3 Chart Defaults
   patternfly.pfSetDonutChartTitle = function (selector, primary, secondary) {
@@ -549,4 +555,4 @@
       getDefaultSingleAreaConfig: getDefaultSingleAreaConfig
     };
   };
-})(window);
+})(typeof window !== 'undefined' ? window : global);

@@ -10898,9 +10898,10 @@ angular.module('patternfly.filters').component('pfFilterResults', {
  * <ul style='list-style-type: none'>
  * <li>.label        - the text to display on the button
  * <li>.class        - (optional) classes to add to the button
- * <li>.actionFn     - (optional) user defined function to call when the button is clicked
+ * <li>.actionFn     - (optional) user defined function to call when the button is clicked. May optionally return false
+ * to prevent closing the modal. For example to perfrom asynchronous validations.
  * <li>.isDisabled   - (optional) boolean true if the button should be disabled by default
- * <li>.isCancel     - (optional) boolean true is the button should cancel and dismiss the modal
+ * <li>.isCancel     - (optional) boolean true if the button should cancel and dismiss the modal
  * </ul>
  * @param {string=} titleId Id of the title. "modalTitle" by default
  * @param {boolean=} hideCloseIcon Flag indicating that the modal should hide the 'x' close icon.
@@ -10912,7 +10913,11 @@ angular.module('patternfly.filters').component('pfFilterResults', {
  * @param {object=} modalBodyScope Object containing the scope for the modalBodyTemplate
  *
  * @example
- <example module="patternfly.modals">
+ <example module="patternfly.modals.demo">
+
+ <file name="modules.js">
+   angular.module('patternfly.modals.demo', ['patternfly.modals', 'patternfly.notification']);
+ </file>
 
  <file name="index.html">
  <div ng-controller="DemoModalOverlayCtrl" class="example-container">
@@ -10949,7 +10954,7 @@ angular.module('patternfly.filters').component('pfFilterResults', {
  </file>
 
  <file name="script.js">
- angular.module('patternfly.modals').controller('DemoModalOverlayCtrl', function( $scope ) {
+ angular.module('patternfly.modals.demo').controller('DemoModalOverlayCtrl', function( $scope, $timeout ) {
 
       $scope.actionsText = "";
 
@@ -10983,7 +10988,15 @@ angular.module('patternfly.filters').component('pfFilterResults', {
           third: ""
         },
         allowBackgroundDismissal: false,
-        showNotAllowedMsg: false
+        showNotAllowedMsg: false,
+        maxLength: 6,
+        firstInputInvalid: false,
+        validating: false,
+        formErrorNotification: {
+          type: "danger",
+          header: "Input is not valid.",
+          message: "Fix the errors below to continue saving."
+        }
       };
       $scope.actionButtons = [
           {
@@ -10994,11 +11007,22 @@ angular.module('patternfly.filters').component('pfFilterResults', {
             label: "Save",
             class: "btn-primary custom-class",
             actionFn: function() {
-                $scope.actionsText = "inputs {" +
+              $scope.actionsText = "inputs {" +
                     "\n    first: " + $scope.formScope.inputs.first +
                     "\n    second: " + $scope.formScope.inputs.second +
                     "\n    third: " + $scope.formScope.inputs.third +
                     "\n}" + $scope.actionsText;
+              $scope.formScope.firstInputInvalid = false;
+              $scope.formScope.validating = true;
+              $timeout(function () {
+                $scope.formScope.validating = false;
+                if ($scope.formScope.inputs.first === 'apples') {
+                  $scope.showModal = false;
+                } else {
+                  $scope.formScope.firstInputInvalid = true;
+                }
+              }, 3000);
+              return false;
             }
           }];
 
@@ -11030,16 +11054,36 @@ angular.module('patternfly.filters').component('pfFilterResults', {
 
  <file name="demo-form.html">
    <ng-form name="demoForm" class="form-horizontal">
+     <pf-inline-notification ng-if="$ctrl.modalBodyScope.firstInputInvalid"
+       pf-notification-type="$ctrl.modalBodyScope.formErrorNotification.type"
+       pf-notification-header="$ctrl.modalBodyScope.formErrorNotification.header"
+       pf-notification-message="$ctrl.modalBodyScope.formErrorNotification.message">
+     </pf-inline-notification>
      <div class="form-group">
        <label class="col-sm-3 control-label required-pf" for="textInput">Field One</label>
-       <div class="col-sm-9">
-        <input type="text" id="textInput" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.first" ng-required="true"/>
+       <div class="col-sm-9"
+            ng-class="{ 'has-error': demoForm.fieldOne.$dirty && demoForm.fieldOne.$touched && $ctrl.modalBodyScope.firstInputInvalid}">
+        <input type="text" id="textInput" name="fieldOne" class="form-control"
+               ng-model="$ctrl.modalBodyScope.inputs.first" ng-required="true"/>
+         <div class="has-error" ng-show="$ctrl.modalBodyScope.firstInputInvalid">
+           <span class="help-block">
+             Invalid value for Field One.  Only acceptable value is 'apples'
+           </span>
+         </div>
        </div>
      </div>
      <div class="form-group">
        <label class="col-sm-3 control-label" for="textInput2">Field Two</label>
-       <div class="col-sm-9">
-         <input type="text" id="textInput2" class="form-control" ng-model="$ctrl.modalBodyScope.inputs.second"/>
+       <div class="col-sm-9"
+            ng-class="{ 'has-error': demoForm.fieldTwo.$dirty && demoForm.fieldTwo.$touched && demoForm.fieldTwo.$error.maxlength}" >
+         <input type="text" name="fieldTwo" id="textInput2" class="form-control"
+                ng-model="$ctrl.modalBodyScope.inputs.second"
+                ng-maxlength="$ctrl.modalBodyScope.maxLength" />
+         <div class="has-error" ng-show="demoForm.fieldTwo.$error.maxlength">
+           <span class="help-block">
+             Field Two exceeds max length of {{$ctrl.modalBodyScope.maxLength}}!
+           </span>
+         </div>
        </div>
      </div>
      <div class="form-group">
@@ -11059,6 +11103,9 @@ angular.module('patternfly.filters').component('pfFilterResults', {
             <span class="help-block">Background dismissal is not allowed!</span>
          </div>
        </div>
+     </div>
+     <div ng-if="$ctrl.modalBodyScope.validating">
+       <div class="spinner spinner-lg blank-slate-pf-icon"></div>
      </div>
    </ng-form>
  </file>
@@ -11091,9 +11138,10 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       'use strict';
 
       var ctrl = this;
+      var modalInstance;
 
       ctrl.open = function () {
-        $uibModal.open({
+        modalInstance = $uibModal.open({
           component: 'pfModalOverlayContent',
           backdrop: ctrl.backgroundClose ? true : 'static',
           resolve: {
@@ -11125,8 +11173,9 @@ angular.module('patternfly.filters').component('pfFilterResults', {
               return ctrl.actionButtons;
             }
           }
-        })
-          .result.then(
+        });
+
+        modalInstance.result.then(
           function (dismissCause) {
             ctrl.close({'dismissCause': dismissCause}); // closed
           },
@@ -11143,8 +11192,12 @@ angular.module('patternfly.filters').component('pfFilterResults', {
       };
 
       ctrl.$onChanges = function (changesObj) {
-        if (changesObj.showModal && changesObj.showModal.currentValue === true) {
-          ctrl.open();
+        if (changesObj.showModal) {
+          if (changesObj.showModal.currentValue === true) {
+            ctrl.open();
+          } else if (changesObj.showModal.currentValue === false && modalInstance) {
+            modalInstance.dismiss('showModal set to false');
+          }
         }
       };
     }]
@@ -11175,9 +11228,12 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
 
       ctrl.ok = function (label, actionFn) {
         if (typeof actionFn === "function") {
-          actionFn();
+          if (actionFn() !== false) {
+            ctrl.close({$value: label});
+          }
+        } else {
+          ctrl.close({$value: label});
         }
-        ctrl.close({$value: label});
       };
 
       ctrl.cancel = function (actionFn) {
