@@ -1,0 +1,90 @@
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/datepicker/examples/bootstrap.datepicker.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/09f41ab/src/datepicker/examples/bootstrap.datepicker.js#L75" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">pfBootstrapDatepicker</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">patternfly.datepicker</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="patternfly-datepicker-componenet-page patternfly-datepicker-componenet-pfbootstrapdatepicker-page"><p>A wrapper for the Angular UI <a href="http://angular-ui.github.io/bootstrap/#!#datepickerPopup">datepicker</a>.</p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as attribute<pre class="prettyprint linenums">&lt;pf-bootstrap-datepicker pf-bootstrap-datepicker
+     date="{date}"
+     format="{string}"
+     on-date-change="{function}"
+     is-open="{boolean}"
+     popup-placement="{string}"
+     date-options="{object}"&gt;
+   ...
+&lt;/pf-bootstrap-datepicker&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>date</td><td><a href="" class="label type-hint type-hint-date">date</a></td><td><div class="patternfly-datepicker-componenet-page patternfly-datepicker-componenet-pfbootstrapdatepicker-page"><p>Must be a Javascript Date - to be displayed in the input. Can be left empty.</p>
+</div></td></tr><tr><td>format</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-datepicker-componenet-page patternfly-datepicker-componenet-pfbootstrapdatepicker-page"><p>Optional date format for displayed dates (&#39;MM/dd/yyyy&#39; by default).</p>
+</div></td></tr><tr><td>on-date-change</td><td><a href="" class="label type-hint type-hint-function">function</a></td><td><div class="patternfly-datepicker-componenet-page patternfly-datepicker-componenet-pfbootstrapdatepicker-page"><p>Optional user defined function which is called when the date is changed by the picker.<br/></p>
+</div></td></tr><tr><td>isOpen</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="patternfly-datepicker-componenet-page patternfly-datepicker-componenet-pfbootstrapdatepicker-page"><p>Optional boolean for determining whether or not to have the datepicker default to open (false by default).</p>
+</div></td></tr><tr><td>popupPlacement</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="patternfly-datepicker-componenet-page patternfly-datepicker-componenet-pfbootstrapdatepicker-page"><p>Optional configuration string used to position the popup datepicker relative to the input element. See <a href="https://angular-ui.github.io/bootstrap/#datepickerPopup">Angular UI Datepicker Popup</a>.</p>
+</div></td></tr><tr><td>dateOptions</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="patternfly-datepicker-componenet-page patternfly-datepicker-componenet-pfbootstrapdatepicker-page"><p>Optional uib-datepicker configuration object. See <a href="https://angular-ui.github.io/bootstrap/#datepicker">Angular UI Datepicker</a>.</p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="patternfly-datepicker-componenet-page patternfly-datepicker-componenet-pfbootstrapdatepicker-page"><h4 id="example_source">Source</h4>
+<div source-edit="patternfly.datepicker" source-edit-deps="angular.js script.js" source-edit-html="index.html-35" source-edit-css="" source-edit-js="script.js-36" source-edit-json="" source-edit-unit="" source-edit-scenario=""></div>
+<div class="tabbable"><div class="tab-pane" title="index.html">
+<pre class="prettyprint linenums" ng-set-text="index.html-35" ng-html-wrap-loaded="patternfly.datepicker angular.js script.js"></pre>
+<script type="text/ng-template" id="index.html-35">
+     <div ng-controller="DemoBootstrapDatepicker" class="row example-container">
+       <div class="form-group">
+         <label class="col-sm-2 control-label" for="date-one">Date One:</label>
+           <pf-bootstrap-datepicker
+                  id="date-one"
+                  date="dateOne"
+                  on-date-change="firstDateChanged(newDate)">
+           </pf-bootstrap-datepicker>
+         <label class="col-sm-2 control-label" for="date-one">Date Two:</label>
+           <pf-bootstrap-datepicker
+                  id="date-two"
+                  date="dateTwo"
+                  format="{{format1}}"
+                  is-open="isOpen"
+                  popup-placement="{{popupPlacement}}"
+                  date-options="dateOptions"
+                  on-date-change="secondDateChanged(newDate)">
+           </pf-bootstrap-datepicker>
+       </div>
+       <div class="col-md-12">
+         <label style="font-weight:normal;vertical-align:center;">Events: </label>
+       </div>
+       <div class="col-md-12">
+         <textarea rows="10" class="col-md-12">{{eventText}}</textarea>
+       </div>
+     </div>
+  </script>
+</div>
+<div class="tab-pane" title="script.js">
+<pre class="prettyprint linenums" ng-set-text="script.js-36"></pre>
+<script type="text/ng-template" id="script.js-36">
+  angular.module('patternfly.datepicker').controller('DemoBootstrapDatepicker', function( $scope ) {
+     $scope.eventText = '';
+
+     // first datepicker
+     $scope.dateOne = new Date("Jan 1, 2000");
+     $scope.firstDateChanged = function(date) {
+       $scope.eventText = 'Date One Updated to: ' + date + '\r\n' + $scope.eventText;
+     };
+
+     // second datepicker
+     $scope.dateTwo = new Date("Feb 1, 2000");
+     $scope.format1 = "MM/dd/yy";
+     $scope.dateOptions = {
+       showWeeks : true
+     };
+     $scope.isOpen = true;
+     $scope.popupPlacement = "bottom-left";
+
+     $scope.secondDateChanged = function(date) {
+         $scope.eventText = 'Date Two Updated to: ' + date + '\r\n' + $scope.eventText;
+      };
+  });
+  </script>
+</div>
+</div><h4 id="example_demo">Demo</h4>
+<div class="well doc-example-live animate-container" ng-embed-app="patternfly.datepicker" ng-set-html="index.html-35" ng-eval-javascript="script.js-36"></div>
+</div></div>
+</div>
