@@ -19,9 +19,10 @@ angular.module('patternfly.modals')
       'use strict';
 
       var ctrl = this;
+      var modalInstance;
 
       ctrl.open = function () {
-        $uibModal.open({
+        modalInstance = $uibModal.open({
           component: 'pfModalOverlayContent',
           backdrop: ctrl.backgroundClose ? true : 'static',
           resolve: {
@@ -53,8 +54,9 @@ angular.module('patternfly.modals')
               return ctrl.actionButtons;
             }
           }
-        })
-          .result.then(
+        });
+
+        modalInstance.result.then(
           function (dismissCause) {
             ctrl.close({'dismissCause': dismissCause}); // closed
           },
@@ -71,8 +73,12 @@ angular.module('patternfly.modals')
       };
 
       ctrl.$onChanges = function (changesObj) {
-        if (changesObj.showModal && changesObj.showModal.currentValue === true) {
-          ctrl.open();
+        if (changesObj.showModal) {
+          if (changesObj.showModal.currentValue === true) {
+            ctrl.open();
+          } else if (changesObj.showModal.currentValue === false && modalInstance) {
+            modalInstance.dismiss('showModal set to false');
+          }
         }
       };
     }
@@ -103,9 +109,12 @@ angular.module('patternfly.modals').component('pfModalOverlayContent', {
 
       ctrl.ok = function (label, actionFn) {
         if (typeof actionFn === "function") {
-          actionFn();
+          if (actionFn() !== false) {
+            ctrl.close({$value: label});
+          }
+        } else {
+          ctrl.close({$value: label});
         }
-        ctrl.close({$value: label});
       };
 
       ctrl.cancel = function (actionFn) {
