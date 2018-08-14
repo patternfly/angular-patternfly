@@ -59,7 +59,7 @@
     "karma-phantomjs-launcher": "^1.0.4",
     "matchdep": "0.3.0",
     "nsp": "^2.6.1",
-    "patternfly-eng-release": "^3.26.54",
+    "patternfly-eng-release": "^3.26.74",
     "qs": "^1.0.0",
     "semantic-release": "^15.0.0",
     "send": "^0.11.1",
@@ -98,9 +98,9 @@
     "help": "grunt help",
     "serve": "grunt serve",
     "start": "grunt serve",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "semantic-release-post": "semantic-release post",
-    "semantic-release-pre": "semantic-release pre"
+    "semantic-release": "semantic-release --pre && npm publish && semantic-release --post",
+    "semantic-release-post": "semantic-release --post",
+    "semantic-release-pre": "semantic-release --pre"
   },
   "repository": {
     "type": "git",

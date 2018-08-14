@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - '4'
+  - '8'
 
 cache:
   directories:
@@ -17,7 +17,7 @@ env:
     - TRIGGER_REPO_BRANCH: "master"
 
 before_install:
-  - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
+  - npm install -g npm@5.4.0
   - npm install -g bower grunt-cli
   - npm install patternfly-eng-release
 
