@@ -21,6 +21,7 @@ angular.module('patternfly.table').component('pfTableView', {
 
     ctrl.selectAll = false;
     ctrl.dtInstance = {};
+    ctrl.dropdownClass = 'dropdown';
 
     ctrl.defaultDtOptions = {
       autoWidth: false,
