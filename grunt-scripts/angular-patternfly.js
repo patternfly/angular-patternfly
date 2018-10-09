@@ -15960,6 +15960,7 @@ angular.module('patternfly.pagination').component('pfPagination', {
 
     ctrl.selectAll = false;
     ctrl.dtInstance = {};
+    ctrl.dropdownClass = 'dropdown';
 
     ctrl.defaultDtOptions = {
       autoWidth: false,
