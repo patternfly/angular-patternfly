@@ -887,6 +887,10 @@ table.dataTable tbody td {
   width: 13px;
 }
 
+.table-view-pf-actions .dropup {
+  height: 100%;
+}
+
 .wizard-pf-footer .btn-cancel.wizard-pf-cancel-no-back {
   margin-right: 0;
 }

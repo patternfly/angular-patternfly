@@ -2161,6 +2161,27 @@ select.selectpicker {
   white-space: nowrap;
   word-wrap: normal;
 }
+.fixed-height-accordion-pf {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+}
+.fixed-height-accordion-pf .panel {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+}
+.fixed-height-accordion-pf .panel.panel-open {
+  -ms-flex: 1;
+      flex: 1;
+}
+.fixed-height-accordion-pf .panel .collapse.in {
+  -ms-flex: 1;
+      flex: 1;
+  overflow-y: auto;
+}
 .about-modal-pf {
   background-color: #292e34;
   background-image: url("../img/bg-modal-about-pf.png");
@@ -2638,11 +2659,27 @@ select.selectpicker {
 .blank-slate-pf .blank-slate-pf-secondary-action {
   margin-top: 20px;
 }
-.blank-slate-pf button {
-  margin-right: 5px;
+.blank-slate-pf .blank-slate-pf-secondary-action a {
+  display: inline-block;
+  padding: 5px 15px;
 }
-.blank-slate-pf button:last-of-type {
-  margin-right: 0;
+.blank-slate-pf .blank-slate-pf-secondary-action a + a:before {
+  background-color: #8b8d8f;
+  content: "";
+  display: inline-block;
+  height: 10px;
+  left: calc(-15px - 2px);
+  position: relative;
+  width: 1px;
+}
+.blank-slate-pf button {
+  margin-bottom: 5px;
+}
+.blank-slate-pf.blank-slate-content-pf {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 20px;
 }
 .combobox-container.combobox-selected .glyphicon-remove {
   display: inline-block;
@@ -4239,6 +4276,10 @@ fieldset[disabled] .btn-experimental-pf.active {
 .filter-pf-select-dropdown .caret {
   font-style: normal;
 }
+.filter-pf-select-dropdown.filter-selected {
+  font-style: normal;
+  color: inherit;
+}
 .filter-pf-active-label {
   margin-right: 5px;
 }
@@ -4347,6 +4388,9 @@ fieldset[disabled] .btn-experimental-pf.active {
 }
 .pficon-domain:before {
   content: "\e919";
+}
+.pficon-drag-drop:before {
+  content: "\e950";
 }
 .pficon-edit:before {
   content: "\e60a";
@@ -5680,14 +5724,17 @@ a.disabled {
 .login-pf .container .submit {
   text-align: right;
 }
+.login-pf-page {
+  padding-top: 20px;
+}
 .login-pf-page .login-pf-brand {
-  margin-top: 20px;
+  margin-top: 0px;
   max-width: 360px;
   width: 70%;
 }
 @media (min-width: 768px) {
   .login-pf-page .login-pf-brand {
-    margin-top: 62px;
+    margin-top: 22px;
   }
 }
 .login-pf-page .login-pf-page-header {
@@ -5743,11 +5790,10 @@ a.disabled {
 }
 @media (min-width: 768px) {
   .login-pf-page .login-pf-header {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
   }
 }
-.login-pf-page .login-pf-header h1,
-.login-pf-page .login-pf-header p {
+.login-pf-page .login-pf-header h1 {
   text-align: center;
 }
 .login-pf-page .login-pf-header h1 {
@@ -5799,6 +5845,12 @@ a.disabled {
       justify-content: center;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
+  padding-bottom: 50px;
+}
+@media (min-width: 768px) {
+  .login-pf-page .login-pf-page-footer {
+    padding-bottom: 100px;
+  }
 }
 .login-pf-page .login-pf-page-footer-links {
   display: -ms-flexbox;
@@ -7650,16 +7702,18 @@ table.dataTable th:active {
 .bootstrap-datetimepicker-widget .today-button-pf:before {
   content: "Today";
 }
-.bootstrap-datetimepicker-widget.timepicker-sbs .datepicker,
-.bootstrap-datetimepicker-widget.timepicker-sbs .accordion-toggle {
-  border-right: 1px solid #d1d1d1;
-}
-.bootstrap-datetimepicker-widget.timepicker-sbs .timepicker {
-  padding-left: 0;
-  margin-top: 50px;
-}
-.bootstrap-datetimepicker-widget.timepicker-sbs .picker-switch {
-  width: 50%;
+@media (min-width: 992px) {
+  .bootstrap-datetimepicker-widget.timepicker-sbs .datepicker,
+  .bootstrap-datetimepicker-widget.timepicker-sbs .accordion-toggle {
+    border-right: 1px solid #d1d1d1;
+  }
+  .bootstrap-datetimepicker-widget.timepicker-sbs .timepicker {
+    padding-left: 0;
+    margin-top: 50px;
+  }
+  .bootstrap-datetimepicker-widget.timepicker-sbs .picker-switch {
+    width: 50%;
+  }
 }
 .bootstrap-datetimepicker-widget a[data-action] {
   border: 0;
