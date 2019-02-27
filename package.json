@@ -2,7 +2,7 @@
   "author": "Red Hat",
   "name": "angular-patternfly",
   "version": "0.0.0-semantically-released",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "description": "Angular extension of the PatternFly project.",
   "keywords": [
     "angular",
