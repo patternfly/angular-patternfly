@@ -308,13 +308,13 @@ module.exports = function (grunt) {
           ]
         }
       },
-      // karma: {
-      //   unit: {
-      //     configFile: 'test/karma.conf.js',
-      //     singleRun: true,
-      //     browsers: ['PhantomJS']
-      //   }
-      // },
+      karma: {
+        unit: {
+          configFile: 'test/karma.conf.js',
+          singleRun: true,
+          browsers: ['PhantomJS']
+        }
+      },
       coveralls: {
         options: {
           debug: true,
@@ -349,6 +349,7 @@ module.exports = function (grunt) {
             'node_modules/angular-animate/angular-animate.js',
             'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
             'misc/angular-bootstrap-prettify.js',
+            'misc/docs2.js',
             'node_modules/lodash/lodash.min.js',
             'dist/angular-patternfly.js',
             'node_modules/angular-ui-router/release/angular-ui-router.min.js',

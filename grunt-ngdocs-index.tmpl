@@ -51,7 +51,7 @@
       <% if(!deferLoad) { %>
       addTag('script', {src: 'js/angular-bootstrap.js'}, sync);
       addTag('script', {src: 'js/docs-setup.js'}, sync);
-      addTag('script', {src: 'js/docs.js'}, sync);
+      addTag('script', {src: 'grunt-scripts/docs2.js'}, sync);
       <% } %>
       function addTag(name, attributes, sync) {
         var el = document.createElement(name),

@@ -22,6 +22,7 @@ module.exports = function (config) {
       'node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
       'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
       'misc/angular-bootstrap-prettify.js',
+      'misc/docs2.js',
       'node_modules/angularjs-datatables/dist/angular-datatables.min.js',
       'node_modules/lodash/lodash.js',
       'misc/test-lib/helpers.js',
