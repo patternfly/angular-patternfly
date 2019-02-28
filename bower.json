@@ -37,20 +37,20 @@
     "url": "git://github.com/patternfly/angular-patternfly.git"
   },
   "dependencies": {
-    "angular": "1.5.*",
-    "angular-animate": "1.5.*",
+    "angular": "^1.6.10",
+    "angular-animate": "^1.6.10",
     "angular-bootstrap": "2.2.x",
     "angular-dragdrop": "1.0.13",
     "angularjs-datatables": "^0.5.9",
     "angular-drag-and-drop-lists": "2.0.0",
-    "angular-sanitize": "1.5.*",
+    "angular-sanitize": "^1.6.10",
     "datatables.net": "^1.10.12",
     "datatables.net-select": "~1.2.0",
     "lodash": "4.x",
     "patternfly": ">=3.36.0"
   },
   "devDependencies": {
-    "angular-mocks": "1.5.*",
+    "angular-mocks": "^1.6.10",
     "angular-ui-router": "^1.0.0-beta.3"
   },
   "overrides": {
