@@ -1,4 +1,4 @@
-<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/notification/notification.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/17b1120/src/notification/notification.js#L99" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">Notification</code>
+<a href="https://github.com/patternfly/angular-patternfly/edit/master/src/notification/notification.js" class="improve-docs"><i class="icon-edit"> </i>Improve this doc</a><a href="https://github.com/patternfly/angular-patternfly/blob/master/src/notification/notification.js#L99" class="view-source"><i class="icon-eye-open"> </i>View source</a><h1><code ng:non-bindable="">Notification</code>
 <div><span class="hint">service in module <code ng:non-bindable="">patternfly.notification</code>
 </span>
 </div>
@@ -18,13 +18,12 @@ too. This is done using the default angular.js $log service.</p>
 to be closed manually with the close button. By default, the &quot;error&quot; and &quot;httpError&quot; modes are set to persistent.
 The input is an object in format {mode: persistValue}.</p>
 <h4 id="description_configuration-example">Configuration Example</h4>
-<pre><code class="lang-js">angular.module(&#39;myApp&#39;, []).config(function (NotificationsProvider) {
+<pre><code class="language-js">angular.module(&#39;myApp&#39;, []).config(function (NotificationsProvider) {
   NotificationsProvider.setDelay(10000).setVerbose(false).setPersist({&#39;error&#39;: true, &#39;httpError&#39;: true, &#39;warn&#39;: true});
-});
-</code></pre>
+});</code></pre>
 </div></div>
 <h2 id="dependencies">Dependencies</h2>
-<ul class="dependencies"><li><code ng:non-bindable=""><a href="#/api/ng.$rootScope">$rootScope</a></code>
+<ul class="dependencies"><li><code ng:non-bindable=""><a href="#!/api/ng.$rootScope">$rootScope</a></code>
 </li>
 </ul>
 <h2 id="example">Example</h2>

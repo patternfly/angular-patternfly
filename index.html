@@ -1,3 +1,4 @@
+
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" ng-app="docsApp"  lang="en" ng-controller="DocsController"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" ng-app="docsApp"  lang="en" ng-controller="DocsController"> <![endif]-->
@@ -18,7 +19,7 @@
     // before the base attribute is added, causing 404 and terribly slow loading of the docs app.
     (function() {
       var indexFile = (location.pathname.match(/\/(index[^\.]*\.html)/) || ['', ''])[1],
-          origin, baseUrl, rUrl = /(\/?#!\/.*|\/(api)\/?(\?.*)*|\/index[^\.]*\.html.*)$/,
+          origin, baseUrl, rUrl = /(\/?#!\/.*|\/(examples|api)\/?(\?.*)*|\/index[^\.]*\.html.*)$/,
           headEl = document.getElementsByTagName('head')[0],
           sync = true;
 
@@ -39,23 +40,23 @@
       addTag('link', {rel: 'stylesheet', href: 'css/animations.css', type: 'text/css'});
 
       
-         addTag('link', {rel: 'stylesheet', href: 'css/jquery.dataTables.css', type: 'text/css'}, sync);
+        addTag('link', {rel: 'stylesheet', href: 'css/jquery.dataTables.css', type: 'text/css'}, sync);
       
-         addTag('link', {rel: 'stylesheet', href: 'css/patternfly.css', type: 'text/css'}, sync);
+        addTag('link', {rel: 'stylesheet', href: 'css/patternfly.css', type: 'text/css'}, sync);
       
-         addTag('link', {rel: 'stylesheet', href: 'css/patternfly-additions.css', type: 'text/css'}, sync);
+        addTag('link', {rel: 'stylesheet', href: 'css/patternfly-additions.css', type: 'text/css'}, sync);
       
-         addTag('link', {rel: 'stylesheet', href: 'css/angular-patternfly.css', type: 'text/css'}, sync);
+        addTag('link', {rel: 'stylesheet', href: 'css/angular-patternfly.css', type: 'text/css'}, sync);
       
-         addTag('link', {rel: 'stylesheet', href: 'css/patternfly-showcase.css', type: 'text/css'}, sync);
+        addTag('link', {rel: 'stylesheet', href: 'css/patternfly-showcase.css', type: 'text/css'}, sync);
       
-         addTag('link', {rel: 'stylesheet', href: 'css/ng-docs.css', type: 'text/css'}, sync);
+        addTag('link', {rel: 'stylesheet', href: 'css/ng-docs.css', type: 'text/css'}, sync);
       
-         addTag('link', {rel: 'stylesheet', href: 'css/examples.css', type: 'text/css'}, sync);
+        addTag('link', {rel: 'stylesheet', href: 'css/examples.css', type: 'text/css'}, sync);
       
 
       addTag('script', {src: 'js/google-code-prettify.js'}, sync);
-      addTag('script', {src: 'js/marked.js'}, sync);
+      addTag('script', {src: 'js/marked.min.js'}, sync);
 
       
         addTag('script', {src: 'grunt-scripts/jquery.js'}, sync);
@@ -107,9 +108,9 @@
         addTag('script', {src: 'grunt-scripts/angular-drag-and-drop-lists.js'}, sync);
       
       
-      addTag('script', {src: 'js/angular-bootstrap.js'}, sync);
-      addTag('script', {src: 'js/docs-setup.js'}, sync);
-      addTag('script', {src: 'js/docs.js'}, sync);
+        addTag('script', {src: 'js/angular-bootstrap.js'}, sync);
+        addTag('script', {src: 'js/docs-setup.js'}, sync);
+        addTag('script', {src: 'js/docs.js'}, sync);
       
       function addTag(name, attributes, sync) {
         var el = document.createElement(name),
@@ -227,9 +228,7 @@
       <div class="col-md-12">
         <!--[if lt IE 7]>
         <p class="alert alert-error">Your browser is <em>ancient!</em>
-          <a href="http://browsehappy.com/">Upgrade to a different browser</a> or
-          <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to
-          experience this site.
+          <a href="http://browsehappy.com/">Upgrade to a different browser</a> to experience this site.
         </p>
         <![endif]-->
 

@@ -3,18 +3,6 @@ img.AngularJS-small {
   height: 25px;
 }
 
-/* this is here to avoid the display=block shuffling of ngShow */
-.breadcrumb li > * {
-  float:left;
-  margin:0 2px 0 0;
-}
-
-.breadcrumb {
-  padding-top: 6px;
-  padding-bottom: 0;
-  line-height: 18px
-}
-
 .navbar img {
   max-height: 40px;
   padding-right: 20px;
@@ -25,7 +13,7 @@ img.AngularJS-small {
 }
 
 .clear-navbar {
-  margin-top: 60px;
+  margin-top: 70px;  /* increased for Bootstrap 3 */
 }
 
 .footer {
@@ -44,11 +32,51 @@ img.AngularJS-small {
   line-height: 13px;
 }
 
-/* =============================== */
+/* ============================= */
+/* Bootstrap 3 overrides and patches */
 
-.form-search {
-  margin-right: 10px;
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
 }
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+.container-fluid {
+  min-width: 305px;
+}
+
+/*control responsive navbar using ng-show, as though it is an "if" in html using 2 media sizes */
+@media (max-width: 767px) {
+  .for-sm-view-hide {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .for-lg-view-hide {
+    display: none;
+  }
+  .form-search {
+    margin-right: 10px;
+  }
+}
+
+.nav-pills.nav-stacked li {
+  margin: 0;
+  padding: 2px 15px;
+  overflow: hidden;
+  line-height: 1.1em;
+}
+
+/* =============================== */
 
 .form-search .search-query {
   width: 180px;
@@ -94,6 +122,10 @@ img.AngularJS-small {
   padding-bottom: 6px;
 }
 
+.form-search > ul.nav > li.deprecate {
+  text-decoration: line-through;
+}
+
 .form-search .well {
   border-color: #d3d3d3;
   padding: 0;
@@ -102,13 +134,14 @@ img.AngularJS-small {
 
 .form-search .well .nav-header {
   text-transform: none;
-  padding: 3px 1px;
+  padding: 3px 15px;
   margin: 0;
 }
 
 .form-search .well .nav-header a {
   text-transform: none;
   color: black;
+  padding: 3px 0;
 }
 .form-search .well .nav-header a:hover {
   background-color: inherit;
@@ -123,17 +156,27 @@ img.AngularJS-small {
 }
 
 .form-search .well .guide {
-  float: right;
+  display: block;
+  text-align: right;
   padding-top: 0;
-  color: gray;
+  color: black;
 }
 
 .form-search .module .guide {
+  float: right;
   line-height: 20px;
+  color: black;
+  font-size: 80%;
 }
 
-.match > a, .nav > .match > a:hover {
-	background-color: #dbeaf4;
+.form-search > ul.nav > li > a {
+  margin: 0;
+  padding: 3px 8px;
+  display: inline-block;
+}
+
+.guide {
+  font-size: 80%;
 }
 
 /* =============================== */
@@ -289,6 +332,7 @@ ul.events > li > h3 {
 
 .type-hint {
   display:inline-block;
+  background: #23241f;
 }
 
 .variables-matrix .type-hint {
@@ -310,7 +354,7 @@ ul.events > li > h3 {
 }
 
 .type-hint-array {
-  background:#F90;;
+  background:#F90;
 }
 
 .type-hint-boolean {
