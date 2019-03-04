@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.modals.component:pfAboutModal
+ * @name patternfly.modals.directive:pfAboutModal
  * @restrict E
  *
  * @description

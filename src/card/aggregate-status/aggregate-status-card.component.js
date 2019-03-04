@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.card.component:pfAggregateStatusCard
+ * @name patternfly.card.directive:pfAggregateStatusCard
  * @restrict E
  *
  * @param {object} status Status configuration information<br/>

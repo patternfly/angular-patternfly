@@ -50,10 +50,11 @@ describe('Directive:  pfFilter', function () {
           filterValues: [{title:'Subaru', id:'subie'}, 'Toyota'],
           filterDelimiter: '-',
           filterCategoriesPlaceholder: 'Filter by Car Model',
-          filterCategories: {subie: {
-            id: 'subie',
-            title:  'Subaru',
-            filterValues: [{title:'Outback', id:'out'}, 'Crosstrek', 'Impreza']},
+          filterCategories: {
+            subie: {
+              id: 'subie',
+              title:  'Subaru',
+              filterValues: [{title:'Outback', id:'out'}, 'Crosstrek', 'Impreza']},
             toyota: {
               id: 'toyota',
               title:  'Toyota',

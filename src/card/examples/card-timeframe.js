@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.card.component:pfCard - Timeframe Filters
+ * @name patternfly.card.directive:pfCard - Timeframe Filters
  * @restrict E
  *
  * @param {string} headTitle Title for the card

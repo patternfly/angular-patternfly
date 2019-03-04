@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.wizard.component:pfWizardStep
+ * @name patternfly.wizard.directive:pfWizardStep
  * @restrict E
  *
  * @description

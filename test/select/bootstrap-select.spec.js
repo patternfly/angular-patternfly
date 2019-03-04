@@ -9,7 +9,7 @@ describe('pf-bootstrap-select', function () {
     $compile = _$compile_;
   }));
 
-  describe('Page with pf-select directive', function () {
+  describe('Page with pf-bootstrap-select directive', function () {
 
     var compileSelect = function (markup, scope) {
       var el = $compile(markup)(scope);
@@ -45,6 +45,8 @@ describe('pf-bootstrap-select', function () {
       $scope.modelValue = $scope.options[0];
       var select = compileSelect('<select pf-bootstrap-select ng-model="modelValue" ng-options="o as o for o in options"></select>', $scope);
 
+      $scope.$digest();
+
       expect(select.text()).toBe('abc');
       expect(select).toEqualSelect([['a'], 'b', 'c']);
 
@@ -73,6 +75,8 @@ describe('pf-bootstrap-select', function () {
       $scope.options = ['a','b','c'];
       $scope.modelValue = $scope.options[0];
       var select = compileSelect('<select pf-bootstrap-select ng-model="modelValue" ng-options="o as o for o in options"></select>', $scope);
+
+      $scope.$digest();
 
       expect(select.text()).toBe('abc');
       expect(select).toEqualSelect([['a'], 'b', 'c']);

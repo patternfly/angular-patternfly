@@ -429,7 +429,7 @@ angular.module('patternfly.charts').component('pfTopology', {
             switch (iconInfo.type) {
             case 'image':
               return iconInfo.icon;
-            case "glyph":
+            default:
               return null;
             }
           })
@@ -559,7 +559,7 @@ angular.module('patternfly.charts').component('pfTopology', {
 
     function buildContextMenuOptions (popup, data) {
       if (data.item.kind === 'Tag') {
-        return false;
+        return;
       }
       addContextMenuOption(popup, 'Go to summary page', data, dblclick);
     }
@@ -617,7 +617,7 @@ angular.module('patternfly.charts').component('pfTopology', {
       case 'pending':
         return "warning";
       case 'unknown':
-      case 'terminated':
+      default:
         return "unknown";
       }
     }

@@ -116,8 +116,8 @@ angular.module('patternfly.charts').component('pfTopologyMap', {
         _.find(ctrl.nodeMultiSelect, function(n) {
           return n.id === node.id;
         }) ? _.remove(ctrl.nodeMultiSelect, function (n) {
-          return n.id === node.id;
-        }) : ctrl.nodeMultiSelect.push(node);
+            return n.id === node.id;
+          }) : ctrl.nodeMultiSelect.push(node);
       }
       if (ctrl.nodeMultiSelect.length === 0 || !addKey) {
         ctrl.nodeMultiSelect = [node];
@@ -151,8 +151,8 @@ angular.module('patternfly.charts').component('pfTopologyMap', {
               _.find(ctrl.edgeMultiSelect, function(e) {
                 return _.isEqual(e, edge);
               }) ? _.remove(ctrl.edgeMultiSelect, function (e) {
-                return _.isEqual(e, edge);
-              }) : ctrl.edgeMultiSelect.push(edge);
+                  return _.isEqual(e, edge);
+                }) : ctrl.edgeMultiSelect.push(edge);
             }
             if (ctrl.edgeMultiSelect.length === 0 || !addKey) {
               ctrl.edgeMultiSelect = [edge];
@@ -606,6 +606,7 @@ angular.module('patternfly.charts').component('pfTopologyMap', {
           index = sheet.href.lastIndexOf('/');
           return href.substring(index) === '/patternfly.css';
         }
+        return false;
       });
       return styleSheet ? styleSheet.rules : undefined;
     };
@@ -618,6 +619,7 @@ angular.module('patternfly.charts').component('pfTopologyMap', {
           if (rule && rule.selectorText) {
             return rule.selectorText.indexOf(className + '::before') !== -1;
           }
+          return false;
         });
       }
       return rule ? rule.style.content : undefined;

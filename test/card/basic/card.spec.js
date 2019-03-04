@@ -188,9 +188,11 @@ describe('Component: pfCard', function () {
     it("should show the filter in the footer if specified", function () {
 
       $scope.filterConfig = {
-        'filters' : [{label:'Last 30 Days', value:'30'},
-                     {label:'Last 15 Days', value:'15'},
-                     {label:'Today', value:'today'}],
+        'filters' : [
+          {label:'Last 30 Days', value:'30'},
+          {label:'Last 15 Days', value:'15'},
+          {label:'Today', value:'today'}
+        ],
         'callBackFn': function (f) {
           return "Footer Filter Callback Fn Called: label='" + f.label + "' value = " + f.value;
         },

@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.navigation.component:pfVerticalNavigation - Basic
+ * @name patternfly.navigation.directive:pfVerticalNavigation - Basic
  * @restrict E
  *
  * @description

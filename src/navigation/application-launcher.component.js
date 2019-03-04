@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.navigation.component:pfApplicationLauncher
+ * @name patternfly.navigation.directive:pfApplicationLauncher
  * @restrict E
  *
  * @description

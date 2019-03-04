@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.views.component:pfListView
+ * @name patternfly.views.directive:pfListView
  * @restrict E
  *
  * @description
@@ -26,7 +26,7 @@
  * <li>.compoundExpansionOnly  - (boolean) Use compound row expansion only. Hides the row expander and pointer cursor on the row while allowing the row to expand via transcluded items functionality, only valid if useExpandRows is true.
  * <li>.selectionMatchProp     - (string) Property of the items to use for determining matching, default is 'uuid'
  * <li>.selectedItems          - (array) Current set of selected items
- * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.directive:pfEmptyState Empty State} component.
  * <li>.checkDisabled          - ( function(item) ) Function to call to determine if an item is disabled, default is none
  * <li>.onCheckBoxChange       - ( function(item) ) Called to notify when a checkbox selection changes, default is none
  * <li>.onSelect               - ( function(item, event) ) Called to notify of item selection, default is none
@@ -64,8 +64,8 @@
  * @param {function (item))} menuClassForItemFn function(item) Used to specify a class for an item's dropdown kebab
  * @param {function (action, item))} updateMenuActionForItemFn function(action, item) Used to update a menu action based on the current item
  * @param {object} customScope Object containing any variables/functions used by the transcluded html, access via $ctrl.customScope.<xxx>
- * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
- * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.directive:pfEmptyState Empty State} component
+ * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.directive:pfEmptyState Empty State} component
  * @example
 <example module="patternfly.views" deps="patternfly.utils">
   <file name="index.html">
@@ -329,7 +329,7 @@
           helpLink: {
              label: 'For more information please see',
              urlLabel: 'pfExample',
-             url : '#/api/patternfly.views.component:pfEmptyState'
+             url : '#/api/patternfly.views.directive:pfEmptyState'
           }
         };
 

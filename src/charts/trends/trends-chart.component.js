@@ -8,7 +8,7 @@
  *   pfSparklineChart.
  *   <br><br>
  *   See http://c3js.org/reference.html for a full list of C3 chart options.<br>
- *   See also: {@link patternfly.charts.component:pfSparklineChart}
+ *   See also: {@link patternfly.charts.directive:pfSparklineChart}
  *
  * @param {object} config configuration settings for the trends chart:<br/>
  * <ul style='list-style-type: none'>

@@ -1,36 +1,35 @@
 angular.module('patternfly.modals')
-
-.directive("pfAboutModalTransclude", function ($parse) {
-  'use strict';
-  return {
-    link: function (scope, element, attrs) {
-      element.append($parse(attrs.pfAboutModalTransclude)(scope));
-    }
-  };
-})
-.component('pfModalContent', {
-  templateUrl: 'about-modal-template.html',
-  bindings: {
-    resolve: '<',
-    close: '&',
-    dismiss: '&'
-  },
-  controller: function () {
+  .directive("pfAboutModalTransclude", function ($parse) {
     'use strict';
-    var $ctrl = this;
-
-    $ctrl.$onInit = function () {
-      $ctrl.additionalInfo = $ctrl.resolve.additionalInfo;
-      $ctrl.copyright = $ctrl.resolve.copyright;
-      $ctrl.imgAlt = $ctrl.resolve.imgAlt;
-      $ctrl.imgSrc = $ctrl.resolve.imgSrc;
-      $ctrl.isOpen = $ctrl.resolve.isOpen;
-      $ctrl.productInfo = $ctrl.resolve.productInfo;
-      $ctrl.title = $ctrl.resolve.title;
-      $ctrl.template = $ctrl.resolve.content;
+    return {
+      link: function (scope, element, attrs) {
+        element.append($parse(attrs.pfAboutModalTransclude)(scope));
+      }
     };
-  }
-})
+  })
+  .component('pfModalContent', {
+    templateUrl: 'about-modal-template.html',
+    bindings: {
+      resolve: '<',
+      close: '&',
+      dismiss: '&'
+    },
+    controller: function () {
+      'use strict';
+      var $ctrl = this;
+
+      $ctrl.$onInit = function () {
+        $ctrl.additionalInfo = $ctrl.resolve.additionalInfo;
+        $ctrl.copyright = $ctrl.resolve.copyright;
+        $ctrl.imgAlt = $ctrl.resolve.imgAlt;
+        $ctrl.imgSrc = $ctrl.resolve.imgSrc;
+        $ctrl.isOpen = $ctrl.resolve.isOpen;
+        $ctrl.productInfo = $ctrl.resolve.productInfo;
+        $ctrl.title = $ctrl.resolve.title;
+        $ctrl.template = $ctrl.resolve.content;
+      };
+    }
+  })
   .component('pfAboutModal', {
     bindings: {
       additionalInfo: '=?',
@@ -92,14 +91,14 @@ angular.module('patternfly.modals')
             }
           }
         })
-        .result.then(
-          function () {
-            ctrl.close(); // closed
-          },
-          function () {
-            ctrl.close(); // dismissed
-          }
-        );
+          .result.then(
+            function () {
+              ctrl.close(); // closed
+            },
+            function () {
+              ctrl.close(); // dismissed
+            }
+          );
       };
       ctrl.$onInit = function () {
         if (ctrl.isOpen === undefined) {

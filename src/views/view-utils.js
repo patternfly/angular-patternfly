@@ -18,7 +18,7 @@
    *    <li>.title - (String) Optional title, uses as a tooltip for the view selector
    *    <li>.iconClass - (String) Icon class to use for the view selector
    * </ul>
-   * Please see {@link patternfly.toolbars.component:pfToolbar pfToolbar} for use in Toolbar View Switcher
+   * Please see {@link patternfly.toolbars.directive:pfToolbar pfToolbar} for use in Toolbar View Switcher
    */
   angular.module('patternfly.views').constant('pfViewUtils', {
     getDashboardView: function (title) {

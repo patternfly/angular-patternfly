@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.charts.component:pfSparklineChart
+ * @name patternfly.charts.directive:pfSparklineChart
  * @restrict E
  *
  * @description
@@ -313,6 +313,11 @@ angular.module('patternfly.charts').component('pfSparklineChart', {
             };
           } catch (e) {
           }
+
+          return {
+            top: 0,
+            left: 0
+          };
         }
       };
     };

@@ -1,5 +1,6 @@
 node_modules
 lib
+.tmp
 coverage
 docs
 dist

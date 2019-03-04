@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.notification.component:pfToastNotification
+ * @name patternfly.notification.directive:pfToastNotification
  * @restrict E
  * @scope
  *

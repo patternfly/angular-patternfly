@@ -216,6 +216,7 @@ angular.module('patternfly.views').component('pfListView', {
       if (ctrl.config.onDblClick) {
         ctrl.config.onDblClick(item, e);
       }
+      return true;
     };
 
     ctrl.checkBoxChange = function (item) {

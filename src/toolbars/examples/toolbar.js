@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.toolbars.component:pfToolbar
+ * @name patternfly.toolbars.directive:pfToolbar
  * @restrict E
  *
  * @description
@@ -489,7 +489,7 @@
         helpLink: {
            label: 'For more information please see',
            urlLabel: 'pfExample',
-           url : '#/api/patternfly.views.component:pfEmptyState'
+           url : '#/api/patternfly.views.directive:pfEmptyState'
         }
       };
 

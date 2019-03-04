@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.filters.component:pfFilterPanelResults
+ * @name patternfly.filters.directive:pfFilterPanelResults
  * @restrict E
  *
  * @description
