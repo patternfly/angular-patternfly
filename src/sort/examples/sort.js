@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.sort.component:pfSort
+ * @name patternfly.sort.directive:pfSort
  * @restrict E
  *
  * @description

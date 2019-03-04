@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.form.component:pfFormButtons
+ * @name patternfly.form.directive:pfFormButtons
  * @restrict E
  *
  * @description

@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.charts.component:pfTopology
+ * @name patternfly.charts.directive:pfTopology
  * @restrict E
  *
  * @description

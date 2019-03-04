@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.notification.component:pfNotificationDrawer
+ * @name patternfly.notification.directive:pfNotificationDrawer
  * @restrict E
  *
  * @description

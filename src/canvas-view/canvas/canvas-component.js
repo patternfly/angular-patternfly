@@ -22,24 +22,6 @@
       controller: function CanvasController ($scope, dragging, $element, $document) {
         var ctrl = this;
 
-        ctrl.chart = new pfCanvas.ChartViewModel(ctrl.chartDataModel);
-        ctrl.chartViewModel = ctrl.chart;
-
-        //
-        // Init data-model variables.
-        //
-        ctrl.draggingConnection = false;
-        ctrl.connectorSize = 6;
-        ctrl.dragSelecting = false;
-
-        //
-        // Reference to the connection, connector or node that the mouse is currently over.
-        //
-        ctrl.mouseOverConnector = null;
-        ctrl.mouseOverConnection = null;
-        ctrl.mouseOverNode = null;
-
-
         //
         // Translate the coordinates so they are relative to the svg element.
         //
@@ -364,6 +346,23 @@
           var deleteKeyCode = 46;
           var aKeyCode = 65;
           var escKeyCode = 27;
+
+          ctrl.chart = new pfCanvas.ChartViewModel(ctrl.chartDataModel);
+          ctrl.chartViewModel = ctrl.chart;
+
+          //
+          // Init data-model variables.
+          //
+          ctrl.draggingConnection = false;
+          ctrl.connectorSize = 6;
+          ctrl.dragSelecting = false;
+
+          //
+          // Reference to the connection, connector or node that the mouse is currently over.
+          //
+          ctrl.mouseOverConnector = null;
+          ctrl.mouseOverConnection = null;
+          ctrl.mouseOverNode = null;
 
           $document.find('body').keydown(function (evt) {
 

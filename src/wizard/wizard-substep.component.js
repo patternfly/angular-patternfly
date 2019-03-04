@@ -1,5 +1,5 @@
 /** @ngdoc directive
-* @name patternfly.wizard.component:pfWizardSubstep
+* @name patternfly.wizard.directive:pfWizardSubstep
 * @restrict E
 *
 * @description

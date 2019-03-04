@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.card.component:pfCard - Utilization
+ * @name patternfly.card.directive:pfCard - Utilization
  * @restrict E
  *
  * @param {string} headTitle Title for the card
@@ -108,13 +108,7 @@ angular.module('patternfly.card').component('pfCard', {
   controller: function () {
     'use strict';
     var ctrl = this;
-    if (ctrl.filter && !ctrl.currentFilter) {
-      if (ctrl.filter.defaultFilter) {
-        ctrl.currentFilter = ctrl.filter.filters[ctrl.filter.defaultFilter];
-      } else {
-        ctrl.currentFilter = ctrl.filter.filters[0];
-      }
-    }
+
     ctrl.footerCallBackFn = function () {
       ctrl.footerCallBackResult = ctrl.footer.callBackFn();
     };
@@ -138,6 +132,13 @@ angular.module('patternfly.card').component('pfCard', {
     };
 
     ctrl.$onInit = function () {
+      if (ctrl.filter && !ctrl.currentFilter) {
+        if (ctrl.filter.defaultFilter) {
+          ctrl.currentFilter = ctrl.filter.filters[ctrl.filter.defaultFilter];
+        } else {
+          ctrl.currentFilter = ctrl.filter.filters[0];
+        }
+      }
       ctrl.shouldShowTitlesSeparator = (!ctrl.showTitlesSeparator || ctrl.showTitlesSeparator === 'true');
       ctrl.showSpinner = ctrl.showSpinner === true;
     };

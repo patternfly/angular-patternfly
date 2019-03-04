@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.charts.component:pfDonutChart
+ * @name patternfly.charts.directive:pfDonutChart
  * @restrict E
  *
  * @description

@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.canvas.component:pfCanvas
+ * @name patternfly.canvas.directive:pfCanvas
  * @restrict E
  *
  * @description

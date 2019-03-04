@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.views.component:pfCardView
+ * @name patternfly.views.directive:pfCardView
  * @restrict E
  *
  * @description
@@ -21,7 +21,7 @@
  * <li>.onSelectionChange      - ( function(items) ) Called to notify when item selections change, default is none
  * <li>.onClick                - ( function(item, event) ) Called to notify when an item is clicked, default is none
  * <li>.onDblClick             - ( function(item, event) ) Called to notify when an item is double clicked, default is none
- * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
+ * <li>.itemsAvailable         - (boolean) If 'false', displays the {@link patternfly.views.directive:pfEmptyState Empty State} component.
  * </ul>
  * @param {object} pageConfig Optional pagination configuration object.  Since all properties are optional it is ok to specify: 'pageConfig = {}' to indicate that you want to
  * use pagination with the default parameters.
@@ -30,8 +30,8 @@
  *   <li>.pageSize    - (number) Optional Initial page size/display length to use. Ie. Number of "Items per Page".  Default is 10 items per page
  *   <li>.pageSizeIncrements - (Array[Number]) Optional Page size increments for the 'per page' dropdown.  If not specified, the default values are: [5, 10, 20, 40, 80, 100]
  * </ul>
- * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
- * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
+ * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.directive:pfEmptyState Empty State} component
+ * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.directive:pfEmptyState Empty State} component
  * @param {Array} items the data to be shown in the cards<br/>
  *
  * @example
@@ -278,7 +278,7 @@
           helpLink: {
             label: 'For more information please see',
             urlLabel: 'pfExample',
-            url : '#/api/patternfly.views.component:pfEmptyState'
+            url : '#/api/patternfly.views.directive:pfEmptyState'
           }
         };
 

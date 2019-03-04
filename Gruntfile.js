@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
   'use strict';
 
+  var nodeSass = require('node-sass');
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   function init () {
@@ -19,13 +20,13 @@ module.exports = function (grunt) {
               'grunt build:buttons:notification) otherwise all available modules are built.',
               'test': 'Executes the karma testsuite.',
               'watch': 'Whenever js source files (from the src directory) change, the tasks executes jslint and documentation build.',
-              'ngdocs': 'Builds documentation into docs.',
-              'ngdocs:view': 'Builds documentation into docs and runs a web server. The docs can be accessed on http://localhost:8000/',
-              'ngdocs:publish': 'Publishes the ngdocs to the dist area. This should only be done when bumping the release version.'
+              'uidocs': 'Builds documentation into docs.',
+              'uidocs:view': 'Builds documentation into docs and runs a web server. The docs can be accessed on http://localhost:8000/',
+              'uidocs:publish': 'Publishes the uidocs to the dist area. This should only be done when bumping the release version.'
             },
             groups: {
               'Basic project tasks': ['help', 'clean', 'build', 'test'],
-              'Documentation tasks': ['ngdocs', 'ngdocs:view', 'ngdocs:publish']
+              'Documentation tasks': ['uidocs', 'uidocs:view', 'uidocs:publish']
             }
           }
         }
@@ -251,6 +252,7 @@ module.exports = function (grunt) {
             'dist/sass/angular-patternfly.css': ['styles/build.scss']
           },
           options: {
+            implementation: nodeSass,
             outputStyle: 'expanded',
             includePaths: [
               'dist/sass',
@@ -265,6 +267,7 @@ module.exports = function (grunt) {
             'dist/styles/angular-patternfly.css': 'styles/angular-patternfly.less'
           },
           options: {
+            implementation: nodeSass,
             paths: ['src/less/'],
             strictMath: true
           }
@@ -323,7 +326,7 @@ module.exports = function (grunt) {
           force: true
         }
       },
-      ngdocs: {
+      'uidocs-generator': {
         options: {
           title: 'ANGULAR PATTERNFLY',
           dest: 'docs',
@@ -354,7 +357,7 @@ module.exports = function (grunt) {
             'node_modules/angular-ui-router/release/angular-ui-router.min.js',
             'node_modules/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js'],
           html5Mode: false,
-          template: 'grunt-ngdocs-index.tmpl',
+          template: 'grunt-uidocs-index.tmpl',
           styles: ['node_modules/datatables.net-dt/css/jquery.dataTables.css',
             'node_modules/patternfly/dist/css/patternfly.css',
             'node_modules/patternfly/dist/css/patternfly-additions.css',
@@ -545,24 +548,24 @@ module.exports = function (grunt) {
         'cssmin',
         'copymain',
         'string-replace',
-        'ngdocs',
+        'uidocs-generator',
         'clean:templates']);
     });
 
     // Runs all the tasks of build with the exception of tests
     grunt.registerTask('deploy', 'Prepares the project for deployment. Does not run unit tests', function () {
       var concatSrc = 'src/**/*.js';
-      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'string-replace', 'ngdocs', 'clean:templates']);
+      grunt.task.run(['clean', 'lint', 'ngtemplates', 'concat', 'ngAnnotate', 'uglify:build', 'less', 'cssmin', 'copymain', 'string-replace', 'uidocs-generator', 'clean:templates']);
     });
 
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('ngdocs:view', ['build', 'connect:docs', 'watch']);
+    grunt.registerTask('uidocs:view', ['build', 'connect:docs', 'watch']);
     grunt.registerTask('lint', ['eslint', 'htmlhint']);
     grunt.registerTask('test', ['karma', 'coveralls']);
     grunt.registerTask('check', ['lint', 'test']);
     grunt.registerTask('help', ['availabletasks']);
-    grunt.registerTask('serve', ['ngdocs:view']);
-    grunt.registerTask('ngdocs:publish', ['remove:published', 'copy:publish']);
+    grunt.registerTask('serve', ['uidocs:view']);
+    grunt.registerTask('uidocs:publish', ['remove:published', 'copy:publish']);
 
   }
 

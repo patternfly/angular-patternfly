@@ -13,10 +13,11 @@
     templateUrl: 'canvas-view/canvas-editor/canvas-editor.html',
     controller: function ($timeout) {
       var ctrl = this;
-      var newNodeCount = 0;
-      var prevClickedOnChart, prevInConnectingMode;
 
       ctrl.$onInit = function () {
+        ctrl.newNodeCount = 0;
+        ctrl.prevClickedOnChart = undefined;
+        ctrl.prevInConnectingMode = undefined;
         ctrl.toolboxVisible = false;
         ctrl.hideConnectors = false;
         ctrl.draggedItem = null;
@@ -24,25 +25,25 @@
 
       // need to get these in next digest cycle, after pfCanvas sets chartViewModel
       $timeout(function () {
-        prevClickedOnChart = ctrl.chartViewModel.clickedOnChart;
-        prevInConnectingMode = ctrl.chartViewModel.inConnectingMode;
+        ctrl.prevClickedOnChart = ctrl.chartViewModel.clickedOnChart;
+        ctrl.prevInConnectingMode = ctrl.chartViewModel.inConnectingMode;
       });
 
       ctrl.$doCheck = function () {
-        if (angular.isDefined(prevClickedOnChart) && angular.isDefined(prevInConnectingMode)) {
-          if (!angular.equals(ctrl.chartViewModel.clickedOnChart, prevClickedOnChart)) {
+        if (angular.isDefined(ctrl.prevClickedOnChart) && angular.isDefined(ctrl.prevInConnectingMode)) {
+          if (!angular.equals(ctrl.chartViewModel.clickedOnChart, ctrl.prevClickedOnChart)) {
             if (ctrl.chartViewModel.clickedOnChart) {
               ctrl.chartViewModel.clickedOnChart = false;
               ctrl.hideToolbox();
             }
-            prevClickedOnChart = ctrl.chartViewModel.clickedOnChart;
+            ctrl.prevClickedOnChart = ctrl.chartViewModel.clickedOnChart;
           }
-          if (!angular.equals(ctrl.chartViewModel.inConnectingMode, prevInConnectingMode)) {
+          if (!angular.equals(ctrl.chartViewModel.inConnectingMode, ctrl.prevInConnectingMode)) {
             if (ctrl.chartViewModel.inConnectingMode) {
               ctrl.hideConnectors = false;
               ctrl.hideToolbox();
             }
-            prevInConnectingMode = ctrl.chartViewModel.inConnectingMode;
+            ctrl.prevInConnectingMode = ctrl.chartViewModel.inConnectingMode;
           }
         }
       };
@@ -90,7 +91,7 @@
 
       ctrl.dropCallback = function (event, ui) {
         var newNode = angular.copy(ctrl.draggedItem);
-        newNodeCount++;
+        ctrl.newNodeCount++;
         newNode.x = event.clientX - 600;
         newNode.y = event.clientY - 200;
         newNode.backgroundColor = newNode.backgroundColor ? newNode.backgroundColor : '#fff';
@@ -100,9 +101,9 @@
 
       ctrl.addNodeByClick = function (item) {
         var newNode = angular.copy(item);
-        newNodeCount++;
-        newNode.x = 250 + (newNodeCount * 4 + 160);
-        newNode.y = 200 + (newNodeCount * 4 + 160);
+        ctrl.newNodeCount++;
+        newNode.x = 250 + (ctrl.newNodeCount * 4 + 160);
+        newNode.y = 200 + (ctrl.newNodeCount * 4 + 160);
         newNode.backgroundColor = newNode.backgroundColor ? newNode.backgroundColor : '#fff';
 
         ctrl.chartViewModel.addNode(newNode);
@@ -125,6 +126,7 @@
             return subtab.active;
           })[0];
         }
+        return false;
       };
 
       ctrl.activeSubSubTab = function () {
@@ -134,6 +136,7 @@
             return subsubtab.active;
           })[0];
         }
+        return false;
       };
 
       /*** Zoom ***/

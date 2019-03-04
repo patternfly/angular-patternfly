@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.select.component:pfSelect
+ * @name patternfly.select.directive:pfSelect
  * @restrict E
  *
  * @param {object} selected Curently selected value

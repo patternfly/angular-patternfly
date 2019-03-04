@@ -19,7 +19,7 @@ rules:
   no-mixed-spaces-and-tabs: 2
   no-multiple-empty-lines: 2
   no-trailing-spaces: 2
-  space-after-keywords: 2
+  keyword-spacing: 2
   space-before-blocks: 2
   space-before-function-paren: 0
   space-infix-ops: 2
@@ -41,6 +41,3 @@ rules:
   dot-notation:
     - 2
     - {"allowPattern": "^[a-z]+(_[a-z]+)+$"}
-
-ecmaFeatures:
-  blockBindings: true
