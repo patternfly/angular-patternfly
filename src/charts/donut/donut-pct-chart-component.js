@@ -120,8 +120,9 @@ angular.module('patternfly.charts').component('pfDonutPctChart', {
       var centerLabelText;
 
       // default to 'used' info.
-      centerLabelText = { bigText: ctrl.data.used,
-                          smText:  ctrl.config.units + ' Used' };
+      centerLabelText = {
+        bigText: ctrl.data.used,
+        smText:  ctrl.config.units + ' Used' };
 
       if (ctrl.config.centerLabelFn) {
         centerLabelText.bigText = ctrl.config.centerLabelFn();

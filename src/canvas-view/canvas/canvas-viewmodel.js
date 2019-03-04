@@ -214,14 +214,14 @@ var pfCanvas = {};
     // X coordinate of the node.
     //
     this.x = function() {
-      return this.data.x;
+      return this.data.x || 0;
     };
 
     //
     // Y coordinate of the node.
     //
     this.y = function() {
-      return this.data.y;
+      return this.data.y || 0;
     };
 
     //

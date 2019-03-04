@@ -54,8 +54,9 @@ angular.module('patternfly.charts').component('pfDonutChart', {
       var centerLabelText;
 
       // default
-      centerLabelText = { bigText: ctrl.getTotal(),
-                          smText:  ctrl.config.donut.title};
+      centerLabelText = {
+        bigText: ctrl.getTotal(),
+        smText:  ctrl.config.donut.title };
 
       if (ctrl.config.centerLabelFn) {
         centerLabelText.bigText = ctrl.config.centerLabelFn();

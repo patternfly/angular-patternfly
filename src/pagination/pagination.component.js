@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.pagination.component:pfPagination
+ * @name patternfly.pagination.directive:pfPagination
  * @restrict E
  *
  * @param {number} pageNumber The current page number

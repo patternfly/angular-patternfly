@@ -8,8 +8,8 @@ describe('Component:  pfNotificationDrawer', function () {
   // load the controller's module
   beforeEach(function () {
     module('patternfly.notification', 'patternfly.utils', 'patternfly.views', 'notification/notification-drawer.html', 'test/notification/title.html',
-           'test/notification/heading.html', 'test/notification/subheading.html', 'test/notification/notification-body.html',
-           'test/notification/notification-footer.html', 'views/empty-state.html');
+      'test/notification/heading.html', 'test/notification/subheading.html', 'test/notification/notification-body.html',
+      'test/notification/notification-footer.html', 'views/empty-state.html');
   });
 
   beforeEach(inject(function (_$compile_, _$rootScope_) {

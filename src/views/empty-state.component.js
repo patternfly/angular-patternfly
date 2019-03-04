@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.views.component:pfEmptyState
+ * @name patternfly.views.directive:pfEmptyState
  * @restrict E
  *
  * @description
@@ -62,7 +62,7 @@
        helpLink: {
          label: 'For more information please see',
          urlLabel: 'pfExample',
-         url: '#/api/patternfly.views.component:pfEmptyState',
+         url: '#/api/patternfly.views.directive:pfEmptyState',
          urlAction: performEmptyStateAction
        }
      };

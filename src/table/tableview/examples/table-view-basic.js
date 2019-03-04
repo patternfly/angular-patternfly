@@ -1,17 +1,17 @@
 /**
   * @ngdoc directive
-  * @name patternfly.table.component:pfTableView-Basic
+  * @name patternfly.table.directive:pfTableView-Basic
   *
   * @description
   * Component for rendering a simple table view.<br><br>
-  * See {@link patternfly.table.component:pfTableView-with-Toolbar pfTableView - with Toolbar} for use with a Toolbar<br>
-  * See {@link patternfly.toolbars.component:pfToolbar pfToolbar} for use in Toolbar View Switcher
+  * See {@link patternfly.table.directive:pfTableView-with-Toolbar pfTableView - with Toolbar} for use with a Toolbar<br>
+  * See {@link patternfly.toolbars.directive:pfToolbar pfToolbar} for use in Toolbar View Switcher
   *
   * @param {object} config Optional configuration object
   * <ul style='list-style-type: none'>
   *   <li>.selectionMatchProp  - (string) Property of the items to use for determining matching, default is 'uuid'
   *   <li>.onCheckBoxChange    - ( function(item) ) Called to notify when a checkbox selection changes, default is none
-  *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.component:pfEmptyState Empty State} component.
+  *   <li>.itemsAvailable      - (boolean) If 'false', displays the {@link patternfly.views.directive:pfEmptyState Empty State} component.
   *   <li>.showCheckboxes      - (boolean) Show checkboxes for row selection, default is true
   * </ul>
   * @param {object} dtOptions Optional angular-datatables DTOptionsBuilder configuration object.  See {@link http://l-lin.github.io/angular-datatables/archives/#/api angular-datatables: DTOptionsBuilder}
@@ -45,8 +45,8 @@
   *     <li>.title - (String) Optional title, used for the tooltip
   *     <li>.actionFn - (function(action)) Function to invoke when the action selected
   *   </ul>
-  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
-  * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.component:pfEmptyState Empty State} component
+  * @param {object} emptyStateConfig Optional configuration settings for the empty state component.  See the {@link patternfly.views.directive:pfEmptyState Empty State} component
+  * @param {array} emptyStateActionButtons Optional buttons to display under the icon, title, and informational paragraph in the empty state component.  See the {@link patternfly.views.directive:pfEmptyState Empty State} component
   * @example
   <example module="patternfly.tableview.demo">
   <file name="index.html">
@@ -138,7 +138,7 @@
             helpLink: {
               label: 'For more information please see',
               urlLabel: 'pfExample',
-              url : '#/api/patternfly.views.component:pfEmptyState'
+              url : '#/api/patternfly.views.directive:pfEmptyState'
             }
           };
 

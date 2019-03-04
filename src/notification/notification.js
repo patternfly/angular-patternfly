@@ -217,7 +217,7 @@ angular.module('patternfly.notification').provider('Notifications', function () 
 
 /**
  * @ngdoc directive
- * @name patternfly.notification.component:pfNotificationList
+ * @name patternfly.notification.directive:pfNotificationList
  * @restrict E
  *
  * @description

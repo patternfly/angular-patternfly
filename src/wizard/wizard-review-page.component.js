@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.wizard.component:pfWizardReviewPage
+ * @name patternfly.wizard.directive:pfWizardReviewPage
  * @restrict E
  *
  * @description

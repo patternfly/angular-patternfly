@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.notification.component:pfInlineNotification
+ * @name patternfly.notification.directive:pfInlineNotification
  * @restrict E
  * @scope
  *

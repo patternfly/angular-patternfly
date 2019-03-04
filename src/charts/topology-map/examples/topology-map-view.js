@@ -1,6 +1,6 @@
 /**
  * @ngdoc directive
- * @name patternfly.charts.component:pfTopologyMap
+ * @name patternfly.charts.directive:pfTopologyMap
  * @restrict E
  *
  * @param {array} nodes array containing objects representing graph nodes. Each node has these attributes. Only node id is mandatory parameter.
