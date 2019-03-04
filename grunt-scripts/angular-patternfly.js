@@ -245,7 +245,6 @@ angular.module('patternfly.autofocus', []).directive('pfFocused', ["$timeout", f
       var ctrl = this;
 
       ctrl.$onInit = function () {
-        console.log('canvas editor oninit');
         ctrl.newNodeCount = 0;
         ctrl.prevClickedOnChart = undefined;
         ctrl.prevInConnectingMode = undefined;
@@ -870,7 +869,6 @@ var pfCanvas = {};
   // Compute the position of a connector in the graph.
   //
   pfCanvas.computeConnectorPos = function(node, connectorIndex, inputConnector) {
-    console.log('d');
     return {
       x: node.x() + (inputConnector ? 0 : node.width ? node.width() : pfCanvas.defaultNodeWidth),
       y: node.y() + pfCanvas.computeConnectorY(connectorIndex)
@@ -979,7 +977,6 @@ var pfCanvas = {};
   //
   pfCanvas.NodeViewModel = function(nodeDataModel) {
     this.data = nodeDataModel;
-    console.log('new node data', nodeDataModel.data);
 
     // set the default width value of the node
     if (!this.data.width || this.data.width < 0) {
@@ -1284,7 +1281,6 @@ var pfCanvas = {};
     };
 
     this.sourceCoordX = function() {
-      console.log('a');
       return this.source.parentNode().x() + this.source.x();
     };
 
@@ -1308,7 +1304,6 @@ var pfCanvas = {};
     };
 
     this.destCoordX = function() {
-      console.log('b', this.dest.parentNode().x(), this.dest.x());
       return this.dest.parentNode().x() + this.dest.x();
     };
 
@@ -1835,7 +1830,6 @@ var pfCanvas = {};
 
       for (var i = 0; i < this.nodes.length; ++i) {
         var node = this.nodes[i];
-        console.log('c');
         if (node.x() >= selectionRect.x
           && node.y() >= selectionRect.y
           && node.x() + node.width() <= selectionRect.x + selectionRect.width
