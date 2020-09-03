@@ -69,7 +69,7 @@
     "angularjs-datatables": "^0.5.9",
     "angular-drag-and-drop-lists": "2.0.0",
     "bootstrap": "3.4.1",
-    "bootstrap-select": "~1.12.4",
+    "bootstrap-select": "~1.13.6",
     "c3": "~0.4.11",
     "jquery-ui-dist": "1.12.1",
     "d3": "~3.5.17",
