@@ -57,7 +57,7 @@
     "karma-junit-reporter": "^1.2.0",
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.4",
-    "marked": "^0.6.1",
+    "marked": "^4.0.10",
     "matchdep": "0.3.0",
     "patternfly-eng-release": "^3.26.74",
     "qs": "^1.0.0",
