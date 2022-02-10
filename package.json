@@ -17,7 +17,7 @@
     "angular-svg-base-fix": "2.0.0",
     "angular-ui-bootstrap": "2.3.x",
     "lodash": "^4.17.12",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "patternfly": "^3.59.4"
   },
   "devDependencies": {
