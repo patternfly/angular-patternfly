@@ -50,7 +50,7 @@
     "grunt-uidocs-generator": "^0.6.1",
     "jasmine-core": "^2.9.0",
     "jquery-ui-dist": "1.12.1",
-    "karma": "^1.7.1",
+    "karma": "^6.4.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0",
