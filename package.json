@@ -60,7 +60,7 @@
     "marked": "^0.6.1",
     "matchdep": "0.3.0",
     "patternfly-eng-release": "^3.26.74",
-    "qs": "^1.0.0",
+    "qs": "^6.2.4",
     "semantic-release": "^15.0.0",
     "send": "^0.17.1",
     "uglify-js": "^3.4.9"
